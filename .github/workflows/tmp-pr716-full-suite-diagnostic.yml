@@ -1,0 +1,126 @@
+name: tmp-pr716-full-suite-diagnostic
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - agent/pr716-full-suite-diagnostic
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-pr716-full-suite-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install workspace planner
+        run: pip install -e ".[dev]"
+      - name: Build exact workspace plan
+        run: |
+          git fetch origin main
+          python -m tools.openva.workspace validate
+          python -m tools.openva.workspace plan \
+            --base-ref origin/main \
+            --head-ref HEAD \
+            --pretty > "$RUNNER_TEMP/workspace-plan.json"
+          cat "$RUNNER_TEMP/workspace-plan.json"
+      - name: Install exact affected dependency chain
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          for path in plan['install_paths']:
+              target = f"{path}[dev]" if path in {'services/openva_match_service', 'integrations/mcp/openva_mcp'} else path
+              subprocess.run([sys.executable, '-m', 'pip', 'install', '-e', target], check=True)
+          PY
+      - name: Run planned test tree in parallel diagnostic shards
+        run: |
+          set +e
+          python - <<'PY'
+          from __future__ import annotations
+
+          import concurrent.futures
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          if plan['test_paths'] != ['tests']:
+              raise SystemExit(f"unexpected non-full-suite plan: {plan['test_paths']}")
+
+          files = sorted(
+              path.as_posix()
+              for path in Path('tests').rglob('*.py')
+              if path.name.startswith('test_') or path.name.endswith('_test.py')
+          )
+          shard_count = 8
+          shards = [files[index::shard_count] for index in range(shard_count)]
+
+          def run_shard(index: int, paths: list[str]) -> tuple[int, int, str]:
+              command = [sys.executable, '-m', 'pytest', '-q', '--maxfail=1', *paths]
+              try:
+                  completed = subprocess.run(command, capture_output=True, text=True, timeout=900)
+                  return index, completed.returncode, completed.stdout + completed.stderr
+              except subprocess.TimeoutExpired as exc:
+                  stdout = exc.stdout.decode() if isinstance(exc.stdout, bytes) else (exc.stdout or '')
+                  stderr = exc.stderr.decode() if isinstance(exc.stderr, bytes) else (exc.stderr or '')
+                  return index, 124, stdout + stderr + '\nSHARD TIMEOUT AFTER 900 SECONDS\n'
+
+          results = []
+          with concurrent.futures.ThreadPoolExecutor(max_workers=shard_count) as executor:
+              futures = [executor.submit(run_shard, index, paths) for index, paths in enumerate(shards)]
+              for future in concurrent.futures.as_completed(futures):
+                  results.append(future.result())
+
+          lines = [
+              'PR #716 full-tree parallel diagnostic with exact CI installation',
+              json.dumps(plan, indent=2, sort_keys=True),
+              f'test_file_count={len(files)}',
+              f'shard_count={shard_count}',
+              '',
+          ]
+          failed = False
+          for index, status, output in sorted(results):
+              lines.extend([
+                  f'===== SHARD {index} status={status} files={len(shards[index])} =====',
+                  'FILES:',
+                  *shards[index],
+                  'OUTPUT:',
+                  output,
+                  '',
+              ])
+              failed = failed or status != 0
+
+          Path('tmp-pr716-full-suite-diagnostic.txt').write_text('\n'.join(lines), encoding='utf-8')
+          raise SystemExit(1 if failed else 0)
+          PY
+          STATUS=$?
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tmp-pr716-full-suite-diagnostic.txt
+          git commit -m "Record exact-install PR 716 parallel diagnostic"
+          git push origin HEAD:agent/pr716-full-suite-diagnostic
+          exit "$STATUS"

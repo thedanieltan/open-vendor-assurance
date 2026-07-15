@@ -281,6 +281,8 @@ def compact_source(source: dict[str, Any], source_health: dict[str, Any] | None 
         "access_class": source.get("access_class"),
         "rights_class": source.get("rights_class"),
         "provenance": source.get("provenance") or {},
+        "publisher_attribution": source.get("publisher_attribution") or {},
+        "applicability": source.get("applicability") or {},
         "source_health": source_health or source_health_for_source(source, {}),
     }
 

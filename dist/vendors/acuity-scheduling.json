@@ -156,12 +156,30 @@
     {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-dpa.yaml",
       "access_class": "public_web",
+      "applicability": {
+        "coverage_basis": "defined_services_inclusion",
+        "covered_products": [
+          "Acuity Scheduling"
+        ],
+        "evidence": {
+          "assessed_at": "2026-07-15T00:00:00Z",
+          "evidence_url": "https://www.squarespace.com/terms-of-service",
+          "statement": "The Squarespace Terms define the covered Services to include services provided through acuityscheduling.com; the DPA applies to those Squarespace Services."
+        },
+        "status": "verified"
+      },
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "high",
         "observer": "agent",
         "publisher": "vendor"
+      },
+      "publisher_attribution": {
+        "publisher_domain": "squarespace.com",
+        "publisher_name": "Squarespace",
+        "publisher_vendor_id": "squarespace",
+        "relationship": "parent"
       },
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
@@ -179,12 +197,30 @@
     {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-privacy.yaml",
       "access_class": "public_web",
+      "applicability": {
+        "coverage_basis": "explicit_product_domain",
+        "covered_products": [
+          "Acuity Scheduling"
+        ],
+        "evidence": {
+          "assessed_at": "2026-07-15T00:00:00Z",
+          "evidence_url": "https://www.squarespace.com/privacy",
+          "statement": "The Squarespace Privacy Policy explicitly lists acuityscheduling.com among the Squarespace Services it covers."
+        },
+        "status": "verified"
+      },
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "high",
         "observer": "agent",
         "publisher": "vendor"
+      },
+      "publisher_attribution": {
+        "publisher_domain": "squarespace.com",
+        "publisher_name": "Squarespace",
+        "publisher_vendor_id": "squarespace",
+        "relationship": "parent"
       },
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
@@ -202,12 +238,30 @@
     {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-security.yaml",
       "access_class": "public_web",
+      "applicability": {
+        "coverage_basis": "defined_services_inclusion",
+        "covered_products": [
+          "Acuity Scheduling"
+        ],
+        "evidence": {
+          "assessed_at": "2026-07-15T00:00:00Z",
+          "evidence_url": "https://www.squarespace.com/terms-of-service",
+          "statement": "The Squarespace Terms include acuityscheduling.com within the Squarespace Services, and Squarespace publishes this security page for that service family."
+        },
+        "status": "verified"
+      },
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "medium",
         "observer": "agent",
         "publisher": "vendor"
+      },
+      "publisher_attribution": {
+        "publisher_domain": "squarespace.com",
+        "publisher_name": "Squarespace",
+        "publisher_vendor_id": "squarespace",
+        "relationship": "parent"
       },
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
@@ -225,12 +279,30 @@
     {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-status-page.yaml",
       "access_class": "public_web",
+      "applicability": {
+        "coverage_basis": "explicit_product_name",
+        "covered_products": [
+          "Acuity Scheduling"
+        ],
+        "evidence": {
+          "assessed_at": "2026-07-15T00:00:00Z",
+          "evidence_url": "https://status.squarespace.com/",
+          "statement": "The Squarespace status page explicitly lists Acuity Scheduling as a monitored service."
+        },
+        "status": "verified"
+      },
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "high",
         "observer": "agent",
         "publisher": "vendor"
+      },
+      "publisher_attribution": {
+        "publisher_domain": "status.squarespace.com",
+        "publisher_name": "Squarespace",
+        "publisher_vendor_id": "squarespace",
+        "relationship": "parent"
       },
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
@@ -248,12 +320,30 @@
     {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-terms-of-service.yaml",
       "access_class": "public_web",
+      "applicability": {
+        "coverage_basis": "explicit_product_domain",
+        "covered_products": [
+          "Acuity Scheduling"
+        ],
+        "evidence": {
+          "assessed_at": "2026-07-15T00:00:00Z",
+          "evidence_url": "https://www.squarespace.com/terms-of-service",
+          "statement": "The Squarespace Terms of Service explicitly include services provided through acuityscheduling.com."
+        },
+        "status": "verified"
+      },
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "high",
         "observer": "agent",
         "publisher": "vendor"
+      },
+      "publisher_attribution": {
+        "publisher_domain": "squarespace.com",
+        "publisher_name": "Squarespace",
+        "publisher_vendor_id": "squarespace",
+        "relationship": "parent"
       },
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",

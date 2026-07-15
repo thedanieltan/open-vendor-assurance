@@ -1,0 +1,476 @@
+PR #716 full-tree parallel diagnostic
+test_file_count=292
+shard_count=8
+
+===== SHARD 0 status=1 files=37 =====
+FILES:
+tests/test_adapter_contract.py
+tests/test_ai_native_distribution_docs.py
+tests/test_assurance_intelligence_publication.py
+tests/test_assurance_projection_diff.py
+tests/test_auto_canonical.py
+tests/test_bot_calibration.py
+tests/test_bot_failure_workflow_integration.py
+tests/test_bot_telemetry.py
+tests/test_candidate_promotion_lifecycle_limits.py
+tests/test_catalog_growth_backlog.py
+tests/test_catalog_maintenance_pr_body.py
+tests/test_contribution_intake.py
+tests/test_discovery_ledger.py
+tests/test_discovery_mesh_activation_no_caps.py
+tests/test_discovery_mesh_activation_reference.py
+tests/test_discovery_mesh_config.py
+tests/test_field_provenance.py
+tests/test_hosted_job_lifecycle.py
+tests/test_machine_provisional_controller.py
+tests/test_missing_vendor_bridge.py
+tests/test_openva_enrichment_parity.py
+tests/test_openva_match_service_worker.py
+tests/test_openva_mcp_protocol.py
+tests/test_pack_integrity.py
+tests/test_public_launch_readiness_record.py
+tests/test_region_taxonomy.py
+tests/test_release_image_workflow.py
+tests/test_retired_validation_checks.py
+tests/test_rollback_workflow.py
+tests/test_source_classification.py
+tests/test_source_observation_ledger.py
+tests/test_source_repair_actions.py
+tests/test_source_repair_pr_cleanup.py
+tests/test_strict_growth_automerge.py
+tests/test_tier_a_disclosure.py
+tests/test_vendor_candidate_discovery.py
+tests/test_workflow_retirement_evidence.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_hosted_job_lifecycle.py ______________
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_hosted_job_lifecycle.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_hosted_job_lifecycle.py:27: in <module>
+    from openva_match_service import job_lifecycle as jl  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+services/openva_match_service/openva_match_service/__init__.py:1: in <module>
+    from .app import create_app
+services/openva_match_service/openva_match_service/app.py:9: in <module>
+    from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Response, UploadFile
+E   ModuleNotFoundError: No module named 'fastapi'
+=========================== short test summary info ============================
+ERROR tests/test_hosted_job_lifecycle.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 11.72s
+
+
+===== SHARD 1 status=0 files=37 =====
+FILES:
+tests/test_adapter_output_contract.py
+tests/test_assurance_change_event_contract.py
+tests/test_assurance_intelligence_publication_acceptance.py
+tests/test_assurance_projection_materialization.py
+tests/test_automation_rules.py
+tests/test_bot_chatops.py
+tests/test_bot_observability.py
+tests/test_bot_telemetry_wp40.py
+tests/test_candidate_promotion_lifecycle_selection.py
+tests/test_catalog_growth_discovery_queue.py
+tests/test_catalog_maintenance_pr_workflow.py
+tests/test_contribution_promotion_materializer.py
+tests/test_discovery_mesh.py
+tests/test_discovery_mesh_activation_non_reviewed.py
+tests/test_discovery_mesh_activation_run_token.py
+tests/test_discovery_mesh_health.py
+tests/test_future_operations_specs.py
+tests/test_human_review_operations.py
+tests/test_machine_states.py
+tests/test_observation_automerge.py
+tests/test_openva_jsonl_export.py
+tests/test_openva_mcp.py
+tests/test_openva_mcp_streamable_http.py
+tests/test_paths.py
+tests/test_quality_gates.py
+tests/test_registry_outputs.py
+tests/test_release_site_routing_smoke.py
+tests/test_reviewed_candidate_promotion_doc.py
+tests/test_safe_fetch.py
+tests/test_source_discovery.py
+tests/test_source_pack_schema.py
+tests/test_source_repair_automerge.py
+tests/test_source_repair_sweep.py
+tests/test_strict_growth_automerge_cli.py
+tests/test_unavailable_source_truth_state.py
+tests/test_vendor_resolution.py
+tests/test_workflow_workspace_ci.py
+OUTPUT:
+........................................................................ [ 19%]
+........................................................................ [ 38%]
+..............................................................s......... [ 57%]
+........................................................................ [ 77%]
+........................................................................ [ 96%]
+.............                                                            [100%]
+372 passed, 2 skipped in 123.64s (0:02:03)
+
+
+===== SHARD 2 status=1 files=37 =====
+FILES:
+tests/test_agent_automerge_workflow.py
+tests/test_assurance_evidence_set.py
+tests/test_assurance_intelligence_recovery.py
+tests/test_assurance_schema_fixtures.py
+tests/test_automerge_lanes.py
+tests/test_bot_chatops_execution.py
+tests/test_bot_operating_model.py
+tests/test_candidate_activation.py
+tests/test_candidate_promotion_workflow.py
+tests/test_catalog_growth_discovery_workflow.py
+tests/test_category_lane_execution_backlog.py
+tests/test_contribution_promotion_queue.py
+tests/test_discovery_mesh_activation.py
+tests/test_discovery_mesh_activation_output_root.py
+tests/test_discovery_mesh_activation_scale.py
+tests/test_discovery_mesh_runner.py
+tests/test_generated_catalog_pr_risk.py
+tests/test_issue_intake.py
+tests/test_maintenance_actions.py
+tests/test_observation_ledger.py
+tests/test_openva_match_service.py
+tests/test_openva_mcp_authority_boundaries.py
+tests/test_openva_mcp_typed_legal_identifiers.py
+tests/test_pr_scope_guard.py
+tests/test_quarantine_automerge.py
+tests/test_release_artifacts.py
+tests/test_release_source_health.py
+tests/test_reviewed_candidate_promotion_planner.py
+tests/test_safe_verify.py
+tests/test_source_health_public_snapshot.py
+tests/test_source_preflight.py
+tests/test_source_repair_batch.py
+tests/test_source_review_decisions.py
+tests/test_strict_growth_policy.py
+tests/test_url_safety.py
+tests/test_web_bot_auth.py
+tests/test_workspace.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_openva_match_service.py ______________
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_match_service.py:7: in <module>
+    from fastapi.testclient import TestClient
+E   ModuleNotFoundError: No module named 'fastapi'
+=============================== warnings summary ===============================
+tests/test_candidate_promotion_workflow.py:159
+  /home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_candidate_promotion_workflow.py:159: SyntaxWarning: invalid escape sequence '\`'
+    assert "Head SHA: \`$HEAD_SHA\`" in text
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_openva_match_service.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 warning, 1 error in 10.62s
+
+
+===== SHARD 3 status=1 files=37 =====
+FILES:
+tests/test_agent_bundle_verification.py
+tests/test_assurance_instrument_projection.py
+tests/test_assurance_knowledge_time.py
+tests/test_assurance_semantic_fixtures.py
+tests/test_autonomous_growth_controller.py
+tests/test_bot_chatops_workflow.py
+tests/test_bot_ops_smoke.py
+tests/test_candidate_demand_priority.py
+tests/test_candidate_record.py
+tests/test_catalog_growth_eligibility.py
+tests/test_category_taxonomy.py
+tests/test_controlled_catalog_reset.py
+tests/test_discovery_mesh_activation_cli.py
+tests/test_discovery_mesh_activation_path_regex.py
+tests/test_discovery_mesh_activation_schema.py
+tests/test_discovery_mesh_workflows.py
+tests/test_generated_exports.py
+tests/test_legal_entity_export_ratification.py
+tests/test_maintenance_lifecycle.py
+tests/test_observation_ledger_append_workflow.py
+tests/test_openva_match_service_agent_contract.py
+tests/test_openva_mcp_enrich.py
+tests/test_openva_pack_reader.py
+tests/test_prohibited_claims.py
+tests/test_quarantine_workflow.py
+tests/test_release_candidate_docs.py
+tests/test_repo_terminology.py
+tests/test_reviewed_plan_lifecycle.py
+tests/test_site.py
+tests/test_source_health_report.py
+tests/test_source_quality_refinement.py
+tests/test_source_repair_classifier.py
+tests/test_source_review_triage.py
+tests/test_strict_growth_shortlist.py
+tests/test_validate.py
+tests/test_work_priority.py
+tests/test_wp41_workflows.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+______ ERROR collecting tests/test_openva_match_service_agent_contract.py ______
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_agent_contract.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_match_service_agent_contract.py:8: in <module>
+    from fastapi.testclient import TestClient
+E   ModuleNotFoundError: No module named 'fastapi'
+=========================== short test summary info ============================
+ERROR tests/test_openva_match_service_agent_contract.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 11.32s
+
+
+===== SHARD 4 status=1 files=36 =====
+FILES:
+tests/test_agent_control_plane_docs.py
+tests/test_assurance_intelligence_acceptance.py
+tests/test_assurance_observation_knowledge_time.py
+tests/test_assurance_supersession_projection.py
+tests/test_autonomous_growth_workflow.py
+tests/test_bot_dashboard.py
+tests/test_bot_queue.py
+tests/test_candidate_intake_guard.py
+tests/test_candidate_source_verification.py
+tests/test_catalog_growth_promotion_bridge_workflow.py
+tests/test_ci_readiness.py
+tests/test_coverage_audit.py
+tests/test_discovery_mesh_activation_contract.py
+tests/test_discovery_mesh_activation_paths.py
+tests/test_discovery_mesh_activation_sorting.py
+tests/test_discovery_promotion_bridge.py
+tests/test_github_actions_artifacts.py
+tests/test_lifecycle_smoke.py
+tests/test_maintenance_operator_runbook.py
+tests/test_observation_report.py
+tests/test_openva_match_service_candidate_ingress.py
+tests/test_openva_mcp_hardening.py
+tests/test_openva_sqlite_export.py
+tests/test_promotion_plan_batcher.py
+tests/test_quorum_benchmark.py
+tests/test_release_candidate_workflow.py
+tests/test_repository_hygiene.py
+tests/test_robots_policy.py
+tests/test_sitemap_discovery.py
+tests/test_source_latest_health.py
+tests/test_source_quarantine.py
+tests/test_source_repair_collision_check.py
+tests/test_source_scheduler_workflow.py
+tests/test_submission_bridge.py
+tests/test_vendor_breadth_mesh.py
+tests/test_workflow_contracts.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+____ ERROR collecting tests/test_openva_match_service_candidate_ingress.py _____
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_candidate_ingress.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_match_service_candidate_ingress.py:38: in <module>
+    from openva_match_service import candidate_ingress as ci  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+services/openva_match_service/openva_match_service/__init__.py:1: in <module>
+    from .app import create_app
+services/openva_match_service/openva_match_service/app.py:9: in <module>
+    from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Response, UploadFile
+E   ModuleNotFoundError: No module named 'fastapi'
+=============================== warnings summary ===============================
+tests/test_catalog_growth_promotion_bridge_workflow.py:295
+  /home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_catalog_growth_promotion_bridge_workflow.py:295: SyntaxWarning: invalid escape sequence '\`'
+    assert 'Discovery run \`$RUN_ID\`' in body
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_openva_match_service_candidate_ingress.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 warning, 1 error in 10.22s
+
+
+===== SHARD 5 status=1 files=36 =====
+FILES:
+tests/test_agent_enrichment_result_schema_contract.py
+tests/test_assurance_intelligence_diff.py
+tests/test_assurance_observation_semantics.py
+tests/test_assurance_verification_contracts.py
+tests/test_autonomous_pr_body.py
+tests/test_bot_dashboard_issue.py
+tests/test_bot_queue_live_state.py
+tests/test_candidate_intake_workflows.py
+tests/test_catalog_audit.py
+tests/test_catalog_guard.py
+tests/test_cleanup_proposals.py
+tests/test_coverage_blocked.py
+tests/test_discovery_mesh_activation_empty.py
+tests/test_discovery_mesh_activation_plan_order.py
+tests/test_discovery_mesh_activation_source_path.py
+tests/test_entity_evidence_quorum.py
+tests/test_google_sheets_integration.py
+tests/test_machine_decisions.py
+tests/test_matching_conformance.py
+tests/test_observe.py
+tests/test_openva_match_service_check.py
+tests/test_openva_mcp_live_resolver.py
+tests/test_openva_vendor_inventory_matcher.py
+tests/test_promotion_planner.py
+tests/test_quorum_promotion.py
+tests/test_release_coherence.py
+tests/test_reset_catalog.py
+tests/test_rollback.py
+tests/test_sitemap_discovery_integration.py
+tests/test_source_ledger_schemas.py
+tests/test_source_refinement_queue.py
+tests/test_source_repair_evidence.py
+tests/test_source_type_labels.py
+tests/test_submission_intake.py
+tests/test_vendor_breadth_replenishment.py
+tests/test_workflow_operating_model.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+__________ ERROR collecting tests/test_openva_match_service_check.py ___________
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_check.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_match_service_check.py:27: in <module>
+    from fastapi.testclient import TestClient
+E   ModuleNotFoundError: No module named 'fastapi'
+=========================== short test summary info ============================
+ERROR tests/test_openva_match_service_check.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 10.96s
+
+
+===== SHARD 6 status=1 files=36 =====
+FILES:
+tests/test_agent_export.py
+tests/test_assurance_intelligence_materialization.py
+tests/test_assurance_projection.py
+tests/test_assurance_verification_freshness.py
+tests/test_autonomy_docs_regression.py
+tests/test_bot_dashboard_signal_quality.py
+tests/test_bot_queue_workflow_integration.py
+tests/test_candidate_memory.py
+tests/test_catalog_batch.py
+tests/test_catalog_lifecycle.py
+tests/test_conformance.py
+tests/test_coverage_growth.py
+tests/test_discovery_mesh_activation_idempotence.py
+tests/test_discovery_mesh_activation_plan_type.py
+tests/test_discovery_mesh_activation_vendor_id.py
+tests/test_entity_records.py
+tests/test_hash.py
+tests/test_machine_provisional_automerge.py
+tests/test_materialization_envelope.py
+tests/test_openva_csv_export.py
+tests/test_openva_match_service_hardening.py
+tests/test_openva_mcp_metadata.py
+tests/test_operational_pr_scope.py
+tests/test_public_exports.py
+tests/test_quorum_promotion_automerge.py
+tests/test_release_downloads_workflow.py
+tests/test_resolve_csv.py
+tests/test_rollback_automerge.py
+tests/test_source_attribution.py
+tests/test_source_ledger_validation.py
+tests/test_source_refinement_scan.py
+tests/test_source_repair_partition.py
+tests/test_source_type_registry_contract.py
+tests/test_submission_lifecycle.py
+tests/test_vendor_candidate_breadth_bridge.py
+tests/test_workflow_retirement.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+________ ERROR collecting tests/test_openva_match_service_hardening.py _________
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_hardening.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_match_service_hardening.py:19: in <module>
+    from fastapi.testclient import TestClient
+E   ModuleNotFoundError: No module named 'fastapi'
+=========================== short test summary info ============================
+ERROR tests/test_openva_match_service_hardening.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 11.52s
+
+
+===== SHARD 7 status=1 files=36 =====
+FILES:
+tests/test_agents_routing_doc.py
+tests/test_assurance_intelligence_projection.py
+tests/test_assurance_projection_contracts.py
+tests/test_assurance_verification_projection.py
+tests/test_bot_authority_levels.py
+tests/test_bot_failure_router.py
+tests/test_bot_quorum.py
+tests/test_candidate_promotion_actions.py
+tests/test_catalog_completeness.py
+tests/test_catalog_maintenance_batch_limits.py
+tests/test_constitution_regression.py
+tests/test_discoverability.py
+tests/test_discovery_mesh_activation_manifest.py
+tests/test_discovery_mesh_activation_posture.py
+tests/test_discovery_mesh_closeout.py
+tests/test_entity_review_queue.py
+tests/test_hosted_deployment_docs.py
+tests/test_machine_provisional_ci_fixes.py
+tests/test_materialization_independence.py
+tests/test_openva_enrichment_api.py
+tests/test_openva_match_service_verify.py
+tests/test_openva_mcp_oci.py
+tests/test_p0_repair_automerge_workflow.py
+tests/test_public_launch_readiness.py
+tests/test_quorum_promotion_workflow.py
+tests/test_release_gates.py
+tests/test_resolver_result_pack.py
+tests/test_rollback_eligibility.py
+tests/test_source_authority.py
+tests/test_source_maintenance_workflow.py
+tests/test_source_registry_schema.py
+tests/test_source_repair_plan.py
+tests/test_source_verification.py
+tests/test_supply_chain_policy.py
+tests/test_vendor_candidate_breadth_root_isolation.py
+tests/test_workflow_retirement_enforcement.py
+OUTPUT:
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_openva_enrichment_api.py _____________
+ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_enrichment_api.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_openva_enrichment_api.py:13: in <module>
+    from fastapi.testclient import TestClient
+E   ModuleNotFoundError: No module named 'fastapi'
+=========================== short test summary info ============================
+ERROR tests/test_openva_enrichment_api.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 11.82s
+

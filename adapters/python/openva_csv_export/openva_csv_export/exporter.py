@@ -41,6 +41,8 @@ SOURCE_COLUMNS = [
     "access_class",
     "rights_class",
     "source_language",
+    "publisher_attribution",
+    "applicability",
     "not_advice",
     "_openva_path",
 ]
