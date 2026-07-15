@@ -24,6 +24,12 @@
     "security_page",
     "trust_center",
   ]);
+  const GUARDED_ACTION_IDS = new Set([
+    "run-local-match",
+    "download-matches-xlsx",
+    "download-matches-csv",
+    "download-matches-json",
+  ]);
 
   const style = document.createElement("style");
   style.id = "openva-resolver-source-availability";
@@ -122,6 +128,20 @@
     }
   }
 
+  function installSelectionGuard() {
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) return;
+      const action = event.target.closest("button");
+      if (!action || !GUARDED_ACTION_IDS.has(action.id) || selectedSourceTypes().length) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const status = document.getElementById("matcher-status");
+      if (status) {
+        status.textContent = "Select at least one available source type before running resolution or downloading results.";
+      }
+    }, true);
+  }
+
   function sourceLabel(payload, sourceType) {
     return (payload.labels && payload.labels[sourceType]) || sourceType.replaceAll("_", " ");
   }
@@ -189,12 +209,13 @@
     const copy = heading && heading.nextElementSibling;
     if (heading) heading.textContent = "Choose source types that exist in this catalog snapshot.";
     if (copy) {
-      copy.textContent = "The options and record counts come from the current accepted catalog. Presets only select available types; clear every option for an identity-only export.";
+      copy.textContent = "The options and record counts come from the current accepted catalog. Presets select only available types; Custom clears the preset so you can choose individual fields.";
     }
   }
 
   async function install() {
     installProjection();
+    installSelectionGuard();
     const response = await fetch("data/source-types.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`source type availability returned HTTP ${response.status}`);
     const payload = await response.json();
