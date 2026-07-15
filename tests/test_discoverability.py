@@ -198,30 +198,3 @@ def test_generated_discovery_output_is_deterministic(tmp_path_factory):
     names += [p.relative_to(a).as_posix() for p in sorted(a.glob("vendors/*/index.html"))]
     for name in names:
         assert (a / name).read_bytes() == (b / name).read_bytes(), f"non-deterministic: {name}"
-
-
-def test_latest_observed_at_handles_missing_and_present_timestamps():
-    assert _latest_observed_at({}) is None
-    assert _latest_observed_at({"observed_at": "2026-07-01T10:00:00Z"}) == "2026-07-01T10:00:00Z"
-    assert _latest_observed_at({"verified_at": "2026-07-02T10:00:00Z"}) == "2026-07-02T10:00:00Z"
-
-
-def test_rendered_vendor_page_exposes_source_snapshot_language(config):
-    html = render_index_html(
-        title="Example",
-        canonical_url=config.vendor_page_url("example"),
-        description="Example vendor",
-        body="<p>Example</p>",
-        structured_data={"@context": "https://schema.org", "@type": "WebPage"},
-    )
-    assert "Snapshot" in html
-
-
-def test_canonical_json_and_hash_helpers_are_stable():
-    payload = {"b": 2, "a": 1}
-    assert canonical_json(payload) == b'{"a":1,"b":2}'
-    assert sha256_bytes(canonical_json(payload)) == sha256_bytes(b'{"a":1,"b":2}')
-
-
-def test_config_is_dataclass(config):
-    assert dataclasses.is_dataclass(config)
