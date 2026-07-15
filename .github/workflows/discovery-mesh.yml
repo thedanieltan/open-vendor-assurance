@@ -1,6 +1,13 @@
 name: discovery-mesh
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/discovery-mesh.yml"
+      - "tools/openva/discovery_mesh_config.py"
+      - "tools/openva/rendered_discovery.py"
+      - "tools/openva/rendered_discovery_runner.py"
   workflow_dispatch:
     inputs:
       shard_count:
@@ -45,7 +52,7 @@ jobs:
       - name: Build full-catalog shard matrix
         id: plan
         env:
-          REQUESTED_SHARD_COUNT: "${{ inputs.shard_count || '' }}"
+          REQUESTED_SHARD_COUNT: "${{ github.event_name == 'push' && '1' || inputs.shard_count || '' }}"
         run: |
           set -euo pipefail
           python - <<'PY' >> "$GITHUB_OUTPUT"
@@ -73,7 +80,7 @@ jobs:
       max-parallel: 32
       matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     env:
-      REQUESTED_VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
+      REQUESTED_VENDOR_LIMIT: "${{ github.event_name == 'push' && '25' || inputs.vendor_limit || '' }}"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -321,6 +328,7 @@ jobs:
       - name: Validate staged candidate intake
         run: python -m tools.openva.validate validate
       - name: Prepare exact intake branch
+        if: github.event_name != 'push'
         id: intake
         env:
           INTAKE_NEEDED: ${{ steps.health.outputs.intake_needed }}
