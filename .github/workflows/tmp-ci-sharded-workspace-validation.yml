@@ -30,18 +30,23 @@ jobs:
           import yaml
 
           path = Path('docs/operations/contracts/work-package-scope.yaml')
-          text = path.read_text(encoding='utf-8')
-          start = text.index('  WP-02E-SUPPLY-CHAIN:\n')
-          end = text.index('  WP-02F-STAGING:\n', start)
-          block = text[start:end]
-          workflow_line = '      - .github/workflows/*\n'
-          ownership_line = '      - .github/validation-ownership.yaml\n'
-          if ownership_line in block:
+          lines = path.read_text(encoding='utf-8').splitlines(keepends=True)
+          start = next(i for i, line in enumerate(lines) if line.strip() == 'WP-02E-SUPPLY-CHAIN:')
+          end = next(
+              i for i in range(start + 1, len(lines))
+              if lines[i].startswith('  WP-') and not lines[i].startswith('    ')
+          )
+          block = lines[start:end]
+          if any(line.strip() == '- .github/validation-ownership.yaml' for line in block):
               raise SystemExit('ownership manifest already granted')
-          if block.count(workflow_line) != 1:
-              raise SystemExit(f'unexpected workflow-line count in WP-02E: {block.count(workflow_line)}')
-          block = block.replace(workflow_line, workflow_line + ownership_line, 1)
-          updated = text[:start] + block + text[end:]
+          matches = [i for i, line in enumerate(block) if line.strip() == '- .github/workflows/*']
+          if len(matches) != 1:
+              raise SystemExit(f'unexpected workflow-line count in WP-02E: {len(matches)}')
+          index = matches[0]
+          indentation = block[index][: len(block[index]) - len(block[index].lstrip())]
+          newline = '\r\n' if block[index].endswith('\r\n') else '\n'
+          block.insert(index + 1, f'{indentation}- .github/validation-ownership.yaml{newline}')
+          updated = ''.join(lines[:start] + block + lines[end:])
           yaml.safe_load(updated)
           path.write_text(updated, encoding='utf-8')
           PY
