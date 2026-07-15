@@ -16,7 +16,7 @@ jobs:
   diagnose:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
@@ -25,65 +25,38 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - name: Install workspace
-        run: pip install -e ".[dev]"
-      - name: Build affected-test plan
+      - name: Install affected packages
         run: |
-          set -euo pipefail
-          git fetch origin main
-          python -m tools.openva.workspace validate
-          python -m tools.openva.workspace plan \
-            --base-ref origin/main \
-            --head-ref HEAD \
-            --pretty > "$RUNNER_TEMP/workspace-plan.json"
-          cat "$RUNNER_TEMP/workspace-plan.json"
-      - name: Install affected dependency chain
-        run: |
-          python - <<'PY'
-          import json
-          import subprocess
-          import sys
-          from pathlib import Path
-          import os
-
-          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
-          for path in plan['install_paths']:
-              target = path
-              if path in {'services/openva_match_service', 'integrations/mcp/openva_mcp'}:
-                  target = f"{path}[dev]"
-              subprocess.run([sys.executable, '-m', 'pip', 'install', '-e', target], check=True)
-          PY
-      - name: Run affected tests and persist diagnostics
+          pip install -e ".[dev]"
+          pip install -e adapters/python/openva_pack_reader
+          pip install -e adapters/python/openva_csv_export
+          pip install -e adapters/python/openva_sqlite_export
+      - name: Run focused contracts and persist diagnostics
         run: |
           set +e
-          python - <<'PY' > "$RUNNER_TEMP/pytest-output.txt" 2>&1
-          import json
-          import subprocess
-          import sys
-          from pathlib import Path
-          import os
-
-          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
-          raise SystemExit(subprocess.run([sys.executable, '-m', 'pytest', '-q', *plan['test_paths']]).returncode)
-          PY
+          python -m pytest -q \
+            tests/test_openva_csv_export.py \
+            tests/test_openva_sqlite_export.py \
+            tests/test_source_attribution.py \
+            tests/test_catalog_guard.py \
+            tests/test_site.py \
+            tests/test_adapter_contract.py \
+            tests/test_validate.py \
+            > "$RUNNER_TEMP/pytest-output.txt" 2>&1
           STATUS=$?
           set -e
           {
-            echo "PR #716 workspace diagnostic"
-            echo "Branch and test plan are based on current main."
+            echo "PR #716 focused diagnostic"
+            echo "Branch is based on current main."
             echo
-            echo "Workspace plan:"
-            cat "$RUNNER_TEMP/workspace-plan.json"
-            echo
-            echo "Pytest tail:"
-            tail -n 300 "$RUNNER_TEMP/pytest-output.txt"
+            cat "$RUNNER_TEMP/pytest-output.txt"
             echo
             echo "exit_status=$STATUS"
-          } > tmp-pr716-workspace-diagnostic.txt
+          } > tmp-pr716-focused-diagnostic.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tmp-pr716-workspace-diagnostic.txt
-          git commit -m "Record temporary PR 716 workspace diagnostic"
+          git add tmp-pr716-focused-diagnostic.txt
+          git commit -m "Record temporary PR 716 focused diagnostic"
           git push origin HEAD:agent/source-attribution-applicability
           cat "$RUNNER_TEMP/pytest-output.txt"
           exit "$STATUS"
