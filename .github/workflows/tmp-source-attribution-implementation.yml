@@ -38,6 +38,39 @@ jobs:
           python .github/openva-source-attribution-patch.py
       - name: Rebuild generated catalog outputs
         run: python -m tools.openva.validate build-indexes
+      - name: Build attribution diagnostic
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+          from tools.openva.source_attribution import classify_source, source_requires_attribution, validate_source_attribution
+
+          root = Path.cwd()
+          vendor = yaml.safe_load((root / 'data/vendors/acuity-scheduling/vendor.yaml').read_text(encoding='utf-8'))
+          rows = []
+          for path in sorted((root / 'data/vendors/acuity-scheduling/sources').glob('*.yaml')):
+              source = yaml.safe_load(path.read_text(encoding='utf-8'))
+              classification, issues = classify_source(source, vendor)
+              rows.append({
+                  'path': path.as_posix(),
+                  'source_url': source.get('source_url'),
+                  'publisher_attribution': source.get('publisher_attribution'),
+                  'applicability': source.get('applicability'),
+                  'requires_attribution': source_requires_attribution(source, vendor),
+                  'validation_failures': validate_source_attribution(source, vendor),
+                  'classification': classification,
+                  'classification_issues': issues,
+              })
+          Path('attribution-diagnostic.json').write_text(json.dumps(rows, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(rows, indent=2, sort_keys=True))
+          PY
+      - name: Upload attribution diagnostic
+        uses: actions/upload-artifact@v6
+        with:
+          name: source-attribution-diagnostic
+          path: attribution-diagnostic.json
+          if-no-files-found: error
       - name: Validate catalog and schemas
         run: python -m tools.openva.validate validate
       - name: Test Acuity parent attribution
