@@ -442,8 +442,11 @@ work_packages:
     allowed_paths:
       - services/openva_match_service/*
       - .github/workflows/*
+      - .github/workflows/validate.yml
+      - .github/validation-ownership.yaml
       - docs/operations/*
       - tests/*
+      - tests/test_workflow_workspace_ci.py
 
   WP-02F-STAGING:
     description: Maintainer-gated staging infrastructure and provider controls.

@@ -17,3 +17,15 @@ provenance:
   observer: human
   confidence: low
 not_advice: true
+review_state: quarantined
+quarantine:
+  reason: persistent_not_found
+  quarantined_by: quarantine-controller
+  quarantined_at: '2026-07-12T14:47:04.424390Z'
+  prior_review_state: null
+  decision_id: adp-dpa-quarantine
+  reversal:
+    method: revert_quarantine
+    reference: Revert the quarantine PR for adp-dpa; restores the prior review_state.
+      See decision adp-dpa-quarantine.
+    reversal_decision_id: null
