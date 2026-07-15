@@ -139,6 +139,8 @@ register_table(
         "access_class": "TEXT",
         "rights_class": "TEXT",
         "source_language": "TEXT",
+        "publisher_attribution": "TEXT",
+        "applicability": "TEXT",
         "not_advice": "INTEGER",
         "_openva_path": "TEXT",
     },
