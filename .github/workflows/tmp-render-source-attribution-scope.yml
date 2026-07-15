@@ -1,0 +1,60 @@
+name: tmp-render-source-attribution-scope
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Render trusted-base scope manifest update
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/operations/contracts/work-package-scope.yaml')
+          text = path.read_text(encoding='utf-8')
+          marker = '  WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:\n'
+          block = '''  WP-SOURCE-PUBLISHER-ATTRIBUTION-01:
+    description: Cross-domain source publisher attribution, product-applicability admission, public presentation, exports, catalog-quality audit, and bounded catalog backfill.
+    allowed_paths:
+      - .github/workflows/coverage-audit.yml
+      - adapters/python/openva_csv_export/openva_csv_export/exporter.py
+      - adapters/python/openva_sqlite_export/openva_sqlite_export/exporter.py
+      - data/vendors/*/sources/*.yaml
+      - dist/vendors/*.json
+      - docs/source-publisher-attribution.md
+      - indexes/sources.json
+      - schemas/openva/source-reference.schema.json
+      - site/build_core.py
+      - site/src/app.js
+      - site/src/styles.css
+      - tests/test_source_attribution.py
+      - tools/openva/catalog_guard.py
+      - tools/openva/source_attribution.py
+
+'''
+          if 'WP-SOURCE-PUBLISHER-ATTRIBUTION-01:' not in text:
+              if marker not in text:
+                  raise SystemExit('scope insertion marker not found')
+              text = text.replace(marker, block + marker, 1)
+          out = Path('rendered/work-package-scope.yaml')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(text, encoding='utf-8')
+          PY
+      - name: Upload rendered scope manifest
+        uses: actions/upload-artifact@v6
+        with:
+          name: source-attribution-scope-manifest
+          path: rendered/work-package-scope.yaml
+          if-no-files-found: error
