@@ -25,7 +25,8 @@ def test_push_smoke_uses_separate_small_runtime_bounds() -> None:
     assert smoke["render_max_pages_per_vendor"] < production["render_max_pages_per_vendor"]
 
 
-def test_manual_and_scheduled_execution_keep_production_bounds() -> None:
+def test_manual_scheduled_and_local_execution_keep_production_bounds() -> None:
     assert config.runtime_bounds("workflow_dispatch") == config.PRODUCTION_BOUNDS
     assert config.runtime_bounds("schedule") == config.PRODUCTION_BOUNDS
+    assert config.runtime_bounds("") == config.PRODUCTION_BOUNDS
     assert config.CATALOG_VENDOR_LIMIT is None
