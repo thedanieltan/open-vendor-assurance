@@ -1,0 +1,400 @@
+from pathlib import Path
+
+
+validate_path = Path(".github/workflows/validate.yml")
+validate = validate_path.read_text(encoding="utf-8")
+
+start_marker = "  workspace-affected-tests:\n"
+end_marker = "  workflow-operating-model:\n"
+start = validate.index(start_marker)
+end = validate.index(end_marker, start)
+
+workspace_jobs = '''  workspace-plan:
+    name: workspace-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: pr-change-classifier
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.workspace_affected == 'true'
+    outputs:
+      full_suite: ${{ steps.plan.outputs.full_suite }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install workspace planner
+        run: pip install -e ".[dev]"
+      - name: Validate workspace and calculate affected components
+        id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          python -m tools.openva.workspace validate
+          python -m tools.openva.workspace plan \
+            --base-ref "$BASE_SHA" \
+            --head-ref "$HEAD_SHA" \
+            --pretty > "$RUNNER_TEMP/workspace-plan.json"
+          cat "$RUNNER_TEMP/workspace-plan.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          full_suite = 'true' if plan['full_suite'] else 'false'
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              handle.write(f"full_suite={full_suite}\\n")
+          PY
+          {
+            echo "### Workspace affected-test plan"
+            echo '```json'
+            cat "$RUNNER_TEMP/workspace-plan.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  workspace-component-tests:
+    name: workspace-component-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - pr-change-classifier
+      - workspace-plan
+    if: >-
+      always() &&
+      github.event_name == 'pull_request' &&
+      needs.pr-change-classifier.outputs.workspace_affected == 'true' &&
+      needs.workspace-plan.result == 'success' &&
+      needs.workspace-plan.outputs.full_suite != 'true'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install workspace planner
+        run: pip install -e ".[dev]"
+      - name: Recalculate targeted workspace plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          python -m tools.openva.workspace validate
+          python -m tools.openva.workspace plan \
+            --base-ref "$BASE_SHA" \
+            --head-ref "$HEAD_SHA" \
+            --pretty > "$RUNNER_TEMP/workspace-plan.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          if plan['full_suite']:
+              raise SystemExit('targeted workspace lane received a full-suite plan')
+          PY
+      - name: Install affected local dependency chain
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          for path in plan['install_paths']:
+              target = path
+              if path in {'services/openva_match_service', 'integrations/mcp/openva_mcp'}:
+                  target = f"{path}[dev]"
+              subprocess.run([sys.executable, '-m', 'pip', 'install', '-e', target], check=True)
+          PY
+      - name: Run affected Python tests
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          subprocess.run([sys.executable, '-m', 'pytest', '-q', *plan['test_paths']], check=True)
+          PY
+
+  workspace-affected-tests:
+    name: workspace-affected-tests
+    runs-on: ubuntu-latest
+    needs:
+      - pr-change-classifier
+      - workspace-plan
+      - workspace-component-tests
+      - full-regression-shards
+    if: >-
+      always() &&
+      github.event_name == 'pull_request' &&
+      needs.pr-change-classifier.outputs.workspace_affected == 'true'
+    steps:
+      - name: Verify delegated workspace validation
+        env:
+          PLAN_RESULT: ${{ needs.workspace-plan.result }}
+          FULL_SUITE: ${{ needs.workspace-plan.outputs.full_suite }}
+          COMPONENT_RESULT: ${{ needs.workspace-component-tests.result }}
+          SHARDS_RESULT: ${{ needs.full-regression-shards.result }}
+        run: |
+          set -euo pipefail
+          if [ "$PLAN_RESULT" != "success" ]; then
+            echo "workspace plan did not succeed: $PLAN_RESULT" >&2
+            exit 1
+          fi
+          if [ "$FULL_SUITE" = "true" ]; then
+            if [ "$SHARDS_RESULT" != "success" ]; then
+              echo "full-suite workspace plan requires successful regression shards; result=$SHARDS_RESULT" >&2
+              exit 1
+            fi
+            echo "Full-suite plan validated by parallel regression shards."
+          else
+            if [ "$COMPONENT_RESULT" != "success" ]; then
+              echo "targeted workspace plan requires successful component tests; result=$COMPONENT_RESULT" >&2
+              exit 1
+            fi
+            echo "Targeted plan validated by component-scoped tests."
+          fi
+
+'''
+validate = validate[:start] + workspace_jobs + validate[end:]
+
+old_shard_header = '''  full-regression-shards:
+    name: full-regression-shards (${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+'''
+new_shard_header = '''  full-regression-shards:
+    name: full-regression-shards (${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    needs:
+      - pr-change-classifier
+      - workspace-plan
+    if: >-
+      always() &&
+      (
+        github.event_name != 'pull_request' ||
+        (
+          needs.pr-change-classifier.outputs.workspace_affected == 'true' &&
+          needs.workspace-plan.result == 'success' &&
+          needs.workspace-plan.outputs.full_suite == 'true'
+        )
+      )
+'''
+if old_shard_header not in validate:
+    raise SystemExit("full-regression-shards header not found")
+validate = validate.replace(old_shard_header, new_shard_header, 1)
+
+test_anchor = "          tests/test_workflow_operating_model.py\n"
+if validate.count(test_anchor) != 2:
+    raise SystemExit(f"unexpected workflow test anchor count: {validate.count(test_anchor)}")
+validate = validate.replace(
+    test_anchor,
+    test_anchor + "          tests/test_workflow_workspace_ci.py\n",
+)
+validate_path.write_text(validate, encoding="utf-8")
+
+Path("tests/test_workflow_workspace_ci.py").write_text('''from pathlib import Path
+
+import yaml
+
+
+VALIDATE = Path(".github/workflows/validate.yml")
+WORKSPACE_DOC = Path("docs/operations/OPENVA_WORKSPACE.md")
+OWNERSHIP = Path(".github/validation-ownership.yaml")
+
+
+def load_validate() -> dict:
+    return yaml.safe_load(VALIDATE.read_text(encoding="utf-8"))
+
+
+def test_workspace_required_context_is_a_delegating_aggregator() -> None:
+    workflow = load_validate()
+    job = workflow["jobs"]["workspace-affected-tests"]
+
+    assert workflow["permissions"] == {"contents": "read"}
+    assert job["needs"] == [
+        "pr-change-classifier",
+        "workspace-plan",
+        "workspace-component-tests",
+        "full-regression-shards",
+    ]
+    assert "always()" in job["if"]
+    assert "workspace_affected == 'true'" in job["if"]
+    text = VALIDATE.read_text(encoding="utf-8")
+    assert "Full-suite plan validated by parallel regression shards." in text
+    assert "Targeted plan validated by component-scoped tests." in text
+
+
+def test_workspace_plan_uses_full_history_and_real_pr_base_head() -> None:
+    workflow = load_validate()
+    job = workflow["jobs"]["workspace-plan"]
+    text = VALIDATE.read_text(encoding="utf-8")
+
+    assert job["needs"] == "pr-change-classifier"
+    assert job["outputs"]["full_suite"] == "${{ steps.plan.outputs.full_suite }}"
+    checkout = next(step for step in job["steps"] if step.get("uses") == "actions/checkout@v5")
+    assert checkout["with"]["fetch-depth"] == 0
+    assert "github.event.pull_request.base.sha" in text
+    assert "github.event.pull_request.head.sha" in text
+    assert "python -m tools.openva.workspace validate" in text
+    assert "python -m tools.openva.workspace plan" in text
+    assert "workspace-plan.json" in text
+
+
+def test_component_lane_installs_and_runs_only_non_full_suite_plans() -> None:
+    workflow = load_validate()
+    job = workflow["jobs"]["workspace-component-tests"]
+    text = VALIDATE.read_text(encoding="utf-8")
+
+    assert job["needs"] == ["pr-change-classifier", "workspace-plan"]
+    assert "full_suite != 'true'" in job["if"]
+    assert "targeted workspace lane received a full-suite plan" in text
+    assert "plan['install_paths']" in text
+    assert "plan['test_paths']" in text
+    assert "subprocess.run([sys.executable, '-m', 'pytest', '-q'" in text
+
+
+def test_full_suite_plans_use_parallel_shards_on_prs_and_main() -> None:
+    workflow = load_validate()
+    job = workflow["jobs"]["full-regression-shards"]
+
+    assert job["needs"] == ["pr-change-classifier", "workspace-plan"]
+    assert "github.event_name != 'pull_request'" in job["if"]
+    assert "needs.workspace-plan.outputs.full_suite == 'true'" in job["if"]
+    assert job["strategy"]["fail-fast"] is False
+    assert len(job["strategy"]["matrix"]["include"]) == 6
+
+
+def test_workspace_lane_is_registered_as_a_required_owned_context() -> None:
+    ownership = yaml.safe_load(OWNERSHIP.read_text(encoding="utf-8"))
+
+    assert "validate / workspace-affected-tests" in ownership["required_status_contexts"]
+    job = ownership["jobs"]["workspace-affected-tests"]
+    assert job["owner_loop"] == "workspace_control_plane"
+    assert "tools/openva/workspace.py" in job["protects"]
+    assert "tools/openva/workspace.yaml" in job["protects"]
+    assert "site/**" not in job["protects"]
+
+
+def test_workspace_validation_remains_within_existing_validate_authority() -> None:
+    jobs = set(load_validate()["jobs"])
+
+    assert {
+        "repository-integrity",
+        "workflow-operating-model",
+        "catalog-growth",
+        "source-maintenance",
+        "catalog-quality",
+        "release-site",
+        "mcp-integration",
+        "google-sheets-integration",
+        "workspace-plan",
+        "workspace-component-tests",
+        "full-regression-shards",
+        "workspace-affected-tests",
+    } <= jobs
+
+
+def test_workspace_operating_model_documents_delegated_execution() -> None:
+    text = WORKSPACE_DOC.read_text(encoding="utf-8")
+
+    assert "single validation authority" in text
+    assert "required status aggregator" in text
+    assert "component-scoped tests" in text
+    assert "parallel regression shards" in text
+    assert "Google Sheets JavaScript tests remain in the dedicated Node lane" in text
+    assert "does not remove a regression boundary" in text
+''', encoding="utf-8")
+
+Path("docs/operations/OPENVA_WORKSPACE.md").write_text('''# OpenVA workspace operating model
+
+OpenVA is maintained as a **single-product, multi-component repository**. The workspace control plane adds package awareness and dependency-aware validation without introducing Nx, Turborepo, Pants, Bazel, or another external monorepo framework.
+
+## Authority and boundaries
+
+- `tools/openva/workspace.yaml` is the component and dependency manifest.
+- `tools/openva/workspace.py` validates the manifest and calculates affected components.
+- `.github/workflows/validate.yml` remains the single validation authority.
+- `workspace-affected-tests` remains the required status aggregator for workspace validation.
+- Component-scoped plans run only the selected Python tests and install only their dependency chain.
+- Full-suite plans are delegated to the existing parallel regression shards rather than a second monolithic `pytest tests` invocation.
+- Shared catalog, schema, generated-contract, and core-tool changes continue to fail safe to full regression coverage whenever the workspace planner is activated.
+- Files that are not owned by a declared component continue to fail safe to full regression coverage.
+- Google Sheets JavaScript tests remain in the dedicated Node lane; the workspace Python plan does not send `.mjs` files to pytest.
+
+## Component model
+
+The manifest identifies:
+
+- shared catalog and schema contracts;
+- root OpenVA tooling;
+- the pack reader;
+- CSV, JSONL, and SQLite exporters;
+- the vendor inventory matcher;
+- the HTTP match service;
+- the MCP integration;
+- the browser site;
+- the Google Sheets integration;
+- operational-ledger governance;
+- distribution-positioning contracts;
+- hosted-deployment contracts;
+- repository and workflow controls.
+
+Dependencies are directional. A change to a dependency affects its reverse dependents. For example, a pack-reader change affects exporters, the matcher, MCP, the match service, Google Sheets, and hosted-deployment contract validation. A leaf MCP change remains MCP-scoped but still installs the pack reader and matcher first.
+
+Specialised governance suites retain their own ownership. A change to `validate.yml` runs workflow and scope-policy checks, but does not pull unrelated hosted-deployment or product-positioning drift suites. Those suites still run when their corresponding source, workflow, schema, or documentation surfaces change.
+
+## Pull-request execution
+
+Pull-request workspace validation has three stages:
+
+1. `workspace-plan` checks out full history, validates the manifest, compares the pull-request base and head, and publishes a machine-readable plan.
+2. A non-full-suite plan runs through `workspace-component-tests`, which installs affected packages in dependency order and executes only the selected tests.
+3. A full-suite plan runs through the six `full-regression-shards` in parallel. The shards install MCP or match-service dependencies only where required.
+
+The `workspace-affected-tests` required status aggregator succeeds only when the selected execution path succeeds. It preserves the existing protected context while removing the duplicate monolithic full-suite job.
+
+Pushes to `main` continue to run the same full regression shards.
+
+## Conservative fallback
+
+The planner selects full regression coverage when:
+
+- no changed files are supplied;
+- a changed file is not owned by any component;
+- a shared contract or core-tool component is affected;
+- the manifest cannot produce a valid targeted plan.
+
+A planner error fails the required aggregator. It never silently skips validation.
+
+## Acceptance
+
+Implementation acceptance requires:
+
+- manifest validation passes;
+- dependency ordering and reverse-dependent tests pass;
+- a leaf-package fixture produces a targeted plan;
+- a shared-contract fixture produces a full-suite plan;
+- targeted plans run component-scoped tests;
+- full-suite plans run parallel regression shards on pull requests;
+- the required workspace status reflects the delegated path result;
+- existing validation and governance checks remain green.
+
+This rationalization removes duplicate execution but does not remove a regression boundary. Retiring specialised validation lanes remains a separate decision requiring measured evidence.
+''', encoding="utf-8")
+
+Path(".github/tmp_apply_ci_rationalization.py").unlink()
+Path(".github/workflows/tmp-ci-sharded-workspace-validation.yml").unlink()
