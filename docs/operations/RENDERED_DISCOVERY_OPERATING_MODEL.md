@@ -3,7 +3,7 @@
 ## Status separation
 
 - **Worker implementation:** merged through PR #729. The detector, offline browser boundary, rendered shard runner, differential metrics, and focused tests are present on `main`.
-- **Scheduled deployment:** this work package installs the Playwright Python binding and selects the rendered shard runner in `discovery-mesh.yml`.
+- **Scheduled deployment:** merged through PR #730. The daily Discovery Mesh selects the rendered shard runner and retains the static lane as its primary path.
 - **Live acceptance:** remains open until an actual workflow run records the rendered differential described below. Green repository checks establish implementation correctness; they do not establish production yield.
 
 ## Purpose
@@ -60,6 +60,8 @@ A merge to `main` that changes the discovery workflow or rendered-discovery work
 
 The smoke limit is not a catalog breadth policy. Daily scheduled runs and ordinary manual runs continue to use the configured full-catalog shard matrix with no scheduled vendor limit. The push smoke exists only to verify a newly merged crawler deployment in the hosted runner environment.
 
+When the push smoke reaches the aggregate acceptance boundary, it resolves the pull request associated with the merge commit and posts a durable evidence comment containing the run ID, commit SHA, health status, diagnostic profile, artifact name, mutation posture, and complete rendered differential. The comment uses the workflow's existing pull-request authority and does not add another workflow or repository mutation path.
+
 ## Live acceptance gates
 
 The read-only post-merge smoke establishes hosted deployment acceptance when all of the following are recorded:
@@ -71,7 +73,7 @@ The read-only post-merge smoke establishes hosted deployment acceptance when all
 5. The report contains all declared counters and posture fields.
 6. Browser direct-network posture remains false and rendered signals remain noncanonical.
 7. Candidate-intake preparation is skipped for the push event.
-8. The acceptance record cites the workflow run ID, commit SHA, differential artifact, and totals.
+8. The acceptance evidence is posted to the associated merged pull request with the workflow run ID, commit SHA, differential artifact, and totals.
 
 Full-catalog production acceptance remains distinct and requires a scheduled or manually dispatched uncapped run:
 

@@ -327,6 +327,57 @@ jobs:
           cat "$HEALTH_MD" >> "$GITHUB_STEP_SUMMARY"
       - name: Validate staged candidate intake
         run: python -m tools.openva.validate validate
+      - name: Publish read-only deployment smoke evidence
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEALTH_STATUS: ${{ steps.health.outputs.health_status }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls" \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No pull request is associated with merge commit ${GITHUB_SHA}; smoke evidence remains in artifacts."
+            exit 0
+          fi
+          DIFFERENTIAL="reports/discovery-mesh/rendered-discovery-differential.json"
+          BODY_FILE="$RUNNER_TEMP/rendered-discovery-smoke.md"
+          python - "$DIFFERENTIAL" "$BODY_FILE" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          differential = report.get("differential") or {}
+          lines = [
+              "## Rendered discovery hosted smoke",
+              "",
+              "The read-only post-merge deployment smoke completed in the GitHub-hosted runner.",
+              "",
+              f"- Run: `{os.environ['GITHUB_RUN_ID']}` (attempt `{os.environ['GITHUB_RUN_ATTEMPT']}`)",
+              f"- Commit: `{os.environ['GITHUB_SHA']}`",
+              "- Profile: `1 shard / 25-vendor diagnostic limit`",
+              f"- Health status: `{os.environ.get('HEALTH_STATUS', 'unknown')}`",
+              "- Candidate-intake mutation: `skipped for push smoke`",
+              f"- Artifact: `openva-discovery-mesh-aggregate`",
+              "",
+              "### Static-to-rendered differential",
+              "",
+          ]
+          for key, value in differential.items():
+              lines.append(f"- {key}: `{json.dumps(value, sort_keys=True) if isinstance(value, dict) else value}`")
+          lines.extend(
+              [
+                  "",
+                  "This accepts the hosted deployment path only. Full-catalog production acceptance remains separate and requires an uncapped scheduled or manually dispatched run.",
+              ]
+          )
+          Path(sys.argv[2]).write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+          gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"
       - name: Prepare exact intake branch
         if: github.event_name != 'push'
         id: intake
