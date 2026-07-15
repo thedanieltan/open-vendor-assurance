@@ -1,4 +1,3 @@
-
 import json
 import runpy
 from pathlib import Path
@@ -107,7 +106,7 @@ def test_site_projection_and_export_contract_preserve_attribution():
         assert f'"{field}": "TEXT"' in sqlite_exporter
 
 
-def test_source_maintenance_workflow_publishes_attribution_audit():
-    workflow = (ROOT / ".github/workflows/source-maintenance-report.yml").read_text(encoding="utf-8")
+def test_coverage_audit_workflow_publishes_attribution_audit():
+    workflow = (ROOT / ".github/workflows/coverage-audit.yml").read_text(encoding="utf-8")
     assert "python -m tools.openva.source_attribution audit" in workflow
     assert "source-attribution-audit.json" in workflow
