@@ -443,6 +443,7 @@ class PlaywrightRenderer:
                 context = browser.new_context(
                     accept_downloads=False,
                     java_script_enabled=True,
+                    offline=True,
                     service_workers="block",
                 )
                 context.route("**/*", handle)
