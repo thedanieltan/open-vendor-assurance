@@ -1,0 +1,93 @@
+name: tmp-pr716-sync-diagnose
+
+on:
+  push:
+    branches:
+      - agent/source-attribution-applicability
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: tmp-pr716-sync-diagnose-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-and-diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Merge current main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit origin/main
+          git push origin HEAD:agent/source-attribution-applicability
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install workspace
+        run: pip install -e ".[dev]"
+      - name: Build affected-test plan
+        run: |
+          set -euo pipefail
+          python -m tools.openva.workspace validate
+          python -m tools.openva.workspace plan \
+            --base-ref origin/main \
+            --head-ref HEAD \
+            --pretty > "$RUNNER_TEMP/workspace-plan.json"
+          cat "$RUNNER_TEMP/workspace-plan.json"
+      - name: Install affected dependency chain
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          import os
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          for path in plan['install_paths']:
+              target = path
+              if path in {'services/openva_match_service', 'integrations/mcp/openva_mcp'}:
+                  target = f"{path}[dev]"
+              subprocess.run([sys.executable, '-m', 'pip', 'install', '-e', target], check=True)
+          PY
+      - name: Run affected tests and post diagnostics
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python - <<'PY' > "$RUNNER_TEMP/pytest-output.txt" 2>&1
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          import os
+
+          plan = json.loads(Path(os.environ['RUNNER_TEMP'], 'workspace-plan.json').read_text(encoding='utf-8'))
+          raise SystemExit(subprocess.run([sys.executable, '-m', 'pytest', '-q', *plan['test_paths']]).returncode)
+          PY
+          STATUS=$?
+          set -e
+          {
+            echo "## PR #716 workspace diagnostic"
+            echo
+            echo "Branch was merged with current main before this run."
+            echo
+            echo '```text'
+            tail -n 240 "$RUNNER_TEMP/pytest-output.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/comment.md"
+          gh pr comment 716 --repo thedanieltan/open-vendor-assurance --body-file "$RUNNER_TEMP/comment.md"
+          cat "$RUNNER_TEMP/pytest-output.txt"
+          exit "$STATUS"
