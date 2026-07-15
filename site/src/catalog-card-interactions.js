@@ -1,5 +1,5 @@
 (() => {
-  const CATALOG_CARD_INTERACTIONS_VERSION = "responsive-card-sheet-v1";
+  const CATALOG_CARD_INTERACTIONS_VERSION = "explicit-view-links-v2";
   const baseRenderCatalog = renderCatalog;
   const baseRenderVendorDetail = renderVendorDetail;
 
@@ -35,23 +35,61 @@
     .vendor-card > label {
       display: none !important;
     }
-    .vendor-card h4 {
-      display: flex !important;
-      align-items: flex-start !important;
-      justify-content: space-between !important;
-      gap: .65rem !important;
+    .vendor-card > :not(.vendor-card__select-hit) {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
     }
-    .vendor-card h4 button {
-      position: static !important;
-      min-width: 0 !important;
-      max-width: calc(100% - 5.75rem) !important;
+    .vendor-card h4 {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      align-items: flex-start !important;
+      gap: .75rem !important;
+    }
+    .vendor-card__name {
+      min-width: 0;
       overflow-wrap: anywhere;
     }
-    .vendor-card h4 button::after {
-      content: "";
+    .vendor-card__header-actions {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: .45rem;
+      pointer-events: none;
+    }
+    .vendor-card__view-links {
+      position: relative !important;
+      z-index: 4 !important;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      min-width: 0 !important;
+      min-height: 2.55rem !important;
+      max-width: none !important;
+      padding: .48rem .72rem !important;
+      white-space: nowrap;
+      pointer-events: auto !important;
+    }
+    .vendor-card__select-hit {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 1;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: inherit;
+      padding: 0 !important;
+      overflow: hidden;
+      appearance: none;
+      background: transparent !important;
+      color: transparent;
+      font-size: 0;
+      cursor: pointer;
     }
     .vendor-card .meta-line,
     .vendor-card .pill-row,
@@ -79,7 +117,8 @@
       background: color-mix(in oklch, var(--donor-brand, #3456a5) 12%, var(--donor-surface, #fff));
       color: var(--donor-brand, #3456a5);
     }
-    .vendor-card:has(h4 button:focus-visible) {
+    .vendor-card:has(.vendor-card__select-hit:focus-visible),
+    .vendor-card:has(.vendor-card__view-links:focus-visible) {
       outline: 2px solid var(--donor-ring, #4667b2) !important;
       outline-offset: 2px !important;
     }
@@ -185,6 +224,9 @@
         border-radius: 0 !important;
         padding: .9rem 1rem !important;
       }
+      .vendor-card__view-links {
+        min-height: 2.75rem !important;
+      }
       .vendor-reference-card {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -206,13 +248,13 @@
         border-radius: 0 !important;
       }
       .vendor-card h4 {
-        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
       }
-      .vendor-card h4 button {
-        max-width: 100% !important;
+      .vendor-card__header-actions {
+        justify-content: space-between;
       }
-      .vendor-card__selection-state {
-        width: fit-content;
+      .vendor-card__view-links {
+        flex: 0 0 auto;
       }
     }
     @supports not (overflow: clip) {
@@ -222,40 +264,71 @@
   `;
   document.head.appendChild(style);
 
-  function selectionState(card, checkbox, button) {
+  function selectionState(card, checkbox, selectionButton, vendorName) {
     const selected = Boolean(checkbox && checkbox.checked);
     card.classList.toggle("is-selected", selected);
-    button.setAttribute("aria-pressed", String(selected));
-    const vendorName = button.textContent.trim();
-    button.setAttribute(
+    selectionButton.setAttribute("aria-pressed", String(selected));
+    selectionButton.setAttribute(
       "aria-label",
       selected
-        ? `Remove ${vendorName} from the public metadata export and view its public links`
-        : `Select ${vendorName} public metadata and view its public links`,
+        ? `Remove ${vendorName} from the public metadata export`
+        : `Select ${vendorName} public metadata`,
     );
-    let state = card.querySelector(".vendor-card__selection-state");
-    if (!state) {
-      state = document.createElement("span");
-      state.className = "vendor-card__selection-state";
-      button.insertAdjacentElement("afterend", state);
-    }
-    state.textContent = selected ? "Selected" : "Select";
+    const state = card.querySelector(".vendor-card__selection-state");
+    if (state) state.textContent = selected ? "Selected" : "Select";
+  }
+
+  function buildCardControls(card, detailButton) {
+    const heading = detailButton.closest("h4");
+    const vendorName = detailButton.textContent.trim();
+    if (!heading || !vendorName) return null;
+
+    const name = document.createElement("span");
+    name.className = "vendor-card__name";
+    name.textContent = vendorName;
+
+    const actions = document.createElement("span");
+    actions.className = "vendor-card__header-actions";
+
+    const state = document.createElement("span");
+    state.className = "vendor-card__selection-state";
+    state.setAttribute("aria-hidden", "true");
+
+    detailButton.classList.add("vendor-card__view-links");
+    detailButton.textContent = "View links";
+    detailButton.setAttribute("aria-label", `View public links for ${vendorName}`);
+
+    actions.append(state, detailButton);
+    heading.replaceChildren(name, actions);
+
+    const selectionButton = document.createElement("button");
+    selectionButton.type = "button";
+    selectionButton.className = "vendor-card__select-hit";
+    selectionButton.textContent = `Select ${vendorName}`;
+    card.prepend(selectionButton);
+
+    return { selectionButton, vendorName };
   }
 
   function enhanceVendorCard(card) {
     if (!card || card.dataset.cardInteractionEnhanced === "true") return;
     const checkbox = card.querySelector("[data-select-vendor]");
-    const button = card.querySelector("[data-open-vendor]");
-    if (!checkbox || !button) return;
+    const detailButton = card.querySelector("[data-open-vendor]");
+    if (!checkbox || !detailButton) return;
+
+    const controls = buildCardControls(card, detailButton);
+    if (!controls) return;
 
     card.dataset.cardInteractionEnhanced = "true";
-    button.addEventListener("click", () => {
+    controls.selectionButton.addEventListener("click", () => {
       checkbox.checked = !checkbox.checked;
       checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-      selectionState(card, checkbox, button);
-    }, true);
-    checkbox.addEventListener("change", () => selectionState(card, checkbox, button));
-    selectionState(card, checkbox, button);
+      selectionState(card, checkbox, controls.selectionButton, controls.vendorName);
+    });
+    checkbox.addEventListener("change", () => {
+      selectionState(card, checkbox, controls.selectionButton, controls.vendorName);
+    });
+    selectionState(card, checkbox, controls.selectionButton, controls.vendorName);
   }
 
   function enhanceVendorCards() {
