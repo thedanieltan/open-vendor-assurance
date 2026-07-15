@@ -97,6 +97,41 @@ def test_adapters_agree_for_shared_evidence_inputs():
         assert _csv_decision(index, row) == _mcp_decision(vendor_rows, row), row
 
 
+def test_unique_exact_product_domain_outranks_parent_domain_candidate():
+    pack = SyntheticPack(
+        [
+            synthetic_vendor("google-cloud", "Google Cloud", ["google.example", "cloud.google.example"]),
+            synthetic_vendor(
+                "google-workspace",
+                "Google Workspace",
+                ["google.example", "workspace.google.example"],
+            ),
+        ]
+    )
+    index = matcher.MatcherIndex.from_pack(pack)
+    vendor_rows = _mcp_rows(pack)
+
+    for row, expected_vendor in (
+        ({"domain": "cloud.google.example"}, "google-cloud"),
+        ({"domain": "workspace.google.example"}, "google-workspace"),
+    ):
+        csv_decision = _csv_decision(index, row)
+        assert csv_decision == _mcp_decision(vendor_rows, row)
+        assert csv_decision[:4] == ("matched", expected_vendor, 1.0, "domain_exact")
+
+
+def test_competing_exact_domain_claims_remain_ambiguous():
+    vendors = [
+        core.vendor_record(synthetic_vendor("shared-a", "Shared A", ["shared.example"])),
+        core.vendor_record(synthetic_vendor("shared-b", "Shared B", ["shared.example"])),
+    ]
+    candidates = core.match_candidates(vendors, "shared.example", "")
+
+    assert [candidate.method for candidate in candidates] == ["domain_exact", "domain_exact"]
+    assert core.select_match(candidates) is None
+    assert core.classify(candidates, None) == "ambiguous"
+
+
 def test_legal_entity_resolution_uses_the_shared_core():
     pack = SyntheticPack.with_legal_entities()
     index = matcher.MatcherIndex.from_pack(pack)
