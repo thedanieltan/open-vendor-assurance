@@ -70,4 +70,20 @@ new_workspace = '''  workspace-plan:
 '''
 if old_workspace not in text:
     raise SystemExit('existing workspace ownership block not found')
-path.write_text(text.replace(old_workspace, new_workspace, 1), encoding='utf-8')
+text = text.replace(old_workspace, new_workspace, 1)
+
+old_workflow_command = (
+    '      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py '
+    'tests/test_workflow_retirement_evidence.py tests/test_future_operations_specs.py '
+    'tests/test_workflow_contracts.py\n'
+)
+new_workflow_command = (
+    '      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py '
+    'tests/test_workflow_workspace_ci.py tests/test_workflow_retirement_evidence.py '
+    'tests/test_future_operations_specs.py tests/test_workflow_contracts.py\n'
+)
+if old_workflow_command not in text:
+    raise SystemExit('workflow operating-model ownership command not found')
+text = text.replace(old_workflow_command, new_workflow_command, 1)
+
+path.write_text(text, encoding='utf-8')
