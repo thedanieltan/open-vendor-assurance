@@ -1,6 +1,8 @@
 name: coverage-audit
 
 on:
+  pull_request:
+    types: [synchronize]
   workflow_dispatch:
   schedule:
     - cron: "23 4 * * 1"
@@ -14,7 +16,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  diagnose-validator:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Capture validator output
+        run: |
+          set +e
+          python -m tools.openva.validate validate > validator-diagnostic.log 2>&1
+          status=$?
+          cat validator-diagnostic.log
+          printf '\nexit_status=%s\n' "$status" >> validator-diagnostic.log
+          exit 0
+      - name: Upload validator diagnostic
+        uses: actions/upload-artifact@v6
+        with:
+          name: source-attribution-validator-diagnostic
+          path: validator-diagnostic.log
+          if-no-files-found: error
+          retention-days: 1
+
   coverage-audit:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
