@@ -11,3 +11,22 @@ def test_rendered_discovery_has_per_vendor_and_per_page_safety_bounds() -> None:
     assert config.RENDER_MAX_HTML_BYTES <= config.RENDER_MAX_BYTES_PER_PAGE
     assert config.RENDER_TIMEOUT_MS > config.RENDER_SETTLE_MS > 0
     assert config.CATALOG_VENDOR_LIMIT is None
+
+
+def test_push_smoke_uses_separate_small_runtime_bounds() -> None:
+    smoke = config.runtime_bounds("push")
+    production = config.runtime_bounds("schedule")
+
+    assert smoke == config.DEPLOYMENT_SMOKE_BOUNDS
+    assert production == config.PRODUCTION_BOUNDS
+    assert smoke["max_pages_per_vendor"] < production["max_pages_per_vendor"]
+    assert smoke["max_total_requests_per_vendor"] < production["max_total_requests_per_vendor"]
+    assert smoke["fetch_timeout_seconds"] < production["fetch_timeout_seconds"]
+    assert smoke["render_max_pages_per_vendor"] < production["render_max_pages_per_vendor"]
+
+
+def test_manual_scheduled_and_local_execution_keep_production_bounds() -> None:
+    assert config.runtime_bounds("workflow_dispatch") == config.PRODUCTION_BOUNDS
+    assert config.runtime_bounds("schedule") == config.PRODUCTION_BOUNDS
+    assert config.runtime_bounds("") == config.PRODUCTION_BOUNDS
+    assert config.CATALOG_VENDOR_LIMIT is None
