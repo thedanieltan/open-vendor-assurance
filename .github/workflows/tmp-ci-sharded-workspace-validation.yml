@@ -1,9 +1,8 @@
 name: tmp-ci-sharded-workspace-validation
 
 on:
-  push:
-    branches:
-      - agent/ci-sharded-workspace-validation
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
@@ -14,11 +13,12 @@ concurrency:
 
 jobs:
   apply:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/ci-sharded-workspace-validation' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
+          ref: agent/ci-sharded-workspace-validation
           fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
