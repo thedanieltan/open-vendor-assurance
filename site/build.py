@@ -141,10 +141,31 @@ def _validate_catalog_donor_alignment() -> None:
         )
 
 
+def _validate_resolver_source_availability() -> None:
+    """Keep resolver choices tied to source types present in the current snapshot."""
+    source_path = Path(__file__).with_name("src") / "resolver-source-availability.js"
+    source = source_path.read_text(encoding="utf-8")
+    required_tokens = (
+        'RESOLVER_SOURCE_AVAILABILITY_VERSION = "catalog-snapshot-v1"',
+        'fetch("data/source-types.json", { cache: "no-store" })',
+        ".filter((sourceType) => Number(counts[sourceType] || 0) > 0)",
+        "browserResultPackRow = availabilityAwareResultPackRow;",
+        "a blank download cell means no indexed URL for that vendor and source type",
+        "Defined by the schema but not currently indexed:",
+    )
+    missing = [token for token in required_tokens if token not in source]
+    if missing:
+        raise ValueError(
+            "resolver source-availability contract is incomplete: "
+            + ", ".join(repr(token) for token in missing)
+        )
+
+
 def render_index_html(template: str, config: Any) -> str:
     """Load focused public interaction layers after the existing site runtime."""
     _validate_catalog_card_interactions()
     _validate_catalog_donor_alignment()
+    _validate_resolver_source_availability()
     page = _ORIGINAL_RENDER_INDEX_HTML(template, config)
     marker = '    <script src="ui-fixes.js?v=20260713-phase2"></script>'
     replacement = (
@@ -153,6 +174,7 @@ def render_index_html(template: str, config: Any) -> str:
         '    <script src="catalog-card-interactions.js?v=20260715-explicit-view-links"></script>\n'
         '    <script src="catalog-donor-alignment.js?v=20260715-trusty-vendor-scan"></script>\n'
         + marker
+        + '\n    <script src="resolver-source-availability.js?v=20260715-catalog-snapshot"></script>'
     )
     if marker not in page:
         raise ValueError("could not locate the public interaction script insertion point")
