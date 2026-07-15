@@ -18,6 +18,14 @@ def test_scheduled_mesh_uses_selective_rendered_discovery_without_browser_downlo
     assert "tools.openva.discovery_mesh_runner shard" not in text
 
 
+def test_hosted_smoke_executes_real_chromium_security_fixtures() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "test_playwright_renderer_executes_javascript_through_intercepted_fetcher" in text
+    assert "test_renderer_blocks_off_authority_requests" in text
+    assert 'OPENVA_CHROMIUM_EXECUTABLE="$CHROMIUM" pytest -q' in text
+
+
 def test_scheduled_mesh_resolves_finite_render_bounds_without_catalog_cap() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
@@ -38,9 +46,15 @@ def test_relevant_main_push_runs_bounded_read_only_deployment_smoke() -> None:
     assert "push:" in text
     assert 'branches: [main]' in text
     assert 'REQUESTED_SHARD_COUNT: "${{ github.event_name == \'push\' && \'1\'' in text
-    assert 'REQUESTED_VENDOR_LIMIT: "${{ github.event_name == \'push\' && \'25\'' in text
+    assert 'REQUESTED_VENDOR_LIMIT: "${{ github.event_name == \'push\' && \'5\'' in text
     assert "if: github.event_name != 'push'" in text
     assert "scheduled discovery mesh must not define a catalog vendor cap" in text
+
+
+def test_new_push_smoke_supersedes_stale_push_smoke_runs() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "cancel-in-progress: ${{ github.event_name == 'push' }}" in text
 
 
 def test_push_smoke_publishes_acceptance_evidence_to_its_merge_pr() -> None:
@@ -50,6 +64,7 @@ def test_push_smoke_publishes_acceptance_evidence_to_its_merge_pr() -> None:
     assert 'if: github.event_name == \'push\'' in text
     assert '"repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls"' in text
     assert "Rendered discovery hosted smoke" in text
+    assert "1 shard / 5-vendor diagnostic limit" in text
     assert "Candidate-intake mutation: `skipped for push smoke`" in text
     assert 'gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"' in text
 
