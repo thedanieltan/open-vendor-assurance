@@ -1,6 +1,9 @@
 name: tmp-pr716-full-suite-diagnostic
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - agent/pr716-full-suite-diagnostic
