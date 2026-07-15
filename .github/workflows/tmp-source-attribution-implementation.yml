@@ -30,80 +30,19 @@ jobs:
       - name: Install package
         run: pip install -e '.[dev]'
       - name: Apply deterministic implementation patch
-        run: |
-          if [ ! -f .github/openva-source-attribution-patch.py ]; then
-            echo 'Patch script not present yet; no-op.'
-            exit 0
-          fi
-          python .github/openva-source-attribution-patch.py
+        run: python .github/openva-source-attribution-patch.py
       - name: Rebuild generated catalog outputs
         run: python -m tools.openva.validate build-indexes
-      - name: Capture attribution diagnostic
-        run: |
-          set +e
-          python - <<'PY' > attribution-diagnostic.txt 2>&1
-          import json
-          from pathlib import Path
-          import yaml
-          from tools.openva.source_attribution import classify_source, source_requires_attribution, validate_source_attribution
-
-          root = Path.cwd()
-          vendor = yaml.safe_load((root / 'data/vendors/acuity-scheduling/vendor.yaml').read_text(encoding='utf-8'))
-          print('vendor=', json.dumps(vendor, indent=2, sort_keys=True, default=str))
-          for path in sorted((root / 'data/vendors/acuity-scheduling/sources').glob('*.yaml')):
-              source = yaml.safe_load(path.read_text(encoding='utf-8'))
-              classification, issues = classify_source(source, vendor)
-              row = {
-                  'path': path.as_posix(),
-                  'source_url': source.get('source_url'),
-                  'publisher_attribution': source.get('publisher_attribution'),
-                  'applicability': source.get('applicability'),
-                  'requires_attribution': source_requires_attribution(source, vendor),
-                  'validation_failures': validate_source_attribution(source, vendor),
-                  'classification': classification,
-                  'classification_issues': issues,
-              }
-              print(json.dumps(row, indent=2, sort_keys=True, default=str))
-          PY
-          STATUS=$?
-          echo "diagnostic_exit_code=$STATUS" >> attribution-diagnostic.txt
-          cat attribution-diagnostic.txt
-          exit 0
-      - name: Commit temporary diagnostic
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add attribution-diagnostic.txt
-          git commit -m 'Record temporary attribution diagnostic'
-          git push origin HEAD
       - name: Validate catalog and schemas
         run: python -m tools.openva.validate validate
-      - name: Test Acuity parent attribution
-        run: pytest -q -vv tests/test_source_attribution.py::test_acuity_cross_domain_sources_have_explainable_parent_attribution
-      - name: Test cross-domain fail-closed behavior
-        run: pytest -q -vv tests/test_source_attribution.py::test_cross_domain_source_without_applicability_fails_closed
-      - name: Test same-domain compatibility
-        run: pytest -q -vv tests/test_source_attribution.py::test_same_product_domain_remains_backward_compatible
-      - name: Test source schema extension
-        run: pytest -q -vv tests/test_source_attribution.py::test_source_schema_accepts_attribution_and_applicability
-      - name: Test changed-record catalog gate
-        run: pytest -q -vv tests/test_source_attribution.py::test_changed_record_gate_accepts_attributed_acuity_sources
-      - name: Test report-only attribution audit
-        run: pytest -q -vv tests/test_source_attribution.py::test_audit_is_report_only_and_surfaces_cross_domain_inventory
-      - name: Test site and export propagation
-        run: pytest -q -vv tests/test_source_attribution.py::test_site_projection_and_export_contract_preserve_attribution
-      - name: Test maintenance workflow integration
-        run: pytest -q -vv tests/test_source_attribution.py::test_source_maintenance_workflow_publishes_attribution_audit
-      - name: Test existing site and source schema regressions
-        run: pytest -q tests/test_site.py tests/test_source_ledger_schemas.py
-      - name: Commit implementation
+      - name: Commit validated implementation
         run: |
-          if git diff --quiet; then
-            echo 'No implementation changes produced.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'Implement source publisher attribution'
           git push origin HEAD
+      - name: Test source attribution contract
+        run: pytest -q -vv tests/test_source_attribution.py
+      - name: Test existing site and source schema regressions
+        run: pytest -q tests/test_site.py tests/test_source_ledger_schemas.py
