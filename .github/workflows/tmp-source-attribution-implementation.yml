@@ -62,15 +62,17 @@ jobs:
                   'classification': classification,
                   'classification_issues': issues,
               })
-          Path('attribution-diagnostic.json').write_text(json.dumps(rows, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-          print(json.dumps(rows, indent=2, sort_keys=True))
+          rendered = json.dumps(rows, indent=2, sort_keys=True, default=str) + '\n'
+          Path('attribution-diagnostic.json').write_text(rendered, encoding='utf-8')
+          print(rendered)
           PY
       - name: Upload attribution diagnostic
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: source-attribution-diagnostic
           path: attribution-diagnostic.json
-          if-no-files-found: error
+          if-no-files-found: warn
       - name: Validate catalog and schemas
         run: python -m tools.openva.validate validate
       - name: Test Acuity parent attribution
