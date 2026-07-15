@@ -280,6 +280,24 @@ work_packages:
       - schemas/openva/resolver-result-pack.schema.json
       - docs/operations/contracts/work-package-scope.yaml
 
+  WP-SOURCE-PUBLISHER-ATTRIBUTION-01:
+    description: Cross-domain source publisher attribution, product-applicability admission, public presentation, exports, catalog-quality audit, and bounded catalog backfill.
+    allowed_paths:
+      - .github/workflows/coverage-audit.yml
+      - adapters/python/openva_csv_export/openva_csv_export/exporter.py
+      - adapters/python/openva_sqlite_export/openva_sqlite_export/exporter.py
+      - data/vendors/*/sources/*.yaml
+      - dist/vendors/*.json
+      - docs/source-publisher-attribution.md
+      - indexes/sources.json
+      - schemas/openva/source-reference.schema.json
+      - site/build_core.py
+      - site/src/app.js
+      - site/src/styles.css
+      - tests/test_source_attribution.py
+      - tools/openva/catalog_guard.py
+      - tools/openva/source_attribution.py
+
   WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
     description: Exact public source-health wording reconciliation surface.
     allowed_paths:
