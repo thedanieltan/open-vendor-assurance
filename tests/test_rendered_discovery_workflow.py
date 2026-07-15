@@ -57,11 +57,27 @@ def test_new_push_smoke_supersedes_stale_push_smoke_runs() -> None:
     assert "cancel-in-progress: ${{ github.event_name == 'push' }}" in text
 
 
+def test_push_smoke_stops_after_rendered_differential_publication() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    production_only_steps = (
+        "Aggregate reports and stage noncanonical candidates",
+        "Replenish stable vendor breadth state",
+        "Build production health and intake decision",
+        "Validate staged candidate intake",
+        "Prepare exact intake branch",
+    )
+    for name in production_only_steps:
+        assert f"- name: {name}\n        if: github.event_name != 'push'" in text
+
+    assert "HEALTH_STATUS: deployment_smoke" in text
+
+
 def test_push_smoke_publishes_acceptance_evidence_to_its_merge_pr() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "Publish read-only deployment smoke evidence" in text
-    assert 'if: github.event_name == \'push\'' in text
+    assert "if: github.event_name == 'push'" in text
     assert '"repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls"' in text
     assert "Rendered discovery hosted smoke" in text
     assert "1 shard / 5-vendor diagnostic limit" in text

@@ -259,6 +259,7 @@ jobs:
               print(f"- {key}: `{value}`")
           PY
       - name: Aggregate reports and stage noncanonical candidates
+        if: github.event_name != 'push'
         run: |
           set -euo pipefail
           RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
@@ -278,6 +279,7 @@ jobs:
             --output "$PLAN_PATH" \
             --viability-report "maintenance/generated/discovery-mesh-promotion-viability-${RUN_KEY}.json"
       - name: Replenish stable vendor breadth state
+        if: github.event_name != 'push'
         run: |
           set -euo pipefail
           RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
@@ -302,6 +304,7 @@ jobs:
             --generated-at "$GENERATED_AT" \
             --root .
       - name: Build production health and intake decision
+        if: github.event_name != 'push'
         id: health
         run: |
           set -euo pipefail
@@ -329,12 +332,13 @@ jobs:
           echo "health_status=$HEALTH_STATUS" >> "$GITHUB_OUTPUT"
           cat "$HEALTH_MD" >> "$GITHUB_STEP_SUMMARY"
       - name: Validate staged candidate intake
+        if: github.event_name != 'push'
         run: python -m tools.openva.validate validate
       - name: Publish read-only deployment smoke evidence
         if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
-          HEALTH_STATUS: ${{ steps.health.outputs.health_status }}
+          HEALTH_STATUS: deployment_smoke
         run: |
           set -euo pipefail
           PR_NUMBER=$(gh api \
