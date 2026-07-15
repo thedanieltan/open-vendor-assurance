@@ -32,6 +32,17 @@ def test_scheduled_mesh_resolves_finite_render_bounds_without_catalog_cap() -> N
     assert "scheduled discovery mesh must not define a catalog vendor cap" in text
 
 
+def test_relevant_main_push_runs_bounded_read_only_deployment_smoke() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "push:" in text
+    assert 'branches: [main]' in text
+    assert 'REQUESTED_SHARD_COUNT: "${{ github.event_name == \'push\' && \'1\'' in text
+    assert 'REQUESTED_VENDOR_LIMIT: "${{ github.event_name == \'push\' && \'25\'' in text
+    assert "if: github.event_name != 'push'" in text
+    assert "scheduled discovery mesh must not define a catalog vendor cap" in text
+
+
 def test_aggregate_publishes_rendered_discovery_differential() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
