@@ -1,0 +1,63 @@
+PR #716 failing-test comparison against current main
+main_commit=fbcc9a9909f238de069ed3d7e2cb04cf5189e78f
+
+===== matcher status=1 =====
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_google_domain_collision_matches_specific_subdomain ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_google_domain_collision_m0')
+
+    def test_google_domain_collision_matches_specific_subdomain(tmp_path):
+        input_path = tmp_path / "vendors.csv"
+        output_path = tmp_path / "matched.csv"
+        write_inventory(
+            input_path,
+            [
+                {"vendor_name": "Google Workspace", "domain": "workspace.google.com", "category": "productivity"},
+                {"vendor_name": "Google Cloud", "domain": "cloud.google.com", "category": "cloud"},
+            ],
+        )
+    
+        match_inventory(".", input_path, output_path)
+    
+        rows = read_csv(output_path)
+        assert rows[0]["match_status"] == "matched"
+        assert rows[0]["matched_vendor_id"] == "google-workspace"
+        assert rows[0]["match_confidence"] == "1.00"
+        assert rows[0]["match_method"] == "domain_exact"
+>       assert rows[1]["match_status"] == "matched"
+E       AssertionError: assert 'ambiguous' == 'matched'
+E         
+E         - matched
+E         + ambiguous
+
+tests/test_openva_vendor_inventory_matcher.py:317: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_openva_vendor_inventory_matcher.py::test_google_domain_collision_matches_specific_subdomain - AssertionError: assert 'ambiguous' == 'matched'
+  
+  - matched
+  + ambiguous
+1 failed in 0.29s
+
+===== discoverability status=1 =====
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_every_vendor_page_retains_original_source_urls ______________
+
+site = PosixPath('/tmp/pytest-of-runner/pytest-1/disco-site0')
+
+    def test_every_vendor_page_retains_original_source_urls(site):
+        index = sources_by_vendor()
+        for vendor_id, urls in index.items():
+            page = (site / "vendors" / vendor_id / "index.html").read_text(encoding="utf-8")
+            for url in urls:
+>               assert url in page, f"{vendor_id} page missing source URL {url}"
+E               AssertionError: cyberark page missing source URL https://trust.cyberark.com/?itemName=certifications&source=click
+E               assert 'https://trust.cyberark.com/?itemName=certifications&source=click' in '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8"><meta name="viewport" content="width=device-wi...>Catalog home</a></li><li><a href="../../agents/">Agent integration</a></li></ul></footer>\n  </div></body>\n</html>\n'
+
+tests/test_discoverability.py:92: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_discoverability.py::test_every_vendor_page_retains_original_source_urls - AssertionError: cyberark page missing source URL https://trust.cyberark.com/?itemName=certifications&source=click
+assert 'https://trust.cyberark.com/?itemName=certifications&source=click' in '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8"><meta name="viewport" content="width=device-wi...>Catalog home</a></li><li><a href="../../agents/">Agent integration</a></li></ul></footer>\n  </div></body>\n</html>\n'
+1 failed in 1.25s
