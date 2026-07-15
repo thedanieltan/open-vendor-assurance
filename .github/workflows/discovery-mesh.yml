@@ -33,7 +33,7 @@ permissions:
 
 concurrency:
   group: discovery-mesh-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   plan:
@@ -80,7 +80,7 @@ jobs:
       max-parallel: 32
       matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     env:
-      REQUESTED_VENDOR_LIMIT: "${{ github.event_name == 'push' && '25' || inputs.vendor_limit || '' }}"
+      REQUESTED_VENDOR_LIMIT: "${{ github.event_name == 'push' && '5' || inputs.vendor_limit || '' }}"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -94,6 +94,9 @@ jobs:
           CHROMIUM="$(command -v chromium)"
           test -x "$CHROMIUM"
           echo "OPENVA_CHROMIUM_EXECUTABLE=$CHROMIUM" >> "$GITHUB_ENV"
+          OPENVA_CHROMIUM_EXECUTABLE="$CHROMIUM" pytest -q \
+            tests/test_rendered_discovery.py::test_playwright_renderer_executes_javascript_through_intercepted_fetcher \
+            tests/test_rendered_discovery.py::test_renderer_blocks_off_authority_requests
       - name: Resolve growth-oriented per-vendor bounds
         run: |
           set -euo pipefail
@@ -359,7 +362,7 @@ jobs:
               "",
               f"- Run: `{os.environ['GITHUB_RUN_ID']}` (attempt `{os.environ['GITHUB_RUN_ATTEMPT']}`)",
               f"- Commit: `{os.environ['GITHUB_SHA']}`",
-              "- Profile: `1 shard / 25-vendor diagnostic limit`",
+              "- Profile: `1 shard / 5-vendor diagnostic limit`",
               f"- Health status: `{os.environ.get('HEALTH_STATUS', 'unknown')}`",
               "- Candidate-intake mutation: `skipped for push smoke`",
               f"- Artifact: `openva-discovery-mesh-aggregate`",
