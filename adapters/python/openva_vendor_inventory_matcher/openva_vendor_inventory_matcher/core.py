@@ -189,6 +189,11 @@ def select_match(candidates: list[MatchCandidate]) -> MatchCandidate | None:
     if len(candidates) == 1:
         return candidates[0]
     first, second = candidates[0], candidates[1]
+    # A unique exact product-domain match is stronger than a broader parent-domain
+    # subdomain candidate. Preserve fail-closed ambiguity when more than one vendor
+    # claims the exact domain or when the leading evidence is otherwise too close.
+    if first.method == "domain_exact" and second.method != "domain_exact":
+        return first
     if first.confidence == second.confidence or first.confidence - second.confidence < AMBIGUITY_MARGIN:
         return None
     return first
