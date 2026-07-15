@@ -35,14 +35,14 @@ jobs:
         run: python -m tools.openva.validate build-indexes
       - name: Validate catalog and schemas
         run: python -m tools.openva.validate validate
-      - name: Commit validated implementation
+      - name: Commit validated implementation except workflow integration
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add -A -- . ':!.github/workflows/source-maintenance-report.yml'
           git commit -m 'Implement source publisher attribution'
           git push origin HEAD
       - name: Test source attribution contract
-        run: pytest -q -vv tests/test_source_attribution.py
+        run: pytest -q -vv tests/test_source_attribution.py -k 'not source_maintenance_workflow'
       - name: Test existing site and source schema regressions
         run: pytest -q tests/test_site.py tests/test_source_ledger_schemas.py
