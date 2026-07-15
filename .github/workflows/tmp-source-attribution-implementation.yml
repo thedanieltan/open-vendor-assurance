@@ -38,10 +38,12 @@ jobs:
           python .github/openva-source-attribution-patch.py
       - name: Rebuild generated catalog outputs
         run: python -m tools.openva.validate build-indexes
-      - name: Validate implementation
-        run: |
-          python -m tools.openva.validate validate
-          pytest -q tests/test_source_attribution.py tests/test_site.py tests/test_source_ledger_schemas.py
+      - name: Validate catalog and schemas
+        run: python -m tools.openva.validate validate
+      - name: Test source attribution contract
+        run: pytest -q -vv tests/test_source_attribution.py
+      - name: Test site and source schema regressions
+        run: pytest -q tests/test_site.py tests/test_source_ledger_schemas.py
       - name: Commit implementation
         run: |
           if git diff --quiet; then
