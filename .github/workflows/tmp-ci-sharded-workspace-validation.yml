@@ -31,27 +31,14 @@ jobs:
 
           path = Path('docs/operations/contracts/work-package-scope.yaml')
           text = path.read_text(encoding='utf-8')
-          anchor = '''  WP-02E-SUPPLY-CHAIN:
-            description: Deployment artifact and supply-chain slice.
-            slice_id: WP-02E-artifact-and-supply-chain
-            depends_on:
-              - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
-            allowed_paths:
-              - services/openva_match_service/*
-              - .github/workflows/*
-          '''
-          replacement = '''  WP-02E-SUPPLY-CHAIN:
-            description: Deployment artifact and supply-chain slice.
-            slice_id: WP-02E-artifact-and-supply-chain
-            depends_on:
-              - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
-            allowed_paths:
-              - services/openva_match_service/*
-              - .github/workflows/*
-              - .github/validation-ownership.yaml
-          '''
-          if anchor not in text:
-              raise SystemExit('WP-02E scope anchor not found')
+          anchor = "              - .github/workflows/*\n              - docs/operations/*\n"
+          replacement = (
+              "              - .github/workflows/*\n"
+              "              - .github/validation-ownership.yaml\n"
+              "              - docs/operations/*\n"
+          )
+          if text.count(anchor) != 1:
+              raise SystemExit(f'unexpected WP-02E anchor count: {text.count(anchor)}')
           updated = text.replace(anchor, replacement, 1)
           yaml.safe_load(updated)
           path.write_text(updated, encoding='utf-8')
