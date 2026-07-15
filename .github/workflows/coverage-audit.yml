@@ -67,6 +67,10 @@ jobs:
         run: |
           mkdir -p reports
           python -m tools.openva.coverage_audit build --output reports/coverage-audit-report.json
+      - name: Build source publisher attribution audit
+        run: |
+          mkdir -p reports
+          python -m tools.openva.source_attribution audit --output reports/source-attribution-audit.json
       - name: Build catalog completeness audit
         run: |
           mkdir -p reports
@@ -97,10 +101,11 @@ jobs:
           from pathlib import Path
 
           report = json.load(open('reports/coverage-audit-report.json', encoding='utf-8'))
+          attribution = json.load(open('reports/source-attribution-audit.json', encoding='utf-8'))
           lines = [
               "# OpenVA Coverage Audit",
               "",
-              "This report measures catalog breadth and depth only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+              "This report measures catalog breadth, depth, and source-attribution completeness only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
               "",
               "## Summary",
               "",
@@ -109,13 +114,17 @@ jobs:
               f"- Vendors with DPA: `{report['summary']['vendors_with_dpa']}`",
               f"- Vendors with subprocessors list: `{report['summary']['vendors_with_subprocessors_list']}`",
               f"- Vendors with at least three core artifacts: `{report['summary']['vendors_with_at_least_three_core_artifacts']}`",
+              f"- Cross-domain sources: `{attribution['summary']['cross_domain_source_count']}`",
+              f"- Cross-domain sources without complete attribution: `{attribution['summary']['unresolved_cross_domain_source_count']}`",
               f"- Parse failures: `{report['summary']['parse_failures']}`",
+              f"- Attribution audit pipeline failures: `{attribution['summary']['pipeline_failure_count']}`",
               "",
               "## Files",
               "",
               "- `coverage-audit-summary.md`: maintainer-readable summary.",
-              "- `coverage-audit-report.json`: machine-readable source of truth.",
+              "- `coverage-audit-report.json`: machine-readable breadth and depth source of truth.",
               "- `coverage-audit-vendors.csv`: reviewer-friendly vendor coverage export.",
+              "- `source-attribution-audit.json`: report-only publisher relationship and product-applicability inventory.",
               "",
           ]
           Path('reports/coverage-audit-summary.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -142,6 +151,7 @@ jobs:
           print(Path('reports/coverage-audit-summary.md').read_text(encoding='utf-8'))
           print(json.dumps(report['breakdowns'].get('artifact_types', {}), indent=2, sort_keys=True))
           print(json.dumps(report['breakdowns'].get('depth_tiers', {}), indent=2, sort_keys=True))
+          print(json.dumps(attribution['summary'], indent=2, sort_keys=True))
           PY
       - name: Upload coverage audit report
         uses: actions/upload-artifact@v6
@@ -154,6 +164,7 @@ jobs:
             reports/coverage-audit-summary.md
             reports/coverage-audit-report.json
             reports/coverage-audit-vendors.csv
+            reports/source-attribution-audit.json
             reports/catalog-completeness-summary.md
             reports/catalog-completeness-report.json
             reports/catalog-completeness-vendors.csv

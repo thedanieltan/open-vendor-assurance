@@ -9,6 +9,7 @@ from typing import Any
 import yaml
 
 from tools.openva.paths import normalize_repo_path, relative_repo_path
+from tools.openva.source_attribution import validate_source_attribution
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -224,10 +225,32 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
     return failures
 
 
+def validate_changed_source_attribution(paths: list[str], *, root: Path = ROOT) -> list[str]:
+    failures: list[str] = []
+    for raw_path in paths:
+        path = normalize_path(raw_path)
+        if not is_source_record_path(path):
+            continue
+        source_path = root / path
+        if not source_path.exists():
+            continue
+        try:
+            source = load_yaml(source_path)
+            vendor_path = source_path.parent.parent / "vendor.yaml"
+            vendor = load_yaml(vendor_path)
+        except ValueError as exc:
+            failures.append(str(exc))
+            continue
+        for issue in validate_source_attribution(source, vendor):
+            failures.append(f"{path}: {issue}")
+    return failures
+
+
 def validate_catalog_pr(paths: list[str], *, root: Path = ROOT) -> list[str]:
     failures = validate_catalog_paths(paths)
     failures.extend(validate_catalog_generated_outputs(paths))
     failures.extend(validate_changed_source_observations(paths, root=root))
+    failures.extend(validate_changed_source_attribution(paths, root=root))
     failures.extend(validate_catalog_batch_duplicates(paths, root=root))
     return failures
 
