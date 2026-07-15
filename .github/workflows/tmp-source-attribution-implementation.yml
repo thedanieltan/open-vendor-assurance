@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 concurrency:
   group: tmp-source-attribution-implementation-${{ github.event.pull_request.head.ref || github.ref }}
@@ -35,13 +37,45 @@ jobs:
         run: python -m tools.openva.validate build-indexes
       - name: Validate catalog and schemas
         run: python -m tools.openva.validate validate
-      - name: Commit validated implementation except workflow integration
+      - name: Diagnose and attempt implementation commit
+        id: commit_attempt
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A -- . ':!.github/workflows/source-maintenance-report.yml'
-          git commit -m 'Implement source publisher attribution'
-          git push origin HEAD
+          set +e
+          {
+            echo '# Temporary implementation commit diagnostic'
+            echo
+            echo '## Working tree before staging'
+            echo '```'
+            git status --short
+            echo '```'
+            echo
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -A -- . ':!.github/workflows/source-maintenance-report.yml'
+            ADD_STATUS=$?
+            echo "git_add_exit=$ADD_STATUS"
+            echo
+            echo '## Staged paths'
+            echo '```'
+            git diff --cached --name-only
+            echo '```'
+            echo
+            git commit -m 'Implement source publisher attribution'
+            COMMIT_STATUS=$?
+            echo "git_commit_exit=$COMMIT_STATUS"
+            echo
+            git push origin HEAD
+            PUSH_STATUS=$?
+            echo "git_push_exit=$PUSH_STATUS"
+          } > commit-diagnostic.md 2>&1
+          cat commit-diagnostic.md
+          echo 'diagnostic_ready=true' >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Post temporary diagnostic to PR
+        if: always() && steps.commit_attempt.outputs.diagnostic_ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 716 --body-file commit-diagnostic.md
       - name: Test source attribution contract
         run: pytest -q -vv tests/test_source_attribution.py -k 'not source_maintenance_workflow'
       - name: Test existing site and source schema regressions
