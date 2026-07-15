@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,25 @@ ROOT = Path(__file__).resolve().parents[1]
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 PAGES_BASE_URL = "https://thedanieltan.github.io/open-vendor-assurance"
 INDEX_TEMPLATE = ROOT / "site" / "src" / "index.html"
+
+
+class _HrefCollector(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.hrefs: set[str] = set()
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag != "a":
+            return
+        for name, value in attrs:
+            if name == "href" and value:
+                self.hrefs.add(value)
+
+
+def page_hrefs(page: str) -> set[str]:
+    parser = _HrefCollector()
+    parser.feed(page)
+    return parser.hrefs
 
 
 def build_site(out: Path) -> Path:
@@ -88,8 +108,9 @@ def test_every_vendor_page_retains_original_source_urls(site):
     index = sources_by_vendor()
     for vendor_id, urls in index.items():
         page = (site / "vendors" / vendor_id / "index.html").read_text(encoding="utf-8")
+        hrefs = page_hrefs(page)
         for url in urls:
-            assert url in page, f"{vendor_id} page missing source URL {url}"
+            assert url in hrefs, f"{vendor_id} page missing source link {url}"
 
 
 def test_sitemap_vendor_count_equals_canonical_vendor_count(site):
@@ -262,7 +283,6 @@ def test_publication_config_requires_all_fields(tmp_path):
     incomplete.write_text("project_name: x\n", encoding="utf-8")
     with pytest.raises(ValueError):
         load_publication_config(incomplete)
-
 
 
 # Phase 3 SEO, answer-engine, and generative-engine acceptance.
