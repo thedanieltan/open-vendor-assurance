@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: tmp-ci-sharded-workspace-validation
@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   apply:
-    if: github.head_ref == 'agent/ci-sharded-workspace-validation' && github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/ci-sharded-workspace-validation'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -41,12 +41,14 @@ jobs:
           cat .github/ci-rationalization-test.log
           printf '\nexit_status=%s\n' "$status" >> .github/ci-rationalization-test.log
           exit 0
-      - name: Commit implementation, diagnostics, and remove executor
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git status --short
-          git add -A
-          git commit -m "Delegate full workspace validation to regression shards"
-          git push origin HEAD:agent/ci-sharded-workspace-validation
+      - name: Upload generated implementation and diagnostics
+        uses: actions/upload-artifact@v6
+        with:
+          name: ci-sharded-workspace-validation
+          path: |
+            .github/workflows/validate.yml
+            docs/operations/OPENVA_WORKSPACE.md
+            tests/test_workflow_workspace_ci.py
+            .github/ci-rationalization-test.log
+          if-no-files-found: error
+          retention-days: 1
