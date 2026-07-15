@@ -266,7 +266,10 @@
     const list = document.getElementById("vendor-list");
     if (!list || list.dataset.donorAlignmentObserved === "true") return;
     list.dataset.donorAlignmentObserved = "true";
-    new MutationObserver(() => alignVendorCards()).observe(list, { childList: true });
+    new MutationObserver(() => window.queueMicrotask(alignVendorCards)).observe(list, {
+      childList: true,
+      subtree: true,
+    });
   }
 
   window.addEventListener("DOMContentLoaded", () => {
