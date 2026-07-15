@@ -1,0 +1,105 @@
+name: tmp-pr716-full-suite-diagnostic
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - agent/pr716-full-suite-diagnostic
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-pr716-full-suite-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install workspace and affected packages
+        run: |
+          pip install -e ".[dev]"
+          pip install -e adapters/python/openva_pack_reader
+          pip install -e adapters/python/openva_csv_export
+          pip install -e adapters/python/openva_sqlite_export
+      - name: Run full test tree in parallel diagnostic shards
+        run: |
+          set +e
+          python - <<'PY'
+          from __future__ import annotations
+
+          import concurrent.futures
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          files = sorted(
+              path.as_posix()
+              for path in Path('tests').rglob('*.py')
+              if path.name.startswith('test_') or path.name.endswith('_test.py')
+          )
+          shard_count = 8
+          shards = [files[index::shard_count] for index in range(shard_count)]
+
+          def run_shard(index: int, paths: list[str]) -> tuple[int, int, str]:
+              command = [sys.executable, '-m', 'pytest', '-q', '--maxfail=1', *paths]
+              try:
+                  completed = subprocess.run(
+                      command,
+                      capture_output=True,
+                      text=True,
+                      timeout=900,
+                  )
+                  output = completed.stdout + completed.stderr
+                  return index, completed.returncode, output
+              except subprocess.TimeoutExpired as exc:
+                  output = (exc.stdout or '') + (exc.stderr or '')
+                  return index, 124, output + '\nSHARD TIMEOUT AFTER 900 SECONDS\n'
+
+          results = []
+          with concurrent.futures.ThreadPoolExecutor(max_workers=shard_count) as executor:
+              futures = [executor.submit(run_shard, index, paths) for index, paths in enumerate(shards)]
+              for future in concurrent.futures.as_completed(futures):
+                  results.append(future.result())
+
+          lines = [
+              'PR #716 full-tree parallel diagnostic',
+              f'test_file_count={len(files)}',
+              f'shard_count={shard_count}',
+              '',
+          ]
+          failed = False
+          for index, status, output in sorted(results):
+              lines.extend([
+                  f'===== SHARD {index} status={status} files={len(shards[index])} =====',
+                  'FILES:',
+                  *shards[index],
+                  'OUTPUT:',
+                  output,
+                  '',
+              ])
+              failed = failed or status != 0
+
+          Path('tmp-pr716-full-suite-diagnostic.txt').write_text('\n'.join(lines), encoding='utf-8')
+          raise SystemExit(1 if failed else 0)
+          PY
+          STATUS=$?
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tmp-pr716-full-suite-diagnostic.txt
+          git commit -m "Record PR 716 parallel full-suite diagnostic"
+          git push origin HEAD:agent/pr716-full-suite-diagnostic
+          exit "$STATUS"

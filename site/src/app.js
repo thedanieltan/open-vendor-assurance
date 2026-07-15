@@ -88,6 +88,7 @@ function text(value) {
 function csvValue(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
+  if (typeof value === "object") return JSON.stringify(value);
   return String(value);
 }
 
@@ -591,6 +592,7 @@ async function renderVendorDetail(vendorId) {
       </div>
       <p>Catalog status: ${html(vendor.catalog_status)}</p>
       <p>Official domains: ${(vendor.official_domains || []).map((domain) => `<code>${html(domain)}</code>`).join(" ") || "Unavailable"}</p>
+      ${vendorSourceAttributionNotice(vendor, sources)}
       <p>Headquarters country: ${html(vendor.headquarters_country)}</p>
       <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
       <div class="snapshot-box">${snapshotDisclosure()}</div>
@@ -619,6 +621,69 @@ async function renderVendorDetail(vendorId) {
   }
 }
 
+const SOURCE_RELATIONSHIP_LABELS = {
+  self: "Product-published source",
+  parent: "Parent-company source",
+  affiliate: "Affiliate-published source",
+  regional_entity: "Regional-entity source",
+  authorized_host: "Authorized hosted source",
+  public_authority: "Public-authority source",
+};
+
+function sourceDestinationDomain(source) {
+  const publisher = source.publisher_attribution || {};
+  if (publisher.publisher_domain) return publisher.publisher_domain;
+  try {
+    return new URL(source.source_url).hostname;
+  } catch (_error) {
+    return "Destination domain unavailable";
+  }
+}
+
+function sourceAttributionTemplate(source) {
+  const publisher = source.publisher_attribution || {};
+  const applicability = source.applicability || {};
+  if (!publisher.publisher_name) return "";
+  const relationshipLabel = SOURCE_RELATIONSHIP_LABELS[publisher.relationship] || "Attributed source";
+  const coveredProducts = Array.isArray(applicability.covered_products)
+    ? applicability.covered_products.join(", ")
+    : "Product coverage unavailable";
+  const evidence = applicability.evidence || {};
+  const evidenceLink = evidence.evidence_url
+    ? `<a href="${html(evidence.evidence_url)}" target="_blank" rel="noreferrer">View coverage evidence</a>`
+    : "Coverage evidence link unavailable";
+  return `
+    <div class="source-attribution">
+      <div class="source-attribution__heading">
+        <span class="source-attribution__badge">${html(relationshipLabel)}</span>
+        <code>${html(sourceDestinationDomain(source))}</code>
+      </div>
+      <strong>Published by ${html(publisher.publisher_name)}</strong>
+      <p>Covers ${html(coveredProducts)} · applicability: ${html(applicability.status || "unresolved")} · basis: ${html((applicability.coverage_basis || "unavailable").replaceAll("_", " "))}</p>
+      <details>
+        <summary>Why this source applies</summary>
+        <p>${html(evidence.statement || "No applicability statement is recorded.")}</p>
+        <p>${evidenceLink}</p>
+      </details>
+    </div>
+  `;
+}
+
+function vendorSourceAttributionNotice(vendor, sources) {
+  const attributed = sources.filter((source) => {
+    const publisher = source.publisher_attribution || {};
+    return publisher.publisher_name && publisher.relationship && publisher.relationship !== "self";
+  });
+  if (!attributed.length) return "";
+  const publishers = [...new Set(attributed.map((source) => source.publisher_attribution.publisher_name))];
+  return `
+    <div class="source-attribution-notice">
+      <strong>Some ${html(vendor.display_name)} documents are published by ${html(publishers.join(", "))}.</strong>
+      <p>OpenVA identifies the publisher, relationship, destination domain, and product-coverage evidence before each cross-domain link.</p>
+    </div>
+  `;
+}
+
 function sourceTemplate(source) {
   const health = source.source_health || {};
   const bucket = health.status_bucket || "missing";
@@ -631,7 +696,9 @@ function sourceTemplate(source) {
       <span class="source-health source-health--${html(bucket)}">${html(label)}</span>
       status: ${html(health.status || "No source-health observation")} | last checked: ${html(health.verified_at || "No source-health observation")} | ${html(health.snapshot_notice || "Source health is based on the latest maintenance snapshot and may change.")}${finalUrl}<br>
       <label><input type="checkbox" data-select-source="${html(source.source_id)}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
-      <strong>${html(sourceTypeLabel(source.source_type))}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
+      <strong>${html(sourceTypeLabel(source.source_type))}</strong><br>
+      ${sourceAttributionTemplate(source)}
+      <a class="source-open-link" href="${html(source.source_url)}" target="_blank" rel="noreferrer">Open ${html(source.title)}</a><br>
       language: ${html(source.source_language)} · authority: ${html(source.source_authority_class)} · access: ${html(source.access_class)} · rights: ${html(source.rights_class)}<br>
       provenance.collected_at: ${html(source.provenance && source.provenance.collected_at)} · catalog_tier: ${html(source.catalog_tier)} · review_state: ${html(source.review_state)} · advisory_boundary: ${html(source.advisory_boundary)}
     </li>
@@ -732,7 +799,7 @@ function setupExport() {
   });
   document.getElementById("download-sources-csv").addEventListener("click", async () => {
     const rows = (await selectedRecords()).sources;
-    const header = ["source_id", "vendor_id", "source_type", "title", "source_url", "catalog_tier", "review_state", "advisory_boundary"];
+    const header = ["source_id", "vendor_id", "source_type", "title", "source_url", "publisher_attribution", "applicability", "catalog_tier", "review_state", "advisory_boundary"];
     const csv = [header.join(","), ...rows.map((row) => header.map((key) => csvCell(row[key])).join(","))].join("\n");
     download("openva-selected-sources.csv", csv + "\n", "text/csv");
   });
