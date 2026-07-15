@@ -43,6 +43,17 @@ def test_relevant_main_push_runs_bounded_read_only_deployment_smoke() -> None:
     assert "scheduled discovery mesh must not define a catalog vendor cap" in text
 
 
+def test_push_smoke_publishes_acceptance_evidence_to_its_merge_pr() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Publish read-only deployment smoke evidence" in text
+    assert 'if: github.event_name == \'push\'' in text
+    assert '"repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls"' in text
+    assert "Rendered discovery hosted smoke" in text
+    assert "Candidate-intake mutation: `skipped for push smoke`" in text
+    assert 'gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"' in text
+
+
 def test_aggregate_publishes_rendered_discovery_differential() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
