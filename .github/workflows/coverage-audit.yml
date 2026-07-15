@@ -1,91 +1,177 @@
 name: coverage-audit
 
 on:
-  pull_request:
-    types: [synchronize]
+  workflow_dispatch:
+  schedule:
+    - cron: "23 4 * * 1"
 
 permissions:
-  contents: write
+  contents: read
+  actions: read
 
 concurrency:
   group: coverage-audit-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  rebuild-source-index:
-    if: github.head_ref == 'agent/source-attribution-applicability'
+  coverage-audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        with:
-          ref: agent/source-attribution-applicability
-          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Rebuild generated indexes and validate
-        run: |
-          set -euo pipefail
-          python -m tools.openva.validate build-indexes
-          git status --short
-          python -m tools.openva.validate validate
-          git diff --exit-code -- . ':!indexes/sources.json'
-      - name: Create source-index Git object
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Download latest source maintenance artifact for freshness
         env:
           GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
+          set -euo pipefail
+          mkdir -p source-health-artifacts
+          RUN_ID="$(gh run list \
+            --workflow source-maintenance-report.yml \
+            --branch main \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId // ""')"
+          if [ -z "$RUN_ID" ]; then
+            echo "::warning::freshness inputs unavailable: no successful source-maintenance-report run was found. Coverage growth will use the committed-events fallback."
+            exit 0
+          fi
+          if ! gh run download "$RUN_ID" \
+            --name openva-source-maintenance-report \
+            --dir source-health-artifacts; then
+            echo "::warning::freshness inputs unavailable: could not download openva-source-maintenance-report from run $RUN_ID. Coverage growth will use the committed-events fallback."
+            exit 0
+          fi
+      - name: Build coverage growth report
+        run: |
+          mkdir -p reports
+          ARGS=(
+            --output reports/coverage-growth-report.json
+            --markdown-output reports/coverage-growth-summary.md
+            --csv-output reports/coverage-growth-queue.csv
+          )
+          if [ -f source-health-artifacts/observation-ledger/latest-observations.json ]; then
+            ARGS+=(--latest-observations source-health-artifacts/observation-ledger/latest-observations.json)
+          fi
+          if [ -f source-health-artifacts/observation-ledger/source-freshness-report.json ]; then
+            ARGS+=(--freshness-report source-health-artifacts/observation-ledger/source-freshness-report.json)
+          fi
+          python -m tools.openva.coverage_growth build "${ARGS[@]}"
+      - name: Build breadth and depth coverage audit
+        run: |
+          mkdir -p reports
+          python -m tools.openva.coverage_audit build --output reports/coverage-audit-report.json
+      - name: Build source publisher attribution audit
+        run: |
+          mkdir -p reports
+          python -m tools.openva.source_attribution audit --output reports/source-attribution-audit.json
+      - name: Build catalog completeness audit
+        run: |
+          mkdir -p reports
+          python -m tools.openva.catalog_completeness build \
+            --output reports/catalog-completeness-report.json \
+            --csv-output reports/catalog-completeness-vendors.csv \
+            --markdown-output reports/catalog-completeness-summary.md
+      - name: Build entity correctness review queue
+        run: |
+          mkdir -p reports
+          python -m tools.openva.entity_review_queue build \
+            --output reports/entity-review-queue.json \
+            --csv-output reports/entity-review-queue.csv \
+            --markdown-output reports/entity-review-summary.md
+      - name: Build field provenance coverage report
+        run: |
+          mkdir -p reports
+          python -m tools.openva.field_provenance coverage \
+            --output reports/field-provenance-coverage.json \
+            --csv-output reports/field-provenance-coverage.csv \
+            --markdown-output reports/field-provenance-summary.md
+      - name: Build reviewer-friendly summary and CSV export
+        run: |
+          mkdir -p reports
           python - <<'PY'
-          import base64
+          import csv
           import json
-          import os
-          import urllib.request
           from pathlib import Path
 
-          repo = os.environ['REPOSITORY']
-          token = os.environ['GH_TOKEN']
-          head_sha = os.environ['HEAD_SHA']
-          api = f'https://api.github.com/repos/{repo}'
-
-          def request(method, endpoint, payload=None):
-              data = None if payload is None else json.dumps(payload).encode('utf-8')
-              req = urllib.request.Request(
-                  api + endpoint,
-                  data=data,
-                  method=method,
-                  headers={
-                      'Accept': 'application/vnd.github+json',
-                      'Authorization': f'Bearer {token}',
-                      'X-GitHub-Api-Version': '2022-11-28',
-                      'User-Agent': 'openva-source-attribution-index-rebuild',
-                  },
-              )
-              with urllib.request.urlopen(req) as response:
-                  return json.load(response)
-
-          commit = request('GET', f'/git/commits/{head_sha}')
-          content = Path('indexes/sources.json').read_bytes()
-          blob = request('POST', '/git/blobs', {
-              'content': base64.b64encode(content).decode('ascii'),
-              'encoding': 'base64',
-          })
-          metadata = {
-              'head_sha': head_sha,
-              'base_tree_sha': commit['tree']['sha'],
-              'sources_index_blob_sha': blob['sha'],
-          }
-          Path('source-index-object.json').write_text(
-              json.dumps(metadata, indent=2) + '\n', encoding='utf-8'
-          )
-          print(json.dumps(metadata, indent=2))
+          report = json.load(open('reports/coverage-audit-report.json', encoding='utf-8'))
+          attribution = json.load(open('reports/source-attribution-audit.json', encoding='utf-8'))
+          lines = [
+              "# OpenVA Coverage Audit",
+              "",
+              "This report measures catalog breadth, depth, and source-attribution completeness only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+              "",
+              "## Summary",
+              "",
+              f"- Vendors: `{report['summary']['vendor_count']}`",
+              f"- Artifacts: `{report['summary']['artifact_count']}`",
+              f"- Vendors with DPA: `{report['summary']['vendors_with_dpa']}`",
+              f"- Vendors with subprocessors list: `{report['summary']['vendors_with_subprocessors_list']}`",
+              f"- Vendors with at least three core artifacts: `{report['summary']['vendors_with_at_least_three_core_artifacts']}`",
+              f"- Cross-domain sources: `{attribution['summary']['cross_domain_source_count']}`",
+              f"- Cross-domain sources without complete attribution: `{attribution['summary']['unresolved_cross_domain_source_count']}`",
+              f"- Parse failures: `{report['summary']['parse_failures']}`",
+              f"- Attribution audit pipeline failures: `{attribution['summary']['pipeline_failure_count']}`",
+              "",
+              "## Files",
+              "",
+              "- `coverage-audit-summary.md`: maintainer-readable summary.",
+              "- `coverage-audit-report.json`: machine-readable breadth and depth source of truth.",
+              "- `coverage-audit-vendors.csv`: reviewer-friendly vendor coverage export.",
+              "- `source-attribution-audit.json`: report-only publisher relationship and product-applicability inventory.",
+              "",
+          ]
+          Path('reports/coverage-audit-summary.md').write_text('\n'.join(lines), encoding='utf-8')
+          with open('reports/coverage-audit-vendors.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = [
+                  'vendor_id',
+                  'display_name',
+                  'artifact_count',
+                  'artifact_types',
+                  'core_artifacts_present',
+                  'core_artifacts_missing',
+                  'depth_score',
+                  'depth_tier',
+              ]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for vendor in report.get('vendors', []):
+                  writer.writerow({
+                      **vendor,
+                      'artifact_types': ';'.join(vendor.get('artifact_types', [])),
+                      'core_artifacts_present': ';'.join(vendor.get('core_artifacts_present', [])),
+                      'core_artifacts_missing': ';'.join(vendor.get('core_artifacts_missing', [])),
+                  })
+          print(Path('reports/coverage-audit-summary.md').read_text(encoding='utf-8'))
+          print(json.dumps(report['breakdowns'].get('artifact_types', {}), indent=2, sort_keys=True))
+          print(json.dumps(report['breakdowns'].get('depth_tiers', {}), indent=2, sort_keys=True))
+          print(json.dumps(attribution['summary'], indent=2, sort_keys=True))
           PY
-      - name: Upload source-index object metadata
+      - name: Upload coverage audit report
         uses: actions/upload-artifact@v6
         with:
-          name: source-attribution-index-object
-          path: source-index-object.json
+          name: openva-coverage-audit-report
+          path: |
+            reports/coverage-growth-report.json
+            reports/coverage-growth-summary.md
+            reports/coverage-growth-queue.csv
+            reports/coverage-audit-summary.md
+            reports/coverage-audit-report.json
+            reports/coverage-audit-vendors.csv
+            reports/source-attribution-audit.json
+            reports/catalog-completeness-summary.md
+            reports/catalog-completeness-report.json
+            reports/catalog-completeness-vendors.csv
+            reports/entity-review-summary.md
+            reports/entity-review-queue.json
+            reports/entity-review-queue.csv
+            reports/field-provenance-summary.md
+            reports/field-provenance-coverage.json
+            reports/field-provenance-coverage.csv
           if-no-files-found: error
-          retention-days: 1
