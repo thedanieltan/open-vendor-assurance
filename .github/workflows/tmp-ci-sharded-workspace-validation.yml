@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: tmp-ci-sharded-workspace-validation
@@ -26,9 +26,11 @@ jobs:
           cache: "pip"
       - name: Install repository
         run: pip install -e ".[dev]"
+      - name: Correct generator indentation
+        run: python .github/tmp_fix_ci_generator.py
       - name: Apply bounded CI rationalization
         run: python .github/tmp_apply_ci_rationalization.py
-      - name: Capture focused workflow contract results
+      - name: Run focused workflow contracts
         run: |
           set +e
           pytest -q \
@@ -41,24 +43,6 @@ jobs:
           cat .github/ci-rationalization-test.log
           printf '\nexit_status=%s\n' "$status" >> .github/ci-rationalization-test.log
           exit 0
-      - name: Attempt branch commit and capture diagnostics
-        run: |
-          set +e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          {
-            echo '--- git status ---'
-            git status --short
-            echo '--- git add ---'
-            git add -A
-            echo '--- git commit ---'
-            git commit -m "Delegate full workspace validation to regression shards"
-            echo '--- git push ---'
-            git push origin HEAD:agent/ci-sharded-workspace-validation
-            echo "push_exit_status=$?"
-          } > /tmp/ci-rationalization-git.log 2>&1
-          cat /tmp/ci-rationalization-git.log
-          exit 0
       - name: Upload generated implementation and diagnostics
         uses: actions/upload-artifact@v6
         with:
@@ -68,6 +52,6 @@ jobs:
             docs/operations/OPENVA_WORKSPACE.md
             tests/test_workflow_workspace_ci.py
             .github/ci-rationalization-test.log
-            /tmp/ci-rationalization-git.log
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 1
