@@ -31,15 +31,17 @@ jobs:
 
           path = Path('docs/operations/contracts/work-package-scope.yaml')
           text = path.read_text(encoding='utf-8')
-          anchor = "              - .github/workflows/*\n              - docs/operations/*\n"
-          replacement = (
-              "              - .github/workflows/*\n"
-              "              - .github/validation-ownership.yaml\n"
-              "              - docs/operations/*\n"
-          )
-          if text.count(anchor) != 1:
-              raise SystemExit(f'unexpected WP-02E anchor count: {text.count(anchor)}')
-          updated = text.replace(anchor, replacement, 1)
+          start = text.index('  WP-02E-SUPPLY-CHAIN:\n')
+          end = text.index('  WP-02F-STAGING:\n', start)
+          block = text[start:end]
+          workflow_line = '      - .github/workflows/*\n'
+          ownership_line = '      - .github/validation-ownership.yaml\n'
+          if ownership_line in block:
+              raise SystemExit('ownership manifest already granted')
+          if block.count(workflow_line) != 1:
+              raise SystemExit(f'unexpected workflow-line count in WP-02E: {block.count(workflow_line)}')
+          block = block.replace(workflow_line, workflow_line + ownership_line, 1)
+          updated = text[:start] + block + text[end:]
           yaml.safe_load(updated)
           path.write_text(updated, encoding='utf-8')
           PY
