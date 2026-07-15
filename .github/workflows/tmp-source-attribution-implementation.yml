@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - agent/source-attribution-applicability
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 concurrency:
-  group: tmp-source-attribution-implementation-${{ github.ref }}
+  group: tmp-source-attribution-implementation-${{ github.event.pull_request.head.ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -19,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
