@@ -150,6 +150,7 @@
     const fieldset = document.querySelector("#matcher-view .source-field-grid");
     if (!fieldset) return;
 
+    const hadExistingFields = Boolean(fieldset.querySelector("[data-source-pack-field]"));
     const previouslySelected = new Set(selectedSourceTypes());
     const counts = payload.counts || {};
     const availableTypes = (payload.items || [])
@@ -163,7 +164,7 @@
     legend.textContent = "Source types available in the current catalog";
 
     const fields = availableTypes.map((sourceType) => {
-      const checked = previouslySelected.size
+      const checked = hadExistingFields
         ? previouslySelected.has(sourceType)
         : DEFAULT_SELECTED_TYPES.has(sourceType);
       return sourceField(payload, sourceType, checked);
