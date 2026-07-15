@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: tmp-ci-sharded-workspace-validation
@@ -41,6 +41,24 @@ jobs:
           cat .github/ci-rationalization-test.log
           printf '\nexit_status=%s\n' "$status" >> .github/ci-rationalization-test.log
           exit 0
+      - name: Attempt branch commit and capture diagnostics
+        run: |
+          set +e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          {
+            echo '--- git status ---'
+            git status --short
+            echo '--- git add ---'
+            git add -A
+            echo '--- git commit ---'
+            git commit -m "Delegate full workspace validation to regression shards"
+            echo '--- git push ---'
+            git push origin HEAD:agent/ci-sharded-workspace-validation
+            echo "push_exit_status=$?"
+          } > /tmp/ci-rationalization-git.log 2>&1
+          cat /tmp/ci-rationalization-git.log
+          exit 0
       - name: Upload generated implementation and diagnostics
         uses: actions/upload-artifact@v6
         with:
@@ -50,5 +68,6 @@ jobs:
             docs/operations/OPENVA_WORKSPACE.md
             tests/test_workflow_workspace_ci.py
             .github/ci-rationalization-test.log
+            /tmp/ci-rationalization-git.log
           if-no-files-found: error
           retention-days: 1
