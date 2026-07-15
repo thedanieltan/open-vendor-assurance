@@ -1,5 +1,5 @@
 {
-  "count": 1585,
+  "count": 1588,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -291,39 +291,49 @@
       "vendor_id": "activecampaign"
     },
     {
+      "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-15T00:00:00Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "acuity-scheduling-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.squarespace.com/dpa",
+      "summary_en": "Public Squarespace data processing addendum metadata reference for Squarespace Services, whose Terms expressly include acuityscheduling.com.",
+      "summary_native": "Public Squarespace data processing addendum metadata reference for Squarespace Services, whose Terms expressly include acuityscheduling.com.",
+      "title_en": "Squarespace Data Processing Addendum (Acuity Scheduling)",
+      "title_native": "Squarespace Data Processing Addendum (Acuity Scheduling)",
+      "vendor_id": "acuity-scheduling"
+    },
+    {
       "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-15T00:00:00Z",
+        "confidence": "high",
+        "observer": "agent",
         "publisher": "vendor"
       },
-      "quarantine": {
-        "decision_id": "acuity-scheduling-privacy-quarantine",
-        "prior_review_state": null,
-        "quarantined_at": "2026-06-17T12:41:30.237245Z",
-        "quarantined_by": "quarantine-controller",
-        "reason": "persistent_not_found",
-        "reversal": {
-          "method": "revert_quarantine",
-          "reference": "Revert the quarantine PR for acuity-scheduling-privacy; restores the prior review_state. See decision acuity-scheduling-privacy-quarantine.",
-          "reversal_decision_id": null
-        }
-      },
-      "review_state": "quarantined",
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
       "source_id": "acuity-scheduling-privacy",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://www.acuityscheduling.com/privacy",
-      "summary_en": "Public Acuity Scheduling privacy notice metadata reference.",
-      "summary_native": "Public Acuity Scheduling privacy notice metadata reference.",
-      "title_en": "Acuity Scheduling Privacy Notice",
-      "title_native": "Acuity Scheduling Privacy Notice",
+      "source_url": "https://www.squarespace.com/privacy",
+      "summary_en": "Public Squarespace privacy policy metadata reference that expressly includes acuityscheduling.com within the covered Services.",
+      "summary_native": "Public Squarespace privacy policy metadata reference that expressly includes acuityscheduling.com within the covered Services.",
+      "title_en": "Squarespace Privacy Policy (Acuity Scheduling)",
+      "title_native": "Squarespace Privacy Policy (Acuity Scheduling)",
       "vendor_id": "acuity-scheduling"
     },
     {
@@ -331,35 +341,68 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-15T00:00:00Z",
         "confidence": "medium",
-        "observer": "human",
+        "observer": "agent",
         "publisher": "vendor"
       },
-      "quarantine": {
-        "decision_id": "acuity-scheduling-security-quarantine",
-        "prior_review_state": null,
-        "quarantined_at": "2026-07-08T10:50:43.183782Z",
-        "quarantined_by": "quarantine-controller",
-        "reason": "persistent_not_found",
-        "reversal": {
-          "method": "revert_quarantine",
-          "reference": "Revert the quarantine PR for acuity-scheduling-security; restores the prior review_state. See decision acuity-scheduling-security-quarantine.",
-          "reversal_decision_id": null
-        }
-      },
-      "review_state": "quarantined",
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
       "source_id": "acuity-scheduling-security",
       "source_language": "en",
       "source_type": "security_page",
-      "source_url": "https://www.acuityscheduling.com/security",
-      "summary_en": "Public Acuity Scheduling security metadata reference.",
-      "summary_native": "Public Acuity Scheduling security metadata reference.",
-      "title_en": "Acuity Scheduling Security",
-      "title_native": "Acuity Scheduling Security",
+      "source_url": "https://www.squarespace.com/security",
+      "summary_en": "Public Squarespace security page metadata reference for the service family that includes Acuity Scheduling.",
+      "summary_native": "Public Squarespace security page metadata reference for the service family that includes Acuity Scheduling.",
+      "title_en": "Squarespace Security (Acuity Scheduling)",
+      "title_native": "Squarespace Security (Acuity Scheduling)",
+      "vendor_id": "acuity-scheduling"
+    },
+    {
+      "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-status-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-15T00:00:00Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "acuity-scheduling-status-page",
+      "source_language": "en",
+      "source_type": "status_page",
+      "source_url": "https://status.squarespace.com/",
+      "summary_en": "Public Squarespace service-status metadata reference that explicitly lists Acuity Scheduling.",
+      "summary_native": "Public Squarespace service-status metadata reference that explicitly lists Acuity Scheduling.",
+      "title_en": "Squarespace Status (Acuity Scheduling)",
+      "title_native": "Squarespace Status (Acuity Scheduling)",
+      "vendor_id": "acuity-scheduling"
+    },
+    {
+      "_openva_path": "data/vendors/acuity-scheduling/sources/acuity-scheduling-terms-of-service.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-15T00:00:00Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "acuity-scheduling-terms-of-service",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://www.squarespace.com/terms-of-service",
+      "summary_en": "Public Squarespace terms metadata reference that expressly includes services provided through acuityscheduling.com.",
+      "summary_native": "Public Squarespace terms metadata reference that expressly includes services provided through acuityscheduling.com.",
+      "title_en": "Squarespace Terms of Service (Acuity Scheduling)",
+      "title_native": "Squarespace Terms of Service (Acuity Scheduling)",
       "vendor_id": "acuity-scheduling"
     },
     {
