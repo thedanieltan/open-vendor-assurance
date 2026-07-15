@@ -121,15 +121,37 @@ def _validate_catalog_card_interactions() -> None:
         )
 
 
+def _validate_catalog_donor_alignment() -> None:
+    """Keep the added controls visually aligned with the Trusty Vendor Scan donor."""
+    source_path = Path(__file__).with_name("src") / "catalog-donor-alignment.js"
+    source = source_path.read_text(encoding="utf-8")
+    required_tokens = (
+        'CATALOG_DONOR_ALIGNMENT_VERSION = "trusty-vendor-scan-v1"',
+        'footer.className = "vendor-card__footer"',
+        'detailButton.textContent = "View links →"',
+        "box-shadow: 0 0 0 1px color-mix(in oklch, var(--donor-brand) 40%, transparent) !important;",
+        "background: rgba(15, 27, 61, .22) !important;",
+        "box-shadow: var(--donor-shadow) !important;",
+    )
+    missing = [token for token in required_tokens if token not in source]
+    if missing:
+        raise ValueError(
+            "catalog donor-alignment contract is incomplete: "
+            + ", ".join(repr(token) for token in missing)
+        )
+
+
 def render_index_html(template: str, config: Any) -> str:
     """Load focused public interaction layers after the existing site runtime."""
     _validate_catalog_card_interactions()
+    _validate_catalog_donor_alignment()
     page = _ORIGINAL_RENDER_INDEX_HTML(template, config)
     marker = '    <script src="ui-fixes.js?v=20260713-phase2"></script>'
     replacement = (
         '    <script src="public-vendor-detail.js?v=20260713-vendor-detail"></script>\n'
         '    <script src="catalog-navigation.js?v=20260714-pagination-drawer"></script>\n'
         '    <script src="catalog-card-interactions.js?v=20260715-explicit-view-links"></script>\n'
+        '    <script src="catalog-donor-alignment.js?v=20260715-trusty-vendor-scan"></script>\n'
         + marker
     )
     if marker not in page:
