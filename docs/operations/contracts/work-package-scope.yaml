@@ -446,6 +446,7 @@ work_packages:
       - .github/validation-ownership.yaml
       - docs/operations/*
       - tests/*
+      - tests/test_workflow_workspace_ci.py
 
   WP-02F-STAGING:
     description: Maintainer-gated staging infrastructure and provider controls.
