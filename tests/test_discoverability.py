@@ -198,3 +198,177 @@ def test_generated_discovery_output_is_deterministic(tmp_path_factory):
     names += [p.relative_to(a).as_posix() for p in sorted(a.glob("vendors/*/index.html"))]
     for name in names:
         assert (a / name).read_bytes() == (b / name).read_bytes(), f"non-deterministic: {name}"
+
+
+def test_well_known_digest_detects_drift(site):
+    manifest = json.loads((site / ".well-known" / "openva.json").read_text(encoding="utf-8"))
+    payload = {k: v for k, v in manifest.items() if k != "snapshot"}
+    assert manifest["snapshot"]["digest"] == sha256_bytes(canonical_json(payload))
+    # A drifted payload must not validate against the committed digest.
+    drifted = {**payload, "canonical_base_url": "https://evil.example"}
+    assert manifest["snapshot"]["digest"] != sha256_bytes(canonical_json(drifted))
+
+
+def _ld_blocks(page: str) -> list[dict]:
+    return [json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, re.DOTALL)]
+
+
+def _ld_by_type(page: str, type_name: str) -> dict:
+    return next(b for b in _ld_blocks(page) if b.get("@type") == type_name)
+
+
+def _meta_url(page: str, *, prop: str, attr: str) -> str:
+    match = re.search(rf'<meta property="{prop}" content="([^"]+)">', page)
+    if not match:
+        match = re.search(rf'<link rel="{attr}" href="([^"]+)">', page)
+    assert match, f"missing {prop}/{attr}"
+    return match.group(1)
+
+
+def test_homepage_metadata_matches_publication_configuration(site, config):
+    page = (site / "index.html").read_text(encoding="utf-8")
+    home_url = config.url("")
+
+    assert re.search(r'<meta property="og:url" content="([^"]+)">', page).group(1) == home_url
+    assert re.search(r'<link rel="canonical" href="([^"]+)">', page).group(1) == home_url
+    assert _ld_by_type(page, "WebSite")["url"] == home_url
+    catalog = _ld_by_type(page, "DataCatalog")
+    assert catalog["url"] == home_url
+    assert catalog["dataset"]["distribution"]["contentUrl"] == config.agent_index_url
+
+
+def test_homepage_metadata_changes_with_publication_configuration(config):
+    template = INDEX_TEMPLATE.read_text(encoding="utf-8")
+    alt = dataclasses.replace(config, canonical_base_url="https://example.org/openva")
+    rendered = render_index_html(template, alt)
+
+    assert 'content="https://example.org/openva/"' in rendered  # og:url
+    assert 'href="https://example.org/openva/"' in rendered  # canonical
+    assert '"url": "https://example.org/openva/"' in rendered  # WebSite / DataCatalog
+    assert "https://example.org/openva/public/openva-agent-index.json" in rendered
+    # The default Pages base URL must not survive when config points elsewhere.
+    assert PAGES_BASE_URL not in rendered
+
+
+def test_no_hardcoded_pages_base_url_in_template_or_generators():
+    for path in (
+        INDEX_TEMPLATE,
+        ROOT / "tools" / "openva" / "site_discovery.py",
+        ROOT / "site" / "build.py",
+    ):
+        assert PAGES_BASE_URL not in path.read_text(encoding="utf-8"), f"{path} hardcodes the Pages base URL"
+    # The base URL lives only in the canonical publication configuration.
+    assert PAGES_BASE_URL in (ROOT / "config" / "publication.yaml").read_text(encoding="utf-8")
+
+
+def test_latest_observed_at_ignores_provenance_collected_at():
+    only_provenance = {"provenance": {"collected_at": "2026-05-16T00:00:00Z"}}
+    assert _latest_observed_at(only_provenance) is None
+
+    observed = {"source_health": {"verified_at": "2026-05-24T12:00:00Z"}, "provenance": {"collected_at": "2026-05-16T00:00:00Z"}}
+    assert _latest_observed_at(observed) == "2026-05-24T12:00:00Z"
+
+
+def test_vendor_page_does_not_show_provenance_date_as_observation(site):
+    # Without a source-health snapshot, sources carry provenance.collected_at but
+    # no verified_at; that provenance date must not be rendered as an observation.
+    sources = json.loads((ROOT / "indexes" / "sources.json").read_text(encoding="utf-8"))["items"]
+    sample = next(s for s in sources if s.get("vendor_id") and (s.get("provenance") or {}).get("collected_at"))
+    page = (site / "vendors" / sample["vendor_id"] / "index.html").read_text(encoding="utf-8")
+    assert sample["provenance"]["collected_at"] not in page
+
+
+def test_publication_config_requires_all_fields(tmp_path):
+    incomplete = tmp_path / "publication.yaml"
+    incomplete.write_text("project_name: x\n", encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_publication_config(incomplete)
+
+
+# Phase 3 SEO, answer-engine, and generative-engine acceptance.
+def test_homepage_has_social_identity_assets_and_visible_direct_answers(site, config):
+    page = (site / "index.html").read_text(encoding="utf-8")
+    for phrase in [
+        'property="og:site_name" content="OpenVA"',
+        'property="og:image"',
+        'name="twitter:image"',
+        'rel="icon"',
+        'rel="manifest"',
+        'What is OpenVA?',
+        'Which source types does OpenVA support?',
+        'Are vendor source URLs permanent?',
+        'Does OpenVA assess or approve vendors?',
+        'Does a vendor CSV leave the browser?',
+        'How should an OpenVA result be cited?',
+    ]:
+        assert phrase in page
+    assert (site / "assets" / "openva-social-preview.png").stat().st_size > 1000
+    assert (site / "assets" / "openva-favicon.svg").is_file()
+    assert (site / "site.webmanifest").is_file()
+
+
+def test_homepage_structured_entities_have_stable_ids(site, config):
+    page = (site / "index.html").read_text(encoding="utf-8")
+    blocks = _ld_blocks(page)
+    by_type = {block.get("@type"): block for block in blocks}
+    for type_name, suffix in {
+        "Organization": "#organization",
+        "SoftwareApplication": "#application",
+        "WebSite": "#website",
+        "DataCatalog": "#catalog",
+    }.items():
+        assert by_type[type_name]["@id"] == config.url("") + suffix
+    assert by_type["DataCatalog"]["dataset"]["@id"] == config.url("") + "#dataset"
+
+
+def test_every_supported_source_type_has_substantive_static_page(site, config):
+    labels = source_type_labels()
+    index_page = (site / "source-types" / "index.html").read_text(encoding="utf-8")
+    for source_type, label in labels.items():
+        page_path = site / "source-types" / source_type / "index.html"
+        assert page_path.is_file()
+        page = page_path.read_text(encoding="utf-8")
+        assert label in page
+        assert "What is this source type?" in page
+        assert "What does OpenVA currently record?" in page
+        assert config.url(f"source-types/{source_type}/") in page
+        assert f'href="{source_type}/"' in index_page
+
+
+def test_segmented_sitemaps_cover_pages_vendors_and_source_types(site, config):
+    labels = source_type_labels()
+    aggregate = set(sitemap_locs(site))
+    for filename in ["sitemap-pages.xml", "sitemap-vendors.xml", "sitemap-source-types.xml"]:
+        assert (site / filename).is_file()
+    vendor_tree = ET.parse(site / "sitemap-vendors.xml")
+    vendor_urls = [el.text for el in vendor_tree.getroot().findall(".//sm:url/sm:loc", SITEMAP_NS)]
+    source_tree = ET.parse(site / "sitemap-source-types.xml")
+    source_urls = [el.text for el in source_tree.getroot().findall(".//sm:url/sm:loc", SITEMAP_NS)]
+    assert len(vendor_urls) == len(canonical_vendor_ids())
+    assert len(source_urls) == len(labels)
+    assert set(vendor_urls).issubset(aggregate)
+    assert set(source_urls).issubset(aggregate)
+
+
+def test_vendor_pages_have_social_metadata_breadcrumbs_and_source_type_links(site, config):
+    vendor_id = canonical_vendor_ids()[0]
+    page = (site / "vendors" / vendor_id / "index.html").read_text(encoding="utf-8")
+    assert 'property="og:site_name" content="OpenVA"' in page
+    assert 'property="og:image"' in page
+    assert '"@type": "BreadcrumbList"' in page
+    assert "What public sources does OpenVA record" in page
+    assert "../../source-types/" in page
+
+
+def test_manifest_and_llms_are_citation_ready(site, config):
+    manifest = json.loads((site / ".well-known" / "openva.json").read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == "1.1.0"
+    assert manifest["source_type_index_url"] == config.url("source-types/")
+    assert len(manifest["source_type_vocabulary"]) == 15
+    assert manifest["citation_policy"]["vendor_content_authority"] == "original_vendor_published_url"
+    assert set(manifest["sitemaps"]) == {"all", "pages", "vendors", "source_types"}
+    payload = {key: value for key, value in manifest.items() if key != "snapshot"}
+    assert manifest["snapshot"]["digest"] == sha256_bytes(canonical_json(payload))
+    llms = (site / "llms.txt").read_text(encoding="utf-8")
+    for phrase in ["Citation rules", "Supported source types", "original vendor-published URL", "exact commit SHA", "convenience map"]:
+        assert phrase in llms
