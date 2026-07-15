@@ -62,7 +62,9 @@ Before public-site discovery begins, the hosted smoke runs deterministic real-Ch
 
 A newer push smoke cancels any older in-progress push smoke in the same concurrency group. Scheduled and manually dispatched runs are not cancelled by this rule. The diagnostic profile therefore validates only the latest deployed crawler revision instead of serializing obsolete deployment probes.
 
-The smoke limit is not a catalog breadth policy. Daily scheduled runs and ordinary manual runs continue to use the configured full-catalog shard matrix with no scheduled vendor limit. The push smoke exists only to verify a newly merged crawler deployment in the hosted runner environment.
+Push-triggered probes select a separate runtime-bounds profile through `GITHUB_EVENT_NAME=push`. Per sampled vendor, the smoke allows at most 10 static pages, 15 total static requests, 200 links per page, 100 locator candidates, a 3-second fetch timeout, two rendered pages, and 30 browser requests per rendered page. Scheduled and manually dispatched runs resolve the unchanged production profile of 5,000 pages, 7,500 requests, 2,000 links per page, 10,000 locator candidates, and the larger rendered budgets.
+
+The smoke limits are not catalog breadth policies. Daily scheduled runs and ordinary manual runs continue to use the configured full-catalog shard matrix with no scheduled vendor limit. The push smoke exists only to verify a newly merged crawler deployment in the hosted runner environment.
 
 When the push smoke reaches the aggregate acceptance boundary, it resolves the pull request associated with the merge commit and posts a durable evidence comment containing the run ID, commit SHA, health status, diagnostic profile, artifact name, mutation posture, and complete rendered differential. The comment uses the workflow's existing pull-request authority and does not add another workflow or repository mutation path.
 
@@ -73,12 +75,13 @@ The read-only post-merge smoke establishes hosted deployment acceptance when all
 1. The run cites the merged deployment commit and uses the push-smoke one-shard, five-vendor diagnostic profile.
 2. Chromium is resolved from the hosted runner.
 3. The real-Chromium JavaScript-execution and off-authority-blocking fixtures pass.
-4. Static public-site discovery executes before selective rendering.
-5. The differential report is emitted and uploaded.
-6. The report contains all declared counters and posture fields.
-7. Browser direct-network posture remains false and rendered signals remain noncanonical.
-8. Candidate-intake preparation is skipped for the push event.
-9. The acceptance evidence is posted to the associated merged pull request with the workflow run ID, commit SHA, differential artifact, and totals.
+4. The push-specific static and rendered resource bounds are active.
+5. Static public-site discovery executes before selective rendering.
+6. The differential report is emitted and uploaded.
+7. The report contains all declared counters and posture fields.
+8. Browser direct-network posture remains false and rendered signals remain noncanonical.
+9. Candidate-intake preparation is skipped for the push event.
+10. The acceptance evidence is posted to the associated merged pull request with the workflow run ID, commit SHA, differential artifact, and totals.
 
 Full-catalog production acceptance remains distinct and requires a scheduled or manually dispatched uncapped run:
 
