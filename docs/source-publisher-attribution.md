@@ -1,4 +1,3 @@
-
 # Source Publisher Attribution and Product Applicability
 
 OpenVA distinguishes the product represented by a vendor record from the organization or service that publishes a source URL.
@@ -34,7 +33,7 @@ Run the report-only audit with:
 python -m tools.openva.source_attribution audit --output source-attribution-audit.json
 ```
 
-`source-maintenance-report.yml` includes this audit in its maintenance artifact bundle.
+`coverage-audit.yml` runs this audit on its existing weekly schedule and includes `source-attribution-audit.json` in the coverage artifact bundle. This keeps attribution completeness within the existing catalog-quality loop rather than adding another scheduled workflow.
 
 ## Public presentation
 
