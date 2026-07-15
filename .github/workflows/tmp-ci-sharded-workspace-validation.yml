@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Install YAML dependency
+        run: pip install "pyyaml>=6"
       - name: Grant WP-02E ownership-manifest scope
         run: |
           python - <<'PY'
@@ -34,7 +36,7 @@ jobs:
           start = next(i for i, line in enumerate(lines) if line.strip() == 'WP-02E-SUPPLY-CHAIN:')
           end = next(
               i for i in range(start + 1, len(lines))
-              if lines[i].startswith('  WP-') and not lines[i].startswith('    ')
+              if lines[i].startswith('  WP-')
           )
           block = lines[start:end]
           if any(line.strip() == '- .github/validation-ownership.yaml' for line in block):
