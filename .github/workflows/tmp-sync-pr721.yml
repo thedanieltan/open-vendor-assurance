@@ -1,0 +1,30 @@
+name: tmp-sync-pr721
+
+on:
+  push:
+    branches:
+      - agent/fix-exact-domain-precedence
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-sync-pr721
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Merge current main into PR branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit origin/main
+          git push origin HEAD:agent/fix-exact-domain-precedence
