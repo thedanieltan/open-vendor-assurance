@@ -1,8 +1,104 @@
-PR #716 full-tree parallel diagnostic
+PR #716 full-tree parallel diagnostic with exact CI installation
+{
+  "affected_components": [
+    "contract",
+    "core-tools",
+    "pack-reader",
+    "csv-export",
+    "jsonl-export",
+    "sqlite-export",
+    "inventory-matcher",
+    "match-service",
+    "mcp",
+    "browser-site",
+    "google-sheets",
+    "operational-governance",
+    "distribution-positioning",
+    "hosted-deployment-contracts",
+    "repository-control"
+  ],
+  "build_order": [
+    "contract",
+    "core-tools",
+    "pack-reader",
+    "csv-export",
+    "jsonl-export",
+    "sqlite-export",
+    "inventory-matcher",
+    "match-service",
+    "mcp",
+    "browser-site",
+    "google-sheets",
+    "operational-governance",
+    "distribution-positioning",
+    "hosted-deployment-contracts",
+    "repository-control"
+  ],
+  "changed_files": [
+    ".github/workflows/coverage-audit.yml",
+    ".github/workflows/tmp-pr716-full-suite-diagnostic.yml",
+    "adapters/python/openva_csv_export/openva_csv_export/exporter.py",
+    "adapters/python/openva_sqlite_export/openva_sqlite_export/exporter.py",
+    "data/vendors/acuity-scheduling/sources/acuity-scheduling-dpa.yaml",
+    "data/vendors/acuity-scheduling/sources/acuity-scheduling-privacy.yaml",
+    "data/vendors/acuity-scheduling/sources/acuity-scheduling-security.yaml",
+    "data/vendors/acuity-scheduling/sources/acuity-scheduling-status-page.yaml",
+    "data/vendors/acuity-scheduling/sources/acuity-scheduling-terms-of-service.yaml",
+    "dist/vendors/acuity-scheduling.json",
+    "docs/source-publisher-attribution.md",
+    "indexes/sources.json",
+    "schemas/openva/source-reference.schema.json",
+    "site/build_core.py",
+    "site/src/app.js",
+    "site/src/styles.css",
+    "tests/test_source_attribution.py",
+    "tmp-pr716-full-suite-diagnostic.txt",
+    "tools/openva/catalog_guard.py",
+    "tools/openva/source_attribution.py"
+  ],
+  "direct_components": [
+    "browser-site",
+    "contract",
+    "core-tools",
+    "csv-export",
+    "distribution-positioning",
+    "google-sheets",
+    "hosted-deployment-contracts",
+    "inventory-matcher",
+    "jsonl-export",
+    "match-service",
+    "mcp",
+    "operational-governance",
+    "pack-reader",
+    "repository-control",
+    "sqlite-export"
+  ],
+  "full_suite": true,
+  "install_paths": [
+    ".",
+    "adapters/python/openva_pack_reader",
+    "adapters/python/openva_csv_export",
+    "adapters/python/openva_jsonl_export",
+    "adapters/python/openva_sqlite_export",
+    "adapters/python/openva_vendor_inventory_matcher",
+    "services/openva_match_service",
+    "integrations/mcp/openva_mcp"
+  ],
+  "reason": "unowned changed files triggered conservative full-suite fallback",
+  "schema_version": "1.0",
+  "test_paths": [
+    "tests"
+  ],
+  "unmatched_files": [
+    "dist/vendors/acuity-scheduling.json",
+    "tests/test_source_attribution.py",
+    "tmp-pr716-full-suite-diagnostic.txt"
+  ]
+}
 test_file_count=292
 shard_count=8
 
-===== SHARD 0 status=1 files=37 =====
+===== SHARD 0 status=0 files=37 =====
 FILES:
 tests/test_adapter_contract.py
 tests/test_ai_native_distribution_docs.py
@@ -42,27 +138,20 @@ tests/test_tier_a_disclosure.py
 tests/test_vendor_candidate_discovery.py
 tests/test_workflow_retirement_evidence.py
 OUTPUT:
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 47%]
+........................................................................ [ 62%]
+........................................................................ [ 78%]
+........................................................................ [ 94%]
+..........................                                               [100%]
+=============================== warnings summary ===============================
+tests/test_openva_match_service_worker.py::test_queue_created_only_when_verify_transport_enabled
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
 
-==================================== ERRORS ====================================
-_____________ ERROR collecting tests/test_hosted_job_lifecycle.py ______________
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_hosted_job_lifecycle.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_hosted_job_lifecycle.py:27: in <module>
-    from openva_match_service import job_lifecycle as jl  # noqa: E402
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-services/openva_match_service/openva_match_service/__init__.py:1: in <module>
-    from .app import create_app
-services/openva_match_service/openva_match_service/app.py:9: in <module>
-    from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Response, UploadFile
-E   ModuleNotFoundError: No module named 'fastapi'
-=========================== short test summary info ============================
-ERROR tests/test_hosted_job_lifecycle.py
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 error in 11.72s
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+458 passed, 1 warning in 651.78s (0:10:51)
 
 
 ===== SHARD 1 status=0 files=37 =====
@@ -105,16 +194,22 @@ tests/test_unavailable_source_truth_state.py
 tests/test_vendor_resolution.py
 tests/test_workflow_workspace_ci.py
 OUTPUT:
-........................................................................ [ 19%]
-........................................................................ [ 38%]
-..............................................................s......... [ 57%]
-........................................................................ [ 77%]
-........................................................................ [ 96%]
-.............                                                            [100%]
-372 passed, 2 skipped in 123.64s (0:02:03)
+........................................................................ [ 18%]
+........................................................................ [ 36%]
+........................................................................ [ 55%]
+........................................................................ [ 73%]
+........................................................................ [ 91%]
+................................                                         [100%]
+=============================== warnings summary ===============================
+tests/test_openva_mcp_streamable_http.py:29
+  /home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_mcp_streamable_http.py:29: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient  # noqa: E402
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+392 passed, 1 warning in 490.72s (0:08:10)
 
 
-===== SHARD 2 status=1 files=37 =====
+===== SHARD 2 status=0 files=37 =====
 FILES:
 tests/test_agent_automerge_workflow.py
 tests/test_assurance_evidence_set.py
@@ -154,31 +249,96 @@ tests/test_url_safety.py
 tests/test_web_bot_auth.py
 tests/test_workspace.py
 OUTPUT:
-
-==================================== ERRORS ====================================
-_____________ ERROR collecting tests/test_openva_match_service.py ______________
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_match_service.py:7: in <module>
-    from fastapi.testclient import TestClient
-E   ModuleNotFoundError: No module named 'fastapi'
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+....................................................Initialized empty Git repository in /tmp/pytest-of-runner/pytest-4/test_applied_patch_paths_inclu0/repo/.git/
+[master (root-commit) ebb1ec8] initial
+ 1 file changed, 1 insertion(+)
+ create mode 100644 indexes/sources.json
+.Initialized empty Git repository in /tmp/pytest-of-runner/pytest-4/test_applied_patch_paths_inclu1/repo/.git/
+[master (root-commit) 6745719] initial
+ 1 file changed, 1 insertion(+)
+ create mode 100644 indexes/sources.json
+.Initialized empty Git repository in /tmp/pytest-of-runner/pytest-4/test_applied_patch_paths_fail_0/repo/.git/
+[master (root-commit) 6745719] initial
+ 1 file changed, 1 insertion(+)
+ create mode 100644 indexes/sources.json
+.Initialized empty Git repository in /tmp/pytest-of-runner/pytest-4/test_applied_patch_paths_fail_1/repo/.git/
+[master (root-commit) 6745719] initial
+ 1 file changed, 1 insertion(+)
+ create mode 100644 indexes/sources.json
+................. [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+......                                                                   [100%]
 =============================== warnings summary ===============================
 tests/test_candidate_promotion_workflow.py:159
   /home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_candidate_promotion_workflow.py:159: SyntaxWarning: invalid escape sequence '\`'
     assert "Head SHA: \`$HEAD_SHA\`" in text
 
+../../../../../opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-=========================== short test summary info ============================
-ERROR tests/test_openva_match_service.py
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 warning, 1 error in 10.62s
+510 passed, 2 warnings in 571.96s (0:09:31)
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
 
 
-===== SHARD 3 status=1 files=37 =====
+===== SHARD 3 status=0 files=37 =====
 FILES:
 tests/test_agent_bundle_verification.py
 tests/test_assurance_instrument_projection.py
@@ -218,22 +378,19 @@ tests/test_validate.py
 tests/test_work_priority.py
 tests/test_wp41_workflows.py
 OUTPUT:
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 93%]
+........................                                                 [100%]
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
 
-==================================== ERRORS ====================================
-______ ERROR collecting tests/test_openva_match_service_agent_contract.py ______
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_agent_contract.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_match_service_agent_contract.py:8: in <module>
-    from fastapi.testclient import TestClient
-E   ModuleNotFoundError: No module named 'fastapi'
-=========================== short test summary info ============================
-ERROR tests/test_openva_match_service_agent_contract.py
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 error in 11.32s
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+384 passed, 1 warning in 587.31s (0:09:47)
 
 
 ===== SHARD 4 status=1 files=36 =====
@@ -275,23 +432,56 @@ tests/test_submission_bridge.py
 tests/test_vendor_breadth_mesh.py
 tests/test_workflow_contracts.py
 OUTPUT:
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+...........F
+=================================== FAILURES ===================================
+__________ test_actions_tab_contains_only_purposeful_public_workflows __________
 
-==================================== ERRORS ====================================
-____ ERROR collecting tests/test_openva_match_service_candidate_ingress.py _____
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_candidate_ingress.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_match_service_candidate_ingress.py:38: in <module>
-    from openva_match_service import candidate_ingress as ci  # noqa: E402
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-services/openva_match_service/openva_match_service/__init__.py:1: in <module>
-    from .app import create_app
-services/openva_match_service/openva_match_service/app.py:9: in <module>
-    from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Response, UploadFile
-E   ModuleNotFoundError: No module named 'fastapi'
+    def test_actions_tab_contains_only_purposeful_public_workflows():
+>       assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
+E       AssertionError: assert {'agent-autom...-pr.yml', ...} == {'agent-autom...-pr.yml', ...}
+E         
+E         Extra items in the left set:
+E         'tmp-pr716-full-suite-diagnostic.yml'
+E         
+E         Full diff:
+E           {
+E               'agent-automerge.yml',
+E               'agent-weighted-review.yml',
+E               'autonomous-catalog-growth.yml',
+E               'bot-chatops.yml',
+E               'bot-dashboard-issue.yml',
+E               'candidate-intake-pr.yml',
+E               'candidate-promotion-pr.yml',
+E               'catalog-agent-pr.yml',
+E               'catalog-growth-discovery.yml',
+E               'catalog-growth-promotion-bridge.yml',
+E               'catalog-maintenance-pr.yml',
+E               'catalog-maintenance.yml',
+E               'catalog-pr-guard.yml',
+E               'contribution-intake-agent.yml',
+E               'coverage-audit.yml',
+E               'discovery-ledger-append-pr.yml',
+E               'discovery-mesh.yml',
+E               'machine-provisional-materialization.yml',
+E               'observation-ledger-append-pr.yml',
+E               'observe-report.yml',
+E               'release-image.yml',
+E               'site-live-feed.yml',
+E               'site-pages.yml',
+E               'source-maintenance-report.yml',
+E               'source-refinement-queue.yml',
+E               'source-refinement-scan.yml',
+E               'source-repair-pr-cleanup.yml',
+E               'source-repair-pr.yml',
+E               'submitted-source-verification.yml',
+E         +     'tmp-pr716-full-suite-diagnostic.yml',
+E               'validate-pr-metadata.yml',
+E               'validate.yml',
+E           }
+
+tests/test_ci_readiness.py:50: AssertionError
 =============================== warnings summary ===============================
 tests/test_catalog_growth_promotion_bridge_workflow.py:295
   /home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_catalog_growth_promotion_bridge_workflow.py:295: SyntaxWarning: invalid escape sequence '\`'
@@ -299,9 +489,48 @@ tests/test_catalog_growth_promotion_bridge_workflow.py:295
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-ERROR tests/test_openva_match_service_candidate_ingress.py
+FAILED tests/test_ci_readiness.py::test_actions_tab_contains_only_purposeful_public_workflows - AssertionError: assert {'agent-autom...-pr.yml', ...} == {'agent-autom...-pr.yml', ...}
+  
+  Extra items in the left set:
+  'tmp-pr716-full-suite-diagnostic.yml'
+  
+  Full diff:
+    {
+        'agent-automerge.yml',
+        'agent-weighted-review.yml',
+        'autonomous-catalog-growth.yml',
+        'bot-chatops.yml',
+        'bot-dashboard-issue.yml',
+        'candidate-intake-pr.yml',
+        'candidate-promotion-pr.yml',
+        'catalog-agent-pr.yml',
+        'catalog-growth-discovery.yml',
+        'catalog-growth-promotion-bridge.yml',
+        'catalog-maintenance-pr.yml',
+        'catalog-maintenance.yml',
+        'catalog-pr-guard.yml',
+        'contribution-intake-agent.yml',
+        'coverage-audit.yml',
+        'discovery-ledger-append-pr.yml',
+        'discovery-mesh.yml',
+        'machine-provisional-materialization.yml',
+        'observation-ledger-append-pr.yml',
+        'observe-report.yml',
+        'release-image.yml',
+        'site-live-feed.yml',
+        'site-pages.yml',
+        'source-maintenance-report.yml',
+        'source-refinement-queue.yml',
+        'source-refinement-scan.yml',
+        'source-repair-pr-cleanup.yml',
+        'source-repair-pr.yml',
+        'submitted-source-verification.yml',
+  +     'tmp-pr716-full-suite-diagnostic.yml',
+        'validate-pr-metadata.yml',
+        'validate.yml',
+    }
 !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 warning, 1 error in 10.22s
+1 failed, 155 passed, 1 warning in 679.40s (0:11:19)
 
 
 ===== SHARD 5 status=1 files=36 =====
@@ -343,25 +572,56 @@ tests/test_submission_intake.py
 tests/test_vendor_breadth_replenishment.py
 tests/test_workflow_operating_model.py
 OUTPUT:
+........................................................................ [ 17%]
+........................................................................ [ 35%]
+........................................................................ [ 53%]
+.......................................................F
+=================================== FAILURES ===================================
+___________ test_google_domain_collision_matches_specific_subdomain ____________
 
-==================================== ERRORS ====================================
-__________ ERROR collecting tests/test_openva_match_service_check.py ___________
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_check.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_match_service_check.py:27: in <module>
-    from fastapi.testclient import TestClient
-E   ModuleNotFoundError: No module named 'fastapi'
+tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-7/test_google_domain_collision_m0')
+
+    def test_google_domain_collision_matches_specific_subdomain(tmp_path):
+        input_path = tmp_path / "vendors.csv"
+        output_path = tmp_path / "matched.csv"
+        write_inventory(
+            input_path,
+            [
+                {"vendor_name": "Google Workspace", "domain": "workspace.google.com", "category": "productivity"},
+                {"vendor_name": "Google Cloud", "domain": "cloud.google.com", "category": "cloud"},
+            ],
+        )
+    
+        match_inventory(".", input_path, output_path)
+    
+        rows = read_csv(output_path)
+        assert rows[0]["match_status"] == "matched"
+        assert rows[0]["matched_vendor_id"] == "google-workspace"
+        assert rows[0]["match_confidence"] == "1.00"
+        assert rows[0]["match_method"] == "domain_exact"
+>       assert rows[1]["match_status"] == "matched"
+E       AssertionError: assert 'ambiguous' == 'matched'
+E         
+E         - matched
+E         + ambiguous
+
+tests/test_openva_vendor_inventory_matcher.py:317: AssertionError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-ERROR tests/test_openva_match_service_check.py
+FAILED tests/test_openva_vendor_inventory_matcher.py::test_google_domain_collision_matches_specific_subdomain - AssertionError: assert 'ambiguous' == 'matched'
+  
+  - matched
+  + ambiguous
 !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 error in 10.96s
+1 failed, 271 passed, 1 warning in 711.58s (0:11:51)
 
 
-===== SHARD 6 status=1 files=36 =====
+===== SHARD 6 status=0 files=36 =====
 FILES:
 tests/test_agent_export.py
 tests/test_assurance_intelligence_materialization.py
@@ -400,22 +660,18 @@ tests/test_submission_lifecycle.py
 tests/test_vendor_candidate_breadth_bridge.py
 tests/test_workflow_retirement.py
 OUTPUT:
+........................................................................ [ 20%]
+........................................................................ [ 41%]
+........................................................................ [ 62%]
+........................................................................ [ 82%]
+...........................................................              [100%]
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
 
-==================================== ERRORS ====================================
-________ ERROR collecting tests/test_openva_match_service_hardening.py _________
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_match_service_hardening.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_match_service_hardening.py:19: in <module>
-    from fastapi.testclient import TestClient
-E   ModuleNotFoundError: No module named 'fastapi'
-=========================== short test summary info ============================
-ERROR tests/test_openva_match_service_hardening.py
-!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 error in 11.52s
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+347 passed, 1 warning in 769.91s (0:12:49)
 
 
 ===== SHARD 7 status=1 files=36 =====
@@ -457,20 +713,33 @@ tests/test_supply_chain_policy.py
 tests/test_vendor_candidate_breadth_root_isolation.py
 tests/test_workflow_retirement_enforcement.py
 OUTPUT:
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................F
+=================================== FAILURES ===================================
+_____________ test_every_vendor_page_retains_original_source_urls ______________
 
-==================================== ERRORS ====================================
-_____________ ERROR collecting tests/test_openva_enrichment_api.py _____________
-ImportError while importing test module '/home/runner/work/open-vendor-assurance/open-vendor-assurance/tests/test_openva_enrichment_api.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/importlib/__init__.py:90: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_openva_enrichment_api.py:13: in <module>
-    from fastapi.testclient import TestClient
-E   ModuleNotFoundError: No module named 'fastapi'
+site = PosixPath('/tmp/pytest-of-runner/pytest-6/disco-site0')
+
+    def test_every_vendor_page_retains_original_source_urls(site):
+        index = sources_by_vendor()
+        for vendor_id, urls in index.items():
+            page = (site / "vendors" / vendor_id / "index.html").read_text(encoding="utf-8")
+            for url in urls:
+>               assert url in page, f"{vendor_id} page missing source URL {url}"
+E               AssertionError: cyberark page missing source URL https://trust.cyberark.com/?itemName=certifications&source=click
+E               assert 'https://trust.cyberark.com/?itemName=certifications&source=click' in '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8"><meta name="viewport" content="width=device-wi...>Catalog home</a></li><li><a href="../../agents/">Agent integration</a></li></ul></footer>\n  </div></body>\n</html>\n'
+
+tests/test_discoverability.py:92: AssertionError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-ERROR tests/test_openva_enrichment_api.py
+FAILED tests/test_discoverability.py::test_every_vendor_page_retains_original_source_urls - AssertionError: cyberark page missing source URL https://trust.cyberark.com/?itemName=certifications&source=click
+assert 'https://trust.cyberark.com/?itemName=certifications&source=click' in '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8"><meta name="viewport" content="width=device-wi...>Catalog home</a></li><li><a href="../../agents/">Agent integration</a></li></ul></footer>\n  </div></body>\n</html>\n'
 !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-1 error in 11.82s
+1 failed, 200 passed, 1 warning in 695.27s (0:11:35)
 
