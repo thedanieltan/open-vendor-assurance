@@ -1,0 +1,104 @@
+name: tmp-scope-validation-ownership
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  generate-object:
+    if: github.head_ref == 'agent/allow-validation-ownership-in-supply-chain'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: agent/allow-validation-ownership-in-supply-chain
+          fetch-depth: 0
+      - name: Generate scope manifest Git object
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python - <<'PY'
+          import base64
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          path = Path('docs/operations/contracts/work-package-scope.yaml')
+          text = path.read_text(encoding='utf-8')
+          anchor = '''  WP-02E-SUPPLY-CHAIN:
+    description: Deployment artifact and supply-chain slice.
+    slice_id: WP-02E-artifact-and-supply-chain
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+    allowed_paths:
+      - services/openva_match_service/*
+      - .github/workflows/*
+      - docs/operations/*
+      - tests/*
+'''
+          replacement = '''  WP-02E-SUPPLY-CHAIN:
+    description: Deployment artifact and supply-chain slice.
+    slice_id: WP-02E-artifact-and-supply-chain
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+    allowed_paths:
+      - services/openva_match_service/*
+      - .github/workflows/*
+      - .github/validation-ownership.yaml
+      - docs/operations/*
+      - tests/*
+'''
+          if anchor not in text:
+              raise SystemExit('WP-02E scope anchor not found')
+          updated = text.replace(anchor, replacement, 1)
+          path.write_text(updated, encoding='utf-8')
+
+          repo = os.environ['REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          head_sha = os.environ['HEAD_SHA']
+          api = f'https://api.github.com/repos/{repo}'
+
+          def request(method, endpoint, payload=None):
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(
+                  api + endpoint,
+                  data=data,
+                  method=method,
+                  headers={
+                      'Accept': 'application/vnd.github+json',
+                      'Authorization': f'Bearer {token}',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'User-Agent': 'openva-scope-policy',
+                  },
+              )
+              with urllib.request.urlopen(req) as response:
+                  return json.load(response)
+
+          commit = request('GET', f'/git/commits/{head_sha}')
+          blob = request('POST', '/git/blobs', {
+              'content': base64.b64encode(updated.encode('utf-8')).decode('ascii'),
+              'encoding': 'base64',
+          })
+          metadata = {
+              'head_sha': head_sha,
+              'base_tree_sha': commit['tree']['sha'],
+              'scope_blob_sha': blob['sha'],
+          }
+          Path('scope-object-metadata.json').write_text(
+              json.dumps(metadata, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(metadata, indent=2))
+          PY
+      - name: Upload scope Git object metadata
+        uses: actions/upload-artifact@v6
+        with:
+          name: validation-ownership-scope-git-object
+          path: scope-object-metadata.json
+          if-no-files-found: error
+          retention-days: 1
