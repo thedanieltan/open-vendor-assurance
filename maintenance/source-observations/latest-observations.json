@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-14T15:43:43Z",
+  "generated_at": "2026-07-15T00:13:25Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 1585,
-    "observed_this_run": 389,
-    "carried_forward": 1196
+    "source_count": 1588,
+    "observed_this_run": 5,
+    "carried_forward": 1583
   },
   "sources": [
     {
@@ -257,42 +257,99 @@
       "carried_forward": true
     },
     {
+      "source_id": "acuity-scheduling-dpa",
+      "vendor_id": "acuity-scheduling",
+      "source_url": "https://www.squarespace.com/dpa",
+      "observed_at": "2026-07-15T00:13:25Z",
+      "observation_id": "acuity-scheduling-dpa-2026-07-15-owner-acuity-squarespace-source-repair-rebased",
+      "final_url": "https://www.squarespace.com/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e1dcbd0caf1a5d73880206ab50a40f1dca82daad3a9a1719289101fd84aef800",
+      "normalized_text_sample_sha256": "sha256:8ff4559b770660a1391183926a925d26ceaddfd4bf2475c484ca6e4f8ec825bf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "acuity-scheduling-privacy",
       "vendor_id": "acuity-scheduling",
-      "source_url": "https://www.acuityscheduling.com/privacy",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "acuity-scheduling-privacy-2026-07-11-29141337215",
-      "final_url": "https://www.acuityscheduling.com/privacy",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "non_material",
+      "source_url": "https://www.squarespace.com/privacy",
+      "observed_at": "2026-07-15T00:13:25Z",
+      "observation_id": "acuity-scheduling-privacy-2026-07-15-owner-acuity-squarespace-source-repair-rebased",
+      "final_url": "https://www.squarespace.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:c54b553223f5129d44f38c8d77ff8193ad41d96d268ddad61af35a2400ccab01",
-      "normalized_text_sample_sha256": "sha256:04763630c67a4d3ddceabd58f8a0a7cf093cd1dd2734c7f7e74d5bdcfdb510de",
+      "raw_sample_sha256": "sha256:1d40595aaf2c4dde770fd9411aeab2ab5a7287810286ef042ac5ae677ee27791",
+      "normalized_text_sample_sha256": "sha256:f85e4d6c56985f571404a75dd827690e371e0831e99b2259bc35e9973a0ba15c",
       "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
+        "required": true,
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "acuity-scheduling-security",
       "vendor_id": "acuity-scheduling",
-      "source_url": "https://www.acuityscheduling.com/security",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "acuity-scheduling-security-2026-07-12-29184618599",
-      "final_url": "https://www.acuityscheduling.com/security",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "non_material",
+      "source_url": "https://www.squarespace.com/security",
+      "observed_at": "2026-07-15T00:13:25Z",
+      "observation_id": "acuity-scheduling-security-2026-07-15-owner-acuity-squarespace-source-repair-rebased",
+      "final_url": "https://www.squarespace.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:05aa59076286a5f3bf26fdc2dfe05af6e467c92c39d3e419980feae8f3629a4a",
-      "normalized_text_sample_sha256": "sha256:04763630c67a4d3ddceabd58f8a0a7cf093cd1dd2734c7f7e74d5bdcfdb510de",
+      "raw_sample_sha256": "sha256:9f1ca2e44d2db56e29463b1fa5a1a18518ac39211c943572eaba16dc33ee02b2",
+      "normalized_text_sample_sha256": "sha256:66a7967f49f82c7af51e764cd308f7bd8337421f8d412c74860847e2c49602bf",
       "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
+        "required": true,
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
+    },
+    {
+      "source_id": "acuity-scheduling-status-page",
+      "vendor_id": "acuity-scheduling",
+      "source_url": "https://status.squarespace.com/",
+      "observed_at": "2026-07-15T00:13:25Z",
+      "observation_id": "acuity-scheduling-status-page-2026-07-15-owner-acuity-squarespace-source-repair-rebased",
+      "final_url": "https://status.squarespace.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d4953a542d36ec6801ca9f216ad402b888159e67d4183a2077cf65265c6c4976",
+      "normalized_text_sample_sha256": "sha256:328af75576650e40214e00c15a83ef457d4f3fa659c4385c4f3bf10ab651ce8b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "acuity-scheduling-terms-of-service",
+      "vendor_id": "acuity-scheduling",
+      "source_url": "https://www.squarespace.com/terms-of-service",
+      "observed_at": "2026-07-15T00:13:25Z",
+      "observation_id": "acuity-scheduling-terms-of-service-2026-07-15-owner-acuity-squarespace-source-repair-rebased",
+      "final_url": "https://www.squarespace.com/terms-of-service",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:939e0bd1e02f02acc5573c05b9df93edc483f5bb973da8b62651683509549438",
+      "normalized_text_sample_sha256": "sha256:5a68a0533960a675705d3b7a36e9948fbef8bcb2ba94fcde7f51f62ff4d91450",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "acumbamail-privacy-notice",
@@ -311,7 +368,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "acumbamail-status-page",
@@ -330,7 +387,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adobe-compliance",
@@ -596,7 +653,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "advance-ai-status-page",
@@ -615,7 +672,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "advance-ai-terms-of-service",
@@ -634,7 +691,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adyen-compliance-page",
@@ -805,7 +862,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aikido-security-status-page",
@@ -824,7 +881,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "airtable-compliance",
@@ -1185,7 +1242,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alcidion-privacy-notice-0d3c23a96fa4",
@@ -1223,7 +1280,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alegra-status-page",
@@ -1242,7 +1299,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alegra-terms-of-service",
@@ -1261,7 +1318,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aleph-alpha-privacy-notice-c1b8d6e63184",
@@ -1584,7 +1641,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "allegro-privacy-notice",
@@ -1603,7 +1660,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alloy-dpa",
@@ -1679,7 +1736,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "amagi-trust-center",
@@ -1698,7 +1755,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "amplitude-compliance",
@@ -1812,7 +1869,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "anchanto-terms-of-service",
@@ -1831,7 +1888,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "anduril-privacy-notice-90199970e154",
@@ -1983,7 +2040,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "applied-systems-privacy",
@@ -2059,7 +2116,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "asaas-security-page",
@@ -2078,7 +2135,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "asana-compliance",
@@ -2591,7 +2648,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aws-compliance",
@@ -2876,7 +2933,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "benevity-security-page",
@@ -2895,7 +2952,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "benevity-subprocessors-list",
@@ -2914,7 +2971,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bespin-global-privacy-notice",
@@ -2933,7 +2990,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "betterfly-trust-center",
@@ -2952,7 +3009,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-certification-reference",
@@ -3503,7 +3560,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bling-status-page",
@@ -3522,7 +3579,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bolt-security-page",
@@ -3541,7 +3598,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bolt-terms-of-service",
@@ -3560,7 +3617,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bowtie-terms-of-service",
@@ -3579,7 +3636,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "box-compliance",
@@ -3731,7 +3788,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "braze-certification-reference",
@@ -3921,7 +3978,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "browserstack-security-page",
@@ -3940,7 +3997,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "browserstack-subprocessors-list",
@@ -3959,7 +4016,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "browserstack-terms-of-service",
@@ -3978,7 +4035,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "browserstack-trust-center",
@@ -3997,7 +4054,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bugcrowd-dpa",
@@ -4016,7 +4073,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "buk-trust-center",
@@ -4035,7 +4092,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bynder-trust-center",
@@ -4054,7 +4111,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cabify-privacy-notice",
@@ -4073,7 +4130,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cabify-security-page",
@@ -4092,7 +4149,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cabify-terms-of-service",
@@ -4111,7 +4168,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "caf-trust-center",
@@ -4130,7 +4187,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "calendly-dpa",
@@ -4453,7 +4510,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "careem-privacy-notice",
@@ -4472,7 +4529,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "careem-terms-of-service",
@@ -4491,7 +4548,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cashfree-payments-status-page",
@@ -4510,7 +4567,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cashfree-payments-trust-center",
@@ -4529,7 +4586,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cast-ai-status-page",
@@ -4548,7 +4605,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "celonis-trust-center",
@@ -4567,7 +4624,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chainalysis-compliance-page",
@@ -4681,7 +4738,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chargebee-security-page",
@@ -4700,7 +4757,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chargebee-terms-of-service",
@@ -4719,7 +4776,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chatwork-privacy-notice",
@@ -4738,7 +4795,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chatwork-trust-center",
@@ -4757,7 +4814,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "checkout-com-certification-reference",
@@ -4852,7 +4909,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cin7-trust-center",
@@ -4871,7 +4928,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-compliance-page",
@@ -4985,7 +5042,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "classum-privacy-notice",
@@ -5004,7 +5061,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "clickup-compliance",
@@ -5118,7 +5175,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "clip-security-page",
@@ -5137,7 +5194,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cloudflare-compliance",
@@ -5289,7 +5346,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cloudsign-security-page",
@@ -5308,7 +5365,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cockroach-labs-privacy",
@@ -5593,7 +5650,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "colendi-security-page",
@@ -5612,7 +5669,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "colendi-trust-center",
@@ -5631,7 +5688,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "collibra-status-page",
@@ -5650,7 +5707,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "comarch-security-page",
@@ -5669,7 +5726,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "commercetools-certification-reference",
@@ -5935,7 +5992,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "contentful-compliance",
@@ -6049,7 +6106,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "convenia-status-page",
@@ -6068,7 +6125,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cover-genius-privacy-notice-096e3816a89f",
@@ -6125,7 +6182,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "culture-amp-compliance-page",
@@ -6429,7 +6486,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cybozu-terms-of-service",
@@ -6448,7 +6505,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dailymotion-privacy-notice",
@@ -6467,7 +6524,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dailymotion-terms-of-service",
@@ -6486,7 +6543,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-compliance-page",
@@ -7512,7 +7569,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docplanner-security-page",
@@ -7531,7 +7588,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docplanner-trust-center",
@@ -7550,7 +7607,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doctolib-status-page",
@@ -7569,7 +7626,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docusign-compliance",
@@ -7721,7 +7778,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doodle-dpa",
@@ -7797,7 +7854,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dooray-terms-of-service",
@@ -7816,7 +7873,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dotdigital-dpa",
@@ -7892,7 +7949,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "douzone-bizon-security-page",
@@ -7911,7 +7968,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "douzone-bizon-terms-of-service",
@@ -7930,7 +7987,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dovetail-privacy-notice",
@@ -7949,7 +8006,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dovetail-status-page",
@@ -7968,7 +8025,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dovetail-trust-center",
@@ -7987,7 +8044,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doxee-compliance-page",
@@ -8006,7 +8063,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doxee-privacy-notice",
@@ -8025,7 +8082,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doxee-trust-center",
@@ -8044,7 +8101,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "drata-compliance",
@@ -8272,7 +8329,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dubizzle-group-privacy-notice",
@@ -8291,7 +8348,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "duck-creek-technologies-governance",
@@ -8424,7 +8481,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "easystore-status-page",
@@ -8443,7 +8500,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ebanx-trust-center",
@@ -8462,7 +8519,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "eis-group-certification-reference-6a827bd97102",
@@ -8652,7 +8709,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "emarsys-privacy-notice",
@@ -8747,7 +8804,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "eset-privacy",
@@ -8918,7 +8975,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "etiya-security-page",
@@ -8937,7 +8994,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "exoscale-certification-reference",
@@ -9260,7 +9317,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fareye-privacy-notice",
@@ -9279,7 +9336,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fareye-security-page",
@@ -9298,7 +9355,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fareye-status-page",
@@ -9317,7 +9374,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fazz-privacy-notice",
@@ -9336,7 +9393,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "feishu-dpa-4d5a5d7d0646",
@@ -9469,7 +9526,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fintoc-privacy-notice",
@@ -9488,7 +9545,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fintoc-status-page",
@@ -9507,7 +9564,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fis-privacy",
@@ -9640,7 +9697,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "flutterwave-privacy-notice",
@@ -9659,7 +9716,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "flutterwave-terms-of-service",
@@ -9678,7 +9735,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-certification-reference",
@@ -9830,7 +9887,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "foodstory-privacy-notice",
@@ -9849,7 +9906,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "foodstory-terms-of-service",
@@ -9868,7 +9925,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-certification-reference",
@@ -10001,7 +10058,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "freee-terms-of-service-087f234f3b77",
@@ -10324,7 +10381,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "getresponse-privacy-notice",
@@ -10590,7 +10647,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "global-payments-privacy",
@@ -10647,7 +10704,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gocardless-privacy",
@@ -10723,7 +10780,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gojek-terms-of-service",
@@ -10742,7 +10799,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "google-cloud-compliance",
@@ -11388,7 +11445,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "guardsquare-status-page",
@@ -11407,7 +11464,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "guidewire-dpa",
@@ -11502,7 +11559,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gusto-compliance",
@@ -11616,7 +11673,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "haptik-privacy-notice",
@@ -11635,7 +11692,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "haptik-trust-center",
@@ -11654,7 +11711,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hashicorp-compliance",
@@ -11768,7 +11825,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hashmicro-privacy-notice",
@@ -11787,7 +11844,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hasura-security-page",
@@ -11806,7 +11863,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "help-scout-dpa",
@@ -11901,7 +11958,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hetzner-privacy-notice",
@@ -12015,7 +12072,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hitpay-status-page",
@@ -12034,7 +12091,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hitpay-terms-of-service",
@@ -12053,7 +12110,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hrbrain-privacy-notice",
@@ -12072,7 +12129,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hrbrain-security-page",
@@ -12091,7 +12148,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "huawei-cloud-cn-compliance",
@@ -12642,7 +12699,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hyperverge-security-page",
@@ -12661,7 +12718,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hyperverge-terms-of-service",
@@ -12680,7 +12737,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ibm-cloud-compliance",
@@ -12851,7 +12908,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "idnow-certification-reference-a357d62849b5",
@@ -13041,7 +13098,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ifood-terms-of-service",
@@ -13060,7 +13117,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "iij-privacy-notice",
@@ -13079,7 +13136,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "iij-security-page",
@@ -13098,7 +13155,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "innovaccer-security-page",
@@ -13117,7 +13174,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "innovaccer-trust-center",
@@ -13136,7 +13193,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "insider-privacy-notice",
@@ -13516,7 +13573,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "interswitch-security-page",
@@ -13535,7 +13592,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ionos-security-page",
@@ -13554,7 +13611,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "iyzico-privacy-notice",
@@ -13573,7 +13630,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jamespot-compliance-page",
@@ -13592,7 +13649,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jamespot-privacy-notice",
@@ -13611,7 +13668,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jamespot-security-page",
@@ -13630,7 +13687,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jetbrains-dpa",
@@ -13725,7 +13782,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jinjer-security-page",
@@ -13744,7 +13801,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jisr-compliance-page",
@@ -13763,7 +13820,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jisr-security-page",
@@ -13782,7 +13839,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jodoo-status-page",
@@ -13801,7 +13858,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jodoo-trust-center",
@@ -13820,7 +13877,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jumio-privacy-notice-17fe92b6fdae",
@@ -13896,7 +13953,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kahoot-trust-center",
@@ -13915,7 +13972,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kakao-enterprise-certification-reference-099c77957491",
@@ -13953,7 +14010,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kakaobank-terms-of-service",
@@ -13972,7 +14029,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "karrot-terms-of-service",
@@ -13991,7 +14048,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kasada-compliance-page",
@@ -14010,7 +14067,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kasada-dpa",
@@ -14029,7 +14086,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kasada-privacy-notice",
@@ -14048,7 +14105,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kavak-privacy-notice",
@@ -14067,7 +14124,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kavak-terms-of-service",
@@ -14086,7 +14143,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kddi-privacy-notice",
@@ -14105,7 +14162,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "kddi-security-page",
@@ -14124,7 +14181,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "keka-dpa",
@@ -14219,7 +14276,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "klarna-privacy",
@@ -14390,7 +14447,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lark-dpa-ea134b796dd6",
@@ -14542,7 +14599,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leaddesk-status-page",
@@ -14561,7 +14618,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leadsquared-privacy-notice",
@@ -14580,7 +14637,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leadsquared-security-page",
@@ -14599,7 +14656,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leadsquared-terms-of-service",
@@ -14618,7 +14675,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lean-technologies-status-page",
@@ -14637,7 +14694,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ledger-privacy-notice",
@@ -14656,7 +14713,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ledger-status-page",
@@ -14675,7 +14732,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ledger-terms-of-service",
@@ -14694,7 +14751,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leena-ai-compliance-page",
@@ -14713,7 +14770,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leena-ai-privacy-notice",
@@ -14732,7 +14789,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leena-ai-security-page",
@@ -14751,7 +14808,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leena-ai-status-page",
@@ -14770,7 +14827,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leena-ai-terms-of-service",
@@ -14789,7 +14846,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "legalon-technologies-trust-center",
@@ -14808,7 +14865,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "leonardo-security-page-2ce925287fee",
@@ -14903,7 +14960,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "line-works-terms-of-service-c673d14b0f9e",
@@ -15036,7 +15093,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "livechat-status-page",
@@ -15055,7 +15112,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logicgate-compliance",
@@ -15169,7 +15226,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logo-yazilim-privacy-notice",
@@ -15188,7 +15245,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logo-yazilim-terms-of-service",
@@ -15207,7 +15264,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "loom-compliance-page",
@@ -15454,7 +15511,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lunar-status-page",
@@ -15473,7 +15530,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "luno-privacy-notice",
@@ -15492,7 +15549,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mailchimp-compliance",
@@ -15663,7 +15720,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mambu-status-page",
@@ -15682,7 +15739,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "marqeta-certification-reference",
@@ -15853,7 +15910,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "megazonecloud-privacy-notice",
@@ -15872,7 +15929,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "megazonecloud-security-page",
@@ -15891,7 +15948,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "meistertask-compliance-page-3b4528adb1ac",
@@ -15948,7 +16005,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mercado-libre-privacy-notice",
@@ -15967,7 +16024,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "microsoft-compliance",
@@ -16157,7 +16214,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mindtickle-compliance-page",
@@ -16176,7 +16233,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mindtickle-privacy-notice",
@@ -16195,7 +16252,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mindtickle-subprocessors-list",
@@ -16214,7 +16271,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mirakl-privacy-notice",
@@ -16233,7 +16290,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mirakl-terms-of-service",
@@ -16252,7 +16309,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "miro-compliance",
@@ -16537,7 +16594,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mollie-privacy",
@@ -17107,7 +17164,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "nebim-privacy-notice",
@@ -17126,7 +17183,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neo4j-compliance-page",
@@ -17354,7 +17411,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-certification-reference",
@@ -17696,7 +17753,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "nhn-cloud-terms-of-service-8926845f0d97",
@@ -17734,7 +17791,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "nium-privacy-notice",
@@ -17753,7 +17810,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "notion-dpa",
@@ -17848,7 +17905,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "nowports-security-page",
@@ -17867,7 +17924,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "nowports-terms-of-service",
@@ -17886,7 +17943,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "odoo-certification-reference",
@@ -18133,7 +18190,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "onepassword-compliance",
@@ -18627,7 +18684,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pagbank-security-page",
@@ -18646,7 +18703,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pagerduty-compliance",
@@ -18912,7 +18969,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "patsnap-security-page",
@@ -18931,7 +18988,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paychex-compliance-page",
@@ -19007,7 +19064,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paymob-status-page",
@@ -19026,7 +19083,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "payoneer-compliance-page",
@@ -19235,7 +19292,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paytabs-status-page",
@@ -19254,7 +19311,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pennylane-security-page",
@@ -19273,7 +19330,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pennylane-terms-of-service",
@@ -19292,7 +19349,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pennylane-trust-center",
@@ -19311,7 +19368,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "peoplestrong-privacy-notice",
@@ -19330,7 +19387,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "peoplestrong-terms-of-service",
@@ -19349,7 +19406,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "personio-dpa",
@@ -19425,7 +19482,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pine-labs-privacy-notice",
@@ -19444,7 +19501,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pinecone-compliance",
@@ -19729,7 +19786,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipefy-privacy-notice",
@@ -19748,7 +19805,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipefy-security-page",
@@ -19767,7 +19824,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipefy-subprocessors-list",
@@ -19786,7 +19843,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "plaid-privacy",
@@ -19919,7 +19976,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "plusserver-privacy-notice",
@@ -19938,7 +19995,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "plusserver-security-page",
@@ -19957,7 +20014,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pointclickcare-compliance-page",
@@ -20242,7 +20299,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "practo-terms-of-service",
@@ -20261,7 +20318,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "printful-terms-of-service",
@@ -20280,7 +20337,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "prismic-privacy-notice",
@@ -20489,7 +20546,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "proton-privacy-notice",
@@ -20508,7 +20565,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "proton-terms-of-service",
@@ -20527,7 +20584,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "proton-trust-center",
@@ -20546,7 +20603,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "przelewy24-compliance-page",
@@ -20565,7 +20622,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "przelewy24-status-page",
@@ -20584,7 +20641,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "qonto-privacy-notice",
@@ -20603,7 +20660,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "qualtrics-dpa",
@@ -20831,7 +20888,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "railway-dpa",
@@ -21040,7 +21097,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "red-hat-privacy",
@@ -21268,7 +21325,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "relex-solutions-security-page",
@@ -21287,7 +21344,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "relex-solutions-terms-of-service",
@@ -21306,7 +21363,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "render-compliance-page",
@@ -21629,7 +21686,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "rossum-trust-center",
@@ -21648,7 +21705,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "saab-compliance-page-c4dea8d2a239",
@@ -21971,7 +22028,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "samsung-sds-security-page",
@@ -21990,7 +22047,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sana-labs-compliance-page",
@@ -22009,7 +22066,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sana-labs-status-page",
@@ -22028,7 +22085,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sana-labs-subprocessors-list",
@@ -22047,7 +22104,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sana-labs-trust-center",
@@ -22066,7 +22123,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sanity-compliance",
@@ -22503,7 +22560,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "seamlesshr-terms-of-service",
@@ -22522,7 +22579,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "second-front-systems-privacy",
@@ -22598,7 +22655,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "secure-code-warrior-status-page",
@@ -22617,7 +22674,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "secureframe-compliance",
@@ -22788,7 +22845,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sendbox-privacy-notice",
@@ -22807,7 +22864,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sendbox-terms-of-service",
@@ -22826,7 +22883,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "senior-sistemas-security-page",
@@ -22845,7 +22902,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "senior-sistemas-status-page",
@@ -22864,7 +22921,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sentry-compliance",
@@ -23225,7 +23282,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopee-security-page",
@@ -23244,7 +23301,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopee-trust-center",
@@ -23263,7 +23320,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shoper-status-page",
@@ -23282,7 +23339,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopify-compliance",
@@ -23396,7 +23453,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopware-privacy-notice",
@@ -23415,7 +23472,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopware-security-page",
@@ -23434,7 +23491,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopware-terms-of-service",
@@ -23453,7 +23510,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopware-trust-center",
@@ -23472,7 +23529,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "siemens-compliance-page-cfb4a860793b",
@@ -23643,7 +23700,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "signaturit-status-page",
@@ -23662,7 +23719,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "signzy-compliance-page",
@@ -23681,7 +23738,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "signzy-status-page",
@@ -23700,7 +23757,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sinch-privacy-notice",
@@ -23719,7 +23776,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sinch-security-page",
@@ -23738,7 +23795,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "siteminder-security-page",
@@ -23757,7 +23814,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "skydropx-status-page",
@@ -23776,7 +23833,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "slack-compliance",
@@ -23890,7 +23947,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sleekflow-privacy-notice",
@@ -23909,7 +23966,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sleekflow-status-page",
@@ -23928,7 +23985,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sleekflow-terms-of-service",
@@ -23947,7 +24004,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "smarthr-privacy-policy",
@@ -24023,7 +24080,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "smartsheet-compliance-page",
@@ -24346,7 +24403,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "soldo-security-page",
@@ -24365,7 +24422,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sophos-compliance",
@@ -24479,7 +24536,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "spendesk-privacy-notice",
@@ -24498,7 +24555,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "spendesk-subprocessors-list",
@@ -24517,7 +24574,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "spendesk-terms-of-service",
@@ -24536,7 +24593,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "spendesk-trust-center",
@@ -24555,7 +24612,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "splunk-compliance",
@@ -24821,7 +24878,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "staffbase-dpa",
@@ -24840,7 +24897,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "staffbase-privacy-notice",
@@ -24859,7 +24916,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "staffbase-trust-center",
@@ -24878,7 +24935,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "starburst-compliance-page",
@@ -24973,7 +25030,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "stitch-status-page",
@@ -24992,7 +25049,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "storehub-privacy-notice",
@@ -25011,7 +25068,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "storyblok-certification-reference",
@@ -25505,7 +25562,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "surfshark-privacy-notice",
@@ -25524,7 +25581,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "surveymonkey-certification-reference",
@@ -25657,7 +25714,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "swit-compliance-page",
@@ -25676,7 +25733,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "swit-security-page",
@@ -25695,7 +25752,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "swit-trust-center",
@@ -25714,7 +25771,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "synerise-compliance-page",
@@ -25733,7 +25790,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "synerise-privacy-notice",
@@ -25752,7 +25809,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "synerise-security-page",
@@ -25771,7 +25828,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "synerise-trust-center",
@@ -25790,7 +25847,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "system-c-terms-of-service-27047298372d",
@@ -25847,7 +25904,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "talkdesk-security-page",
@@ -25866,7 +25923,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "talkspirit-privacy-notice",
@@ -25885,7 +25942,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "talkspirit-terms-of-service",
@@ -25904,7 +25961,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "tally-solutions-status-page",
@@ -25923,7 +25980,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamspirit-security-page",
@@ -25942,7 +25999,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamsystem-compliance-page",
@@ -25961,7 +26018,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamsystem-dpa",
@@ -25980,7 +26037,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamsystem-privacy-notice",
@@ -25999,7 +26056,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamsystem-trust-center",
@@ -26018,7 +26075,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamtailor-trust-center",
@@ -26037,7 +26094,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "teamwork-privacy",
@@ -26645,7 +26702,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trade-republic-security-page",
@@ -26664,7 +26721,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-compliance-page",
@@ -26968,7 +27025,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "twilio-compliance",
@@ -27272,7 +27329,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "unifonic-security-page",
@@ -27291,7 +27348,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "unifonic-status-page",
@@ -27310,7 +27367,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "uniphore-compliance-page",
@@ -27329,7 +27386,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "uniphore-dpa",
@@ -27348,7 +27405,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "uniphore-subprocessors-list",
@@ -27367,7 +27424,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "upcloud-privacy",
@@ -27443,7 +27500,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vanta-compliance",
@@ -27633,7 +27690,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vertafore-compliance-page",
@@ -27728,7 +27785,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "visma-privacy-notice",
@@ -27747,7 +27804,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vng-cloud-compliance-page",
@@ -27766,7 +27823,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vng-cloud-security-page",
@@ -27785,7 +27842,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vng-cloud-status-page",
@@ -27804,7 +27861,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vng-cloud-trust-center",
@@ -27823,7 +27880,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "voyado-trust-center",
@@ -27842,7 +27899,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vtex-compliance-page",
@@ -27918,7 +27975,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vwo-privacy-notice",
@@ -27937,7 +27994,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vwo-security-page",
@@ -27956,7 +28013,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vwo-subprocessors-list",
@@ -27975,7 +28032,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vwo-terms-of-service",
@@ -27994,7 +28051,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vwo-trust-center",
@@ -28013,7 +28070,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wanted-privacy-notice",
@@ -28032,7 +28089,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "weaviate-compliance",
@@ -28127,7 +28184,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "webengage-privacy-notice",
@@ -28146,7 +28203,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "webflow-compliance",
@@ -28241,7 +28298,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wetransfer-terms-of-service",
@@ -28260,7 +28317,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "whereby-dpa",
@@ -28279,7 +28336,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "whereby-privacy-notice",
@@ -28298,7 +28355,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "whereby-security-page",
@@ -28317,7 +28374,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "whereby-trust-center",
@@ -28336,7 +28393,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wingify-compliance-page",
@@ -28355,7 +28412,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wingify-security-page",
@@ -28374,7 +28431,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wingify-trust-center",
@@ -28393,7 +28450,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wise-payments-limited-companies-house",
@@ -28906,7 +28963,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "works-applications-security-page",
@@ -28925,7 +28982,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "works-mobile-privacy-notice",
@@ -28944,7 +29001,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "works-mobile-security-page",
@@ -28963,7 +29020,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "works-mobile-terms-of-service",
@@ -28982,7 +29039,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worktile-privacy-notice",
@@ -29001,7 +29058,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worktile-security-page",
@@ -29020,7 +29077,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worktile-terms-of-service",
@@ -29039,7 +29096,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worldpay-privacy",
@@ -29381,7 +29438,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "yoco-status-page",
@@ -29400,7 +29457,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "yonyou-privacy-notice",
@@ -29419,7 +29476,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "yonyou-security-page",
@@ -29438,7 +29495,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "yousign-dpa",
@@ -29457,7 +29514,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "yousign-privacy-notice",
@@ -29476,7 +29533,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zapier-compliance",
@@ -29666,7 +29723,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zenvia-status-page",
@@ -29685,7 +29742,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zenvia-trust-center",
@@ -29704,7 +29761,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zoho-compliance",
@@ -29951,7 +30008,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-certification-reference",
@@ -30103,7 +30160,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zucchetti-status-page",
@@ -30122,7 +30179,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     }
   ],
   "not_advice": true
