@@ -26,12 +26,16 @@ name: catalog-growth-promotion-bridge
 # current evidence and remains the sole catalog write authority, gated by its own
 # queue, stale-evidence, source-preflight, and strict-growth automerge checks.
 #
+# A separate exact-gated job may dispatch one uncapped discovery-mesh acceptance run
+# after a successful hosted push smoke tied to the maintainer-owned acceptance PR.
+# That job does not alter the promotion path above or write repository state.
+#
 # Operational metadata only. Not legal, compliance, procurement, security, KYC, AML,
 # audit, or vendor-risk advice.
 
 on:
   workflow_run:
-    workflows: ["catalog-growth-discovery"]
+    workflows: ["catalog-growth-discovery", "discovery-mesh"]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -52,7 +56,14 @@ concurrency:
 
 jobs:
   catalog-growth-promotion-bridge:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.name == 'catalog-growth-discovery' &&
+          github.event.workflow_run.conclusion == 'success'
+        )
+      }}
     runs-on: ubuntu-latest
     env:
       MUTATION_WORKFLOW: candidate-promotion-pr.yml
@@ -269,3 +280,79 @@ jobs:
             reports/promotion-bridge-eligibility.json
             reports/promotion-bridge-decision.json
           if-no-files-found: warn
+
+  dispatch-full-catalog-rendered-acceptance:
+    if: >-
+      ${{
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.name == 'discovery-mesh' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.conclusion == 'success'
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve exact acceptance pull request
+        id: acceptance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          PR_JSON=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
+            --jq '.[0] // empty')
+          if [ -z "$PR_JSON" ]; then
+            echo "dispatch=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          PR_TITLE=$(printf '%s' "$PR_JSON" | jq -r '.title // ""')
+          PR_HEAD=$(printf '%s' "$PR_JSON" | jq -r '.head.ref // ""')
+          PR_AUTHOR=$(printf '%s' "$PR_JSON" | jq -r '.user.login // ""')
+          PR_MERGED=$(printf '%s' "$PR_JSON" | jq -r '.merged_at // ""')
+          if [ "$PR_TITLE" != "Trigger full-catalog rendered-discovery acceptance" ]; then
+            echo "dispatch=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$PR_HEAD" in
+            agent/full-catalog-rendered-acceptance-*) ;;
+            *) echo "::error::acceptance PR branch is not authorized: $PR_HEAD"; exit 1 ;;
+          esac
+          if [ "$PR_AUTHOR" != "$GITHUB_REPOSITORY_OWNER" ]; then
+            echo "::error::acceptance PR must be owned by repository owner"
+            exit 1
+          fi
+          if [ -z "$PR_MERGED" ]; then
+            echo "::error::acceptance PR must be merged"
+            exit 1
+          fi
+          EXISTING=$(gh run list \
+            --workflow discovery-mesh.yml \
+            --branch main \
+            --event workflow_dispatch \
+            --limit 100 \
+            --json headSha,status,conclusion,databaseId \
+            --jq "[.[] | select(.headSha == \"${HEAD_SHA}\")] | length")
+          case "$EXISTING" in ''|*[!0-9]*) echo "::error::invalid prior acceptance run count"; exit 1 ;; esac
+          if [ "$EXISTING" != "0" ]; then
+            echo "dispatch=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "dispatch=true" >> "$GITHUB_OUTPUT"
+      - name: Dispatch uncapped full-catalog discovery mesh
+        if: steps.acceptance.outputs.dispatch == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run discovery-mesh.yml --ref main
+          {
+            echo "### Full-catalog rendered-discovery acceptance dispatch"
+            echo ""
+            echo "- Source smoke run: \`${{ github.event.workflow_run.id }}\`"
+            echo "- Source commit: \`${{ github.event.workflow_run.head_sha }}\`"
+            echo "- Target workflow: \`discovery-mesh.yml\`"
+            echo "- Target ref: \`main\`"
+            echo "- Input overrides: none"
+            echo "- Expected matrix: \`32 shards / no vendor limit\`"
+          } >> "$GITHUB_STEP_SUMMARY"
