@@ -2,7 +2,7 @@ name: discovery-ledger-append-pr
 
 on:
   workflow_run:
-    workflows: ["catalog-growth-discovery"]
+    workflows: ["catalog-growth-discovery", "discovery-mesh"]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -22,7 +22,14 @@ concurrency:
 
 jobs:
   discovery-ledger-append:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.name == 'catalog-growth-discovery' &&
+          github.event.workflow_run.conclusion == 'success'
+        )
+      }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -177,3 +184,123 @@ jobs:
             --color "0E8A16" \
             --force
           gh pr edit "$PR_NUMBER" --add-label "discovery-ledger" --add-label "automerge:observation"
+
+  discovery-mesh-smoke-report:
+    if: >-
+      ${{
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.name == 'discovery-mesh' &&
+        github.event.workflow_run.event == 'push'
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture job outcomes and optional differential
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/discovery-mesh-smoke"
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/jobs?per_page=100" \
+            > "$RUNNER_TEMP/discovery-mesh-smoke/jobs.json"
+          if gh run download "$RUN_ID" \
+            --name openva-discovery-mesh-aggregate \
+            --dir "$RUNNER_TEMP/discovery-mesh-smoke/aggregate"; then
+            echo "aggregate artifact downloaded"
+          else
+            echo "aggregate artifact unavailable"
+          fi
+      - name: Publish durable smoke outcome
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
+            --jq '.[0].number // empty')
+          BODY_FILE="$RUNNER_TEMP/discovery-mesh-smoke-report.md"
+          python - "$RUNNER_TEMP/discovery-mesh-smoke" "$BODY_FILE" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          jobs_payload = json.loads((root / "jobs.json").read_text(encoding="utf-8"))
+          jobs = {
+              str(row.get("name") or "unknown"): str(row.get("conclusion") or row.get("status") or "unknown")
+              for row in jobs_payload.get("jobs", [])
+          }
+          differential_path = root / "aggregate" / "rendered-discovery-differential.json"
+          differential = None
+          if differential_path.is_file():
+              differential = json.loads(differential_path.read_text(encoding="utf-8"))
+
+          lines = [
+              "## Rendered discovery hosted smoke",
+              "",
+              f"- Run: [{os.environ['RUN_ID']}]({os.environ['RUN_URL']}) (attempt `{os.environ['RUN_ATTEMPT']}`)",
+              f"- Commit: `{os.environ['HEAD_SHA']}`",
+              f"- Workflow conclusion: `{os.environ['RUN_CONCLUSION']}`",
+              "- Profile: `1 shard / 5-vendor diagnostic limit`",
+              "- Candidate-intake mutation: `disabled for push smoke`",
+              "",
+              "### Job outcomes",
+              "",
+          ]
+          for name, result in sorted(jobs.items()):
+              lines.append(f"- {name}: `{result}`")
+          lines.extend(["", "### Static-to-rendered differential", ""])
+          if differential is None:
+              lines.append("- Differential artifact: `missing`")
+          else:
+              for key, value in (differential.get("differential") or {}).items():
+                  rendered = json.dumps(value, sort_keys=True) if isinstance(value, dict) else value
+                  lines.append(f"- {key}: `{rendered}`")
+              posture = differential.get("posture") or {}
+              lines.append(f"- Browser direct network access: `{posture.get('browser_direct_network_access')}`")
+              lines.append(f"- Writes canonical sources: `{posture.get('writes_canonical_sources')}`")
+          lines.extend(
+              [
+                  "",
+                  "Hosted deployment acceptance requires a successful workflow, successful plan/discover/aggregate jobs, and a rendered-discovery differential artifact. Full-catalog production acceptance remains separate.",
+              ]
+          )
+          Path(sys.argv[2]).write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+          cat "$BODY_FILE" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"
+          else
+            echo "No pull request associated with ${HEAD_SHA}; outcome retained in workflow summary."
+          fi
+      - name: Enforce hosted-smoke acceptance
+        env:
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: |
+          set -euo pipefail
+          JOBS="$RUNNER_TEMP/discovery-mesh-smoke/jobs.json"
+          DIFFERENTIAL="$RUNNER_TEMP/discovery-mesh-smoke/aggregate/rendered-discovery-differential.json"
+          test "$RUN_CONCLUSION" = "success"
+          python - "$JOBS" <<'PY'
+          import json
+          import sys
+
+          jobs = {
+              str(row.get("name") or ""): str(row.get("conclusion") or "")
+              for row in json.load(open(sys.argv[1], encoding="utf-8")).get("jobs", [])
+          }
+          required = ("plan", "discover", "aggregate")
+          failures = [name for name in required if jobs.get(name) != "success"]
+          if failures:
+              raise SystemExit("hosted smoke jobs not successful: " + ", ".join(failures))
+          PY
+          test -f "$DIFFERENTIAL"
