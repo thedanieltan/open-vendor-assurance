@@ -35,18 +35,21 @@ def test_discovery_ledger_append_remains_confined_to_legacy_successful_runs() ->
     assert "discovery ledger append only accepts catalog-growth-discovery artifacts" in text
 
 
-def test_rendered_smoke_report_is_unconditional_for_completed_push_runs() -> None:
+def test_rendered_discovery_report_covers_push_and_manual_acceptance_runs() -> None:
     workflow = _workflow(REPORTER)
     job = workflow["jobs"]["discovery-mesh-smoke-report"]
     text = REPORTER.read_text(encoding="utf-8")
 
     assert "github.event.workflow_run.name == 'discovery-mesh'" in job["if"]
     assert "github.event.workflow_run.event == 'push'" in job["if"]
+    assert "github.event.workflow_run.event == 'workflow_dispatch'" in job["if"]
     assert "actions/runs/${RUN_ID}/jobs?per_page=100" in text
     assert "openva-discovery-mesh-aggregate" in text
     assert "rendered-discovery-differential.json" in text
-    assert "Workflow conclusion" in text
-    assert "Enforce hosted-smoke acceptance" in text
+    assert "Rendered discovery full-catalog acceptance" in text
+    assert "default 32-shard matrix / no vendor limit" in text
+    assert "Enforce discovery acceptance" in text
+    assert "full-catalog acceptance expected 32 shard reports" in text
 
 
 def test_full_catalog_dispatch_uses_existing_actions_write_bridge() -> None:
