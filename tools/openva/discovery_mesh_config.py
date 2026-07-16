@@ -9,7 +9,6 @@ from __future__ import annotations
 import os
 from typing import Any
 
-HOSTED_SMOKE_CONTRACT_VERSION = "0.1.0"
 CATALOG_VENDOR_LIMIT: int | None = None
 DEFAULT_SHARD_COUNT = 32
 MAX_DEPTH_PER_VENDOR = 2
