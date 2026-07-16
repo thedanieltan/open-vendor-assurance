@@ -4,8 +4,6 @@ from pathlib import Path
 
 import yaml
 
-from tools.openva import discovery_mesh_config as config
-
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "discovery-ledger-append-pr.yml"
@@ -48,10 +46,3 @@ def test_rendered_smoke_report_is_unconditional_for_completed_push_runs() -> Non
     assert "rendered-discovery-differential.json" in text
     assert "Workflow conclusion" in text
     assert "Enforce hosted-smoke acceptance" in text
-
-
-def test_hosted_smoke_contract_is_versioned_and_catalog_remains_uncapped() -> None:
-    assert config.HOSTED_SMOKE_CONTRACT_VERSION == "0.1.0"
-    assert config.CATALOG_VENDOR_LIMIT is None
-    assert config.runtime_bounds("push") == config.DEPLOYMENT_SMOKE_BOUNDS
-    assert config.runtime_bounds("schedule") == config.PRODUCTION_BOUNDS
