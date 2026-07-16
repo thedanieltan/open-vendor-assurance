@@ -190,7 +190,10 @@ jobs:
       ${{
         github.event_name == 'workflow_run' &&
         github.event.workflow_run.name == 'discovery-mesh' &&
-        github.event.workflow_run.event == 'push'
+        (
+          github.event.workflow_run.event == 'push' ||
+          github.event.workflow_run.event == 'workflow_dispatch'
+        )
       }}
     runs-on: ubuntu-latest
     steps:
@@ -212,12 +215,13 @@ jobs:
           else
             echo "aggregate artifact unavailable"
           fi
-      - name: Publish durable smoke outcome
+      - name: Publish durable discovery outcome
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.event.workflow_run.id }}
           RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
           RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
           RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
@@ -236,7 +240,9 @@ jobs:
           root = Path(sys.argv[1])
           jobs_payload = json.loads((root / "jobs.json").read_text(encoding="utf-8"))
           jobs = {
-              str(row.get("name") or "unknown"): str(row.get("conclusion") or row.get("status") or "unknown")
+              str(row.get("name") or "unknown"): str(
+                  row.get("conclusion") or row.get("status") or "unknown"
+              )
               for row in jobs_payload.get("jobs", [])
           }
           differential_path = root / "aggregate" / "rendered-discovery-differential.json"
@@ -244,14 +250,32 @@ jobs:
           if differential_path.is_file():
               differential = json.loads(differential_path.read_text(encoding="utf-8"))
 
+          full_catalog = os.environ["RUN_EVENT"] == "workflow_dispatch"
+          heading = (
+              "## Rendered discovery full-catalog acceptance"
+              if full_catalog
+              else "## Rendered discovery hosted smoke"
+          )
+          profile = (
+              "`default 32-shard matrix / no vendor limit`"
+              if full_catalog
+              else "`1 shard / 5-vendor diagnostic limit`"
+          )
+          mutation = (
+              "`existing governed production pipeline enabled`"
+              if full_catalog
+              else "`disabled for push smoke`"
+          )
           lines = [
-              "## Rendered discovery hosted smoke",
+              heading,
               "",
-              f"- Run: [{os.environ['RUN_ID']}]({os.environ['RUN_URL']}) (attempt `{os.environ['RUN_ATTEMPT']}`)",
+              f"- Run: [{os.environ['RUN_ID']}]({os.environ['RUN_URL']}) "
+              f"(attempt `{os.environ['RUN_ATTEMPT']}`)",
               f"- Commit: `{os.environ['HEAD_SHA']}`",
+              f"- Source event: `{os.environ['RUN_EVENT']}`",
               f"- Workflow conclusion: `{os.environ['RUN_CONCLUSION']}`",
-              "- Profile: `1 shard / 5-vendor diagnostic limit`",
-              "- Candidate-intake mutation: `disabled for push smoke`",
+              f"- Profile: {profile}",
+              f"- Candidate-intake posture: {mutation}",
               "",
               "### Job outcomes",
               "",
@@ -262,16 +286,38 @@ jobs:
           if differential is None:
               lines.append("- Differential artifact: `missing`")
           else:
+              lines.append(
+                  f"- Shard reports: `{differential.get('shard_report_count')}`"
+              )
               for key, value in (differential.get("differential") or {}).items():
-                  rendered = json.dumps(value, sort_keys=True) if isinstance(value, dict) else value
+                  rendered = (
+                      json.dumps(value, sort_keys=True)
+                      if isinstance(value, dict)
+                      else value
+                  )
                   lines.append(f"- {key}: `{rendered}`")
               posture = differential.get("posture") or {}
-              lines.append(f"- Browser direct network access: `{posture.get('browser_direct_network_access')}`")
-              lines.append(f"- Writes canonical sources: `{posture.get('writes_canonical_sources')}`")
+              lines.append(
+                  "- Browser direct network access: "
+                  f"`{posture.get('browser_direct_network_access')}`"
+              )
+              lines.append(
+                  f"- Writes canonical sources: `{posture.get('writes_canonical_sources')}`"
+              )
           lines.extend(
               [
                   "",
-                  "Hosted deployment acceptance requires a successful workflow, successful plan/discover/aggregate jobs, and a rendered-discovery differential artifact. Full-catalog production acceptance remains separate.",
+                  (
+                      "Full-catalog production acceptance requires a successful "
+                      "workflow, successful plan/discover/aggregate jobs, 32 shard "
+                      "reports, and a rendered-discovery differential artifact."
+                      if full_catalog
+                      else
+                      "Hosted deployment acceptance requires a successful workflow, "
+                      "successful plan/discover/aggregate jobs, and a rendered-"
+                      "discovery differential artifact. Full-catalog production "
+                      "acceptance remains separate."
+                  ),
               ]
           )
           Path(sys.argv[2]).write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -282,15 +328,16 @@ jobs:
           else
             echo "No pull request associated with ${HEAD_SHA}; outcome retained in workflow summary."
           fi
-      - name: Enforce hosted-smoke acceptance
+      - name: Enforce discovery acceptance
         env:
           RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
         run: |
           set -euo pipefail
           JOBS="$RUNNER_TEMP/discovery-mesh-smoke/jobs.json"
           DIFFERENTIAL="$RUNNER_TEMP/discovery-mesh-smoke/aggregate/rendered-discovery-differential.json"
           test "$RUN_CONCLUSION" = "success"
-          python - "$JOBS" <<'PY'
+          python - "$JOBS" "$DIFFERENTIAL" "$RUN_EVENT" <<'PY'
           import json
           import sys
 
@@ -301,6 +348,14 @@ jobs:
           required = ("plan", "discover", "aggregate")
           failures = [name for name in required if jobs.get(name) != "success"]
           if failures:
-              raise SystemExit("hosted smoke jobs not successful: " + ", ".join(failures))
+              raise SystemExit(
+                  "discovery acceptance jobs not successful: " + ", ".join(failures)
+              )
+          differential = json.load(open(sys.argv[2], encoding="utf-8"))
+          if sys.argv[3] == "workflow_dispatch":
+              shard_count = int(differential.get("shard_report_count") or 0)
+              if shard_count != 32:
+                  raise SystemExit(
+                      f"full-catalog acceptance expected 32 shard reports, got {shard_count}"
+                  )
           PY
-          test -f "$DIFFERENTIAL"
