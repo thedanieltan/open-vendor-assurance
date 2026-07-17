@@ -1,0 +1,279 @@
+name: rendered-discovery-acceptance-controller
+
+# Exact-gated recovery and durable dispatch-receipt lane for full-catalog rendered
+# discovery acceptance. This workflow does not write catalog state or create/merge PRs.
+# It serializes with catalog-growth-promotion-bridge so only one controller can dispatch.
+
+on:
+  workflow_run:
+    workflows: ["discovery-mesh"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_smoke_run_id:
+        description: "Exact successful Discovery Mesh push-smoke run id"
+        required: true
+        type: string
+      acceptance_pr_number:
+        description: "Exact merged acceptance pull request number"
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+  pull-requests: write
+
+concurrency:
+  # Repository-wide concurrency groups are shared across workflows. Reusing the
+  # bridge group serializes this controller with the legacy dispatch job.
+  group: catalog-growth-promotion-bridge
+  cancel-in-progress: false
+
+jobs:
+  dispatch-and-publish-receipt:
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.name == 'discovery-mesh' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.conclusion == 'success'
+        )
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve and validate exact acceptance source
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SMOKE_RUN_ID: ${{ github.event.workflow_run.id }}
+          INPUT_SMOKE_RUN_ID: ${{ inputs.source_smoke_run_id }}
+          INPUT_PR_NUMBER: ${{ inputs.acceptance_pr_number }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            SMOKE_RUN_ID="$INPUT_SMOKE_RUN_ID"
+            REQUESTED_PR_NUMBER="$INPUT_PR_NUMBER"
+          else
+            SMOKE_RUN_ID="$EVENT_SMOKE_RUN_ID"
+            REQUESTED_PR_NUMBER=""
+          fi
+          case "$SMOKE_RUN_ID" in ''|*[!0-9]*) echo "::error::source smoke run id must be numeric"; exit 1 ;; esac
+          case "$REQUESTED_PR_NUMBER" in *[!0-9]*) echo "::error::acceptance PR number must be numeric"; exit 1 ;; esac
+
+          META=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${SMOKE_RUN_ID}")
+          WORKFLOW_NAME=$(printf '%s' "$META" | jq -r '.name // ""')
+          SOURCE_EVENT=$(printf '%s' "$META" | jq -r '.event // ""')
+          CONCLUSION=$(printf '%s' "$META" | jq -r '.conclusion // ""')
+          HEAD_SHA=$(printf '%s' "$META" | jq -r '.head_sha // ""')
+          COMPLETED_AT=$(printf '%s' "$META" | jq -r '.updated_at // ""')
+          if [ "$WORKFLOW_NAME" != "discovery-mesh" ] || [ "$SOURCE_EVENT" != "push" ] || [ "$CONCLUSION" != "success" ]; then
+            echo "::error::acceptance source must be a successful discovery-mesh push run"
+            exit 1
+          fi
+          if [ -z "$HEAD_SHA" ] || [ -z "$COMPLETED_AT" ]; then
+            echo "::error::source smoke metadata is incomplete"
+            exit 1
+          fi
+
+          PRS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls")
+          if [ -n "$REQUESTED_PR_NUMBER" ]; then
+            PR_JSON=$(printf '%s' "$PRS" | jq -c --argjson number "$REQUESTED_PR_NUMBER" \
+              '.[] | select(.number == $number)' | head -n 1)
+          else
+            PR_JSON=$(printf '%s' "$PRS" | jq -c '.[0] // empty')
+          fi
+          if [ -z "$PR_JSON" ]; then
+            if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+              echo "::error::source smoke commit is not associated with the requested PR"
+              exit 1
+            fi
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          PR_NUMBER=$(printf '%s' "$PR_JSON" | jq -r '.number')
+          PR_TITLE=$(printf '%s' "$PR_JSON" | jq -r '.title // ""')
+          PR_HEAD=$(printf '%s' "$PR_JSON" | jq -r '.head.ref // ""')
+          PR_AUTHOR=$(printf '%s' "$PR_JSON" | jq -r '.user.login // ""')
+          PR_MERGED=$(printf '%s' "$PR_JSON" | jq -r '.merged_at // ""')
+          if [ "$PR_TITLE" != "Trigger full-catalog rendered-discovery acceptance" ]; then
+            if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+              echo "::error::acceptance PR title is not authorized"
+              exit 1
+            fi
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$PR_HEAD" in
+            agent/full-catalog-rendered-acceptance-*) ;;
+            *) echo "::error::acceptance PR branch is not authorized: $PR_HEAD"; exit 1 ;;
+          esac
+          if [ "$PR_AUTHOR" != "$GITHUB_REPOSITORY_OWNER" ]; then
+            echo "::error::acceptance PR must be owned by repository owner"
+            exit 1
+          fi
+          if [ -z "$PR_MERGED" ]; then
+            echo "::error::acceptance PR must be merged"
+            exit 1
+          fi
+
+          {
+            echo "eligible=true"
+            echo "smoke_run_id=$SMOKE_RUN_ID"
+            echo "head_sha=$HEAD_SHA"
+            echo "completed_at=$COMPLETED_AT"
+            echo "pr_number=$PR_NUMBER"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Resolve existing receipt or dispatch exact full-catalog run
+        if: steps.source.outputs.eligible == 'true'
+        id: dispatch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SMOKE_RUN_ID: ${{ steps.source.outputs.smoke_run_id }}
+          SOURCE_SHA: ${{ steps.source.outputs.head_sha }}
+          SMOKE_COMPLETED_AT: ${{ steps.source.outputs.completed_at }}
+          PR_NUMBER: ${{ steps.source.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          MARKER="<!-- openva-full-catalog-dispatch source-smoke=${SMOKE_RUN_ID} -->"
+          PRIOR_COMMENT=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
+            --paginate \
+            --jq ".[] | select(.body | contains(\"${MARKER}\")) | .body" | head -n 1)
+
+          STATE=""
+          RUN_ID=""
+          RUN_URL=""
+          if [ -n "$PRIOR_COMMENT" ]; then
+            STATE="existing_receipt"
+            RUN_ID=$(printf '%s' "$PRIOR_COMMENT" | sed -n 's/.*openva-full-catalog-run-id=\([0-9][0-9]*\).*/\1/p' | head -n 1)
+            RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
+          else
+            RUNS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/discovery-mesh.yml/runs?branch=main&event=workflow_dispatch&per_page=100")
+            MATCHES=$(printf '%s' "$RUNS" | jq --arg after "$SMOKE_COMPLETED_AT" \
+              '[.workflow_runs[] | select(.created_at >= $after)]')
+            MATCH_COUNT=$(printf '%s' "$MATCHES" | jq 'length')
+            case "$MATCH_COUNT" in ''|*[!0-9]*) echo "::error::invalid existing run count"; exit 1 ;; esac
+            if [ "$MATCH_COUNT" -gt 1 ]; then
+              printf '%s' "$MATCHES" > reports/full-catalog-dispatch-ambiguity.json
+              echo "::error::multiple workflow_dispatch runs exist after the source smoke; refusing duplicate dispatch"
+              exit 1
+            elif [ "$MATCH_COUNT" = "1" ]; then
+              STATE="existing_run"
+              RUN_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].id')
+              RUN_URL=$(printf '%s' "$MATCHES" | jq -r '.[0].html_url')
+            else
+              RESPONSE=$(gh api --method POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2026-03-10" \
+                "repos/${GITHUB_REPOSITORY}/actions/workflows/discovery-mesh.yml/dispatches" \
+                -f ref=main \
+                -F return_run_details=true)
+              STATE="dispatched"
+              RUN_ID=$(printf '%s' "$RESPONSE" | jq -r '.workflow_run_id // empty')
+              RUN_URL=$(printf '%s' "$RESPONSE" | jq -r '.html_url // empty')
+            fi
+          fi
+
+          case "$RUN_ID" in ''|*[!0-9]*) echo "::error::dispatch did not produce an exact workflow run id"; exit 1 ;; esac
+          if [ -z "$RUN_URL" ]; then
+            echo "::error::dispatch did not produce a workflow run URL"
+            exit 1
+          fi
+          RUN_META=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}")
+          RUN_EVENT=$(printf '%s' "$RUN_META" | jq -r '.event // ""')
+          RUN_WORKFLOW=$(printf '%s' "$RUN_META" | jq -r '.name // ""')
+          if [ "$RUN_EVENT" != "workflow_dispatch" ] || [ "$RUN_WORKFLOW" != "discovery-mesh" ]; then
+            echo "::error::resolved run is not a discovery-mesh workflow_dispatch run"
+            exit 1
+          fi
+
+          jq -n \
+            --arg schema_version "0.1.0" \
+            --arg state "$STATE" \
+            --argjson source_smoke_run_id "$SMOKE_RUN_ID" \
+            --arg source_commit "$SOURCE_SHA" \
+            --argjson acceptance_pr_number "$PR_NUMBER" \
+            --argjson workflow_run_id "$RUN_ID" \
+            --arg workflow_run_url "$RUN_URL" \
+            --arg profile "default 32-shard matrix / no vendor limit" \
+            '{
+              schema_version: $schema_version,
+              state: $state,
+              source_smoke_run_id: $source_smoke_run_id,
+              source_commit: $source_commit,
+              acceptance_pr_number: $acceptance_pr_number,
+              workflow_run_id: $workflow_run_id,
+              workflow_run_url: $workflow_run_url,
+              profile: $profile,
+              writes_canonical_sources: false
+            }' > reports/full-catalog-dispatch-receipt.json
+          {
+            echo "state=$STATE"
+            echo "run_id=$RUN_ID"
+            echo "run_url=$RUN_URL"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish durable dispatch receipt
+        if: steps.source.outputs.eligible == 'true' && steps.dispatch.outputs.run_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.source.outputs.pr_number }}
+          SMOKE_RUN_ID: ${{ steps.source.outputs.smoke_run_id }}
+          SOURCE_SHA: ${{ steps.source.outputs.head_sha }}
+          STATE: ${{ steps.dispatch.outputs.state }}
+          RUN_ID: ${{ steps.dispatch.outputs.run_id }}
+          RUN_URL: ${{ steps.dispatch.outputs.run_url }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- openva-full-catalog-dispatch source-smoke=${SMOKE_RUN_ID} -->"
+          EXISTING=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
+            --paginate \
+            --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -n 1)
+          if [ -n "$EXISTING" ]; then
+            echo "Dispatch receipt already exists on PR #${PR_NUMBER}."
+            exit 0
+          fi
+          BODY="$RUNNER_TEMP/full-catalog-dispatch-receipt.md"
+          {
+            echo "$MARKER"
+            echo "<!-- openva-full-catalog-run-id=${RUN_ID} -->"
+            echo "## Full-catalog rendered-discovery dispatch receipt"
+            echo ""
+            echo "- Controller state: \`${STATE}\`"
+            echo "- Source smoke run: \`${SMOKE_RUN_ID}\`"
+            echo "- Source commit: \`${SOURCE_SHA}\`"
+            echo "- Full-catalog run: [\`${RUN_ID}\`](${RUN_URL})"
+            echo "- Profile: \`default 32-shard matrix / no vendor limit\`"
+            echo "- Input overrides affecting capacity: \`none\`"
+            echo "- Canonical catalog writes by controller: \`false\`"
+            echo ""
+            echo "Completion and differential evidence remain the responsibility of the existing Discovery Mesh outcome reporter."
+          } > "$BODY"
+          gh pr comment "$PR_NUMBER" --body-file "$BODY"
+          cat "$BODY" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload dispatch receipt
+        if: steps.source.outputs.eligible == 'true' && always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-full-catalog-dispatch-receipt
+          path: reports/full-catalog-dispatch-receipt.json
+          if-no-files-found: warn
+          retention-days: 14
