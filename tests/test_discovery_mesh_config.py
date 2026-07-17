@@ -15,6 +15,6 @@ def test_discovery_mesh_per_vendor_bounds_are_not_catalog_caps() -> None:
 
 
 def test_hosted_rendered_discovery_smoke_contract_is_versioned() -> None:
-    assert config.HOSTED_SMOKE_CONTRACT_VERSION == "0.1.2"
+    assert config.HOSTED_SMOKE_CONTRACT_VERSION == "0.1.3"
     assert config.runtime_bounds("push") == config.DEPLOYMENT_SMOKE_BOUNDS
     assert config.runtime_bounds("schedule") == config.PRODUCTION_BOUNDS
