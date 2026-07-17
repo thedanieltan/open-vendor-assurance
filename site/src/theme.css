@@ -8,20 +8,20 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  /* trusty-vendor-scan: Navy Trust dark */
-  --donor-bg: oklch(0.16 0.03 260);
-  --donor-fg: oklch(0.96 0.01 250);
-  --donor-surface: oklch(0.2 0.035 260);
-  --donor-surface-muted: oklch(0.22 0.035 260);
-  --donor-primary: oklch(0.78 0.11 250);
-  --donor-primary-fg: oklch(0.16 0.03 260);
-  --donor-brand: oklch(0.7 0.14 250);
-  --donor-muted: oklch(0.72 0.03 255);
-  --donor-accent: oklch(0.28 0.045 258);
-  --donor-border: oklch(0.3 0.03 260);
-  --donor-ring: oklch(0.65 0.12 250);
-  --donor-warning: oklch(0.75 0.14 85);
-  --donor-danger: oklch(0.68 0.2 22);
+  /* Cobalt dark — same hue anchor (258) as light, only lightness/chroma move. */
+  --donor-bg: var(--color-paper);
+  --donor-fg: var(--color-ink);
+  --donor-surface: var(--color-surface);
+  --donor-surface-muted: var(--color-paper-2);
+  --donor-primary: var(--color-accent);
+  --donor-primary-fg: var(--color-accent-ink);
+  --donor-brand: var(--color-accent);
+  --donor-muted: var(--color-muted);
+  --donor-accent: var(--color-accent-soft);
+  --donor-border: var(--color-rule);
+  --donor-ring: var(--color-focus);
+  --donor-warning: var(--color-warning);
+  --donor-danger: var(--color-danger);
 
   /* Compatibility aliases used by older static selectors. */
   --visual-bg: var(--donor-bg);
@@ -36,8 +36,8 @@ html[data-theme="dark"] {
   --visual-accent: var(--donor-accent);
   --visual-warning-bg: var(--donor-surface-muted);
   --visual-warning-border: var(--donor-border);
-  --visual-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.16);
-  --visual-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.14);
+  --visual-shadow: var(--shadow-card);
+  --visual-shadow-soft: var(--shadow-whisper);
 }
 
 html[data-theme="dark"] body {
@@ -133,7 +133,9 @@ html[data-theme="dark"] footer {
 }
 
 /* Donor presentation hardening. These high-specificity rules intentionally
-   override the compatibility layer without reintroducing legacy styling. */
+   override the compatibility layer without reintroducing legacy styling.
+   Cobalt carries the page on cool paper + hairlines only — no background
+   texture or pattern, so the old dot-grid ::before is removed outright. */
 html body main .home-room .one-page-hero {
   overflow: hidden !important;
   -webkit-mask-image: none !important;
@@ -141,16 +143,7 @@ html body main .home-room .one-page-hero {
   background-image: none !important;
 }
 html body main .home-room .one-page-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, color-mix(in oklch, var(--donor-border) 62%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklch, var(--donor-border) 62%, transparent) 1px, transparent 1px) !important;
-  background-size: 32px 32px !important;
-  -webkit-mask-image: radial-gradient(ellipse at top, black 35%, transparent 82%) !important;
-  mask-image: radial-gradient(ellipse at top, black 35%, transparent 82%) !important;
+  content: none !important;
 }
 html body main .detail-panel > .summary-strip + p {
   display: none !important;

@@ -1,28 +1,31 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
-/* Donor-faithful static presentation layer.
-   Mirrors trusty-vendor-scan's Navy Trust light-mode visual system while
-   preserving OpenVA's dependency-free HTML and browser-local workflows. */
+/* Hallmark · genre: modern-minimal · macrostructure: Workbench · theme: Cobalt
+ * accent: electric cobalt oklch(58% 0.20 256) · nav: bordered hairline · footer: mast-headed
+ * Cool engineered paper, hairline structure, one dark graphite instrument-panel band,
+ * Space Grotesk display + Inter body + JetBrains Mono data/labels.
+ * Values below alias tokens.css so every existing --donor-* selector in this
+ * layered stylesheet repaints without any structural rule changing. */
 :root {
-  --donor-bg: oklch(0.985 0.005 250);
-  --donor-fg: oklch(0.18 0.04 260);
-  --donor-surface: oklch(1 0 0);
-  --donor-surface-muted: oklch(0.965 0.012 250);
-  --donor-primary: oklch(0.28 0.08 260);
-  --donor-primary-fg: oklch(0.985 0.005 250);
-  --donor-brand: oklch(0.45 0.15 260);
-  --donor-muted: oklch(0.48 0.03 255);
-  --donor-accent: oklch(0.93 0.025 250);
-  --donor-border: oklch(0.9 0.015 250);
-  --donor-ring: oklch(0.55 0.12 255);
-  --donor-warning: oklch(0.58 0.16 55);
-  --donor-danger: oklch(0.58 0.22 27);
-  --donor-radius-sm: 0.375rem;
-  --donor-radius: 0.5rem;
-  --donor-radius-lg: 0.75rem;
-  --donor-radius-xl: 1rem;
-  --donor-shadow-sm: 0 1px 2px rgba(15, 27, 61, 0.05);
-  --donor-shadow: 0 1px 2px rgba(15, 27, 61, 0.05), 0 8px 24px rgba(15, 27, 61, 0.06);
+  --donor-bg: var(--color-paper);
+  --donor-fg: var(--color-ink);
+  --donor-surface: var(--color-surface);
+  --donor-surface-muted: var(--color-paper-2);
+  --donor-primary: var(--color-accent);
+  --donor-primary-fg: var(--color-accent-ink);
+  --donor-brand: var(--color-accent);
+  --donor-muted: var(--color-muted);
+  --donor-accent: var(--color-accent-soft);
+  --donor-border: var(--color-rule);
+  --donor-ring: var(--color-focus);
+  --donor-warning: var(--color-warning);
+  --donor-danger: var(--color-danger);
+  --donor-radius-sm: var(--radius-sm);
+  --donor-radius: var(--radius);
+  --donor-radius-lg: var(--radius-lg);
+  --donor-radius-xl: var(--radius-xl);
+  --donor-shadow-sm: var(--shadow-whisper);
+  --donor-shadow: var(--shadow-card);
 }
 
 * { box-sizing: border-box; }
@@ -31,8 +34,19 @@ html {
   scroll-padding-top: 5rem;
   background: var(--donor-bg);
   color: var(--donor-fg);
-  font-family: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-feature-settings: "ss01", "cv11";
+}
+h1, h2, h3,
+.brand-link strong,
+.vendor-card h4 button,
+.detail-panel h3,
+.section-card h3,
+.section-heading-lite h3,
+.terms-card h3 {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em;
 }
 body {
   margin: 0;
@@ -47,8 +61,17 @@ code, kbd, pre, samp, .font-mono,
 .snapshot-heading span:last-child,
 .hero-metrics strong,
 .meta-line,
-.summary-strip strong {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace !important;
+.summary-strip strong,
+.eyebrow,
+.hero-pill,
+.source-health,
+th {
+  font-family: var(--font-mono) !important;
+}
+.eyebrow,
+.hero-pill,
+th {
+  letter-spacing: .06em !important;
 }
 ::selection { background: color-mix(in oklch, var(--donor-brand) 30%, transparent); }
 a { color: var(--donor-brand); text-underline-offset: .18em; }
@@ -251,6 +274,29 @@ main { width: 100% !important; max-width: none !important; margin: 0 !important;
 .hero-flow li > a { grid-column: 3; grid-row: 1; color: var(--donor-fg) !important; font-size: .86rem !important; font-weight: 500 !important; text-decoration: none !important; }
 .hero-flow li:hover { border-color: color-mix(in oklch, var(--donor-brand) 55%, var(--donor-border)) !important; background: var(--donor-accent) !important; }
 .hero-snapshot-disclosure { display: none !important; }
+
+/* Cobalt signature move — the hero's one dark graphite instrument-panel band.
+   Data is the hero here (live catalog snapshot), not a code sample. */
+.hero-snapshot {
+  background: var(--color-graphite) !important;
+  border-color: var(--color-graphite-2) !important;
+  color: var(--color-graphite-ink) !important;
+}
+.hero-snapshot .snapshot-heading { color: var(--color-graphite-muted) !important; }
+.hero-snapshot .hero-metrics strong { color: var(--color-accent) !important; font-variant-numeric: tabular-nums; }
+.hero-snapshot .hero-metrics span { color: var(--color-graphite-muted) !important; }
+.hero-snapshot .hero-flow { border-top-color: var(--color-graphite-2) !important; }
+.hero-snapshot .hero-flow li {
+  border-color: var(--color-graphite-2) !important;
+  background: var(--color-graphite-2) !important;
+}
+.hero-snapshot .hero-flow li::before { background: color-mix(in oklch, var(--color-accent) 22%, transparent) !important; }
+.hero-snapshot .hero-flow li > span { color: var(--color-graphite-muted) !important; }
+.hero-snapshot .hero-flow li > a { color: var(--color-graphite-ink) !important; }
+.hero-snapshot .hero-flow li:hover {
+  border-color: color-mix(in oklch, var(--color-accent) 55%, var(--color-graphite-2)) !important;
+  background: color-mix(in oklch, var(--color-accent) 14%, var(--color-graphite-2)) !important;
+}
 
 button,
 .button {

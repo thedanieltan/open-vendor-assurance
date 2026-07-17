@@ -3,28 +3,27 @@
 
 :root {
   color-scheme: light dark;
-  --visual-bg: #f6f8f5;
-  --visual-bg-soft: #fbfaf4;
-  --visual-surface: #ffffff;
-  --visual-surface-soft: #f4faf6;
-  --visual-text: #10221d;
-  --visual-muted: #4f665e;
-  --visual-border: #d7e5de;
-  --visual-brand: #0c4a5a;
-  --visual-brand-strong: #083842;
-  --visual-accent: #2f7d5b;
-  --visual-warning-bg: #fff7e8;
-  --visual-warning-border: #e5b86f;
-  --visual-radius: 22px;
-  --visual-shadow: 0 18px 44px rgba(16, 80, 78, 0.10);
-  --visual-shadow-soft: 0 10px 28px rgba(16, 80, 78, 0.07);
+  --visual-bg: var(--color-paper);
+  --visual-bg-soft: var(--color-paper-2);
+  --visual-surface: var(--color-surface);
+  --visual-surface-soft: var(--color-paper-2);
+  --visual-text: var(--color-ink);
+  --visual-muted: var(--color-muted);
+  --visual-border: var(--color-rule);
+  --visual-brand: var(--color-accent);
+  --visual-brand-strong: var(--color-accent);
+  --visual-accent: var(--color-accent);
+  --visual-warning-bg: var(--color-warning-bg);
+  --visual-warning-border: var(--color-warning-rule);
+  --visual-radius: var(--radius-xl);
+  --visual-shadow: var(--shadow-card);
+  --visual-shadow-soft: var(--shadow-whisper);
 }
 
+/* Cobalt is a flat engineered canvas — no gradient blobs, no ambient texture. */
 body {
   color: var(--visual-text);
-  background:
-    radial-gradient(circle at 12% 4%, rgba(77, 178, 127, 0.18), transparent 22rem),
-    linear-gradient(180deg, var(--visual-bg) 0%, var(--visual-bg-soft) 36rem, var(--visual-bg) 100%);
+  background: var(--visual-bg);
 }
 
 .site-header {
@@ -272,27 +271,25 @@ footer {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --visual-bg: #071311;
-    --visual-bg-soft: #0a1916;
-    --visual-surface: #10201c;
-    --visual-surface-soft: #132923;
-    --visual-text: #edf7f1;
-    --visual-muted: #a8beb5;
-    --visual-border: #274139;
-    --visual-brand: #69d0a0;
-    --visual-brand-strong: #8ee5bd;
-    --visual-accent: #8ee5bd;
-    --visual-warning-bg: #21190d;
-    --visual-warning-border: #a77b35;
-    --visual-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
-    --visual-shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.22);
+  :root:not([data-theme="light"]) {
+    --visual-bg: oklch(15% 0.012 258);
+    --visual-bg-soft: oklch(19% 0.014 258);
+    --visual-surface: oklch(18% 0.013 258);
+    --visual-surface-soft: oklch(19% 0.014 258);
+    --visual-text: oklch(94% 0.008 258);
+    --visual-muted: oklch(66% 0.014 258);
+    --visual-border: oklch(30% 0.02 258);
+    --visual-brand: oklch(68% 0.17 256);
+    --visual-brand-strong: oklch(68% 0.17 256);
+    --visual-accent: oklch(68% 0.17 256);
+    --visual-warning-bg: oklch(26% 0.03 75);
+    --visual-warning-border: oklch(40% 0.06 75);
+    --visual-shadow: 0 1px 2px oklch(0% 0 0 / 0.3);
+    --visual-shadow-soft: 0 1px 2px oklch(0% 0 0 / 0.35);
   }
 
   body {
-    background:
-      radial-gradient(circle at 12% 4%, rgba(77, 178, 127, 0.12), transparent 22rem),
-      linear-gradient(180deg, var(--visual-bg) 0%, var(--visual-bg-soft) 36rem, var(--visual-bg) 100%);
+    background: var(--visual-bg);
   }
 
   .site-header {

@@ -1,24 +1,24 @@
 :root {
   color-scheme: light;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1b2522;
-  background: #f6f8f5;
-  --surface: #ffffff;
-  --surface-soft: #f7faf8;
-  --ink: #17231f;
-  --muted: #5b6d65;
-  --line: #d9e4de;
-  --brand: #0f4c5c;
-  --brand-strong: #0b3945;
-  --accent: #2f7d5b;
-  --accent-strong: #245b43;
-  --accent-soft: #e7f3ec;
-  --warning: #9a5b13;
-  --warning-soft: #fff4df;
-  --radius: 18px;
-  --radius-lg: 28px;
-  --shadow: 0 16px 38px rgba(18, 52, 59, 0.1);
-  --shadow-soft: 0 10px 28px rgba(18, 52, 59, 0.06);
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  --surface: var(--color-surface);
+  --surface-soft: var(--color-paper-2);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --line: var(--color-rule);
+  --brand: var(--color-accent);
+  --brand-strong: var(--color-accent);
+  --accent: var(--color-accent);
+  --accent-strong: var(--color-accent);
+  --accent-soft: var(--color-accent-soft);
+  --warning: var(--color-warning);
+  --warning-soft: var(--color-warning-bg);
+  --legacy-radius: var(--radius-lg);
+  --legacy-radius-lg: var(--radius-xl);
+  --shadow: var(--shadow-card);
+  --shadow-soft: var(--shadow-whisper);
 }
 
 * {
@@ -32,13 +32,11 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  background:
-    radial-gradient(circle at top left, rgba(47, 125, 91, 0.15), transparent 22rem),
-    linear-gradient(180deg, #eef5f1 0%, #f7faf8 34rem, #f4f7f4 100%);
+  background: var(--color-paper);
 }
 
 a {
-  color: #245f73;
+  color: var(--color-accent);
   text-underline-offset: 0.2em;
 }
 
@@ -615,27 +613,27 @@ input[type="checkbox"] {
 }
 
 .source-health--healthy {
-  border-color: rgba(47, 125, 91, 0.38);
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  border-color: var(--color-success-rule);
+  background: var(--color-success-bg);
+  color: var(--color-success);
 }
 
 .source-health--warning {
-  border-color: rgba(154, 91, 19, 0.32);
-  background: var(--warning-soft);
-  color: var(--warning);
+  border-color: var(--color-warning-rule);
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
 }
 
 .source-health--unavailable {
-  border-color: rgba(137, 44, 44, 0.3);
-  background: #fff0f0;
-  color: #8a2c2c;
+  border-color: var(--color-danger-rule);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
 }
 
 .source-health--ambiguous,
 .source-health--missing {
-  border-color: rgba(91, 109, 101, 0.35);
-  background: #f1f5f3;
+  border-color: var(--color-rule);
+  background: var(--color-paper-2);
   color: var(--muted);
 }
 
@@ -769,25 +767,23 @@ footer {
 /* Native static implementation derived from the approved Lovable UI hierarchy.
    No Lovable runtime, generated package, or donor-repository dependency. */
 :root {
-  --page-bg: #f7f7f4;
-  --page-surface: #ffffff;
-  --page-surface-muted: #f1f2ee;
-  --page-ink: #171a18;
-  --page-muted: #656b67;
-  --page-line: #dfe2dc;
-  --page-brand: #176b50;
-  --page-brand-strong: #0e4f3a;
-  --page-brand-soft: #e8f3ed;
-  --page-warm: #f3efe5;
-  --page-shadow: 0 18px 50px rgba(25, 37, 31, 0.08);
-  --page-shadow-soft: 0 8px 24px rgba(25, 37, 31, 0.06);
+  --page-bg: var(--color-paper);
+  --page-surface: var(--color-surface);
+  --page-surface-muted: var(--color-paper-2);
+  --page-ink: var(--color-ink);
+  --page-muted: var(--color-muted);
+  --page-line: var(--color-rule);
+  --page-brand: var(--color-accent);
+  --page-brand-strong: var(--color-accent);
+  --page-brand-soft: var(--color-accent-soft);
+  --page-warm: var(--color-paper-2);
+  --page-shadow: var(--shadow-card);
+  --page-shadow-soft: var(--shadow-whisper);
 }
 
 html { scroll-padding-top: 7rem; }
 body {
-  background:
-    radial-gradient(circle at 84% 5%, rgba(23, 107, 80, 0.09), transparent 25rem),
-    linear-gradient(180deg, #fbfbf8 0%, var(--page-bg) 45rem, #f3f4f0 100%);
+  background: var(--page-bg);
   color: var(--page-ink);
 }
 
@@ -873,16 +869,7 @@ main {
   overflow: hidden;
 }
 .one-page-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: .45;
-  background-image:
-    linear-gradient(rgba(23, 107, 80, .055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 107, 80, .055) 1px, transparent 1px);
-  background-size: 38px 38px;
-  mask-image: linear-gradient(to bottom, black, transparent 86%);
+  content: none;
 }
 .hero-copy,
 .hero-snapshot { position: relative; z-index: 1; }
