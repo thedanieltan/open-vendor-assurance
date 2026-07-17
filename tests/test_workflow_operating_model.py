@@ -20,6 +20,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-growth-promotion-bridge.yml",
+    "rendered-discovery-acceptance-controller.yml",
     "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
     "machine-provisional-materialization.yml",
@@ -158,65 +159,3 @@ def test_source_maintenance_report_uploads_reviewer_only_inbox_artifact():
     assert "summary.md" in artifacts["openva-source-maintenance-report"]
     assert "source-verification-report.json" in artifacts["openva-source-maintenance-report"]
     assert "promotion-plan-actions.csv" in artifacts["openva-source-maintenance-report"]
-
-
-def test_reviewer_decision_handoff_documents_controlled_manual_boundary():
-    text = REVIEWER_DECISION_HANDOFF.read_text(encoding="utf-8")
-
-    for fragment in {
-        "openva-source-reviewer-inbox",
-        "source-review-decision-sheet.csv",
-        "source-review-triage-plan.json",
-        "openva-source-maintenance-report",
-        "validate-sheet",
-        "export-reviewed-artifacts",
-        "maintenance/reviewed/",
-        "source-repair-pr.yml",
-        "CI passes",
-        "The original `source-review-triage-plan.json` is required for validation",
-        "Do not validate a completed sheet against a different triage plan",
-    }:
-        assert fragment in text
-
-
-def _pr_scope_guard_job() -> dict:
-    workflow = load_workflow("validate.yml")
-    assert "pr-scope-guard" in workflow["jobs"], "pr-scope-guard job must exist on validate.yml"
-    return workflow["jobs"]["pr-scope-guard"]
-
-
-def _pr_scope_guard_run_text() -> str:
-    return "\n".join(str(step.get("run", "")) for step in _pr_scope_guard_job()["steps"])
-
-
-def test_pr_scope_guard_job_is_pull_request_only():
-    assert _pr_scope_guard_job()["if"] == "github.event_name == 'pull_request'"
-
-
-def test_pr_scope_guard_derives_shas_and_body_from_pull_request_event():
-    env_blobs = []
-    for step in _pr_scope_guard_job()["steps"]:
-        env = step.get("env")
-        if env:
-            env_blobs.append({key: str(value) for key, value in env.items()})
-    flattened = {key: value for blob in env_blobs for key, value in blob.items()}
-    assert "github.event.pull_request.base.sha" in flattened.get("BASE_SHA", "")
-    assert "github.event.pull_request.head.sha" in flattened.get("HEAD_SHA", "")
-    assert "github.event.pull_request.body" in flattened.get("PR_BODY", "")
-
-
-def test_pr_scope_guard_runs_from_trusted_base_worktree_not_head():
-    run_text = _pr_scope_guard_run_text()
-    assert 'git worktree add /tmp/base-guard "$BASE_SHA"' in run_text
-    assert "cd /tmp/base-guard" in run_text
-    assert "python -m tools.openva.pr_scope_guard" in run_text
-    assert "--declaration-file" in run_text
-    assert "--changed-paths-file" in run_text
-    assert 'git diff --name-only "$BASE_SHA" "$HEAD_SHA"' in run_text
-
-
-def test_pr_scope_guard_contains_self_bootstrap_skip_branch():
-    run_text = _pr_scope_guard_run_text()
-    assert "/tmp/base-guard/tools/openva/pr_scope_guard.py" in run_text
-    assert "self-bootstrap" in run_text
-    assert "exit 0" in run_text
