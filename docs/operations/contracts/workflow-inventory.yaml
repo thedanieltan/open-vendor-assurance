@@ -130,6 +130,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: rendered-discovery-acceptance-controller.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_run, workflow_dispatch]
+    permissions: {actions: write, contents: read, pull-requests: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: candidate-promotion-pr.yml
     loop: catalog_growth
     status: core
