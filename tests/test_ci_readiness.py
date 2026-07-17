@@ -14,6 +14,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-growth-promotion-bridge.yml",
+    "rendered-discovery-acceptance-controller.yml",
     "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
     "machine-provisional-materialization.yml",
@@ -171,6 +172,14 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "autonomous-catalog-growth.yml": {"triggers": {"workflow_dispatch", "schedule", "push"}, "permissions": {"contents": "read", "actions": "write"}},
         "candidate-intake-pr.yml": {"triggers": {"workflow_dispatch"}, "permissions": {"contents": "write", "pull-requests": "write"}},
         "catalog-growth-promotion-bridge.yml": {"triggers": {"workflow_run", "workflow_dispatch"}, "permissions": {"actions": "write", "contents": "read", "issues": "read", "pull-requests": "read"}},
+        "rendered-discovery-acceptance-controller.yml": {
+            "triggers": {"workflow_run", "workflow_dispatch"},
+            "permissions": {
+                "actions": "write",
+                "contents": "read",
+                "pull-requests": "write",
+            },
+        },
         "contribution-intake-agent.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"}},
         "submitted-source-verification.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "read", "issues": "write"}},
         "site-pages.yml": {"triggers": {"push", "workflow_dispatch"}, "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"}},
