@@ -42,6 +42,27 @@ from tools.openva.vendor_breadth_mesh import (
     resolver_demand_signals,
 )
 
+VIBE_CODER_SAAS_DIRECTORY_DIR = Path("tools/openva/data/vibe-coder-saas")
+VIBE_CODER_SAAS_DIRECTORY_PROVIDER = "openva_vibe_coder_saas_directory"
+VIBE_CODER_SAAS_DIRECTORY_SOURCE_BASE = (
+    "https://github.com/thedanieltan/open-vendor-assurance/blob/main/"
+    "tools/openva/data/vibe-coder-saas"
+)
+
+
+def curated_vibe_coder_directory_specs(root: Path = ROOT) -> list[str]:
+    """Return every built-in developer-SaaS directory shard that is present."""
+
+    directory = root / VIBE_CODER_SAAS_DIRECTORY_DIR
+    return [
+        (
+            f"{VIBE_CODER_SAAS_DIRECTORY_PROVIDER}::"
+            f"{VIBE_CODER_SAAS_DIRECTORY_SOURCE_BASE}/{path.name}::{path}"
+        )
+        for path in sorted(directory.glob("*.csv"))
+        if path.is_file()
+    ]
+
 
 def _clone(value: Any) -> Any:
     return json.loads(json.dumps(value))
@@ -378,9 +399,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
 
+    directory_feeds = list(args.directory_feed)
+    for curated_directory in curated_vibe_coder_directory_specs(args.root):
+        if curated_directory not in directory_feeds:
+            directory_feeds.append(curated_directory)
+
     signals, skipped = collect_signals(
         resolver_events=args.resolver_events,
-        directory_feeds=args.directory_feed,
+        directory_feeds=directory_feeds,
         relationship_reports=args.relationship_report,
     )
     ledger, queue, candidates, metrics, changes = build_replenishment(
