@@ -50,7 +50,7 @@ def test_controller_is_exact_gated_and_returns_a_durable_run_receipt() -> None:
     assert "agent/full-catalog-rendered-acceptance-*" in text
     assert 'PR_AUTHOR" != "$GITHUB_REPOSITORY_OWNER' in text
     assert "X-GitHub-Api-Version: 2026-03-10" in text
-    assert "return_run_details=true" in text
+    assert "return_run_details" not in text
     assert ".workflow_run_id // empty" in text
     assert "openva-full-catalog-dispatch source-smoke=" in text
     assert "openva-full-catalog-run-id=" in text
