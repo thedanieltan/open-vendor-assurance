@@ -42,6 +42,27 @@ from tools.openva.vendor_breadth_mesh import (
     resolver_demand_signals,
 )
 
+VIBE_CODER_SAAS_DIRECTORY_DIR = Path("tools/openva/data/vibe-coder-saas")
+VIBE_CODER_SAAS_DIRECTORY_PROVIDER = "openva_vibe_coder_saas_directory"
+VIBE_CODER_SAAS_DIRECTORY_SOURCE_BASE = (
+    "https://github.com/thedanieltan/open-vendor-assurance/blob/main/"
+    "tools/openva/data/vibe-coder-saas"
+)
+
+
+def curated_vibe_coder_directory_specs(root: Path = ROOT) -> list[str]:
+    """Return every built-in developer-SaaS directory shard that is present."""
+
+    directory = root / VIBE_CODER_SAAS_DIRECTORY_DIR
+    return [
+        (
+            f"{VIBE_CODER_SAAS_DIRECTORY_PROVIDER}::"
+            f"{VIBE_CODER_SAAS_DIRECTORY_SOURCE_BASE}/{path.name}::{path}"
+        )
+        for path in sorted(directory.glob("*.csv"))
+        if path.is_file()
+    ]
+
 
 def _clone(value: Any) -> Any:
     return json.loads(json.dumps(value))
@@ -93,7 +114,8 @@ def _upsert_signal(entity: dict[str, Any], signal: dict[str, Any]) -> bool:
         (
             row
             for row in observations
-            if isinstance(row, dict) and str(row.get("signal_id") or "") == signal_id
+            if isinstance(row, dict)
+            and str(row.get("signal_id") or "") == signal_id
         ),
         None,
     )
@@ -129,23 +151,41 @@ def _upsert_signal(entity: dict[str, Any], signal: dict[str, Any]) -> bool:
         entity["domain"] = domain
         changed = True
     name = normalize_name(signal.get("display_name_observed"))
-    if name and (not entity.get("display_name") or len(name) > len(str(entity.get("display_name") or ""))):
+    if name and (
+        not entity.get("display_name")
+        or len(name) > len(str(entity.get("display_name") or ""))
+    ):
         entity["display_name"] = name
         changed = True
     if changed:
-        entity["last_seen_at"] = max(str(entity.get("last_seen_at") or ""), _observed_at(signal))
+        entity["last_seen_at"] = max(
+            str(entity.get("last_seen_at") or ""), _observed_at(signal)
+        )
     return changed
 
 
 def _finalize_entity(entity: dict[str, Any]) -> dict[str, Any]:
     row = _clone(entity)
-    row["countries"] = sorted({value for value in row.get("countries", []) or [] if value})
+    row["countries"] = sorted(
+        {value for value in row.get("countries", []) or [] if value}
+    )
     row["observations"] = sorted(
-        [value for value in row.get("observations", []) or [] if isinstance(value, dict)],
-        key=lambda value: (str(value.get("provider") or ""), str(value.get("signal_id") or "")),
+        [
+            value
+            for value in row.get("observations", []) or []
+            if isinstance(value, dict)
+        ],
+        key=lambda value: (
+            str(value.get("provider") or ""),
+            str(value.get("signal_id") or ""),
+        ),
     )
     providers = sorted(
-        {str(value.get("provider") or "") for value in row["observations"] if value.get("provider")}
+        {
+            str(value.get("provider") or "")
+            for value in row["observations"]
+            if value.get("provider")
+        }
     )
     row["provider_count"] = len(providers)
     row["providers"] = providers
@@ -154,7 +194,8 @@ def _finalize_entity(entity: dict[str, Any]) -> dict[str, Any]:
     # create another observation and therefore cannot inflate these counters.
     row["observation_count"] = len(row["observations"])
     row["demand_count"] = sum(
-        max(1, int(value.get("demand_count") or 1)) for value in row["observations"]
+        max(1, int(value.get("demand_count") or 1))
+        for value in row["observations"]
     )
     return row
 
@@ -191,7 +232,9 @@ def merge_ledger_idempotent(
     if changed:
         timestamp = generated_at or now_iso()
     else:
-        timestamp = str((existing or {}).get("generated_at") or generated_at or now_iso())
+        timestamp = str(
+            (existing or {}).get("generated_at") or generated_at or now_iso()
+        )
     ledger = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": timestamp,
@@ -200,9 +243,15 @@ def merge_ledger_idempotent(
         "summary": {
             "entity_count": len(rows),
             "signal_count": sum(int(row["signal_count"]) for row in rows),
-            "observation_count": sum(int(row["observation_count"]) for row in rows),
+            "observation_count": sum(
+                int(row["observation_count"]) for row in rows
+            ),
             "provider_count": len(
-                {provider for row in rows for provider in row.get("providers", [])}
+                {
+                    provider
+                    for row in rows
+                    for provider in row.get("providers", [])
+                }
             ),
             "catalog_vendor_count_cap": None,
         },
@@ -231,16 +280,24 @@ def stabilize_projection(
     *,
     generated_at: str | None = None,
 ) -> tuple[dict[str, Any], bool]:
-    if isinstance(existing, dict) and _without_generated_at(new) == _without_generated_at(existing):
+    if isinstance(existing, dict) and _without_generated_at(new) == _without_generated_at(
+        existing
+    ):
         return _clone(existing), False
     output = _clone(new)
     output["generated_at"] = generated_at or now_iso()
     return output, True
 
 
-def cumulative_metrics(ledger: dict[str, Any], queue: dict[str, Any]) -> dict[str, Any]:
-    entities = [value for value in ledger.get("entities", []) or [] if isinstance(value, dict)]
-    queue_items = [value for value in queue.get("items", []) or [] if isinstance(value, dict)]
+def cumulative_metrics(
+    ledger: dict[str, Any], queue: dict[str, Any]
+) -> dict[str, Any]:
+    entities = [
+        value for value in ledger.get("entities", []) or [] if isinstance(value, dict)
+    ]
+    queue_items = [
+        value for value in queue.get("items", []) or [] if isinstance(value, dict)
+    ]
     provider_entity_counts: Counter[str] = Counter()
     provider_signal_counts: Counter[str] = Counter()
     source_kind_counts: Counter[str] = Counter()
@@ -250,8 +307,12 @@ def cumulative_metrics(ledger: dict[str, Any], queue: dict[str, Any]) -> dict[st
         for observation in entity.get("observations", []) or []:
             if not isinstance(observation, dict):
                 continue
-            provider_signal_counts[str(observation.get("provider") or "unknown")] += 1
-            source_kind_counts[str(observation.get("source_kind") or "unknown")] += 1
+            provider_signal_counts[
+                str(observation.get("provider") or "unknown")
+            ] += 1
+            source_kind_counts[
+                str(observation.get("source_kind") or "unknown")
+            ] += 1
     state_counts = Counter(str(value.get("state") or "unknown") for value in queue_items)
     return {
         "schema_version": SCHEMA_VERSION,
@@ -263,13 +324,16 @@ def cumulative_metrics(ledger: dict[str, Any], queue: dict[str, Any]) -> dict[st
             "observation_count": int(
                 (ledger.get("summary") or {}).get("observation_count") or 0
             ),
-            "provider_count": int((ledger.get("summary") or {}).get("provider_count") or 0),
+            "provider_count": int(
+                (ledger.get("summary") or {}).get("provider_count") or 0
+            ),
             "provider_entity_counts": dict(sorted(provider_entity_counts.items())),
             "provider_signal_counts": dict(sorted(provider_signal_counts.items())),
             "source_kind_counts": dict(sorted(source_kind_counts.items())),
             "queue_state_counts": dict(sorted(state_counts.items())),
             "ready_for_source_discovery_count": int(
-                (queue.get("summary") or {}).get("ready_for_source_discovery_count") or 0
+                (queue.get("summary") or {}).get("ready_for_source_discovery_count")
+                or 0
             ),
             "catalog_vendor_count_cap": None,
         },
@@ -322,7 +386,13 @@ def build_replenishment(
     existing_metrics: dict[str, Any] | None,
     root: Path = ROOT,
     generated_at: str | None = None,
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any], dict[str, bool]]:
+) -> tuple[
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, bool],
+]:
     timestamp = generated_at or now_iso()
     ledger, ledger_changed = merge_ledger_idempotent(
         existing_ledger,
@@ -356,7 +426,9 @@ def build_replenishment(
 
 def write_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -378,9 +450,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
 
+    directory_feeds = list(args.directory_feed)
+    for curated_directory in curated_vibe_coder_directory_specs(args.root):
+        if curated_directory not in directory_feeds:
+            directory_feeds.append(curated_directory)
+
     signals, skipped = collect_signals(
         resolver_events=args.resolver_events,
-        directory_feeds=args.directory_feed,
+        directory_feeds=directory_feeds,
         relationship_reports=args.relationship_report,
     )
     ledger, queue, candidates, metrics, changes = build_replenishment(
@@ -409,8 +486,12 @@ def main(argv: list[str] | None = None) -> int:
                 "summary": {
                     "input_signal_count": len(signals),
                     "skipped_input_count": len(skipped),
-                    "changed_outputs": sorted(key for key, changed in changes.items() if changed),
-                    "unchanged_outputs": sorted(key for key, changed in changes.items() if not changed),
+                    "changed_outputs": sorted(
+                        key for key, changed in changes.items() if changed
+                    ),
+                    "unchanged_outputs": sorted(
+                        key for key, changed in changes.items() if not changed
+                    ),
                     "catalog_vendor_count_cap": None,
                 },
                 "skipped": skipped,
@@ -426,7 +507,9 @@ def main(argv: list[str] | None = None) -> int:
             {
                 **ledger["summary"],
                 **queue["summary"],
-                "changed_outputs": sorted(key for key, changed in changes.items() if changed),
+                "changed_outputs": sorted(
+                    key for key, changed in changes.items() if changed
+                ),
             },
             indent=2,
             sort_keys=True,
