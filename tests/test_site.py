@@ -100,10 +100,11 @@ def test_canonical_site_is_one_page_catalog_first_and_lovable_independent():
     index, css, script = phase2_site_text()
     assert index.index('id="catalog-view"') < index.index('id="matcher-view"')
     assert index.index('id="matcher-view"') < index.index('id="export-view"')
-    assert index.index('id="export-view"') < index.index('id="about-view"')
+    assert index.index('id="export-view"') < index.index('id="questions-view"')
     assert 'href="#catalog"' in index
     assert 'href="#matcher"' in index
     assert 'href="#review"' in index
+    assert 'href="#questions"' in index
     assert 'href="#about"' in index
     assert "@lovable" not in index + css + script
     assert "Phase 2 canonical one-page design layer" in css
