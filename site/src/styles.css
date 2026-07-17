@@ -605,7 +605,7 @@ input[type="checkbox"] {
   margin: 0 0.35rem 0.3rem 0;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: #edf4ef;
+  background: var(--color-paper-2);
   color: var(--ink);
   padding: 0.18rem 0.55rem;
   font-size: 0.82rem;
@@ -990,15 +990,13 @@ button.secondary:hover,
 
 #catalog-view,
 #matcher-view,
-#export-view,
-#about-view {
+#export-view {
   padding: clamp(4rem, 8vw, 6.5rem) clamp(1rem, 5vw, 4rem);
   scroll-margin-top: 5rem;
 }
 #catalog-view,
 #export-view { background: var(--page-surface); }
 #matcher-view { background: var(--page-surface-muted); }
-#about-view { background: var(--page-warm); }
 
 .section-intro {
   max-width: 74rem;
@@ -1197,8 +1195,7 @@ footer .meta-line { color: #b8c4bd; }
   .source-field-grid { grid-template-columns: 1fr; }
   #catalog-view,
   #matcher-view,
-  #export-view,
-  #about-view { padding: 3.5rem 1rem; }
+  #export-view { padding: 3.5rem 1rem; }
   .actions { align-items: stretch; }
   .actions > * { width: 100%; }
   .local-boundary-card { align-items: flex-start; flex-direction: column; }
@@ -1212,7 +1209,7 @@ footer .meta-line { color: #b8c4bd; }
 /* Phase 3 direct-answer surface. */
 #questions-view {
   padding: clamp(4rem, 8vw, 6.5rem) clamp(1rem, 5vw, 4rem);
-  background: #eef4ef;
+  background: var(--page-warm);
   scroll-margin-top: 5rem;
 }
 .question-grid {

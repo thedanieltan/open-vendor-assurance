@@ -80,11 +80,14 @@ html[data-theme="dark"] .secondary-button:hover {
   color: var(--donor-fg) !important;
 }
 
-html[data-theme="dark"] .pill,
-html[data-theme="dark"] .source-health {
-  background: var(--donor-accent) !important;
+/* Cobalt's accent is a signal, used sparingly — not a flood across every
+   pill/status chip on the page. Neutral surface for source-type tags;
+   source-health keeps its own semantic success/warning/danger colours
+   (set in styles.css) rather than being forced to the accent hue here. */
+html[data-theme="dark"] .pill {
+  background: var(--donor-surface-muted) !important;
   border-color: var(--donor-border) !important;
-  color: var(--donor-fg) !important;
+  color: var(--donor-muted) !important;
 }
 
 html[data-theme="dark"] pre,
