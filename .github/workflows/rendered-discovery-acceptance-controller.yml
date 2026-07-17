@@ -179,8 +179,7 @@ jobs:
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2026-03-10" \
                 "repos/${GITHUB_REPOSITORY}/actions/workflows/discovery-mesh.yml/dispatches" \
-                -f ref=main \
-                -F return_run_details=true)
+                -f ref=main)
               STATE="dispatched"
               RUN_ID=$(printf '%s' "$RESPONSE" | jq -r '.workflow_run_id // empty')
               RUN_URL=$(printf '%s' "$RESPONSE" | jq -r '.html_url // empty')
