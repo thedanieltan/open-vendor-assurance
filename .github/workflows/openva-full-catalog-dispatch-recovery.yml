@@ -1,0 +1,181 @@
+name: openva-full-catalog-dispatch-recovery
+
+# One-shot recovery for PR #745. The workflow validates the exact successful
+# push smoke, acquires a durable PR-comment lock, reuses any existing full run,
+# or dispatches exactly one uncapped Discovery Mesh run. It removes itself only
+# after publishing the exact run receipt.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/openva-full-catalog-dispatch-recovery.yml"
+
+permissions:
+  actions: write
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: openva-full-catalog-dispatch-recovery-745
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate smoke, lock receipt, and dispatch or recover full run
+        id: recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SMOKE_RUN_ID: "29637253533"
+          SOURCE_SHA: "5f055af2e2a6c067c91b6225e533806c8d3a51a1"
+          ACCEPTANCE_PR_NUMBER: "745"
+        run: |
+          set -euo pipefail
+
+          META=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_SMOKE_RUN_ID}")
+          WORKFLOW_NAME=$(printf '%s' "$META" | jq -r '.name // ""')
+          SOURCE_EVENT=$(printf '%s' "$META" | jq -r '.event // ""')
+          CONCLUSION=$(printf '%s' "$META" | jq -r '.conclusion // ""')
+          HEAD_SHA=$(printf '%s' "$META" | jq -r '.head_sha // ""')
+          COMPLETED_AT=$(printf '%s' "$META" | jq -r '.updated_at // ""')
+          if [ "$WORKFLOW_NAME" != "discovery-mesh" ] || \
+             [ "$SOURCE_EVENT" != "push" ] || \
+             [ "$CONCLUSION" != "success" ] || \
+             [ "$HEAD_SHA" != "$SOURCE_SHA" ] || \
+             [ -z "$COMPLETED_AT" ]; then
+            echo "::error::source smoke does not match the authorized successful PR #745 run"
+            exit 1
+          fi
+
+          MARKER="<!-- openva-full-catalog-dispatch source-smoke=${SOURCE_SMOKE_RUN_ID} -->"
+          COMMENTS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/issues/${ACCEPTANCE_PR_NUMBER}/comments?per_page=100" \
+            --paginate)
+          EXISTING_COMMENT=$(printf '%s' "$COMMENTS" | jq -c --arg marker "$MARKER" \
+            '[.[] | select(.body | contains($marker))][0] // empty')
+
+          COMMENT_ID=""
+          EXISTING_RECEIPT_RUN_ID=""
+          if [ -n "$EXISTING_COMMENT" ]; then
+            COMMENT_ID=$(printf '%s' "$EXISTING_COMMENT" | jq -r '.id')
+            EXISTING_RECEIPT_RUN_ID=$(printf '%s' "$EXISTING_COMMENT" | jq -r '.body' | \
+              sed -n 's/.*openva-full-catalog-run-id=\([0-9][0-9]*\).*/\1/p' | head -n 1)
+          else
+            LOCK_BODY=$(cat <<EOF
+          ${MARKER}
+          ## Full-catalog dispatch recovery lock
+
+          Recovery has taken ownership of the missing controller receipt for smoke run \`${SOURCE_SMOKE_RUN_ID}\` on commit \`${SOURCE_SHA}\`.
+
+          The recovery lane will reuse an existing post-smoke full run or dispatch exactly one default 32-shard / no-vendor-limit run, then replace this lock with the exact run receipt.
+          EOF
+          )
+            COMMENT_ID=$(gh api --method POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/${GITHUB_REPOSITORY}/issues/${ACCEPTANCE_PR_NUMBER}/comments" \
+              -f body="$LOCK_BODY" --jq '.id')
+          fi
+
+          STATE=""
+          RUN_ID=""
+          RUN_URL=""
+          if [ -n "$EXISTING_RECEIPT_RUN_ID" ]; then
+            STATE="existing_receipt"
+            RUN_ID="$EXISTING_RECEIPT_RUN_ID"
+            RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
+          else
+            RUNS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/discovery-mesh.yml/runs?branch=main&event=workflow_dispatch&per_page=100")
+            MATCHES=$(printf '%s' "$RUNS" | jq --arg after "$COMPLETED_AT" \
+              '[.workflow_runs[] | select(.created_at >= $after)]')
+            MATCH_COUNT=$(printf '%s' "$MATCHES" | jq 'length')
+            if [ "$MATCH_COUNT" -gt 1 ]; then
+              echo "::error::multiple post-smoke workflow_dispatch runs exist; refusing another dispatch"
+              exit 1
+            elif [ "$MATCH_COUNT" = "1" ]; then
+              STATE="existing_run"
+              RUN_ID=$(printf '%s' "$MATCHES" | jq -r '.[0].id')
+              RUN_URL=$(printf '%s' "$MATCHES" | jq -r '.[0].html_url')
+            else
+              RESPONSE=$(gh api --method POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2026-03-10" \
+                "repos/${GITHUB_REPOSITORY}/actions/workflows/discovery-mesh.yml/dispatches" \
+                -f ref=main \
+                -F return_run_details=true)
+              STATE="dispatched"
+              RUN_ID=$(printf '%s' "$RESPONSE" | jq -r '.workflow_run_id // empty')
+              RUN_URL=$(printf '%s' "$RESPONSE" | jq -r '.html_url // empty')
+            fi
+          fi
+
+          case "$RUN_ID" in ''|*[!0-9]*) echo "::error::no exact full-run ID was resolved"; exit 1 ;; esac
+          [ -n "$RUN_URL" ] || { echo "::error::no full-run URL was resolved"; exit 1; }
+
+          RUN_META=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}")
+          RUN_EVENT=$(printf '%s' "$RUN_META" | jq -r '.event // ""')
+          RUN_WORKFLOW=$(printf '%s' "$RUN_META" | jq -r '.name // ""')
+          RUN_SHA=$(printf '%s' "$RUN_META" | jq -r '.head_sha // ""')
+          if [ "$RUN_EVENT" != "workflow_dispatch" ] || [ "$RUN_WORKFLOW" != "discovery-mesh" ]; then
+            echo "::error::resolved run is not a discovery-mesh workflow_dispatch run"
+            exit 1
+          fi
+
+          RECEIPT=$(cat <<EOF
+          ${MARKER}
+          <!-- openva-full-catalog-run-id=${RUN_ID} -->
+          ## Full-catalog Discovery Mesh recovery receipt
+
+          - Recovery state: \`${STATE}\`
+          - Source smoke run: \`${SOURCE_SMOKE_RUN_ID}\`
+          - Source smoke commit: \`${SOURCE_SHA}\`
+          - Full-catalog run: [\`${RUN_ID}\`](${RUN_URL})
+          - Full-catalog run SHA: \`${RUN_SHA}\`
+          - Profile: \`default 32-shard matrix / no vendor limit\`
+          - Canonical-source writes: \`false\`
+
+          This receipt replaces the missing output from \`rendered-discovery-acceptance-controller\`. Completion and ingestion remain subject to the full run's terminal evidence.
+          EOF
+          )
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID}" \
+            -f body="$RECEIPT" >/dev/null
+
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "run_url=$RUN_URL" >> "$GITHUB_OUTPUT"
+          echo "run_sha=$RUN_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Remove one-shot recovery workflow
+        if: steps.recover.outputs.run_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PATH_NAME=".github/workflows/openva-full-catalog-dispatch-recovery.yml"
+          BLOB_SHA=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/contents/${PATH_NAME}?ref=main" --jq '.sha')
+          gh api --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GITHUB_REPOSITORY}/contents/${PATH_NAME}" \
+            -f message="Ops: remove one-shot full-catalog dispatch recovery" \
+            -f sha="$BLOB_SHA" \
+            -f branch=main >/dev/null
