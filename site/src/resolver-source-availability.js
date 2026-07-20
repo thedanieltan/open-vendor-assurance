@@ -117,6 +117,11 @@
 
     result.trust_security_url = result.trust_center_url || result.security_page_url || null;
     result.subprocessors_url = result.subprocessors_list_url || null;
+    // catalogResolutionFields is defined in app.js at true top-level scope (not inside an
+    // IIFE), so it stays reachable as a plain global from every later-loaded script layer.
+    if (typeof catalogResolutionFields === "function") {
+      Object.assign(result, catalogResolutionFields(matched, vendor));
+    }
     return result;
   }
 

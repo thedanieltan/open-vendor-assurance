@@ -413,3 +413,167 @@ assert.ok(!selected.includes("certification_reference"));
         + scenario
     )
     _run_node(node_script, tmp_path)
+
+
+def _layered_source() -> str:
+    # Build order the compiled site actually uses (site/build.py): app.js loads first,
+    # ui-fixes.js replaces the resolver controls and installs its own click handler,
+    # resolver-source-availability.js (build-injected) re-overrides browserResultPackRow
+    # last. A test against app.js alone cannot catch a wiring gap in the later layers --
+    # that gap is exactly what shipped in PR #750 and went undetected until live
+    # verification, so this test loads all three together, matching production.
+    app_js = (SITE_SRC / "app.js").read_text(encoding="utf-8")
+    ui_fixes_js = (SITE_SRC / "ui-fixes.js").read_text(encoding="utf-8")
+    resolver_availability_js = (SITE_SRC / "resolver-source-availability.js").read_text(encoding="utf-8")
+    return "\n".join([app_js, ui_fixes_js, resolver_availability_js])
+
+
+_LAYERED_HARNESS_PREAMBLE = r'''
+const vm = require("node:vm");
+const assert = require("node:assert/strict");
+
+const elementRegistry = new Map();
+function stableElement(id) {
+  if (!elementRegistry.has(id)) {
+    const listeners = {};
+    const el = {
+      id,
+      dataset: {},
+      disabled: false,
+      checked: false,
+      files: [],
+      value: "",
+      classList: { add() {}, remove() {}, contains: () => false },
+      style: {},
+      _text: "",
+      get textContent() { return this._text; },
+      set textContent(v) { this._text = v; },
+      set innerHTML(_v) {},
+      addEventListener(event, cb) {
+        listeners[event] = listeners[event] || [];
+        listeners[event].push(cb);
+      },
+      listenersFor(event) { return listeners[event] || []; },
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      replaceWith: () => {},
+      cloneNode: () => stableElement(`${id}-clone`),
+      closest: () => null,
+      setAttribute: () => {},
+      replaceChildren: () => {},
+      appendChild: () => {},
+      append: () => {},
+    };
+    elementRegistry.set(id, el);
+  }
+  return elementRegistry.get(id);
+}
+
+const domContentLoadedCallbacks = [];
+const context = {
+  console,
+  URL,
+  AbortController,
+  FileReader: undefined,
+  setTimeout,
+  clearTimeout,
+  setInterval,
+  clearInterval,
+  addEventListener: (event, cb) => { if (event === "DOMContentLoaded") domContentLoadedCallbacks.push(cb); },
+  location: { hash: "", origin: "https://thedanieltan.github.io", pathname: "/" },
+  localStorage: { getItem: () => null, setItem: () => {} },
+  document: {
+    documentElement: { dataset: {}, removeAttribute: () => {} },
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    getElementById: (id) => stableElement(id),
+    addEventListener: (event, cb) => { if (event === "DOMContentLoaded") domContentLoadedCallbacks.push(cb); },
+    head: { appendChild: () => {} },
+    createElement: () => stableElement(`created-${Math.random()}`),
+  },
+  fetch: (url, options) => {
+    if (typeof url === "string" && url.startsWith("data/")) {
+      return new Promise(() => {}); // bootstrap/availability fetches never resolve; harmless.
+    }
+    return context.__fetchHandler(url, options);
+  },
+};
+context.window = context;
+context.globalThis = context;
+'''
+
+
+def test_full_layered_stack_wires_live_resolution_into_the_active_click_handler(tmp_path: Path):
+    scenario = r'''
+let calls = [];
+context.__fetchHandler = async (url, options) => {
+  calls.push({ url, body: JSON.parse(options.body) });
+  return {
+    ok: true,
+    json: async () => ({
+      vendor: { official_domain: "resend.com" },
+      sources: [{ source_type: "privacy_notice", status: "newly_discovered", source_url: "https://resend.com/privacy" }],
+    }),
+  };
+};
+
+api.setCatalogData({
+  vendors: [
+    { vendor_id: "adobe", display_name: "Adobe", legal_name: "Adobe Inc.", official_domains: ["adobe.com"], detail_path: "data/vendors/adobe.json" },
+  ],
+});
+
+domContentLoadedCallbacks.forEach((cb) => cb());
+
+const fileInput = stableElement("inventory-file");
+assert.ok(fileInput.listenersFor("change").length, "ui-fixes.js must attach its own file-change listener");
+const runButton = stableElement("run-local-match");
+assert.ok(runButton.listenersFor("click").length, "ui-fixes.js must attach its own click listener");
+
+// Bypass real File/DataTransfer (unavailable in a Node vm) and seed inventory rows directly,
+// exactly as ui-fixes.js's change handler would have after parsing a real CSV.
+api.setLocalInventoryRows([
+  { vendor_name: "Adobe", domain: "adobe.com" },
+  { vendor_name: "Resend", domain: "resend.com" },
+]);
+
+stableElement("enable-live-resolution").checked = true;
+
+(async () => {
+  await runButton.listenersFor("click")[0]();
+
+  assert.equal(calls.length, 1, "the live resolver must be called exactly once (for the unmatched Resend row)");
+  assert.equal(calls[0].body.domain, "resend.com");
+
+  const rows = api.getLocalMatchRows();
+  assert.equal(rows.length, 2);
+  const adobeRow = rows.find((r) => r.input_vendor_name === "Adobe");
+  const resendRow = rows.find((r) => r.input_vendor_name === "Resend");
+
+  assert.equal(adobeRow.openva_resolution_status, "catalog_match");
+  assert.equal(adobeRow.openva_result_origin, "published_catalog");
+
+  assert.equal(resendRow.openva_resolution_status, "newly_discovered");
+  assert.equal(resendRow.openva_result_origin, "live_discovery");
+  assert.equal(resendRow.openva_catalog_publication_status, "pending_catalog_publication");
+  assert.equal(resendRow.privacy_notice_url, "https://resend.com/privacy");
+
+  const csv = resultPackCsv([{ vendor_name: "Adobe", domain: "adobe.com" }, { vendor_name: "Resend", domain: "resend.com" }], rows);
+  assert.ok(csv.includes("openva_resolution_status"), "the actually-active CSV serializer must emit the new columns");
+  assert.ok(csv.includes("newly_discovered"));
+})().catch((error) => { console.error(error); process.exit(1); });
+'''
+    export_block = """
+globalThis.__openvaLiveResolverTest = {
+  setCatalogData: (data) => { catalogData = data; },
+  setLocalInventoryRows: (rows) => { localInventoryRows = rows; },
+  getLocalMatchRows: () => localMatchRows,
+};
+"""
+    node_script = (
+        _LAYERED_HARNESS_PREAMBLE
+        + f"vm.runInNewContext({json.dumps(_layered_source() + export_block)}, context, {{ filename: 'layered-site.js' }});\n"
+        + "const api = context.__openvaLiveResolverTest;\n"
+        + scenario
+    )
+    _run_node(node_script, tmp_path)
