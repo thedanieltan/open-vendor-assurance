@@ -219,6 +219,10 @@
             <p>Use whichever fields you have. At least one of <code>vendor_name</code>, <code>business_entity_name</code>, <code>domain</code>, or <code>registration_number</code> is required per row.</p>
             <pre>vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address</pre>
           </div>
+          <div class="live-resolution-toggle">
+            <label><input type="checkbox" id="enable-live-resolution"> Resolve unmatched vendors online</label>
+            <p class="disclosure-note">Only unmatched vendor names, domains, and requested public-source types are sent. Your CSV and other inventory fields remain in your browser.</p>
+          </div>
           <div class="actions">
             <label class="button">Choose local CSV<input id="inventory-file" type="file" accept=".csv,text/csv" hidden></label>
             <button type="button" id="run-local-match">Run local resolution</button>

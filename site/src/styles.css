@@ -1099,6 +1099,18 @@ button.secondary:hover,
   color: var(--page-muted);
 }
 .local-boundary-card strong { color: var(--page-ink); }
+.live-resolution-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  margin-bottom: 1rem;
+  padding: .95rem 1rem;
+  border-left: 4px solid var(--page-brand);
+  background: var(--page-surface);
+  border-radius: .6rem;
+}
+.live-resolution-toggle label { font-weight: 600; color: var(--page-ink); }
+.live-resolution-toggle .disclosure-note { margin: 0; color: var(--page-muted); font-size: .85rem; }
 .source-builder-card {
   display: grid;
   grid-template-columns: minmax(250px, .75fr) minmax(0, 1.25fr);
