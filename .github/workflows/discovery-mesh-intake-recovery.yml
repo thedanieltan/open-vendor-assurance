@@ -1,0 +1,316 @@
+name: discovery-mesh-intake-recovery
+
+on:
+  workflow_run:
+    workflows: [discovery-mesh]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Discovery Mesh workflow run containing the aggregate artifact to recover."
+        required: true
+        type: string
+      transaction_max_files:
+        description: "Repository transaction file budget. Total actions remain uncapped and are partitioned."
+        required: false
+        type: string
+        default: "2500"
+      transaction_max_bytes:
+        description: "Estimated repository transaction byte budget. Total actions remain uncapped and are partitioned."
+        required: false
+        type: string
+        default: "25000000"
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: discovery-mesh-intake-${{ github.event_name == 'workflow_dispatch' && inputs.source_run_id || github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  recover-intake:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.event == 'schedule' ||
+      github.event.workflow_run.event == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Resolve exact source run
+        id: source
+        env:
+          DISPATCH_RUN_ID: ${{ inputs.source_run_id || '' }}
+          COMPLETED_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          COMPLETED_WORKFLOW: ${{ github.event.workflow_run.name || '' }}
+        run: |
+          set -euo pipefail
+          SOURCE_RUN_ID="${DISPATCH_RUN_ID:-${COMPLETED_RUN_ID:-}}"
+          case "$SOURCE_RUN_ID" in
+            ''|*[!0-9]*) echo "source_run_id must be a GitHub Actions numeric run id" >&2; exit 1 ;;
+          esac
+          if [ -n "${COMPLETED_WORKFLOW:-}" ] && [ "$COMPLETED_WORKFLOW" != "discovery-mesh" ]; then
+            echo "unexpected source workflow: $COMPLETED_WORKFLOW" >&2
+            exit 1
+          fi
+          echo "run_id=$SOURCE_RUN_ID" >> "$GITHUB_OUTPUT"
+      - name: Download source aggregate artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: openva-discovery-mesh-aggregate
+          path: ${{ runner.temp }}/openva-discovery-mesh-aggregate
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.source.outputs.run_id }}
+      - name: Resolve and validate aggregate evidence
+        id: evidence
+        env:
+          ARTIFACT_ROOT: ${{ runner.temp }}/openva-discovery-mesh-aggregate
+        run: |
+          set -euo pipefail
+          mapfile -t SOURCE_REPORTS < <(find "$ARTIFACT_ROOT" -type f -name source-discovery-report.json | sort)
+          mapfile -t PROMOTION_PLANS < <(find "$ARTIFACT_ROOT" -type f -name 'strict-growth-discovery-mesh-promotion-plan-*.json' | sort)
+          mapfile -t HEALTH_REPORTS < <(find "$ARTIFACT_ROOT" -type f -name 'discovery-mesh-health-*.json' | sort)
+          [ "${#SOURCE_REPORTS[@]}" = "1" ] || { echo "expected one source discovery report" >&2; exit 1; }
+          [ "${#PROMOTION_PLANS[@]}" = "1" ] || { echo "expected one promotion plan" >&2; exit 1; }
+          [ "${#HEALTH_REPORTS[@]}" = "1" ] || { echo "expected one discovery mesh health report" >&2; exit 1; }
+          SOURCE_REPORT="${SOURCE_REPORTS[0]}"
+          PROMOTION_PLAN="${PROMOTION_PLANS[0]}"
+          HEALTH_REPORT="${HEALTH_REPORTS[0]}"
+          python - "$HEALTH_REPORT" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          if report.get("report_type") != "discovery_mesh_health":
+              raise SystemExit("invalid discovery mesh health report")
+          posture = report.get("posture") or {}
+          if posture.get("changes_admission_authority") is True:
+              raise SystemExit("health artifact attempts to change admission authority")
+          if posture.get("non_advisory") is not True:
+              raise SystemExit("health artifact lost non-advisory posture")
+          print(json.dumps({
+              "status": report.get("status"),
+              "intake": report.get("intake"),
+              "promotion": report.get("promotion"),
+          }, indent=2, sort_keys=True))
+          PY
+          INTAKE_NEEDED=$(python -c 'import json,sys; print(str(json.load(open(sys.argv[1], encoding="utf-8"))["intake"]["intake_needed"]).lower())' "$HEALTH_REPORT")
+          case "$INTAKE_NEEDED" in true|false) ;; *) echo "invalid intake decision" >&2; exit 1 ;; esac
+          echo "source_report=$SOURCE_REPORT" >> "$GITHUB_OUTPUT"
+          echo "promotion_plan=$PROMOTION_PLAN" >> "$GITHUB_OUTPUT"
+          echo "health_report=$HEALTH_REPORT" >> "$GITHUB_OUTPUT"
+          echo "intake_needed=$INTAKE_NEEDED" >> "$GITHUB_OUTPUT"
+      - name: Stop on a true no-op
+        if: steps.evidence.outputs.intake_needed != 'true'
+        run: echo "Discovery Mesh health reports a true no-op; no intake transactions are required."
+      - name: Filter exact plan-referenced candidates
+        if: steps.evidence.outputs.intake_needed == 'true'
+        env:
+          PROMOTION_PLAN: ${{ steps.evidence.outputs.promotion_plan }}
+          SOURCE_REPORT: ${{ steps.evidence.outputs.source_report }}
+          CANDIDATE_NDJSON: ${{ runner.temp }}/discovery-mesh-intake-candidates.ndjson
+          WANTED_INDEX: ${{ runner.temp }}/discovery-mesh-intake-wanted.json
+        run: |
+          set -euo pipefail
+          python - "$PROMOTION_PLAN" "$WANTED_INDEX" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          if plan.get("report_type") != "promotion_plan":
+              raise SystemExit("invalid promotion plan")
+          wanted = []
+          for action in plan.get("actions", []) or []:
+              wanted.append({
+                  "key": f"{action.get('vendor_id', '')}|{action.get('candidate_source_id', '')}",
+              })
+          Path(sys.argv[2]).write_text(json.dumps(wanted, separators=(",", ":")), encoding="utf-8")
+          print(f"Plan actions: {len(wanted)}")
+          PY
+          jq -c --slurpfile wanted "$WANTED_INDEX" '
+            ($wanted[0] | INDEX(.key)) as $wanted_index
+            | .vendors[] as $vendor
+            | ($vendor.candidates // [])[]
+            | . as $candidate
+            | ($vendor.vendor_id + "|" + ($candidate.candidate_source_id // "")) as $key
+            | select($wanted_index[$key] != null)
+            | {vendor_id: $vendor.vendor_id, candidate: $candidate}
+          ' "$SOURCE_REPORT" > "$CANDIDATE_NDJSON"
+          EXPECTED=$(python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8")).get("actions", []) or []))' "$PROMOTION_PLAN")
+          ACTUAL=$(wc -l < "$CANDIDATE_NDJSON" | tr -d ' ')
+          [ "$ACTUAL" = "$EXPECTED" ] || { echo "candidate filter mismatch: expected $EXPECTED, got $ACTUAL" >&2; exit 1; }
+      - name: Build replay-safe intake partitions
+        if: steps.evidence.outputs.intake_needed == 'true'
+        env:
+          ARTIFACT_ROOT: ${{ runner.temp }}/openva-discovery-mesh-aggregate
+          CANDIDATE_NDJSON: ${{ runner.temp }}/discovery-mesh-intake-candidates.ndjson
+          PROMOTION_PLAN: ${{ steps.evidence.outputs.promotion_plan }}
+          PREPARED_ROOT: ${{ runner.temp }}/discovery-mesh-intake-prepared
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          MAX_FILES: ${{ inputs.transaction_max_files || '2500' }}
+          MAX_BYTES: ${{ inputs.transaction_max_bytes || '25000000' }}
+        run: |
+          set -euo pipefail
+          case "$MAX_FILES" in ''|*[!0-9]*) echo "transaction_max_files must be positive" >&2; exit 1 ;; esac
+          case "$MAX_BYTES" in ''|*[!0-9]*) echo "transaction_max_bytes must be positive" >&2; exit 1 ;; esac
+          python -m tools.openva.discovery_mesh_intake prepare \
+            --artifact-root "$ARTIFACT_ROOT" \
+            --candidate-ndjson "$CANDIDATE_NDJSON" \
+            --promotion-plan "$PROMOTION_PLAN" \
+            --output-dir "$PREPARED_ROOT" \
+            --source-run-id "$SOURCE_RUN_ID" \
+            --max-files "$MAX_FILES" \
+            --max-bytes "$MAX_BYTES"
+      - name: Open or reuse every intake transaction
+        if: steps.evidence.outputs.intake_needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+          CANDIDATE_NDJSON: ${{ runner.temp }}/discovery-mesh-intake-candidates.ndjson
+          PREPARED_ROOT: ${{ runner.temp }}/discovery-mesh-intake-prepared
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          RECEIPT: ${{ runner.temp }}/discovery-mesh-intake-receipt.ndjson
+        run: |
+          set -euo pipefail
+          git config user.name "openva-discovery-mesh"
+          git config user.email "openva-discovery-mesh@users.noreply.github.com"
+          MANIFEST="$PREPARED_ROOT/manifest.json"
+          : > "$RECEIPT"
+          python - "$MANIFEST" <<'PY' > "$RUNNER_TEMP/discovery-mesh-intake-partitions.txt"
+          import base64
+          import json
+          import sys
+          from pathlib import Path
+
+          manifest = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          for partition in manifest.get("partitions", []) or []:
+              payload = json.dumps(partition, sort_keys=True, separators=(",", ":")).encode("utf-8")
+              print(base64.b64encode(payload).decode("ascii"))
+          PY
+          while IFS= read -r ENCODED; do
+            PARTITION_JSON=$(printf '%s' "$ENCODED" | base64 --decode)
+            PARTITION_ID=$(jq -r '.partition_id' <<< "$PARTITION_JSON")
+            KIND=$(jq -r '.kind' <<< "$PARTITION_JSON")
+            BRANCH=$(jq -r '.branch' <<< "$PARTITION_JSON")
+            TITLE=$(jq -r '.title' <<< "$PARTITION_JSON")
+            ACTION_COUNT=$(jq -r '.action_count' <<< "$PARTITION_JSON")
+            EXISTING=$(gh pr list --state all --head "$BRANCH" --limit 2 --json number,state,mergedAt,url)
+            EXISTING_COUNT=$(jq 'length' <<< "$EXISTING")
+            if [ "$EXISTING_COUNT" -gt 1 ]; then
+              echo "ambiguous existing intake PRs for $BRANCH" >&2
+              exit 1
+            fi
+            if [ "$EXISTING_COUNT" = "1" ]; then
+              jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --argjson pr "$(jq '.[0]' <<< "$EXISTING")" \
+                '{partition_id:$partition,branch:$branch,state:"reused",pull_request:$pr}' >> "$RECEIPT"
+              continue
+            fi
+            EXPECTED_COMMIT="Ops: stage discovery mesh intake ${SOURCE_RUN_ID}/${PARTITION_ID}"
+            if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+              git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH"
+              REMOTE_COMMIT=$(git log -1 --format=%s "refs/remotes/origin/$BRANCH")
+              if [ "$REMOTE_COMMIT" != "$EXPECTED_COMMIT" ]; then
+                echo "workflow-owned branch exists with unexpected commit: $BRANCH" >&2
+                exit 1
+              fi
+              BODY="$RUNNER_TEMP/discovery-mesh-intake-${PARTITION_ID}.md"
+              cat > "$BODY" <<EOF
+          <!-- openva-discovery-mesh-intake source-run=$SOURCE_RUN_ID partition=$PARTITION_ID -->
+          Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01
+
+          Resumes the already-pushed deterministic repository transaction "$PARTITION_ID" from Discovery Mesh run "$SOURCE_RUN_ID".
+
+          Candidate promotion remains controlled by \`candidate-promotion-pr.yml\`, the sole canonical source mutation authority.
+          EOF
+              PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
+              PR_NUMBER="${PR_URL##*/}"
+              gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+              jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --arg url "$PR_URL" \
+                '{partition_id:$partition,branch:$branch,state:"recovered_orphan_branch",pull_request_url:$url}' >> "$RECEIPT"
+              continue
+            fi
+            git fetch origin main --prune
+            git switch --detach origin/main
+            git clean -fdx
+            git switch -C "$BRANCH"
+            python -m tools.openva.discovery_mesh_intake materialize \
+              --manifest "$MANIFEST" \
+              --partition-id "$PARTITION_ID" \
+              --candidate-ndjson "$CANDIDATE_NDJSON" \
+              --prepared-root "$PREPARED_ROOT" \
+              --repository-root .
+            git add -A -- data/vendors maintenance/generated
+            CHANGED="$RUNNER_TEMP/discovery-mesh-intake-changed-${PARTITION_ID}.txt"
+            git diff --cached --name-only > "$CHANGED"
+            if [ ! -s "$CHANGED" ]; then
+              jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" \
+                '{partition_id:$partition,branch:$branch,state:"no_change"}' >> "$RECEIPT"
+              continue
+            fi
+            python - "$PARTITION_JSON" "$CHANGED" <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          partition = json.loads(sys.argv[1])
+          changed = {line.strip() for line in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if line.strip()}
+          allowed = {str(path) for path in partition.get("paths", []) or []}
+          invalid = sorted(changed - allowed)
+          if invalid:
+              raise SystemExit("out-of-scope intake paths: " + ", ".join(invalid))
+          if partition.get("kind") == "source":
+              plans = [path for path in changed if re.fullmatch(r"maintenance/generated/strict-growth-discovery-mesh-promotion-plan-.*\.json", path)]
+              if len(plans) != 1:
+                  raise SystemExit(f"expected one staged partition plan, found {len(plans)}")
+              for path in allowed:
+                  if "/candidate_sources/" in path and not Path(path).is_file():
+                      raise SystemExit(f"partition candidate missing from worktree: {path}")
+          PY
+            COMMIT_MESSAGE="$EXPECTED_COMMIT"
+            git commit -m "$COMMIT_MESSAGE"
+            git push -u origin "$BRANCH"
+            BODY="$RUNNER_TEMP/discovery-mesh-intake-${PARTITION_ID}.md"
+            cat > "$BODY" <<EOF
+          <!-- openva-discovery-mesh-intake source-run=$SOURCE_RUN_ID partition=$PARTITION_ID -->
+          Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01
+
+          Replays Discovery Mesh run "$SOURCE_RUN_ID" as deterministic repository transaction "$PARTITION_ID".
+
+          - Transaction kind: "$KIND"
+          - Noncanonical source actions: "$ACTION_COUNT"
+          - Catalog vendor count cap: none
+          - Total candidate action cap: none
+          - Canonical vendor/source mutation: false
+
+          The transaction budget partitions repository writes only. It does not truncate catalog growth. Candidate promotion remains controlled by \`candidate-promotion-pr.yml\`, which is the sole canonical source mutation authority.
+          EOF
+            PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
+            PR_NUMBER="${PR_URL##*/}"
+            gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+            jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --arg url "$PR_URL" --arg kind "$KIND" --argjson actions "$ACTION_COUNT" \
+              '{partition_id:$partition,branch:$branch,state:"opened",kind:$kind,action_count:$actions,pull_request_url:$url}' >> "$RECEIPT"
+            sleep 3
+          done < "$RUNNER_TEMP/discovery-mesh-intake-partitions.txt"
+      - name: Upload intake recovery evidence
+        if: always() && steps.evidence.outputs.intake_needed == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-discovery-mesh-intake-recovery-${{ steps.source.outputs.run_id }}
+          path: |
+            ${{ runner.temp }}/discovery-mesh-intake-prepared/manifest.json
+            ${{ runner.temp }}/discovery-mesh-intake-receipt.ndjson
+          if-no-files-found: warn
+          retention-days: 30

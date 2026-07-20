@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DISCOVERY = ROOT / ".github" / "workflows" / "discovery-mesh.yml"
+RECOVERY = ROOT / ".github" / "workflows" / "discovery-mesh-intake-recovery.yml"
 
 
 def test_scheduled_discovery_mesh_processes_full_catalog_without_vendor_cap() -> None:
@@ -13,7 +14,7 @@ def test_scheduled_discovery_mesh_processes_full_catalog_without_vendor_cap() ->
     assert "matrix: ${{ fromJson(needs.plan.outputs.matrix) }}" in text
     assert "max-parallel: 32" in text
     assert '--vendor-limit "$LIMIT"' in text
-    assert "Catalog breadth was not capped" in text
+    assert "Catalog breadth cap: none" in text
 
 
 def test_mesh_uses_large_per_vendor_bounds_without_limiting_catalog_breadth() -> None:
@@ -57,50 +58,28 @@ def test_mesh_builds_health_report_and_publishes_step_summary() -> None:
     assert 'cat "$HEALTH_MD" >> "$GITHUB_STEP_SUMMARY"' in text
 
 
-def test_health_decision_suppresses_true_noop_intake_pr() -> None:
+def test_full_catalog_intake_is_delegated_after_aggregate_completion() -> None:
+    text = DISCOVERY.read_text(encoding="utf-8")
+    recovery = RECOVERY.read_text(encoding="utf-8")
+
+    assert "Record partitioned intake handoff" in text
+    assert "discovery-mesh-intake-recovery.yml" in text
+    assert "partitions the complete uncapped action set after this run completes" in text
+    assert "Prepare exact intake branch" not in text
+    assert "Open candidate-intake PR and enable native auto-merge" not in text
+    assert 'git switch -c "$BRANCH"' not in text
+    assert 'xargs -r git add -- < "$CANDIDATE_PATHS"' not in text
+    assert "workflow_run:" in recovery
+    assert "workflows: [discovery-mesh]" in recovery
+
+
+def test_push_smoke_remains_read_only_and_skips_production_intake() -> None:
     text = DISCOVERY.read_text(encoding="utf-8")
 
-    assert 'INTAKE_NEEDED: ${{ steps.health.outputs.intake_needed }}' in text
-    assert 'if [ "$INTAKE_NEEDED" != "true" ]' in text
-    assert "True no-op run: no viable promotion actions and no changed breadth outputs." in text
-    assert "has_changes=false" in text
-    assert "Health decision required intake but no eligible paths were staged." in text
-
-
-def test_mesh_stages_only_plan_referenced_candidate_records() -> None:
-    text = DISCOVERY.read_text(encoding="utf-8")
-
-    assert 'CANDIDATE_PATHS="$RUNNER_TEMP/discovery-mesh-candidate-paths.txt"' in text
-    assert 'action.get("path")' in text
-    assert 'data/vendors/[^/]+/candidate_sources/[^/]+\\.yaml' in text
-    assert "invalid candidate path in promotion plan" in text
-    assert 'xargs -r git add -- < "$CANDIDATE_PATHS"' in text
-    assert 'git add "$PLAN_PATH"' in text
-    assert "find data/vendors -type f -path '*/candidate_sources/*.yaml'" not in text
-    assert "git add maintenance/generated/*discovery-mesh*.json" not in text
-
-
-def test_intake_path_guard_allows_only_candidates_exact_plan_and_stable_breadth() -> None:
-    text = DISCOVERY.read_text(encoding="utf-8")
-
-    assert "vendor-breadth-(signal-ledger|resolution-queue|candidates|provider-metrics)" in text
-    assert "out-of-scope discovery mesh intake paths" in text
-    assert "candidate records staged without the exact reviewed promotion plan" in text
-    assert "git add maintenance/generated/vendor-breadth-*.json" in text
-    assert "changed stable vendor-breadth projections" in text
-    assert "Provider signals are not catalog facts" in text
-    assert "provider-replenished identities are not truncated by the curated seed target" in text
-
-
-def test_mesh_intake_uses_workflow_triggering_token_and_native_auto_merge() -> None:
-    text = DISCOVERY.read_text(encoding="utf-8")
-
-    assert "OPENVA_AUTOMERGE_TOKEN || github.token" in text
-    assert "--write-candidates" in text
-    assert "candidate_promotion_actions filter-reviewed-plan" in text
-    assert 'title "Ops: stage discovery mesh candidates"' in text
-    assert 'gh pr merge "$PR_NUMBER" --auto --squash --delete-branch' in text
-    assert "sole canonical mutation authority" in text
+    assert "Publish read-only deployment smoke evidence" in text
+    assert "Candidate-intake mutation: `skipped for push smoke`" in text
+    assert "if: github.event_name != 'push'" in text
+    assert "if: github.event_name == 'push'" in text
 
 
 def test_aggregate_artifact_contains_health_and_run_evidence() -> None:
@@ -111,9 +90,10 @@ def test_aggregate_artifact_contains_health_and_run_evidence() -> None:
     assert "reports/discovery-mesh/vendor-breadth-replenishment-run-*.json" in text
     assert "maintenance/generated/*discovery-mesh*.json" in text
     assert "maintenance/generated/vendor-breadth-*.json" in text
+    assert "openva-discovery-mesh-aggregate" in text
 
 
-def test_merged_intake_handoff_dispatches_existing_canonical_mutation_workflow() -> None:
+def test_merged_partition_handoff_dispatches_existing_canonical_mutation_workflow() -> None:
     text = DISCOVERY.read_text(encoding="utf-8")
 
     assert "promotion-handoff:" in text
