@@ -231,7 +231,7 @@ def test_reviewed_recovery_request_bridge_is_dispatch_only():
     assert "source workflow verification failed" in bridge
     assert "expected_head_sha" in bridge
     assert "gh workflow run discovery-mesh-intake-recovery.yml" in bridge
-    assert "Catalog vendor count cap: `none`" in bridge
-    assert "Total action count cap: `none`" in bridge
+    assert "recovery request must not define a catalog vendor cap" in bridge
+    assert "recovery request must not define a total action cap" in bridge
     assert "gh pr create" not in bridge
     assert "git push" not in bridge
