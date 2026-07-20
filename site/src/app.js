@@ -10,6 +10,23 @@ const sourceCache = new Map();
 let localInventoryRows = [];
 let localMatchRows = [];
 
+// Single source of truth for the deployed live-resolver Worker. Nothing else in this
+// file should hardcode the endpoint or its request boundary.
+const LIVE_RESOLVER_CONFIG = Object.freeze({
+  endpoint: "https://openva-live-resolver.danieltanyl91.workers.dev/v1/resolve",
+  supportedSourceTypes: Object.freeze([
+    "privacy_notice",
+    "dpa",
+    "security_page",
+    "subprocessors_list",
+    "trust_center",
+    "status_page",
+  ]),
+  maxSourceTypes: 5,
+  timeoutMs: 20000,
+  concurrency: 2,
+});
+
 const RESULT_PACK_VERSION = "2.0.0";
 const RESULT_PACK_SOURCE_TYPES = ["trust_security", "dpa", "subprocessors", "privacy_notice", "status_page"];
 const RESULT_PACK_RESOLVER_TYPES_BY_OUTPUT = {
@@ -326,6 +343,31 @@ function officialDomain(vendor) {
   return vendor && Array.isArray(vendor.official_domains) && vendor.official_domains.length ? vendor.official_domains[0] : null;
 }
 
+// Baseline openva_resolution_* fields every downloaded row carries. A catalog match gets
+// its terminal state here; an unmatched row gets a placeholder that the live-resolution
+// orchestration (or the opt-out path) always overwrites before download, so no row is ever
+// downloaded without an explicit resolution status.
+function catalogResolutionFields(matched, vendor) {
+  if (matched) {
+    return {
+      openva_resolution_status: "catalog_match",
+      openva_result_origin: "published_catalog",
+      openva_live_checked: false,
+      openva_checked_at: null,
+      openva_catalog_publication_status: "published_catalog_record",
+      openva_resolution_message: "Matched against the published catalog.",
+    };
+  }
+  return {
+    openva_resolution_status: "not_checked",
+    openva_result_origin: null,
+    openva_live_checked: false,
+    openva_checked_at: null,
+    openva_catalog_publication_status: "not_applicable",
+    openva_resolution_message: "No published catalog match found.",
+  };
+}
+
 function browserResultPackRow(row, inputIndex, vendor, summary = null) {
   const sourceUrls = summary ? cachedSourceUrlsByType(summary) : new Map();
   const matched = Boolean(vendor);
@@ -343,6 +385,7 @@ function browserResultPackRow(row, inputIndex, vendor, summary = null) {
     subprocessors_url: matched && selectedResultPackSourceTypes().includes("subprocessors") ? sourceUrls.get("subprocessors") || null : null,
     privacy_notice_url: matched && selectedResultPackSourceTypes().includes("privacy_notice") ? sourceUrls.get("privacy_notice") || null : null,
     status_page_url: matched && selectedResultPackSourceTypes().includes("status_page") ? sourceUrls.get("status_page") || null : null,
+    ...catalogResolutionFields(matched, vendor),
   };
 }
 
@@ -444,6 +487,149 @@ function renderLocalMatcher() {
     : "<p>No local match results yet.</p>";
 }
 
+// --- Live resolver integration (opt-in) -------------------------------------------------
+//
+// Only unmatched rows with a supplied domain are ever sent, and only vendor_name, domain,
+// and source_types leave the browser — never the full CSV or other inventory columns. See
+// LIVE_RESOLVER_CONFIG for the single endpoint definition.
+
+async function runWithConcurrency(items, limit, worker) {
+  let cursor = 0;
+  async function next() {
+    while (cursor < items.length) {
+      const current = cursor;
+      cursor += 1;
+      await worker(items[current], current);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, next));
+}
+
+function selectedLiveSourceTypes() {
+  const selected = selectedResultPackSourceTypes();
+  const supported = selected.filter((type) => LIVE_RESOLVER_CONFIG.supportedSourceTypes.includes(type));
+  return (supported.length ? supported : [...LIVE_RESOLVER_CONFIG.supportedSourceTypes]).slice(0, LIVE_RESOLVER_CONFIG.maxSourceTypes);
+}
+
+async function callLiveResolver(vendorName, domain, sourceTypes) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), LIVE_RESOLVER_CONFIG.timeoutMs);
+  try {
+    const response = await fetch(LIVE_RESOLVER_CONFIG.endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vendor_name: vendorName || "", domain, source_types: sourceTypes }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!response.ok) {
+      let message = `HTTP ${response.status}`;
+      try {
+        const errorBody = await response.json();
+        if (errorBody && errorBody.error) message = String(errorBody.error);
+      } catch (_error) {
+        // Non-JSON error body; keep the HTTP-status message.
+      }
+      return { ok: false, kind: "http_error", message };
+    }
+    const payload = await response.json();
+    if (!payload || typeof payload !== "object" || !Array.isArray(payload.sources) || !payload.vendor) {
+      return { ok: false, kind: "malformed_response", message: "Unexpected resolver response shape." };
+    }
+    return { ok: true, payload };
+  } catch (error) {
+    clearTimeout(timeout);
+    const message = error && error.name === "AbortError" ? "request timed out" : (error && error.message) || "network error";
+    return { ok: false, kind: "network_error", message };
+  }
+}
+
+function buildDomainConfirmationFields() {
+  return {
+    openva_resolution_status: "domain_confirmation_required",
+    openva_result_origin: null,
+    openva_live_checked: false,
+    openva_checked_at: null,
+    openva_catalog_publication_status: "not_applicable",
+    openva_resolution_message: "No domain was supplied for this vendor. Add a domain to enable live discovery.",
+  };
+}
+
+function buildNotCheckedFields() {
+  return {
+    openva_resolution_status: "not_checked",
+    openva_result_origin: null,
+    openva_live_checked: false,
+    openva_checked_at: null,
+    openva_catalog_publication_status: "not_applicable",
+    openva_resolution_message: 'Live discovery is off. Enable "Resolve unmatched vendors online" to check this vendor against public sources.',
+  };
+}
+
+// Merges live-resolver source URLs into a row, matching whichever URL-column convention the
+// active row builder used (the flat legacy columns or the Phase 2 per-source-type columns),
+// so downloaded rows always carry one URL column per selected source type.
+function mergeLiveSourceUrls(row, sources) {
+  sources.forEach((source) => {
+    const url = source.status === "newly_discovered" ? source.source_url : null;
+    if (row.source_urls && typeof row.source_urls === "object") row.source_urls[source.source_type] = url;
+    row[`${source.source_type}_url`] = url;
+  });
+  row.trust_security_url = row.trust_center_url || row.security_page_url || row.trust_security_url || null;
+  row.subprocessors_url = row.subprocessors_list_url || row.subprocessors_url || null;
+}
+
+function applyLiveOutcomeToRow(row, outcome) {
+  const checkedAt = new Date().toISOString();
+  if (!outcome.ok) {
+    const status = outcome.kind === "malformed_response" ? "verification_inconclusive" : "live_resolution_error";
+    Object.assign(row, {
+      openva_resolution_status: status,
+      openva_result_origin: null,
+      openva_live_checked: true,
+      openva_checked_at: checkedAt,
+      openva_catalog_publication_status: "not_applicable",
+      openva_resolution_message: status === "verification_inconclusive"
+        ? `Live lookup returned an unexpected response; verification is inconclusive. (${outcome.message})`
+        : `Live discovery failed: ${outcome.message}`,
+    });
+    return;
+  }
+  const sources = outcome.payload.sources || [];
+  const found = sources.filter((source) => source.status === "newly_discovered" && source.source_url);
+  mergeLiveSourceUrls(row, sources);
+  if (outcome.payload.vendor && outcome.payload.vendor.official_domain) {
+    row.official_domain = outcome.payload.vendor.official_domain;
+  }
+  Object.assign(row, {
+    openva_resolution_status: found.length ? "newly_discovered" : "not_found",
+    openva_result_origin: found.length ? "live_discovery" : null,
+    openva_live_checked: true,
+    openva_checked_at: checkedAt,
+    openva_catalog_publication_status: found.length ? "pending_catalog_publication" : "not_applicable",
+    openva_resolution_message: found.length
+      ? "Newly discovered via live public-source lookup. Not yet in the published catalog."
+      : "No public source found for the requested source types within the resolver's bounded checks.",
+  });
+}
+
+// Bounded concurrency (LIVE_RESOLVER_CONFIG.concurrency) and per-session domain dedup: rows
+// sharing a domain (case-insensitive) trigger exactly one live request and share its outcome.
+async function resolveLivePending(pending, sourceTypes) {
+  const byDomain = new Map();
+  pending.forEach((item) => {
+    const key = item.domain.toLowerCase();
+    if (!byDomain.has(key)) byDomain.set(key, { domain: item.domain, rows: [] });
+    byDomain.get(key).rows.push(item.row);
+  });
+  const groups = [...byDomain.values()];
+  await runWithConcurrency(groups, LIVE_RESOLVER_CONFIG.concurrency, async (group) => {
+    const vendorName = group.rows[0].input_vendor_name || "";
+    const outcome = await callLiveResolver(vendorName, group.domain, sourceTypes);
+    group.rows.forEach((row) => applyLiveOutcomeToRow(row, outcome));
+  });
+}
+
 function setupLocalMatcher() {
   const fileInput = document.getElementById("inventory-file");
   if (!fileInput) return;
@@ -466,8 +652,30 @@ function setupLocalMatcher() {
   document.getElementById("run-local-match").addEventListener("click", async () => {
     const indexes = buildLocalMatchIndexes();
     document.getElementById("matcher-status").textContent = "Matching locally against the lightweight OpenVA vendor index and loading matched vendor shards on demand...";
-    localMatchRows = await Promise.all(localInventoryRows.map((row, index) => matchInventoryRow(row, index, indexes)));
-    document.getElementById("matcher-status").textContent = `${localMatchRows.length} row(s) matched locally in browser memory. No private inventory data was uploaded.`;
+    const results = await Promise.all(localInventoryRows.map((row, index) => matchInventoryRow(row, index, indexes)));
+
+    const liveToggle = document.getElementById("enable-live-resolution");
+    const liveEnabled = Boolean(liveToggle && liveToggle.checked);
+    const pending = [];
+    results.forEach((row) => {
+      if (row.matched_vendor_name) return;
+      const domain = String(row.input_domain || "").trim();
+      if (!domain) {
+        Object.assign(row, buildDomainConfirmationFields());
+      } else if (!liveEnabled) {
+        Object.assign(row, buildNotCheckedFields());
+      } else {
+        pending.push({ row, domain });
+      }
+    });
+
+    if (pending.length) {
+      document.getElementById("matcher-status").textContent = `Checking ${pending.length} unmatched vendor(s) with a supplied domain against live public sources (bounded, opt-in, duplicate domains reused)...`;
+      await resolveLivePending(pending, selectedLiveSourceTypes());
+    }
+
+    localMatchRows = results;
+    document.getElementById("matcher-status").textContent = `${localMatchRows.length} row(s) resolved locally in browser memory. No private inventory data was uploaded.${liveEnabled ? " Unmatched vendors with a supplied domain were checked against live public sources." : ""}`;
     renderLocalMatcher();
   });
 
@@ -1010,6 +1218,7 @@ init();
     result.subprocessors_url = result.subprocessors_list_url || null;
     result.privacy_notice_url = result.privacy_notice_url || null;
     result.status_page_url = result.status_page_url || null;
+    Object.assign(result, catalogResolutionFields(matched, vendor));
     return result;
   }
 
