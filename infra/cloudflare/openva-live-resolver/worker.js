@@ -388,6 +388,13 @@ export default {
     if (!origin) {
       return jsonResponse({ error: "origin_not_allowed" }, 403);
     }
+    if (env.RESOLVE_RATE_LIMITER) {
+      const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+      const { success } = await env.RESOLVE_RATE_LIMITER.limit({ key: clientIp });
+      if (!success) {
+        return jsonResponse({ error: "rate_limited" }, 429, origin);
+      }
+    }
     if (!(request.headers.get("Content-Type") || "").includes("application/json")) {
       return jsonResponse({ error: "content_type_must_be_json" }, 415, origin);
     }
