@@ -566,6 +566,20 @@ function buildNotCheckedFields() {
   };
 }
 
+// Used only by the ui-fixes.js hardened resolver, which recognizes an "ambiguous" catalog
+// match (multiple plausible vendors) distinct from "no vendor found". Live discovery is
+// skipped for these rows -- there IS a plausible catalog identity, just not a unique one.
+function buildAmbiguousFields(note) {
+  return {
+    openva_resolution_status: "verification_inconclusive",
+    openva_result_origin: null,
+    openva_live_checked: false,
+    openva_checked_at: null,
+    openva_catalog_publication_status: "not_applicable",
+    openva_resolution_message: note || "Multiple plausible catalog vendors matched; verification is inconclusive.",
+  };
+}
+
 // Merges live-resolver source URLs into a row, matching whichever URL-column convention the
 // active row builder used (the flat legacy columns or the Phase 2 per-source-type columns),
 // so downloaded rows always carry one URL column per selected source type.

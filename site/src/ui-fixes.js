@@ -333,7 +333,14 @@
       if (!inputColumns.includes(key)) inputColumns.push(key);
     }));
     const sourceColumns = selectedSourceTypesForExport().map((sourceType) => `${sourceType}_url`);
-    const columns = [...inputColumns, "openva_match_status", "openva_match_method", "openva_match_confidence", "openva_match_note", "matched_vendor_name", "official_domain", ...sourceColumns];
+    const columns = [
+      ...inputColumns,
+      "openva_match_status", "openva_match_method", "openva_match_confidence", "openva_match_note",
+      "matched_vendor_name", "official_domain",
+      "openva_resolution_status", "openva_result_origin", "openva_live_checked", "openva_checked_at",
+      "openva_catalog_publication_status", "openva_resolution_message",
+      ...sourceColumns,
+    ];
     const rows = resultRows.map((result, index) => {
       const row = { ...(inputRows[index] || {}) };
       row.openva_match_status = result.match_status || "no_match";
@@ -342,6 +349,12 @@
       row.openva_match_note = result.match_note || "";
       row.matched_vendor_name = result.matched_vendor_name || "";
       row.official_domain = result.official_domain || "";
+      row.openva_resolution_status = result.openva_resolution_status || "";
+      row.openva_result_origin = result.openva_result_origin || "";
+      row.openva_live_checked = result.openva_live_checked ?? "";
+      row.openva_checked_at = result.openva_checked_at || "";
+      row.openva_catalog_publication_status = result.openva_catalog_publication_status || "";
+      row.openva_resolution_message = result.openva_resolution_message || "";
       sourceColumns.forEach((column) => { row[column] = result[column] || ""; });
       return row;
     });
@@ -429,10 +442,35 @@
       try {
         const indexes = buildResolverIndexes();
         localMatchRows = await Promise.all(localInventoryRows.map((row, index) => matchInventoryRowHardened(row, index, indexes)));
+
+        const liveToggle = document.getElementById("enable-live-resolution");
+        const liveEnabled = Boolean(liveToggle && liveToggle.checked);
+        const pending = [];
+        localMatchRows.forEach((row) => {
+          if (row.match_status === "matched") return;
+          if (row.match_status === "ambiguous") {
+            Object.assign(row, buildAmbiguousFields(row.match_note));
+            return;
+          }
+          const domain = String(row.input_domain || "").trim();
+          if (!domain) {
+            Object.assign(row, buildDomainConfirmationFields());
+          } else if (!liveEnabled) {
+            Object.assign(row, buildNotCheckedFields());
+          } else {
+            pending.push({ row, domain });
+          }
+        });
+
+        if (pending.length) {
+          statusNode.textContent = `Checking ${pending.length} unmatched vendor(s) with a supplied domain against live public sources (bounded, opt-in, duplicate domains reused)...`;
+          await resolveLivePending(pending, selectedLiveSourceTypes());
+        }
+
         const matched = localMatchRows.filter((row) => row.match_status === "matched").length;
         const ambiguous = localMatchRows.filter((row) => row.match_status === "ambiguous").length;
         const unmatched = localMatchRows.length - matched - ambiguous;
-        statusNode.textContent = `${localMatchRows.length} row(s) resolved locally: ${matched} matched, ${ambiguous} ambiguous, ${unmatched} no match. No inventory data was uploaded.`;
+        statusNode.textContent = `${localMatchRows.length} row(s) resolved locally: ${matched} matched, ${ambiguous} ambiguous, ${unmatched} no match. No inventory data was uploaded.${liveEnabled ? " Unmatched vendors with a supplied domain were checked against live public sources." : ""}`;
       } catch (error) {
         localMatchRows = [];
         statusNode.textContent = `Resolution failed before producing results: ${error.message}`;
