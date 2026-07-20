@@ -385,118 +385,26 @@ jobs:
           Path(sys.argv[2]).write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
           gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"
-      - name: Prepare exact intake branch
+      - name: Record partitioned intake handoff
         if: github.event_name != 'push'
-        id: intake
         env:
           INTAKE_NEEDED: ${{ steps.health.outputs.intake_needed }}
-        run: |
-          set -euo pipefail
-          RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          BRANCH="agent-discovery-mesh-intake-${RUN_KEY}"
-          PLAN_PATH="maintenance/generated/strict-growth-discovery-mesh-promotion-plan-${RUN_KEY}.json"
-          CANDIDATE_PATHS="$RUNNER_TEMP/discovery-mesh-candidate-paths.txt"
-          CHANGED_PATHS="$RUNNER_TEMP/discovery-mesh-staged-paths.txt"
-          if [ "$INTAKE_NEEDED" != "true" ]; then
-            echo "True no-op run: no viable promotion actions and no changed breadth outputs."
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            echo "action_count=0" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          ACTION_COUNT=$(python - "$PLAN_PATH" "$CANDIDATE_PATHS" <<'PY'
-          import json
-          import re
-          import sys
-          from pathlib import Path
-
-          plan_path = Path(sys.argv[1])
-          output_path = Path(sys.argv[2])
-          plan = json.loads(plan_path.read_text(encoding="utf-8"))
-          actions = [row for row in plan.get("actions", []) or [] if isinstance(row, dict)]
-          paths = []
-          for action in actions:
-              path = str(action.get("path") or "")
-              if not re.fullmatch(r"data/vendors/[^/]+/candidate_sources/[^/]+\.yaml", path):
-                  raise SystemExit(f"invalid candidate path in promotion plan: {path!r}")
-              if not Path(path).is_file():
-                  raise SystemExit(f"candidate path does not exist: {path}")
-              paths.append(path)
-          output_path.write_text("\n".join(sorted(set(paths))) + ("\n" if paths else ""), encoding="utf-8")
-          print(len(actions))
-          PY
-          )
-          case "$ACTION_COUNT" in *[!0-9]*) echo "invalid promotion action count" >&2; exit 1 ;; esac
-          git config user.name "openva-discovery-mesh"
-          git config user.email "openva-discovery-mesh@users.noreply.github.com"
-          git switch -c "$BRANCH"
-          if [ "$ACTION_COUNT" != "0" ]; then
-            xargs -r git add -- < "$CANDIDATE_PATHS"
-            git add "$PLAN_PATH"
-          fi
-          git add maintenance/generated/vendor-breadth-*.json
-          git diff --cached --name-only > "$CHANGED_PATHS"
-          python - "$CHANGED_PATHS" "$PLAN_PATH" <<'PY'
-          import re
-          import sys
-          from pathlib import Path
-
-          changed = [line.strip() for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines() if line.strip()]
-          plan_path = sys.argv[2]
-          allowed_breadth = re.compile(
-              r"maintenance/generated/vendor-breadth-(signal-ledger|resolution-queue|candidates|provider-metrics)\.json"
-          )
-          candidate = re.compile(r"data/vendors/[^/]+/candidate_sources/[^/]+\.yaml")
-          invalid = [
-              path
-              for path in changed
-              if path != plan_path and not allowed_breadth.fullmatch(path) and not candidate.fullmatch(path)
-          ]
-          if invalid:
-              raise SystemExit("out-of-scope discovery mesh intake paths: " + ", ".join(invalid))
-          candidate_paths = [path for path in changed if candidate.fullmatch(path)]
-          if candidate_paths and plan_path not in changed:
-              raise SystemExit("candidate records staged without the exact reviewed promotion plan")
-          PY
-          if git diff --cached --quiet; then
-            echo "Health decision required intake but no eligible paths were staged." >&2
-            exit 1
-          fi
-          git commit -m "Ops: stage discovery mesh candidates (${RUN_KEY})"
-          git push origin "$BRANCH"
-          echo "has_changes=true" >> "$GITHUB_OUTPUT"
-          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-          echo "action_count=$ACTION_COUNT" >> "$GITHUB_OUTPUT"
-      - name: Open candidate-intake PR and enable native auto-merge
-        if: steps.intake.outputs.has_changes == 'true'
-        env:
-          # Workflow-triggering token so PR validation and this workflow's merged-PR handoff fire.
-          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
-          BRANCH: ${{ steps.intake.outputs.branch }}
           HEALTH_STATUS: ${{ steps.health.outputs.health_status }}
-          ACTION_COUNT: ${{ steps.intake.outputs.action_count }}
         run: |
           set -euo pipefail
-          BODY_FILE="$RUNNER_TEMP/discovery-mesh-intake.md"
-          cat > "$BODY_FILE" <<EOF
-          Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01
-
-          Generated by full-catalog discovery mesh run \`${GITHUB_RUN_ID}\`, attempt \`${GITHUB_RUN_ATTEMPT}\`.
-
-          This PR stages only changed stable vendor-breadth projections and, when viable actions exist, the exact reviewed promotion plan plus the candidate-source records referenced by that plan.
-
-          Health status: \`${HEALTH_STATUS}\`. Viable source-promotion actions: \`${ACTION_COUNT}\`.
-
-          Provider signals are not catalog facts. This PR does not write canonical sources or vendors. After this intake PR merges, the same discovery-mesh workflow dispatches \`candidate-promotion-pr.yml\` only when an exact non-empty promotion plan was committed. That workflow remains the sole canonical mutation authority.
-
-          Catalog breadth was not capped. The entire eligible catalog was assigned across \`${{ needs.plan.outputs.shard_count }}\` shards, and provider-replenished identities are not truncated by the curated seed target.
-          EOF
-          PR_URL=$(gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --title "Ops: stage discovery mesh candidates" \
-            --body-file "$BODY_FILE")
-          PR_NUMBER="${PR_URL##*/}"
-          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+          {
+            echo "### Partitioned intake handoff"
+            echo ""
+            echo "- Health status: \`${HEALTH_STATUS}\`"
+            echo "- Intake needed: \`${INTAKE_NEEDED}\`"
+            echo "- Aggregate artifact: \`openva-discovery-mesh-aggregate\`"
+            if [ "$INTAKE_NEEDED" = "true" ]; then
+              echo "- Next authority: \`discovery-mesh-intake-recovery.yml\` partitions the complete uncapped action set after this run completes."
+            else
+              echo "- Next authority: none; the health decision is a true no-op."
+            fi
+            echo "- Canonical mutation authority: unchanged; \`candidate-promotion-pr.yml\` remains sole authority."
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload aggregate evidence
         if: always()
         uses: actions/upload-artifact@v6
