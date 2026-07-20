@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "openva-live-resolver",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-20",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": true,
+  "limits": {
+    "subrequests": 48
+  },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://thedanieltan.github.io"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.05
+  }
+}
