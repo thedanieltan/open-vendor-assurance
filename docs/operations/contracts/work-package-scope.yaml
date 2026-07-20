@@ -561,3 +561,11 @@ work_packages:
       - docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
       - docs/operations/reports/*
       - docs/maintenance/*
+
+  WP-OPENVA-LIVE-RESOLVER-SITE-INTEGRATION-01:
+    description: Connects the deployed openva-live-resolver Cloudflare Worker (WP-02F-STAGING) to the browser CSV resolver — opt-in live discovery for unmatched vendors with a supplied domain, bounded/deduplicated requests, and explicit per-row resolution fields in the downloaded result pack.
+    allowed_paths:
+      - site/src/app.js
+      - site/src/index.html
+      - site/src/styles.css
+      - tests/test_live_resolver_site_integration.py
