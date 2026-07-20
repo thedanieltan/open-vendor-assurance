@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "request_type": "discovery_mesh_intake_recovery",
-  "request_id": "recover-run-29637347015",
+  "request_id": "recover-run-29637347015-attempt-2",
   "source_run_id": 29637347015,
   "expected_workflow": "discovery-mesh",
   "expected_event": "workflow_dispatch",
@@ -12,6 +12,6 @@
   "catalog_vendor_count_cap": null,
   "total_action_count_cap": null,
   "requested_on": "2026-07-20",
-  "reason": "Recover the healthy aggregate evidence from the first uncapped full-catalog run after the original monolithic intake transaction produced no branch or pull request.",
+  "reason": "Replay the exact healthy aggregate after the request-dispatch workflow is already installed on main. Recovery is deterministic and reuses any branches or pull requests created by an earlier dispatch.",
   "non_advisory": true
 }
