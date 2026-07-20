@@ -114,6 +114,14 @@ public_workflows:
     writes_repository_state: true
     creates_prs: true
     merges_prs: true
+  - name: discovery-mesh-intake-recovery.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, workflow_run]
+    permissions: {actions: read, contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: true
   - name: autonomous-catalog-growth.yml
     loop: catalog_growth
     status: core
@@ -258,6 +266,3 @@ public_workflows:
     status: quarantined
     triggers: [workflow_dispatch]
     permissions: {contents: read}
-    writes_repository_state: false
-    creates_prs: false
-    merges_prs: false
