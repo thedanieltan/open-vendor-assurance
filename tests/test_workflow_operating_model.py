@@ -187,3 +187,33 @@ def test_source_maintenance_report_uploads_reviewer_only_inbox_artifact():
     assert "promotion-plan-actions.csv" in artifacts[
         "openva-source-maintenance-report"
     ]
+
+
+def test_discovery_mesh_delegates_full_catalog_intake_after_artifact_publication():
+    discovery = (WORKFLOW_DIR / "discovery-mesh.yml").read_text(encoding="utf-8")
+    recovery = (WORKFLOW_DIR / "discovery-mesh-intake-recovery.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Record partitioned intake handoff" in discovery
+    assert "discovery-mesh-intake-recovery.yml" in discovery
+    assert "Prepare exact intake branch" not in discovery
+    assert "Open candidate-intake PR and enable native auto-merge" not in discovery
+    assert "workflows: [discovery-mesh]" in recovery
+    assert "run-id: ${{ steps.source.outputs.run_id }}" in recovery
+    assert "tools.openva.discovery_mesh_intake prepare" in recovery
+
+
+def test_discovery_mesh_recovery_preserves_scope_authority_and_uncapped_growth():
+    recovery = (WORKFLOW_DIR / "discovery-mesh-intake-recovery.yml").read_text(
+        encoding="utf-8"
+    )
+
+    declaration = "Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01"
+    assert recovery.count(declaration) == 2
+    assert "Catalog vendor count cap: none" in recovery
+    assert "Total candidate action cap: none" in recovery
+    assert "candidate-promotion-pr.yml" in recovery
+    assert "Canonical vendor/source mutation: false" in recovery
+    assert 'gh pr list --state all --head "$BRANCH"' in recovery
+    assert "workflow-owned branch exists with unexpected commit" in recovery
