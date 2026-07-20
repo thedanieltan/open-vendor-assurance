@@ -30,7 +30,17 @@ The Worker:
 - uses at most 48 external subrequests per invocation;
 - returns `newly_discovered` or `not_found` immediately;
 - leaves governed catalog intake disabled until the existing remote intake boundary
-  is connected separately.
+  is connected separately;
+- rate-limits `/v1/resolve` per client IP (`CF-Connecting-IP`) using Cloudflare's
+  in-Worker `ratelimit` binding (`RESOLVE_RATE_LIMITER`, 60 requests / 60 seconds,
+  free on all plans, no Durable Objects). A limited request returns
+  `HTTP 429 {"error":"rate_limited"}`. This binding is documented by Cloudflare as
+  "permissive, eventually consistent" and local to the machine handling the
+  request rather than globally accurate -- it reliably catches a single client
+  reusing one connection (verified: 61st request on a kept-alive connection
+  returns 429), but offers weaker protection against a client that deliberately
+  opens many parallel connections. It is a hygiene measure on top of the
+  existing per-request bounds above, not a precise quota system.
 
 ## Deploy through the Cloudflare dashboard
 

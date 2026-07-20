@@ -563,9 +563,11 @@ work_packages:
       - docs/maintenance/*
 
   WP-OPENVA-LIVE-RESOLVER-SITE-INTEGRATION-01:
-    description: Connects the deployed openva-live-resolver Cloudflare Worker (WP-02F-STAGING) to the browser CSV resolver — opt-in live discovery for unmatched vendors with a supplied domain, bounded/deduplicated requests, and explicit per-row resolution fields in the downloaded result pack.
+    description: Connects the deployed openva-live-resolver Cloudflare Worker (WP-02F-STAGING) to the browser CSV resolver — opt-in live discovery for unmatched vendors with a supplied domain, bounded/deduplicated requests, and explicit per-row resolution fields in the downloaded result pack. Covers all three layered row-builder/click-handler overrides the compiled site loads (app.js, ui-fixes.js, and the build-injected resolver-source-availability.js) so the fields and orchestration reach the actually-active layer.
     allowed_paths:
       - site/src/app.js
       - site/src/index.html
       - site/src/styles.css
+      - site/src/ui-fixes.js
+      - site/src/resolver-source-availability.js
       - tests/test_live_resolver_site_integration.py
