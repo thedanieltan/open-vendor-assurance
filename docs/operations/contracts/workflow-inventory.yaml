@@ -266,3 +266,6 @@ public_workflows:
     status: quarantined
     triggers: [workflow_dispatch]
     permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
