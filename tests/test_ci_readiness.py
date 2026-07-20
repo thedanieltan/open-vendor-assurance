@@ -18,6 +18,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
     "discovery-mesh-intake-recovery.yml",
+    "discovery-mesh-intake-recovery-request.yml",
     "machine-provisional-materialization.yml",
     "catalog-maintenance-pr.yml",
     "catalog-maintenance.yml",
@@ -169,6 +170,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "discovery-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
         "discovery-mesh.yml": {"triggers": {"workflow_dispatch", "schedule", "pull_request", "push"}, "permissions": {"actions": "write", "contents": "write", "pull-requests": "write"}},
         "discovery-mesh-intake-recovery.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"actions": "read", "contents": "write", "pull-requests": "write"}},
+        "discovery-mesh-intake-recovery-request.yml": {"triggers": {"push"}, "permissions": {"actions": "write", "contents": "read"}},
         "machine-provisional-materialization.yml": {"triggers": {"workflow_dispatch"}, "permissions": {"contents": "read", "actions": "write"}},
         "catalog-growth-discovery.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
         "autonomous-catalog-growth.yml": {"triggers": {"workflow_dispatch", "schedule", "push"}, "permissions": {"contents": "read", "actions": "write"}},
@@ -214,6 +216,27 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         allowed = allowed_write_workflows[path.name]
         assert set(triggers.keys()) == allowed["triggers"], f"{path}: unexpected write workflow triggers"
         assert permissions == allowed["permissions"], f"{path}: unexpected write workflow permissions"
+
+
+def test_recovery_request_bridge_is_main_path_scoped_and_dispatch_only():
+    workflow = load_workflow("discovery-mesh-intake-recovery-request.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "discovery-mesh-intake-recovery-request.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert set(triggers) == {"push"}
+    assert triggers["push"]["branches"] == ["main"]
+    assert triggers["push"]["paths"] == [
+        "docs/operations/requests/discovery-mesh-intake-recovery.json"
+    ]
+    assert workflow["permissions"] == {"actions": "write", "contents": "read"}
+    assert "gh workflow run discovery-mesh-intake-recovery.yml" in text
+    assert "gh pr create" not in text
+    assert "git push" not in text
+    assert "source workflow verification failed" in text
+    assert "recovery request must not define a catalog vendor cap" in text
+    assert "recovery request must not define a total action cap" in text
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():

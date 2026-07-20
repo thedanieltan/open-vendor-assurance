@@ -1,0 +1,134 @@
+name: discovery-mesh-intake-recovery-request
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/operations/requests/discovery-mesh-intake-recovery.json"
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: discovery-mesh-intake-recovery-request
+  cancel-in-progress: false
+
+jobs:
+  dispatch-request:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate reviewed recovery request
+        id: request
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          path = Path("docs/operations/requests/discovery-mesh-intake-recovery.json")
+          request = json.loads(path.read_text(encoding="utf-8"))
+          if request.get("schema_version") != "0.1.0":
+              raise SystemExit("unsupported recovery request schema")
+          if request.get("request_type") != "discovery_mesh_intake_recovery":
+              raise SystemExit("invalid recovery request type")
+          if request.get("non_advisory") is not True:
+              raise SystemExit("recovery request lost non-advisory posture")
+          if request.get("catalog_vendor_count_cap") is not None:
+              raise SystemExit("recovery request must not define a catalog vendor cap")
+          if request.get("total_action_count_cap") is not None:
+              raise SystemExit("recovery request must not define a total action cap")
+          run_id = request.get("source_run_id")
+          max_files = request.get("transaction_max_files")
+          max_bytes = request.get("transaction_max_bytes")
+          if not isinstance(run_id, int) or run_id < 1:
+              raise SystemExit("source_run_id must be a positive integer")
+          if not isinstance(max_files, int) or max_files < 2:
+              raise SystemExit("transaction_max_files must allow one candidate and one plan")
+          if not isinstance(max_bytes, int) or max_bytes < 1:
+              raise SystemExit("transaction_max_bytes must be positive")
+          expected_sha = str(request.get("expected_head_sha") or "")
+          if len(expected_sha) != 40 or any(ch not in "0123456789abcdef" for ch in expected_sha):
+              raise SystemExit("expected_head_sha must be a lowercase 40-character commit SHA")
+          print(f"source_run_id={run_id}")
+          print(f"transaction_max_files={max_files}")
+          print(f"transaction_max_bytes={max_bytes}")
+          print(f"expected_workflow={request.get('expected_workflow', '')}")
+          print(f"expected_event={request.get('expected_event', '')}")
+          print(f"expected_conclusion={request.get('expected_conclusion', '')}")
+          print(f"expected_head_sha={expected_sha}")
+          print(f"request_id={request.get('request_id', '')}")
+          PY
+      - name: Verify exact source workflow run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ steps.request.outputs.source_run_id }}
+          EXPECTED_WORKFLOW: ${{ steps.request.outputs.expected_workflow }}
+          EXPECTED_EVENT: ${{ steps.request.outputs.expected_event }}
+          EXPECTED_CONCLUSION: ${{ steps.request.outputs.expected_conclusion }}
+          EXPECTED_HEAD_SHA: ${{ steps.request.outputs.expected_head_sha }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_RUN_ID}" > "$RUNNER_TEMP/source-run.json"
+          python - "$RUNNER_TEMP/source-run.json" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          run = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          checks = {
+              "name": os.environ["EXPECTED_WORKFLOW"],
+              "event": os.environ["EXPECTED_EVENT"],
+              "conclusion": os.environ["EXPECTED_CONCLUSION"],
+              "head_sha": os.environ["EXPECTED_HEAD_SHA"],
+          }
+          failures = [
+              f"{key}: expected {expected!r}, got {run.get(key)!r}"
+              for key, expected in checks.items()
+              if run.get(key) != expected
+          ]
+          if run.get("status") != "completed":
+              failures.append(f"status: expected 'completed', got {run.get('status')!r}")
+          if failures:
+              raise SystemExit("source workflow verification failed: " + "; ".join(failures))
+          print(json.dumps({key: run.get(key) for key in ("id", "name", "event", "status", "conclusion", "head_sha")}, indent=2, sort_keys=True))
+          PY
+      - name: Dispatch exact intake recovery
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ steps.request.outputs.source_run_id }}
+          MAX_FILES: ${{ steps.request.outputs.transaction_max_files }}
+          MAX_BYTES: ${{ steps.request.outputs.transaction_max_bytes }}
+        run: |
+          set -euo pipefail
+          gh workflow run discovery-mesh-intake-recovery.yml \
+            --ref main \
+            -f source_run_id="$SOURCE_RUN_ID" \
+            -f transaction_max_files="$MAX_FILES" \
+            -f transaction_max_bytes="$MAX_BYTES"
+          {
+            echo "### Discovery Mesh intake recovery request"
+            echo ""
+            echo "- Request: \`${{ steps.request.outputs.request_id }}\`"
+            echo "- Source run: \`$SOURCE_RUN_ID\`"
+            echo "- Transaction max files: \`$MAX_FILES\`"
+            echo "- Transaction max bytes: \`$MAX_BYTES\`"
+            echo "- Catalog vendor count cap: \`none\`"
+            echo "- Total action count cap: \`none\`"
+            echo "- Dispatched workflow: \`discovery-mesh-intake-recovery.yml\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload reviewed request receipt
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-discovery-mesh-intake-recovery-request-${{ steps.request.outputs.source_run_id }}
+          path: |
+            docs/operations/requests/discovery-mesh-intake-recovery.json
+            ${{ runner.temp }}/source-run.json
+          if-no-files-found: error
+          retention-days: 30

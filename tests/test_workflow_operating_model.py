@@ -25,6 +25,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
     "discovery-mesh-intake-recovery.yml",
+    "discovery-mesh-intake-recovery-request.yml",
     "machine-provisional-materialization.yml",
     "catalog-maintenance-pr.yml",
     "catalog-maintenance.yml",
@@ -119,6 +120,7 @@ def test_workflow_operating_model_documents_core_loops():
         "They must not become catalog truth generators",
         "Discovery Mesh intake recovery",
         "The recovery workflow is the sole post-aggregate intake transaction owner",
+        "Reviewed request bridge",
     }:
         assert fragment in text
 
@@ -128,6 +130,7 @@ def test_workflow_operating_model_documents_core_loops():
         "source-maintenance-report.yml",
         "discovery-mesh.yml",
         "discovery-mesh-intake-recovery.yml",
+        "discovery-mesh-intake-recovery-request.yml",
         "candidate-promotion-pr.yml",
         "site-pages.yml",
     }:
@@ -217,3 +220,18 @@ def test_discovery_mesh_recovery_preserves_scope_authority_and_uncapped_growth()
     assert "Canonical vendor/source mutation: false" in recovery
     assert 'gh pr list --state all --head "$BRANCH"' in recovery
     assert "workflow-owned branch exists with unexpected commit" in recovery
+
+
+def test_reviewed_recovery_request_bridge_is_dispatch_only():
+    bridge = (
+        WORKFLOW_DIR / "discovery-mesh-intake-recovery-request.yml"
+    ).read_text(encoding="utf-8")
+
+    assert "docs/operations/requests/discovery-mesh-intake-recovery.json" in bridge
+    assert "source workflow verification failed" in bridge
+    assert "expected_head_sha" in bridge
+    assert "gh workflow run discovery-mesh-intake-recovery.yml" in bridge
+    assert "recovery request must not define a catalog vendor cap" in bridge
+    assert "recovery request must not define a total action cap" in bridge
+    assert "gh pr create" not in bridge
+    assert "git push" not in bridge

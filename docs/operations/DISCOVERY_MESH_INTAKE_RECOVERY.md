@@ -14,6 +14,20 @@ The workflow runs after completed `discovery-mesh` executions whose source event
 
 Push deployment smokes and pull-request promotion handoffs are excluded because they do not carry a full production intake artifact.
 
+### Reviewed request bridge
+
+`discovery-mesh-intake-recovery-request.yml` provides an auditable activation route when direct workflow-dispatch tooling is unavailable. It triggers only when the reviewed request at `docs/operations/requests/discovery-mesh-intake-recovery.json` changes on `main`.
+
+Before dispatch, the bridge validates that:
+
+- the request schema and type are exact;
+- catalog vendor count and total action count remain uncapped;
+- transaction bounds are positive repository-safety budgets;
+- the named source run is completed successfully;
+- the source workflow name, source event, and exact commit SHA match the reviewed request.
+
+The bridge has Actions write authority only to dispatch `discovery-mesh-intake-recovery.yml`. It has read-only repository access, does not create repository branches or pull requests itself, and uploads the reviewed request plus verified source-run metadata as a receipt artifact.
+
 ## Evidence contract
 
 The source run must contain exactly one `openva-discovery-mesh-aggregate` artifact with:

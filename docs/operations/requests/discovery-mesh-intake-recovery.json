@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1.0",
+  "request_type": "discovery_mesh_intake_recovery",
+  "request_id": "recover-run-29637347015",
+  "source_run_id": 29637347015,
+  "expected_workflow": "discovery-mesh",
+  "expected_event": "workflow_dispatch",
+  "expected_conclusion": "success",
+  "expected_head_sha": "5f055af2e2a6c067c91b6225e533806c8d3a51a1",
+  "transaction_max_files": 2500,
+  "transaction_max_bytes": 25000000,
+  "catalog_vendor_count_cap": null,
+  "total_action_count_cap": null,
+  "requested_on": "2026-07-20",
+  "reason": "Recover the healthy aggregate evidence from the first uncapped full-catalog run after the original monolithic intake transaction produced no branch or pull request.",
+  "non_advisory": true
+}
