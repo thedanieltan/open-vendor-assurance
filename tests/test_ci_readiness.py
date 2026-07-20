@@ -17,6 +17,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "rendered-discovery-acceptance-controller.yml",
     "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
+    "discovery-mesh-intake-recovery.yml",
     "machine-provisional-materialization.yml",
     "catalog-maintenance-pr.yml",
     "catalog-maintenance.yml",
@@ -167,6 +168,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "observation-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
         "discovery-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
         "discovery-mesh.yml": {"triggers": {"workflow_dispatch", "schedule", "pull_request", "push"}, "permissions": {"actions": "write", "contents": "write", "pull-requests": "write"}},
+        "discovery-mesh-intake-recovery.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"actions": "read", "contents": "write", "pull-requests": "write"}},
         "machine-provisional-materialization.yml": {"triggers": {"workflow_dispatch"}, "permissions": {"contents": "read", "actions": "write"}},
         "catalog-growth-discovery.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
         "autonomous-catalog-growth.yml": {"triggers": {"workflow_dispatch", "schedule", "push"}, "permissions": {"contents": "read", "actions": "write"}},
@@ -201,7 +203,11 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
         permissions = workflow.get("permissions", {})
         triggers = workflow_triggers(workflow)
-        write_permissions = {permission: value for permission, value in permissions.items() if value == "write"}
+        write_permissions = {
+            permission: value
+            for permission, value in permissions.items()
+            if value == "write"
+        }
         if not write_permissions:
             continue
         assert path.name in allowed_write_workflows, f"{path}: unexpected write permissions"
