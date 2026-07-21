@@ -78,6 +78,16 @@ def test_recovery_waits_for_mergeable_before_enabling_automerge() -> None:
     assert 'EXISTING_STATE=$(jq -r \'.[0].state\' <<< "$EXISTING")' in text
 
 
+def test_recovery_validates_changed_paths_via_file_not_argv() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert 'PARTITION_JSON_FILE="$RUNNER_TEMP/discovery-mesh-intake-partition-current.json"' in text
+    assert 'printf \'%s\' "$PARTITION_JSON" > "$PARTITION_JSON_FILE"' in text
+    assert 'python - "$PARTITION_JSON_FILE" "$CHANGED" <<\'PY\'' in text
+    assert '"$PARTITION_JSON" "$CHANGED"' not in text
+    assert 'partition = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))' in text
+
+
 def test_discovery_mesh_no_longer_attempts_monolithic_repository_intake() -> None:
     text = DISCOVERY.read_text(encoding="utf-8")
 

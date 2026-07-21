@@ -213,6 +213,8 @@ jobs:
           PY
           while IFS= read -r ENCODED; do
             PARTITION_JSON=$(printf '%s' "$ENCODED" | base64 --decode)
+            PARTITION_JSON_FILE="$RUNNER_TEMP/discovery-mesh-intake-partition-current.json"
+            printf '%s' "$PARTITION_JSON" > "$PARTITION_JSON_FILE"
             PARTITION_ID=$(jq -r '.partition_id' <<< "$PARTITION_JSON")
             KIND=$(jq -r '.kind' <<< "$PARTITION_JSON")
             BRANCH=$(jq -r '.branch' <<< "$PARTITION_JSON")
@@ -276,13 +278,13 @@ jobs:
                 '{partition_id:$partition,branch:$branch,state:"no_change"}' >> "$RECEIPT"
               continue
             fi
-            python - "$PARTITION_JSON" "$CHANGED" <<'PY'
+            python - "$PARTITION_JSON_FILE" "$CHANGED" <<'PY'
           import json
           import re
           import sys
           from pathlib import Path
 
-          partition = json.loads(sys.argv[1])
+          partition = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           changed = {line.strip() for line in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if line.strip()}
           allowed = {str(path) for path in partition.get("paths", []) or []}
           invalid = sorted(changed - allowed)
