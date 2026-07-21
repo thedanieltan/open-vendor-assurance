@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-b63ead431209
+candidate_status: selected
+candidate_url: https://www.aikido.dev/code/static-code-analysis-sast
+canonical_candidate_url: https://www.aikido.dev/code/static-code-analysis-sast
+confidence: likely
+discovered_at: '2026-07-18T08:23:15.248676Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.aikido.dev/code/static-code-analysis-sast
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: SAST Platform - Static Code Analysis | Aikido Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4ec59978d520906a742c803447f38da52db09fc0dffff2b158a21a3a022c6434
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.aikido.dev/code/static-code-analysis-sast
+requested_url: https://www.aikido.dev/code/static-code-analysis-sast
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-07-18T08:23:15.248676Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security

@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-9904cf035f26
+candidate_status: selected
+candidate_url: https://www.aikido.dev/cloud/hardened-images
+canonical_candidate_url: https://www.aikido.dev/cloud/hardened-images
+confidence: likely
+discovered_at: '2026-07-18T08:23:15.248676Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.aikido.dev/cloud/hardened-images
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: CVE-free images without breaking changes | Aikido Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:943364a22b6375e70ed5b6a9b7a57fe3111d2f9b5bc7107f55291b329e9ad69f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.aikido.dev/cloud/hardened-images
+requested_url: https://www.aikido.dev/cloud/hardened-images
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-07-18T08:23:15.248676Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security
