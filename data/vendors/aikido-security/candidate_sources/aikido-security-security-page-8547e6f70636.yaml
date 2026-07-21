@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-8547e6f70636
+candidate_status: selected
+candidate_url: https://status.aikido.dev/incidents
+canonical_candidate_url: https://status.aikido.dev/incidents
+confidence: likely
+discovered_at: '2026-07-21T06:13:42.653076Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.aikido.dev/incidents
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Previous incidents | Aikido Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:49e42913128d393e2e01e187b34e4aaa9b15392944af10a3e0f91c0bfcb2ea2b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.aikido.dev/incidents
+requested_url: https://status.aikido.dev/incidents
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-07-21T06:13:42.653076Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security

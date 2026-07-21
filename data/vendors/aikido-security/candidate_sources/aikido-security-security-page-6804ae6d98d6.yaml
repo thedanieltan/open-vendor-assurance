@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-6804ae6d98d6
+candidate_status: selected
+candidate_url: https://www.aikido.dev/attack/api-scanning
+canonical_candidate_url: https://www.aikido.dev/attack/api-scanning
+confidence: likely
+discovered_at: '2026-07-21T06:13:42.653076Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.aikido.dev/attack/api-scanning
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: API Security Testing &amp; API Fuzz Testing | Aikido Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cff06dece1f2d4924b877d04b73ac3de62c4ca07d89587cc8b45c51c1db501e3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.aikido.dev/attack/api-scanning
+requested_url: https://www.aikido.dev/attack/api-scanning
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-07-21T06:13:42.653076Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security
