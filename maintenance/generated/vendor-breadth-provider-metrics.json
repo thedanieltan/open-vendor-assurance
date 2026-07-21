@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-07-21T10:47:04Z",
+  "posture": {
+    "cumulative": true,
+    "non_advisory": true,
+    "replay_idempotent": true
+  },
+  "report_type": "vendor_breadth_provider_metrics",
+  "schema_version": "0.1.0",
+  "summary": {
+    "catalog_vendor_count_cap": null,
+    "entity_count": 266,
+    "observation_count": 287,
+    "provider_count": 2,
+    "provider_entity_counts": {
+      "openva_vibe_coder_saas_directory": 240,
+      "subprocessor_relationship_graph": 27
+    },
+    "provider_signal_counts": {
+      "openva_vibe_coder_saas_directory": 240,
+      "subprocessor_relationship_graph": 47
+    },
+    "queue_state_counts": {
+      "already_catalogued": 33,
+      "needs_country": 23,
+      "needs_domain": 3,
+      "ready_for_source_discovery": 207
+    },
+    "ready_for_source_discovery_count": 207,
+    "signal_count": 287,
+    "source_kind_counts": {
+      "public_directory": 240,
+      "relationship_graph": 47
+    }
+  }
+}
