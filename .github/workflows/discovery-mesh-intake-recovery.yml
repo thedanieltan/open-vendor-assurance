@@ -188,6 +188,18 @@ jobs:
           git config user.email "openva-discovery-mesh@users.noreply.github.com"
           MANIFEST="$PREPARED_ROOT/manifest.json"
           : > "$RECEIPT"
+          wait_for_mergeable_then_automerge() {
+            local pr_number="$1"
+            local attempt mergeable
+            for attempt in $(seq 1 12); do
+              mergeable=$(gh pr view "$pr_number" --json mergeable --jq .mergeable)
+              if [ "$mergeable" != "UNKNOWN" ]; then
+                break
+              fi
+              sleep 5
+            done
+            gh pr merge "$pr_number" --auto --squash --delete-branch
+          }
           python - "$MANIFEST" <<'PY' > "$RUNNER_TEMP/discovery-mesh-intake-partitions.txt"
           import base64
           import json
@@ -213,6 +225,11 @@ jobs:
               exit 1
             fi
             if [ "$EXISTING_COUNT" = "1" ]; then
+              EXISTING_STATE=$(jq -r '.[0].state' <<< "$EXISTING")
+              if [ "$EXISTING_STATE" = "OPEN" ]; then
+                EXISTING_PR_NUMBER=$(jq -r '.[0].number' <<< "$EXISTING")
+                wait_for_mergeable_then_automerge "$EXISTING_PR_NUMBER" || true
+              fi
               jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --argjson pr "$(jq '.[0]' <<< "$EXISTING")" \
                 '{partition_id:$partition,branch:$branch,state:"reused",pull_request:$pr}' >> "$RECEIPT"
               continue
@@ -236,7 +253,7 @@ jobs:
           EOF
               PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
               PR_NUMBER="${PR_URL##*/}"
-              gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+              wait_for_mergeable_then_automerge "$PR_NUMBER"
               jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --arg url "$PR_URL" \
                 '{partition_id:$partition,branch:$branch,state:"recovered_orphan_branch",pull_request_url:$url}' >> "$RECEIPT"
               continue
@@ -299,7 +316,7 @@ jobs:
           EOF
             PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
             PR_NUMBER="${PR_URL##*/}"
-            gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+            wait_for_mergeable_then_automerge "$PR_NUMBER"
             jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --arg url "$PR_URL" --arg kind "$KIND" --argjson actions "$ACTION_COUNT" \
               '{partition_id:$partition,branch:$branch,state:"opened",kind:$kind,action_count:$actions,pull_request_url:$url}' >> "$RECEIPT"
             sleep 3
