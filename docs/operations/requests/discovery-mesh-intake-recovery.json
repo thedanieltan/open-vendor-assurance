@@ -1,17 +1,17 @@
 {
   "schema_version": "0.1.0",
   "request_type": "discovery_mesh_intake_recovery",
-  "request_id": "recover-run-29637347015-attempt-2",
+  "request_id": "recover-run-29637347015-attempt-3",
   "source_run_id": 29637347015,
   "expected_workflow": "discovery-mesh",
   "expected_event": "workflow_dispatch",
-  "expected_conclusion": "success",
+  "expected_conclusion": "failure",
   "expected_head_sha": "5f055af2e2a6c067c91b6225e533806c8d3a51a1",
   "transaction_max_files": 2500,
   "transaction_max_bytes": 25000000,
   "catalog_vendor_count_cap": null,
   "total_action_count_cap": null,
-  "requested_on": "2026-07-20",
-  "reason": "Replay the exact healthy aggregate after the request-dispatch workflow is already installed on main. Recovery is deterministic and reuses any branches or pull requests created by an earlier dispatch.",
+  "requested_on": "2026-07-21",
+  "reason": "Corrects the reviewed expected_conclusion from a mistaken 'success' to the verified GitHub value 'failure': run 29637347015's aggregate job completed all 32 discover shards and uploaded a healthy 45.6MB aggregate artifact, but its own 'Validate staged candidate intake' step failed on the monolithic transaction this recovery program exists to fix. Attempts 1-2 (PR #757, #758) failed identity verification against this exact mismatch. Recovery still fail-closed verifies run id, workflow, event, head SHA, and completed status against live GitHub state, and separately verifies the aggregate's own health report before any transaction opens.",
   "non_advisory": true
 }
