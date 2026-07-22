@@ -16,7 +16,7 @@ def load_prohibited_terms(path: Path | None = None) -> list[str]:
 
 
 def term_pattern(term: str) -> re.Pattern[str]:
-    return re.compile(r"(?<![a-z0-9-])" + re.escape(term) + r"(?![a-z0-9-])")
+    return re.compile(r"(?<![a-z0-9_-])" + re.escape(term) + r"(?![a-z0-9_-])")
 
 
 def prohibited_terms_in_text(text: Any, terms: list[str] | None = None) -> list[str]:
