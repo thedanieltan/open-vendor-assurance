@@ -1,0 +1,105 @@
+# OpenVA capability manifest — the SINGLE source of truth for source types,
+# per-transport availability, and cross-runtime contract versions.
+#
+# WP-OPENVA-CAPABILITY-CONTRACT. Governance: canonical, PR-governed, non-advisory.
+#
+# Downstream copies MUST agree with this file. `python -m tools.openva.capabilities check`
+# fails closed when any surface (controlled-vocabulary.yaml, candidate-source schema enum,
+# the Python SOURCE_TYPE_REGISTRY, the browser resolver arrays, RESULT_PACK_VERSION) or the
+# generated artifact drifts from this manifest. Do not edit source-type lists elsewhere;
+# edit here and regenerate.
+
+manifest_version: "1.0.0"
+
+# Cross-runtime contract versions. Every transport pins these.
+contracts:
+  schema_version: "0.1.0"            # candidate-source / catalog schema family
+  resolver_contract_version: "1.0.0" # matching + resolution contract (WP-RESOLVER-UNIFICATION)
+  result_pack_version: "2.0.0"       # must equal resolver_result_pack.RESULT_PACK_VERSION
+
+# The controlled list of public source types. ORDER IS SIGNIFICANT (canonical order,
+# matches the schema enum and controlled-vocabulary.yaml). `aliases` are accepted synonyms
+# that normalize to `id` (none today; the field is contractual so consumers can rely on it).
+source_types:
+  - id: dpa
+    label: Data processing addendum
+    aliases: []
+  - id: subprocessors_list
+    label: Subprocessor list
+    aliases: []
+  - id: privacy_notice
+    label: Privacy notice
+    aliases: []
+  - id: trust_center
+    label: Trust center
+    aliases: []
+  - id: security_page
+    label: Security page
+    aliases: []
+  - id: compliance_page
+    label: Compliance page
+    aliases: []
+  - id: certification_reference
+    label: Certification reference
+    aliases: []
+  - id: terms_of_service
+    label: Terms of service
+    aliases: []
+  - id: kyc_statement
+    label: Know your customer statement
+    aliases: []
+  - id: aml_statement
+    label: Anti-money laundering statement
+    aliases: []
+  - id: ai_terms
+    label: Artificial intelligence terms
+    aliases: []
+  - id: government_request_policy
+    label: Government request policy
+    aliases: []
+  - id: transparency_report
+    label: Transparency report
+    aliases: []
+  - id: status_page
+    label: Service status page
+    aliases: []
+  - id: other_public_source
+    label: Other public source
+    aliases: []
+
+# Per-capability availability. Each list is a subset of source_types[].id.
+# These are CHECKED against the live surfaces named in each comment (fail closed on drift).
+availability:
+  # Source types the discovery pipeline knows how to find.
+  # Checked against: tools.openva.source_discovery.SOURCE_TYPE_REGISTRY keys.
+  discovery_supported:
+    - dpa
+    - subprocessors_list
+    - privacy_notice
+    - trust_center
+    - security_page
+    - compliance_page
+    - certification_reference
+    - status_page
+    - ai_terms
+  # Source types checked by default in the browser resolver UI.
+  # Checked against: site/src/resolver-source-availability.js DEFAULT_SELECTED_TYPES.
+  browser_default_selected:
+    - dpa
+    - privacy_notice
+    - subprocessors_list
+    - security_page
+    - trust_center
+  # Source types the opt-in live edge resolver is contractually permitted to attempt.
+  # NOT yet checked against the Worker (the Worker does not enumerate source types today);
+  # this is the target contract, to be conformance-verified in WP-OPENVA-LIVE-RESOLVER-BOUNDARY.
+  live_resolver_supported:
+    - dpa
+    - subprocessors_list
+    - privacy_notice
+    - trust_center
+    - security_page
+    - compliance_page
+    - certification_reference
+    - status_page
+    - ai_terms
