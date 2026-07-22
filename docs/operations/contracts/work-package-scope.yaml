@@ -16,6 +16,17 @@ work_packages:
       - .github/workflows/validate.yml
       - .github/validation-ownership.yaml
 
+  WP-OPENVA-FOUR-PLANE-FOUNDATION-01:
+    description: Four-plane refactor foundation — capability manifest, generated cross-runtime contracts, and architecture docs. Additive and backward-compatible; no canonical data mutation.
+    allowed_paths:
+      - config/openva-capabilities.yaml
+      - tools/openva/capabilities.py
+      - tools/openva/validate.py
+      - site/src/generated/*
+      - tests/test_capabilities_manifest.py
+      - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
+      - docs/architecture/adr/*
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
