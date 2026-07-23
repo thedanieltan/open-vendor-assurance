@@ -35,6 +35,15 @@ work_packages:
       - dist/vendors/*.json
       - tests/test_candidate_source_schema.py
 
+  WP-OPENVA-RESOLVER-UNIFICATION-01:
+    description: Freeze the authoritative matching core's observable behaviour as a committed cross-runtime conformance suite and wire a fail-closed check into validate_all. Additive and backward-compatible; no matching-behaviour change and no canonical data mutation; the browser/Worker normalizer consolidation is deferred to a later increment gated on this lock.
+    allowed_paths:
+      - tools/openva/resolver_conformance.py
+      - tools/openva/validate.py
+      - tests/test_resolver_conformance.py
+      - tests/conformance/*
+      - docs/architecture/adr/*
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
