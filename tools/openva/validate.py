@@ -709,6 +709,14 @@ def validate_machine_decisions() -> list[str]:
     return [f"machine-decision: {reason}" for reason in validate_committed()]
 
 
+def check_capability_manifest() -> list[str]:
+    # WP-OPENVA-CAPABILITY-CONTRACT: fail closed if any surface or the generated
+    # artifact drifts from config/openva-capabilities.yaml.
+    from tools.openva.capabilities import check as check_capabilities
+
+    return [f"capability-manifest: {reason}" for reason in check_capabilities()]
+
+
 def validate_all() -> int:
     failures: list[str] = []
     schema_failures_by_kind: dict[str, list[str]] = {}
@@ -725,6 +733,7 @@ def validate_all() -> int:
     failures.extend(check_prohibited_language())
     failures.extend(validate_machine_decisions())
     failures.extend(check_generated_current())
+    failures.extend(check_capability_manifest())
 
     if failures:
         for failure in failures:
