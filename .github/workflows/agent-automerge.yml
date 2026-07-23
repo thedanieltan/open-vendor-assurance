@@ -4,7 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
   schedule:
-    - cron: "*/10 * * * *"
+    # Backstop poll only: automerge also runs on pull_request events (opened, synchronize,
+    # reopened, labeled), so event-driven merges are unaffected by this cadence. A 30-minute
+    # backstop is ~336 runs/week vs ~1,008 at */10 — the dominant scheduled-CI cost. See
+    # docs/operations/contracts/workflow-schedule-budget.yaml.
+    - cron: "*/30 * * * *"
 
 permissions:
   actions: read
