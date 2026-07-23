@@ -102,6 +102,14 @@ work_packages:
     allowed_paths:
       - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
 
+  WP-OPENVA-CODEQL-ADVANCED-SETUP-01:
+    description: Replace GitHub Code Scanning "default setup" with an advanced-setup codeql.yml (same python/javascript-typescript/actions coverage plus a weekly full scan) that path-filters pull requests so docs/data/schema-only changes skip the security scan; a code change still runs the full analysis. Declares the new workflow in the workflow-inventory, ci-readiness expected-set, and schedule-budget contracts so the governance surface stays reconciled. Requires GitHub default setup to be disabled first (owner setting).
+    allowed_paths:
+      - .github/workflows/codeql.yml
+      - docs/operations/contracts/workflow-inventory.yaml
+      - docs/operations/contracts/workflow-schedule-budget.yaml
+      - tests/test_ci_readiness.py
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
