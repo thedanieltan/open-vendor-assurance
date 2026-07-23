@@ -247,19 +247,27 @@ async function loadSelectedVendorDetails() {
   await Promise.all([...selectedVendors].map((vendorId) => loadVendorDetail(vendorId)));
 }
 
+// Identity normalization is delegated to the single shared matcher core
+// (openva-matcher-core.js), which mirrors the authoritative Python core, so this file does
+// not carry its own divergent copy. ui-fixes.js overrides the resolver pipeline at runtime;
+// keeping these thin wrappers pointed at the same core means the fallback path cannot drift
+// from the active path or from Python.
+function openvaMatcherCore() {
+  const core =
+    (typeof window !== "undefined" && window.OpenVAMatcherCore) ||
+    (typeof globalThis !== "undefined" && globalThis.OpenVAMatcherCore);
+  if (!core) {
+    throw new Error("OpenVAMatcherCore (openva-matcher-core.js) must load before app.js");
+  }
+  return core;
+}
+
 function normalizeForMatch(value) {
-  return text(value)
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
-    .replace(/\/$/, "")
-    .replace(/[^a-z0-9.]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  return openvaMatcherCore().normalizeName(value);
 }
 
 function normalizeDomain(value) {
-  return normalizeForMatch(value).split("/")[0];
+  return openvaMatcherCore().normalizeDomain(value);
 }
 
 function parseCsv(content) {
