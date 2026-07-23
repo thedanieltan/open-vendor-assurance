@@ -1,7 +1,7 @@
 # ADR-0002: One authoritative matching core with cross-runtime conformance vectors
 
 Status: **Proposed** (implemented + locally verified on `refactor/openva-resolver-unification`; not deployed; not live-accepted).
-Work package: WP-OPENVA-RESOLVER-UNIFICATION.
+Work package: WP-OPENVA-RESOLVER-UNIFICATION-01.
 
 ## Context
 Vendor identity resolution is implemented on several transports: the Python core

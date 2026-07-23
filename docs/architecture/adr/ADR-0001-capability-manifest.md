@@ -1,7 +1,7 @@
 # ADR-0001: Single generated capability manifest
 
 Status: **Proposed** (implemented + locally verified on `refactor/openva-four-planes`; not deployed; not live-accepted).
-Work package: WP-OPENVA-CAPABILITY-CONTRACT.
+Work package: WP-OPENVA-FOUR-PLANE-FOUNDATION-01.
 
 ## Context
 Source-type definitions and cross-runtime contract versions were maintained independently in
