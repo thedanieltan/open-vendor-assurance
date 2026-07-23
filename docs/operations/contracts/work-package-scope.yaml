@@ -52,6 +52,20 @@ work_packages:
       - tests/test_data_plane_boundary.py
       - docs/architecture/adr/*
 
+  WP-OPENVA-LIVE-RESOLVER-BOUNDARY-01:
+    description: Introduce one shared JS matcher core (openva-matcher-core.js) mirroring the authoritative Python core, prove cross-runtime normalization parity with a committed Node conformance harness driven by Python-generated vectors, and rewire the browser resolver (app.js, ui-fixes.js) to consume the shared core instead of hand-maintained copies. Live matching behaviour preserved for ASCII identities; internationalized-domain normalization is aligned to the Python authority. Additive; the Worker's fetch-safety domain validation and the full match-decision reconciliation are out of scope.
+    allowed_paths:
+      - site/src/openva-matcher-core.js
+      - site/src/app.js
+      - site/src/ui-fixes.js
+      - site/src/index.html
+      - site/test/*
+      - tools/openva/resolver_conformance.py
+      - tests/conformance/*
+      - tests/test_resolver_js_conformance.py
+      - tests/test_resolver_conformance.py
+      - tests/test_site.py
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
