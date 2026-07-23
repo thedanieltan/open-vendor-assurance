@@ -717,6 +717,15 @@ def check_capability_manifest() -> list[str]:
     return [f"capability-manifest: {reason}" for reason in check_capabilities()]
 
 
+def check_resolver_conformance() -> list[str]:
+    # WP-OPENVA-RESOLVER-UNIFICATION: fail closed if the authoritative matching core no
+    # longer reproduces the committed cross-runtime conformance vectors, or if the
+    # committed artifact is stale relative to the core.
+    from tools.openva.resolver_conformance import check as check_conformance
+
+    return [f"resolver-conformance: {reason}" for reason in check_conformance()]
+
+
 def validate_all() -> int:
     failures: list[str] = []
     schema_failures_by_kind: dict[str, list[str]] = {}
@@ -734,6 +743,7 @@ def validate_all() -> int:
     failures.extend(validate_machine_decisions())
     failures.extend(check_generated_current())
     failures.extend(check_capability_manifest())
+    failures.extend(check_resolver_conformance())
 
     if failures:
         for failure in failures:
