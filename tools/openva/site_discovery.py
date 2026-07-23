@@ -181,12 +181,17 @@ def render_vendor_page(
         for source in recorded:
             observed = _latest_observed_at(source)
             health = _source_health_label(source)
+            # Cells are precomputed rather than nested inside the f-strings so the module
+            # parses on the declared minimum Python (>=3.11), which forbids backslashes in
+            # f-string expressions. Output is byte-for-byte identical.
+            health_cell = _esc(health) if health else f'<span class="muted">{MISSING_SOURCE_HEALTH_LABEL}</span>'
+            observed_cell = _esc(observed) if observed else '<span class="muted">—</span>'
             rows.append(
                 "<tr>"
                 f"<td>{_esc(label)}</td>"
                 f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
-                f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
-                f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td>"
+                f"<td>{health_cell}</td>"
+                f"<td>{observed_cell}</td>"
                 "</tr>"
             )
     sources_html = (
@@ -568,12 +573,16 @@ def render_vendor_page(
         for source in recorded:
             observed = _latest_observed_at(source)
             health = _source_health_label(source)
+            # Precomputed for >=3.11 f-string compatibility (no backslash in expressions);
+            # byte-for-byte identical output.
+            health_cell = _esc(health) if health else f'<span class="muted">{MISSING_SOURCE_HEALTH_LABEL}</span>'
+            observed_cell = _esc(observed) if observed else '<span class="muted">—</span>'
             rows.append(
                 "<tr>"
                 f'<td><a href="{_esc(directory_url)}">{_esc(label)}</a></td>'
                 f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
-                f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
-                f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td></tr>"
+                f"<td>{health_cell}</td>"
+                f"<td>{observed_cell}</td></tr>"
             )
     sources_html = "<table><thead><tr><th>Source type</th><th>Vendor-published source URL</th><th>Source health</th><th>Last checked</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
     dataset = _vendor_dataset_jsonld(config, vendor, export_url)

@@ -1,7 +1,8 @@
 # OpenVA Four-Plane Refactor — Phase 0 Assessment & Plan
 
-Status: **assessment complete; implementation in progress (increment 1).**
-Branch: `refactor/openva-four-planes`. Base: `main` @ `48a71c33`.
+Status: **assessment complete; implementation in progress.** Seven increments have landed on
+`main` via the two-PR pattern (see the Increment log at the end); RUNTIME-CONSOLIDATION and
+INCREMENTAL-COMPILER remain as infrastructure-gated follow-on work.
 
 This document is the Phase 0 deliverable required before code changes: a current-state
 map, identified problems (verified against `main`, not inherited from prior assessments),
@@ -119,4 +120,31 @@ per-transport availability, and contract versions.
 ---
 
 ## Increment log
-- **1 — WP-CAPABILITY-CONTRACT**: see commit(s) on this branch + `docs/architecture/adr/`.
+
+Each increment landed via the two-PR pattern (independent scope-policy PR, then implementation
+PR) with a fail-closed guard wired into the test/validation surface. All are additive and
+backward-compatible unless noted.
+
+1. **WP-OPENVA-FOUR-PLANE-FOUNDATION-01** — single generated capability manifest
+   (`config/openva-capabilities.yaml`); one source of truth for source types, aliases,
+   per-transport availability, and contract versions. ADR-0001. PR #769.
+2. **WP-OPENVA-DISCOVERY-SCHEMA-ALIGNMENT-01** — aligned the discovery-plane candidate-source
+   schema to its generator; greened `main`. PR #771.
+3. **WP-OPENVA-RESOLVER-UNIFICATION-01** — froze the authoritative matching core's behaviour as a
+   committed cross-runtime conformance suite (`tests/conformance/resolver-conformance.json`),
+   fail-closed in `validate_all`. ADR-0002. PR #773.
+4. **WP-OPENVA-DATA-PLANE-BOUNDARY-01** — machine-enforced the discovery/canonical plane boundary:
+   every candidate record is store-addressable by deterministic identity; canonical schema stays
+   disjoint from discovery bulk. ADR-0003. PR #775.
+5. **WP-OPENVA-LIVE-RESOLVER-BOUNDARY-01** — one shared JS matcher core
+   (`site/src/openva-matcher-core.js`) mirroring the Python core, with a Node conformance harness;
+   the browser resolver consumes it instead of divergent copies. PR #777.
+6. **WP-OPENVA-WORKFLOW-SCHEDULE-BUDGET-01** — fail-closed schedule budget: declared crons and
+   per-workflow/aggregate runs-per-week ceilings for every scheduled workflow. PR #779.
+7. **WP-OPENVA-TRUTH-RECONCILIATION-01** — restored `>=3.11` portability (the whole tree parses on
+   the declared minimum Python), reconciled ADR work-package references to the enforced scope
+   manifest, and added a fail-closed ADR↔work-package guard. This entry.
+
+Deferred / remaining: RUNTIME-CONSOLIDATION and INCREMENTAL-COMPILER (the physical relocation of
+the discovery plane to an external store, and incremental site/index compilation, are
+infrastructure-gated and higher blast radius — tracked as follow-on work, not yet landed).
