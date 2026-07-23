@@ -40,43 +40,25 @@
     return value === null || value === undefined ? "" : String(value).trim();
   }
 
-  function normalizeName(value) {
-    return scalar(value)
-      .toLowerCase()
-      .replaceAll("&", " and ")
-      .replace(/[^a-z0-9]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function stripLegalSuffixes(value) {
-    const suffixes = new Set(["inc", "llc", "ltd", "limited", "corp", "corporation", "company", "co"]);
-    const tokens = normalizeName(value).split(" ").filter(Boolean);
-    while (tokens.length && suffixes.has(tokens[tokens.length - 1])) tokens.pop();
-    return tokens.join(" ");
-  }
-
-  function normalizeDomainValue(value) {
-    let raw = scalar(value).toLowerCase();
-    if (!raw) return "";
-    try {
-      const parsed = new URL(raw.includes("://") ? raw : `https://${raw}`);
-      raw = parsed.hostname;
-    } catch (_error) {
-      raw = raw.split(/[\/#?]/, 1)[0];
-      raw = raw.includes("@") ? raw.split("@").pop() : raw;
-      if (raw.includes(":") && raw.split(":").length === 2) raw = raw.split(":", 1)[0];
+  // Identity normalization is delegated to the single shared matcher core
+  // (openva-matcher-core.js), which mirrors the authoritative Python core. This file must
+  // NOT hand-maintain its own normalization, so the browser resolver cannot drift from
+  // Python; the Node conformance harness (site/test/resolver-conformance.cjs) proves parity.
+  function openvaMatcherCore() {
+    const core =
+      (typeof globalThis !== "undefined" && globalThis.OpenVAMatcherCore) ||
+      (typeof window !== "undefined" && window.OpenVAMatcherCore);
+    if (!core) {
+      throw new Error("OpenVAMatcherCore (openva-matcher-core.js) must load before ui-fixes.js");
     }
-    return raw.replace(/^www\./, "").replace(/\.$/, "");
+    return core;
   }
 
-  function normalizeRegistrationNumber(value) {
-    return scalar(value).replace(/[^A-Za-z0-9]+/g, "").toUpperCase();
-  }
-
-  function normalizeJurisdiction(value) {
-    return scalar(value).toUpperCase();
-  }
+  const normalizeName = (value) => openvaMatcherCore().normalizeName(value);
+  const stripLegalSuffixes = (value) => openvaMatcherCore().stripLegalSuffixes(value);
+  const normalizeDomainValue = (value) => openvaMatcherCore().normalizeDomain(value);
+  const normalizeRegistrationNumber = (value) => openvaMatcherCore().normalizeRegistrationNumber(value);
+  const normalizeJurisdiction = (value) => openvaMatcherCore().normalizeJurisdiction(value);
 
   function normalizedHeader(value, index) {
     const key = scalar(value)

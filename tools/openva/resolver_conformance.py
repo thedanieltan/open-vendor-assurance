@@ -99,6 +99,62 @@ CASES: list[dict[str, Any]] = [
 ]
 
 
+# Normalization inputs — exercised by the JS conformance harness so the shared JS matcher
+# core (site/src/openva-matcher-core.js) proves it reproduces the Python core's normalization
+# byte-for-byte, including the tricky cases (scheme/path/www/port/userinfo, trailing dot,
+# internationalized domains kept as unicode, "&" in names, legal suffixes, punctuated
+# registration numbers). Expected outputs are computed by the Python core below.
+_NORMALIZATION_DOMAIN_INPUTS = [
+    "acme.com",
+    "https://www.acme.com/security",
+    "trust.acme.com",
+    "MÜNCHEN.EXAMPLE",
+    "münchen.example",
+    "user@acme.com",
+    "acme.com:8080",
+    "https://user:pw@host.example:443/p?q#f",
+    "ACME.COM.",
+    "https://security.adobe.com/path",
+    "",
+]
+_NORMALIZATION_NAME_INPUTS = [
+    "Acme",
+    "Globex LLC",
+    "Initech Corporation",
+    "M&M Corp",
+    "Adobe Inc.",
+    "Café Ltd",
+    "  Foo  Bar ",
+]
+_NORMALIZATION_REGISTRATION_INPUTS = ["12345678", "53 102 443 916", "1234-5678", "ab-cd/ef", ""]
+_NORMALIZATION_JURISDICTION_INPUTS = ["gb", " us ", "GB", ""]
+
+
+def _normalization_vectors() -> dict[str, Any]:
+    return {
+        "domain": [
+            {"input": value, "normalized": core.normalize_domain(value)}
+            for value in _NORMALIZATION_DOMAIN_INPUTS
+        ],
+        "name": [
+            {
+                "input": value,
+                "normalized": core.normalize_name(value),
+                "stripped": core.strip_legal_suffixes(value),
+            }
+            for value in _NORMALIZATION_NAME_INPUTS
+        ],
+        "registration_number": [
+            {"input": value, "normalized": core.normalize_registration_number(value)}
+            for value in _NORMALIZATION_REGISTRATION_INPUTS
+        ],
+        "jurisdiction": [
+            {"input": value, "normalized": core.normalize_jurisdiction(value)}
+            for value in _NORMALIZATION_JURISDICTION_INPUTS
+        ],
+    }
+
+
 def _resolve(query: dict[str, Any]) -> dict[str, Any]:
     """Run the authoritative core exactly as a transport would."""
     vendors = [core.vendor_record(row) for row in VENDORS]
@@ -156,7 +212,7 @@ def build_suite() -> dict[str, Any]:
             "expected": _resolve(case["query"]),
         })
     return {"contract": contract, "catalog": {"vendors": VENDORS, "legal_entities": LEGAL_ENTITIES},
-            "vectors": vectors}
+            "normalization": _normalization_vectors(), "vectors": vectors}
 
 
 def render() -> str:

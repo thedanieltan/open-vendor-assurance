@@ -126,6 +126,131 @@
       "ambiguous"
     ]
   },
+  "normalization": {
+    "domain": [
+      {
+        "input": "acme.com",
+        "normalized": "acme.com"
+      },
+      {
+        "input": "https://www.acme.com/security",
+        "normalized": "acme.com"
+      },
+      {
+        "input": "trust.acme.com",
+        "normalized": "trust.acme.com"
+      },
+      {
+        "input": "MÜNCHEN.EXAMPLE",
+        "normalized": "münchen.example"
+      },
+      {
+        "input": "münchen.example",
+        "normalized": "münchen.example"
+      },
+      {
+        "input": "user@acme.com",
+        "normalized": "acme.com"
+      },
+      {
+        "input": "acme.com:8080",
+        "normalized": "acme.com"
+      },
+      {
+        "input": "https://user:pw@host.example:443/p?q#f",
+        "normalized": "host.example"
+      },
+      {
+        "input": "ACME.COM.",
+        "normalized": "acme.com"
+      },
+      {
+        "input": "https://security.adobe.com/path",
+        "normalized": "security.adobe.com"
+      },
+      {
+        "input": "",
+        "normalized": ""
+      }
+    ],
+    "jurisdiction": [
+      {
+        "input": "gb",
+        "normalized": "GB"
+      },
+      {
+        "input": " us ",
+        "normalized": "US"
+      },
+      {
+        "input": "GB",
+        "normalized": "GB"
+      },
+      {
+        "input": "",
+        "normalized": ""
+      }
+    ],
+    "name": [
+      {
+        "input": "Acme",
+        "normalized": "acme",
+        "stripped": "acme"
+      },
+      {
+        "input": "Globex LLC",
+        "normalized": "globex llc",
+        "stripped": "globex"
+      },
+      {
+        "input": "Initech Corporation",
+        "normalized": "initech corporation",
+        "stripped": "initech"
+      },
+      {
+        "input": "M&M Corp",
+        "normalized": "m and m corp",
+        "stripped": "m and m"
+      },
+      {
+        "input": "Adobe Inc.",
+        "normalized": "adobe inc",
+        "stripped": "adobe"
+      },
+      {
+        "input": "Café Ltd",
+        "normalized": "caf ltd",
+        "stripped": "caf"
+      },
+      {
+        "input": "  Foo  Bar ",
+        "normalized": "foo bar",
+        "stripped": "foo bar"
+      }
+    ],
+    "registration_number": [
+      {
+        "input": "12345678",
+        "normalized": "12345678"
+      },
+      {
+        "input": "53 102 443 916",
+        "normalized": "53102443916"
+      },
+      {
+        "input": "1234-5678",
+        "normalized": "12345678"
+      },
+      {
+        "input": "ab-cd/ef",
+        "normalized": "ABCDEF"
+      },
+      {
+        "input": "",
+        "normalized": ""
+      }
+    ]
+  },
   "vectors": [
     {
       "class": "exact_domain",

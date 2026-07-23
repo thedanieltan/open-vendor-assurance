@@ -221,6 +221,9 @@ def test_browser_resolver_source_carries_explicit_fail_closed_contract():
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is unavailable")
 def test_browser_resolver_javascript_executes_matching_contract(tmp_path: Path):
+    # ui-fixes.js delegates identity normalization to the shared matcher core, which loads
+    # as a prior <script> in the browser; the vm must provide it the same way.
+    core_source = (SITE_SRC / "openva-matcher-core.js").read_text(encoding="utf-8")
     source = (SITE_SRC / "ui-fixes.js").read_text(encoding="utf-8")
     marker = "\n})();\n"
     assert source.endswith(marker)
@@ -232,7 +235,7 @@ def test_browser_resolver_javascript_executes_matching_contract(tmp_path: Path):
     matchingDecision,
   };
 """
-    instrumented = source[: -len(marker)] + exports + marker
+    instrumented = core_source + "\n" + source[: -len(marker)] + exports + marker
     harness = r'''
 const vm = require("node:vm");
 const assert = require("node:assert/strict");
