@@ -1,5 +1,13 @@
 {
-  "candidate_source_type_counts": {},
+  "candidate_source_type_counts": {
+    "ai_terms": 5,
+    "certification_reference": 2,
+    "compliance_page": 720,
+    "dpa": 9,
+    "privacy_notice": 7,
+    "security_page": 120,
+    "trust_center": 553
+  },
   "coverage_claim_role_counts": {
     "certification_reference": 3,
     "compliance_page": 3,
@@ -52,7 +60,9 @@
   "unique_source_location_count": 1588,
   "vendor_coverage": [
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "dpa",
@@ -172,7 +182,12 @@
       "vendor_id": "acuity-scheduling"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page"
@@ -184,8 +199,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -199,7 +212,10 @@
       "vendor_id": "acumbamail"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -345,7 +361,10 @@
       "vendor_id": "adyen"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -374,7 +393,9 @@
       "vendor_id": "aidoc"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "status_page"
@@ -387,7 +408,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -436,7 +456,9 @@
       "vendor_id": "airtable"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "trust_center"
@@ -447,9 +469,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "trust_center"
@@ -468,7 +488,10 @@
       "vendor_id": "airwallex"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "dpa",
@@ -506,7 +529,9 @@
       "vendor_id": "aiven"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -563,7 +588,11 @@
       "vendor_id": "alan"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -574,7 +603,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -587,7 +615,9 @@
       "vendor_id": "alcidion"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -676,7 +706,11 @@
       "vendor_id": "algolia"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -746,7 +780,10 @@
       "vendor_id": "aliyun"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice"
@@ -759,7 +796,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -773,7 +809,9 @@
       "vendor_id": "allegro"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -813,7 +851,11 @@
       "vendor_id": "alloy"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "trust_center"
@@ -825,9 +867,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -841,7 +880,9 @@
       "vendor_id": "amagi"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -876,7 +917,11 @@
       "vendor_id": "amplitude"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -888,8 +933,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -927,7 +970,9 @@
       "vendor_id": "anduril"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -1043,7 +1088,10 @@
       "vendor_id": "applyboard"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -1054,7 +1102,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -1067,7 +1114,9 @@
       "vendor_id": "asaas"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",

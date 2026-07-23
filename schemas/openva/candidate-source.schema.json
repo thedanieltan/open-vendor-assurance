@@ -41,11 +41,33 @@
       ]
     },
     "candidate_url": { "type": "string", "format": "uri" },
-    "discovery_method": { "enum": ["manual_seed", "official_entrypoint", "sitemap", "robots_txt", "official_domain_crawl", "search_result", "redirect_observation"] },
+    "discovery_method": {
+      "enum": [
+        "manual_seed",
+        "official_entrypoint",
+        "sitemap",
+        "robots_txt",
+        "official_domain_crawl",
+        "search_result",
+        "redirect_observation",
+        "sitemap_locator_verification",
+        "rendered_dom_locator_verification"
+      ]
+    },
     "confidence": { "enum": ["candidate", "possible", "likely"] },
     "requires_review": { "const": true },
     "discovered_at": { "type": "string", "format": "date-time" },
     "discovered_by": { "enum": ["human", "agent", "hybrid"] },
+    "candidate_status": { "enum": ["selected", "alternative"] },
+    "requested_url": { "type": ["string", "null"], "format": "uri" },
+    "observed_final_url": { "type": ["string", "null"], "format": "uri" },
+    "canonical_candidate_url": { "type": ["string", "null"], "format": "uri" },
+    "selection_run_id": { "type": ["string", "null"] },
+    "evidence_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "superseded_by_candidate_id": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
     "evidence": {
       "type": "object",
       "required": ["matched_terms"],
@@ -59,7 +81,11 @@
         },
         "final_url": { "type": ["string", "null"], "format": "uri" },
         "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
-        "content_type": { "type": ["string", "null"], "maxLength": 160 }
+        "content_type": { "type": ["string", "null"], "maxLength": 160 },
+        "semantic_status": { "type": ["string", "null"], "maxLength": 80 },
+        "verification_status": { "type": ["string", "null"], "maxLength": 80 },
+        "soft_404_detected": { "type": "boolean" },
+        "render_transport": { "type": ["string", "null"], "maxLength": 160 }
       },
       "additionalProperties": false
     },
