@@ -52,7 +52,7 @@ def test_fails_closed_on_silent_cron_change(tmp_path):
     contract = copy.deepcopy(budget.load_contract())
     for entry in contract["workflows"]:
         if entry["name"] == "agent-automerge.yml":
-            entry["crons"] = ["*/30 * * * *"]  # contract claims a slower cadence than reality
+            entry["crons"] = ["7 4 * * 2"]  # contract claims a cadence that differs from reality
     problems = budget.check(_write_contract(tmp_path, contract))
     assert any("agent-automerge.yml" in p and "do not match" in p for p in problems)
 

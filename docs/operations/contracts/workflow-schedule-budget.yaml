@@ -19,17 +19,19 @@ version: 1
 contract: workflow-schedule-budget
 source_document: docs/operations/WORKFLOW_OPERATING_MODEL.md
 
-# Aggregate ceiling on scheduled runs/week across all workflows (current total ~1035, with
+# Aggregate ceiling on scheduled runs/week across all workflows (current total ~363, with
 # headroom for a modest number of new weekly/daily jobs before a reviewed budget increase).
-aggregate_max_runs_per_week: 1100
+aggregate_max_runs_per_week: 450
 
 workflows:
   - name: agent-automerge.yml
-    crons: ["*/10 * * * *"]
-    max_runs_per_week: 1008
+    crons: ["*/30 * * * *"]
+    max_runs_per_week: 336
     rationale: >-
-      Automerge poll lane; the 10-minute cadence is intentional so mergeable PRs advance
-      promptly. By far the dominant scheduled cost — any increase must be justified here.
+      Automerge backstop poll; automerge also runs on pull_request events, so this cadence
+      only bounds how long a mergeable-but-not-event-triggered PR waits. Reduced from */10
+      (~1,008/wk) to */30 (~336/wk) to cut the dominant scheduled cost. Any increase must be
+      justified here.
   - name: autonomous-catalog-growth.yml
     crons: ["17 23 * * *"]
     max_runs_per_week: 7
