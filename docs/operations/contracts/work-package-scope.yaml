@@ -82,6 +82,13 @@ work_packages:
       - docs/architecture/adr/*
       - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
 
+  WP-OPENVA-AUTOMERGE-CADENCE-01:
+    description: Reduce the agent-automerge backstop schedule from */10 to */30 (the dominant scheduled-CI cost, ~1008 to ~336 runs/week) and reconcile the schedule-budget contract and its test accordingly. Automerge also runs on pull_request events, so event-driven merges are unaffected; this only bounds the backstop poll latency. Operational cadence change only; no automerge policy or gate is relaxed.
+    allowed_paths:
+      - .github/workflows/agent-automerge.yml
+      - docs/operations/contracts/workflow-schedule-budget.yaml
+      - tests/test_workflow_schedule_budget.py
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
