@@ -11,6 +11,7 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.openva import assurance_validation
+from tools.openva import fast_yaml
 from tools.openva.advisory_wording import load_prohibited_terms as load_shared_prohibited_terms
 from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.entity_evidence_quorum import evaluate_entity_evidence_quorum
@@ -91,8 +92,9 @@ ENTITY_ANCHORED_AUTHORITY_CLASSES = {"public_registry", "public_authority", "cou
 
 
 def load_yaml(path: Path) -> Any:
+    # Uses the libyaml C loader when available; validation parses every committed record.
     with path.open("r", encoding="utf-8") as handle:
-        return yaml.safe_load(handle)
+        return fast_yaml.load(handle)
 
 
 def load_json(path: Path) -> Any:
