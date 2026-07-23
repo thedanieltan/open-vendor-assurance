@@ -97,6 +97,11 @@ work_packages:
       - tools/openva/validate.py
       - tests/test_fast_yaml.py
 
+  WP-OPENVA-FOUR-PLANE-CLOSURE-01:
+    description: Record the closure decision for the two remaining originally-planned four-plane WPs (RUNTIME-CONSOLIDATION superseded by delivered core-unification work; INCREMENTAL-COMPILER superseded by the fast YAML loader after profiling showed parsing, not output generation, is the bottleneck) in the four-plane assessment. Documentation-only; no tooling or behaviour change.
+    allowed_paths:
+      - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
