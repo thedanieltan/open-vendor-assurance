@@ -1,0 +1,80 @@
+# Schedule budget for scheduled GitHub Actions workflows.
+#
+# CI evaluates this contract from the trusted base via tools/openva/workflow_schedule_budget.py
+# (tests/test_workflow_schedule_budget.py). It complements workflow-inventory.yaml: the inventory
+# pins which workflows exist and their trigger *types*; this pins how *often* the scheduled ones
+# run, so schedule frequency (the CI/compute cost) cannot grow silently.
+#
+# Rules enforced (fail closed):
+#   * every workflow with a `schedule:` trigger must appear here (no undeclared scheduled job);
+#   * each entry's `crons` must exactly match the workflow's actual `on.schedule` crons;
+#   * each workflow's estimated runs/week must be <= its `max_runs_per_week`;
+#   * the sum of runs/week must be <= `aggregate_max_runs_per_week`.
+#
+# `max_runs_per_week` values are set to each workflow's CURRENT frequency, so increasing any
+# schedule (e.g. agent-automerge from */10 to */5) fails the guard until the ceiling is raised
+# here in a reviewed change. Ceilings are an upper bound, not a target: lowering a schedule is
+# always safe.
+version: 1
+contract: workflow-schedule-budget
+source_document: docs/operations/WORKFLOW_OPERATING_MODEL.md
+
+# Aggregate ceiling on scheduled runs/week across all workflows (current total ~1035, with
+# headroom for a modest number of new weekly/daily jobs before a reviewed budget increase).
+aggregate_max_runs_per_week: 1100
+
+workflows:
+  - name: agent-automerge.yml
+    crons: ["*/10 * * * *"]
+    max_runs_per_week: 1008
+    rationale: >-
+      Automerge poll lane; the 10-minute cadence is intentional so mergeable PRs advance
+      promptly. By far the dominant scheduled cost — any increase must be justified here.
+  - name: autonomous-catalog-growth.yml
+    crons: ["17 23 * * *"]
+    max_runs_per_week: 7
+    rationale: Daily autonomous catalog-growth proposal pass.
+  - name: discovery-mesh.yml
+    crons: ["37 3 * * *"]
+    max_runs_per_week: 7
+    rationale: Daily discovery-mesh intake pass.
+  - name: catalog-growth-discovery.yml
+    crons: ["17 8 * * 1,3,5"]
+    max_runs_per_week: 3
+    rationale: Catalog expansion proposal path, three weekdays a week.
+  - name: source-maintenance-report.yml
+    crons: ["29 5 * * 3", "29 5 * * 0"]
+    max_runs_per_week: 2
+    rationale: Source cleanup/reporting entry point, twice weekly.
+  - name: bot-dashboard-issue.yml
+    crons: ["41 6 * * 1"]
+    max_runs_per_week: 1
+    rationale: Weekly report-only bot dashboard issue visibility.
+  - name: candidate-promotion-pr.yml
+    crons: ["47 8 * * 3"]
+    max_runs_per_week: 1
+    rationale: Weekly controlled promotion write path.
+  - name: catalog-maintenance-pr.yml
+    crons: ["41 7 * * 3"]
+    max_runs_per_week: 1
+    rationale: Weekly maintenance PR support path.
+  - name: catalog-maintenance.yml
+    crons: ["17 2 * * 1"]
+    max_runs_per_week: 1
+    rationale: Weekly maintenance pass (retire_candidate; kept manual/low-frequency).
+  - name: coverage-audit.yml
+    crons: ["23 4 * * 1"]
+    max_runs_per_week: 1
+    rationale: Weekly catalog-quality audit entry point.
+  - name: site-live-feed.yml
+    crons: ["0 3 * * 0"]
+    max_runs_per_week: 1
+    rationale: Weekly live-feed publication path.
+  - name: source-refinement-scan.yml
+    crons: ["0 8 * * 3"]
+    max_runs_per_week: 1
+    rationale: Weekly P0 source-repair candidate confirmation.
+  - name: source-repair-pr-cleanup.yml
+    crons: ["30 8 * * 3"]
+    max_runs_per_week: 1
+    rationale: Weekly cleanup of stale generated source-repair PRs.
