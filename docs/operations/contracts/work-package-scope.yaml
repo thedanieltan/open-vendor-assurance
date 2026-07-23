@@ -27,6 +27,14 @@ work_packages:
       - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
       - docs/architecture/adr/*
 
+  WP-OPENVA-DISCOVERY-SCHEMA-ALIGNMENT-01:
+    description: Align the discovery-plane candidate-source schema to its generator and regenerate stale generated projections. Fail-closed preserved; canonical source-reference schema untouched; no vendor/source data mutation.
+    allowed_paths:
+      - schemas/openva/candidate-source.schema.json
+      - indexes/*.json
+      - dist/vendors/*.json
+      - tests/test_candidate_source_schema.py
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
