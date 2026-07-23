@@ -726,6 +726,15 @@ def check_resolver_conformance() -> list[str]:
     return [f"resolver-conformance: {reason}" for reason in check_conformance()]
 
 
+def check_data_plane_boundary() -> list[str]:
+    # WP-OPENVA-DATA-PLANE-BOUNDARY: fail closed if any discovery candidate record is not
+    # store-addressable by its deterministic identity, or if the canonical catalog schema
+    # has absorbed discovery-plane-only bulk fields (the planes must stay separate).
+    from tools.openva.data_plane_boundary import check as check_boundary
+
+    return [f"data-plane-boundary: {reason}" for reason in check_boundary()]
+
+
 def validate_all() -> int:
     failures: list[str] = []
     schema_failures_by_kind: dict[str, list[str]] = {}
@@ -744,6 +753,7 @@ def validate_all() -> int:
     failures.extend(check_generated_current())
     failures.extend(check_capability_manifest())
     failures.extend(check_resolver_conformance())
+    failures.extend(check_data_plane_boundary())
 
     if failures:
         for failure in failures:
