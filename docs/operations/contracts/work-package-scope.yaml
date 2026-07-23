@@ -665,3 +665,8 @@ work_packages:
       - site/src/ui-fixes.js
       - site/src/resolver-source-availability.js
       - tests/test_live_resolver_site_integration.py
+
+  WP-OPENVA-README-REFRESH-01:
+    description: Documentation-only refresh of the top-level README scope list — replaces internal jargon in the "OpenVA is:" property list with plain, factual phrasing. No behaviour, contract, schema, or data change.
+    allowed_paths:
+      - README.md
