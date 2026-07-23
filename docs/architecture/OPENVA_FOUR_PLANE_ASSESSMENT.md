@@ -1,8 +1,10 @@
 # OpenVA Four-Plane Refactor — Phase 0 Assessment & Plan
 
-Status: **assessment complete; implementation in progress.** Seven increments have landed on
-`main` via the two-PR pattern (see the Increment log at the end); RUNTIME-CONSOLIDATION and
-INCREMENTAL-COMPILER remain as infrastructure-gated follow-on work.
+Status: **assessment complete; the planned programme has landed.** Nine increments landed on
+`main` via the two-PR pattern (see the Increment log at the end). The two remaining originally-
+planned WPs (RUNTIME-CONSOLIDATION, INCREMENTAL-COMPILER) are **closed with reasoning** (see
+Closed work packages); the only open item is the owner-gated physical relocation of the discovery
+plane to an external store.
 
 This document is the Phase 0 deliverable required before code changes: a current-state
 map, identified problems (verified against `main`, not inherited from prior assessments),
@@ -145,6 +147,33 @@ backward-compatible unless noted.
    the declared minimum Python), reconciled ADR work-package references to the enforced scope
    manifest, and added a fail-closed ADR↔work-package guard. This entry.
 
-Deferred / remaining: RUNTIME-CONSOLIDATION and INCREMENTAL-COMPILER (the physical relocation of
-the discovery plane to an external store, and incremental site/index compilation, are
-infrastructure-gated and higher blast radius — tracked as follow-on work, not yet landed).
+## Closed work packages
+
+The two originally-planned WPs below are **closed without a dedicated implementation**, on the
+evidence gathered while landing the increments above. Closing them is a deliberate decision, not
+an omission.
+
+- **WP-RUNTIME-CONSOLIDATION — closed (core objective delivered; residual not worth the risk).**
+  The objective — one authoritative matching core consumed by every runtime, pinned by
+  cross-runtime conformance — landed across WP-OPENVA-FOUR-PLANE-FOUNDATION-01 (capability
+  manifest), WP-OPENVA-RESOLVER-UNIFICATION-01 (conformance vectors), and
+  WP-OPENVA-LIVE-RESOLVER-BOUNDARY-01 (one shared JS matcher core the browser consumes). The only
+  residual is de-layering the browser's load-order-dependent patch stack (ui-fixes.js overriding
+  app.js at load). That is a high-blast-radius refactor of a functional, now conformance-locked
+  live surface that cannot be fully verified without a deploy; its remaining benefit
+  (fragility/dead-code reduction) does not justify the regression risk. Revisit only with deploy
+  verification available.
+
+- **WP-INCREMENTAL-COMPILER — closed (superseded by the fast YAML loader).** Profiling the build
+  showed its cost is ~99% YAML *parsing* (loading ~7,400 records ≈ 8.5s), not redundant *output*
+  generation (all 500 dist shards + indexes write in ~0.36s; the full site builds in ~0.8s).
+  WP-OPENVA-FAST-YAML-LOADER-01 addresses the real bottleneck (libyaml CSafeLoader, ~9.5s → ~1–2s
+  per PR). Literal incremental compilation of unchanged shards would optimize <5% of build time,
+  cannot reuse a cache across fresh-checkout CI runs, and would add fingerprint-manifest plus
+  incremental-vs-full-equivalence machinery and stale-output risk. Not worth implementing.
+
+The one genuinely infrastructure-gated item that remains open is the **physical relocation of the
+discovery plane** to an external append-only store (the follow-on to
+WP-OPENVA-DATA-PLANE-BOUNDARY-01). It needs external store infrastructure and touches the live
+discovery/promotion workflows, so it stays owner-gated; the boundary guard already proves the
+plane is store-ready.
