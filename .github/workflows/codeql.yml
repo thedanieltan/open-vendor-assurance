@@ -1,0 +1,94 @@
+# Advanced-setup replacement for GitHub Code Scanning "default setup".
+#
+# Same coverage as default setup — python, javascript-typescript, actions, plus a weekly full
+# scan — but with a path deny-list so a pull request that changes ONLY docs/data/schemas (no
+# scannable code) does not trigger a security scan. Any PR that touches a code file still runs
+# the full analysis, so no code change goes unscanned. A deny-list (paths-ignore), not an
+# allow-list, is intentional: a missed pattern means an extra run, never a coverage gap.
+#
+# ── ENABLEMENT (owner, one-time) ─────────────────────────────────────────────────────────────
+# Default setup and advanced setup CANNOT coexist. Before merging this workflow:
+#   1. Settings → Code security and analysis → Code scanning → "Default setup" → Disable.
+#      (If both are on, GitHub ignores this workflow or double-scans — the opposite of the goal.)
+#   2. Keep CodeQL as a NON-required status check in branch protection. With path filters, a pure
+#      docs/data PR skips this workflow; a *required* check that never runs would block the merge.
+#   3. This workflow's weekly `schedule` adds 1 run/week — declare it in
+#      docs/operations/contracts/workflow-schedule-budget.yaml or the schedule-budget guard fails
+#      closed. Snippet:
+#          - name: codeql.yml
+#            crons: ["0 3 * * 1"]
+#            max_runs_per_week: 1
+#            rationale: Weekly full CodeQL security scan (path-filtered on PRs).
+#      and bump aggregate_max_runs_per_week if needed (current headroom to 450 is ample).
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'data/**'
+      - 'dist/**'
+      - 'indexes/**'
+      - 'maintenance/**'
+      - 'examples/**'
+      - 'schemas/**'
+      - 'public/**'
+      - 'config/**'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'data/**'
+      - 'dist/**'
+      - 'indexes/**'
+      - 'maintenance/**'
+      - 'examples/**'
+      - 'schemas/**'
+      - 'public/**'
+      - 'config/**'
+  schedule:
+    # Weekly full scan: the safety net for path-filtered PRs and for newly-published CodeQL
+    # queries finding issues in code no recent PR touched.
+    - cron: '0 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: python
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: actions
+            build-mode: none
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

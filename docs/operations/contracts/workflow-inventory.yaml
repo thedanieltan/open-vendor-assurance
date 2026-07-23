@@ -10,6 +10,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: codeql.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request, push, schedule]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: validate-pr-metadata.yml
     loop: pr_safety
     status: core

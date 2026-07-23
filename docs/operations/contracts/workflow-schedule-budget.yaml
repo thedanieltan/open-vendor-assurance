@@ -24,6 +24,10 @@ source_document: docs/operations/WORKFLOW_OPERATING_MODEL.md
 aggregate_max_runs_per_week: 450
 
 workflows:
+  - name: codeql.yml
+    crons: ["0 3 * * 1"]
+    max_runs_per_week: 1
+    rationale: Weekly full CodeQL security scan (advanced setup; path-filtered on pull requests).
   - name: agent-automerge.yml
     crons: ["*/30 * * * *"]
     max_runs_per_week: 336

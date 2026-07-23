@@ -4,6 +4,7 @@ import yaml
 
 WORKFLOW_DIR = Path(".github/workflows")
 EXPECTED_PUBLIC_WORKFLOWS = {
+    "codeql.yml",
     "autonomous-catalog-growth.yml",
     "candidate-intake-pr.yml",
     "candidate-promotion-pr.yml",
