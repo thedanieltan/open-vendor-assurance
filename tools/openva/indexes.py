@@ -7,6 +7,7 @@ from typing import Any
 
 import yaml
 
+from tools.openva import fast_yaml
 from tools.openva.paths import relative_repo_path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,7 +58,8 @@ ID_KEYS = {
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    # Uses the libyaml C loader when available (parsing ~7,400 records is ~99% of build cost).
+    data = fast_yaml.load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError(f"{path}: expected YAML mapping")
     return data
