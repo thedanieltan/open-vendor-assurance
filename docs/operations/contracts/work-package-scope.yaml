@@ -44,6 +44,14 @@ work_packages:
       - tests/conformance/*
       - docs/architecture/adr/*
 
+  WP-OPENVA-DATA-PLANE-BOUNDARY-01:
+    description: Machine-enforce the discovery/canonical plane boundary with a fail-closed guard wired into validate_all — proves the discovery plane is store-addressable by its deterministic identity and keeps discovery-plane bulk out of the canonical catalog schema. Additive and backward-compatible; no files moved, no workflow removed, no data mutation; the physical relocation of candidate records to an external store is a later infrastructure-gated increment.
+    allowed_paths:
+      - tools/openva/data_plane_boundary.py
+      - tools/openva/validate.py
+      - tests/test_data_plane_boundary.py
+      - docs/architecture/adr/*
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
