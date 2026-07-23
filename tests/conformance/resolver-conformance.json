@@ -1,0 +1,361 @@
+{
+  "catalog": {
+    "legal_entities": [
+      {
+        "catalog_status": "active",
+        "entity_id": "acme-gb",
+        "jurisdiction": "GB",
+        "legal_name": "Acme Inc",
+        "registration_number": "12345678",
+        "vendor_id": "acme"
+      },
+      {
+        "catalog_status": "active",
+        "entity_id": "dup-a",
+        "jurisdiction": "US",
+        "legal_name": "Globex LLC",
+        "registration_number": "99999999",
+        "vendor_id": "globex"
+      },
+      {
+        "catalog_status": "active",
+        "entity_id": "dup-b",
+        "jurisdiction": "GB",
+        "legal_name": "Initech Corporation",
+        "registration_number": "99999999",
+        "vendor_id": "initech"
+      }
+    ],
+    "vendors": [
+      {
+        "catalog_status": "active",
+        "display_name": "Acme",
+        "legal_name": "Acme Inc",
+        "official_domains": [
+          "acme.com"
+        ],
+        "vendor_id": "acme"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Globex",
+        "legal_name": "Globex LLC",
+        "official_domains": [
+          "globex.io"
+        ],
+        "vendor_id": "globex"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Initech",
+        "legal_name": "Initech Corporation",
+        "official_domains": [
+          "initech.example"
+        ],
+        "vendor_id": "initech"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Umbrella",
+        "legal_name": "Umbrella EU BV",
+        "official_domains": [
+          "umbrella.eu"
+        ],
+        "vendor_id": "umbrella-eu"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Umbrella",
+        "legal_name": "Umbrella US Inc",
+        "official_domains": [
+          "umbrella.us"
+        ],
+        "vendor_id": "umbrella-us"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "München Cloud",
+        "legal_name": "München Cloud GmbH",
+        "official_domains": [
+          "münchen.example"
+        ],
+        "vendor_id": "muenchen"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Shared A",
+        "legal_name": "Shared A Ltd",
+        "official_domains": [
+          "shared.example"
+        ],
+        "vendor_id": "shared-a"
+      },
+      {
+        "catalog_status": "active",
+        "display_name": "Shared B",
+        "legal_name": "Shared B Ltd",
+        "official_domains": [
+          "shared.example"
+        ],
+        "vendor_id": "shared-b"
+      }
+    ]
+  },
+  "contract": {
+    "ambiguity_margin": 0.05,
+    "legal_suffixes": [
+      "co",
+      "company",
+      "corp",
+      "corporation",
+      "inc",
+      "limited",
+      "llc",
+      "ltd"
+    ],
+    "method_confidence": {
+      "domain_exact": 1.0,
+      "domain_subdomain": 0.95,
+      "name_exact": 0.9
+    },
+    "minimum_match_confidence": 0.9,
+    "resolver_contract_version": "1.0.0",
+    "status_vocabulary": [
+      "matched",
+      "no_match",
+      "ambiguous"
+    ]
+  },
+  "vectors": [
+    {
+      "class": "exact_domain",
+      "expected": {
+        "confidence": 1.0,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "domain_exact",
+        "status": "matched",
+        "vendor_id": "acme"
+      },
+      "id": "domain-exact",
+      "query": {
+        "domain": "acme.com"
+      }
+    },
+    {
+      "class": "exact_domain",
+      "expected": {
+        "confidence": 1.0,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "domain_exact",
+        "status": "matched",
+        "vendor_id": "acme"
+      },
+      "id": "domain-exact-scheme-path",
+      "query": {
+        "domain": "https://www.acme.com/security"
+      }
+    },
+    {
+      "class": "subdomain",
+      "expected": {
+        "confidence": 0.95,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "domain_subdomain",
+        "status": "matched",
+        "vendor_id": "acme"
+      },
+      "id": "domain-subdomain",
+      "query": {
+        "domain": "trust.acme.com"
+      }
+    },
+    {
+      "class": "shared_parent_domain",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": null,
+        "status": "ambiguous",
+        "vendor_id": null
+      },
+      "id": "shared-domain-ambiguous",
+      "query": {
+        "domain": "shared.example"
+      }
+    },
+    {
+      "class": "exact_name",
+      "expected": {
+        "confidence": 0.9,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "name_exact",
+        "status": "matched",
+        "vendor_id": "globex"
+      },
+      "id": "name-exact",
+      "query": {
+        "vendor_name": "Globex"
+      }
+    },
+    {
+      "class": "stripped_legal_suffix",
+      "expected": {
+        "confidence": 0.9,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "name_exact",
+        "status": "matched",
+        "vendor_id": "initech"
+      },
+      "id": "name-stripped-suffix",
+      "query": {
+        "vendor_name": "Initech"
+      }
+    },
+    {
+      "class": "ambiguous",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": null,
+        "status": "ambiguous",
+        "vendor_id": null
+      },
+      "id": "name-ambiguous",
+      "query": {
+        "vendor_name": "Umbrella"
+      }
+    },
+    {
+      "class": "no_match",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": null,
+        "status": "no_match",
+        "vendor_id": null
+      },
+      "id": "no-match",
+      "query": {
+        "domain": "unknown.example",
+        "vendor_name": "Nobody Ltd"
+      }
+    },
+    {
+      "class": "malformed_input",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": null,
+        "status": "no_match",
+        "vendor_id": null
+      },
+      "id": "malformed",
+      "query": {
+        "domain": "$$$ not a url",
+        "vendor_name": ""
+      }
+    },
+    {
+      "class": "internationalized_domain",
+      "expected": {
+        "confidence": 1.0,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "domain_exact",
+        "status": "matched",
+        "vendor_id": "muenchen"
+      },
+      "id": "idn-domain",
+      "query": {
+        "domain": "MÜNCHEN.EXAMPLE"
+      }
+    },
+    {
+      "class": "conflicting_identity",
+      "expected": {
+        "confidence": 1.0,
+        "legal_entity_confidence": "unresolved",
+        "legal_entity_id": null,
+        "legal_entity_method": "unresolved",
+        "method": "domain_exact",
+        "status": "matched",
+        "vendor_id": "acme"
+      },
+      "id": "conflicting-identity",
+      "query": {
+        "domain": "acme.com",
+        "vendor_name": "Globex"
+      }
+    },
+    {
+      "class": "registration_number",
+      "expected": {
+        "confidence": 1.0,
+        "legal_entity_confidence": "matched",
+        "legal_entity_id": "acme-gb",
+        "legal_entity_method": "registration_number_exact",
+        "method": "registration_number_exact",
+        "status": "matched",
+        "vendor_id": "acme"
+      },
+      "id": "registration-exact",
+      "query": {
+        "jurisdiction": "gb",
+        "registration_number": "1234-5678"
+      }
+    },
+    {
+      "class": "registration_number",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "ambiguous",
+        "legal_entity_id": null,
+        "legal_entity_method": "registration_number_exact",
+        "method": null,
+        "status": "no_match",
+        "vendor_id": null
+      },
+      "id": "registration-ambiguous",
+      "query": {
+        "registration_number": "99999999"
+      }
+    },
+    {
+      "class": "conflicting_identity",
+      "expected": {
+        "confidence": null,
+        "legal_entity_confidence": "conflict",
+        "legal_entity_id": null,
+        "legal_entity_method": "registration_vendor_conflict",
+        "method": null,
+        "status": "ambiguous",
+        "vendor_id": null
+      },
+      "id": "registration-vendor-conflict",
+      "query": {
+        "domain": "acme.com",
+        "jurisdiction": "us",
+        "registration_number": "99999999"
+      }
+    }
+  ]
+}
