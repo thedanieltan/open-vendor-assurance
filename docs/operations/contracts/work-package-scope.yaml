@@ -89,6 +89,14 @@ work_packages:
       - docs/operations/contracts/workflow-schedule-budget.yaml
       - tests/test_workflow_schedule_budget.py
 
+  WP-OPENVA-FAST-YAML-LOADER-01:
+    description: Route the hot record-loading paths (indexes.load_yaml, validate.load_yaml) through a shared fast_yaml loader that uses libyaml's CSafeLoader when available and falls back to the pure-Python SafeLoader. Parsing the ~7,400 committed records is ~99% of build/validate time and runs on every PR. Behaviour-preserving (byte-identical build output; a parity test asserts the two loaders agree on real records); the speedup lands wherever libyaml is installed (CI).
+    allowed_paths:
+      - tools/openva/fast_yaml.py
+      - tools/openva/indexes.py
+      - tools/openva/validate.py
+      - tests/test_fast_yaml.py
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
