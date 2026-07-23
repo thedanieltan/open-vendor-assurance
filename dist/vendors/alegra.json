@@ -91,7 +91,43 @@
       "vendor_id": "alegra"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/alegra/candidate_sources/alegra-compliance-page-f3c09ad7c562.yaml",
+      "candidate_source_id": "alegra-compliance-page-f3c09ad7c562",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.alegra.com/legal/terminos-y-condiciones",
+      "canonical_candidate_url": "https://www.alegra.com/legal/terminos-y-condiciones/",
+      "confidence": "likely",
+      "discovered_at": "2026-07-18T09:05:11.862274Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://www.alegra.com/legal/terminos-y-condiciones/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "Términos y Condiciones",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:21e3229a4072be786c1960ff13265b42d7913498fbcb3eab8ed3b4c049404c7b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.alegra.com/legal/terminos-y-condiciones/",
+      "requested_url": "https://www.alegra.com/legal/terminos-y-condiciones",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-07-18T09:05:11.862274Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "alegra"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/alegra/sources/alegra-privacy-notice.yaml",
@@ -229,8 +265,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 1,
+    "candidate_source_types": [
+      "compliance_page"
+    ],
     "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
