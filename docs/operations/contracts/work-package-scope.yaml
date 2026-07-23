@@ -73,6 +73,15 @@ work_packages:
       - tools/openva/workflow_schedule_budget.py
       - tests/test_workflow_schedule_budget.py
 
+  WP-OPENVA-TRUTH-RECONCILIATION-01:
+    description: Reconcile declared documentation with enforced reality — restore >=3.11 portability so the whole tree parses on the declared minimum Python (behaviour-preserving f-string fix in site_discovery.py), correct ADR work-package references and the four-plane assessment increment log to the actual landed state, and add a fail-closed ADR to work-package guard. Additive and behaviour-preserving; no site output or matching behaviour changes.
+    allowed_paths:
+      - tools/openva/site_discovery.py
+      - tools/openva/doc_truth.py
+      - tests/test_doc_truth.py
+      - docs/architecture/adr/*
+      - docs/architecture/OPENVA_FOUR_PLANE_ASSESSMENT.md
+
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
