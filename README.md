@@ -247,14 +247,10 @@ Low-risk public-source updates can proceed through machine gates without default
 
 OpenVA is:
 
-- public-source-only;
-- metadata-first;
+- public-source-only and metadata-first;
 - factual and non-advisory;
-- resolver-first;
-- native-language-aware;
-- provenance-driven;
-- hash-friendly;
-- source-reference oriented;
+- provenance-driven, with deterministic content hashes so any state can be pinned;
+- native-language-aware (native titles are preserved; English is convenience metadata);
 - usable independently of any one runtime or application.
 
 OpenVA does not:
