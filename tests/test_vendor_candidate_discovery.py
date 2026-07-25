@@ -83,6 +83,107 @@ artifact_categories:
     assert candidate["headquarters_country_candidate"] == "US"
 
 
+def test_vendor_candidate_discovery_ignores_global_planning_target(tmp_path):
+    queue = tmp_path / "maintenance/queues/catalog-growth-discovery.json"
+    taxonomy = tmp_path / "config/category-taxonomy.yaml"
+    seed = tmp_path / "maintenance/seeds/vendors/cloud_platforms.yaml"
+    queue.parent.mkdir(parents=True, exist_ok=True)
+    taxonomy.parent.mkdir(parents=True, exist_ok=True)
+    seed.parent.mkdir(parents=True, exist_ok=True)
+    taxonomy.write_text(
+        """
+coverage_lanes:
+  cloud_platforms: {}
+artifact_categories:
+  data_processing_terms:
+    maps_to_artifact_types: [dpa]
+""",
+        encoding="utf-8",
+    )
+    queue.write_text(
+        """
+{
+  "schema_version": "0.1.0",
+  "queue_type": "catalog_growth_discovery_queue",
+  "non_advisory": true,
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "writes_canonical_sources": false,
+    "creates_candidate_sources": false
+  },
+  "limits": {
+    "target_vendor_candidates": 1,
+    "max_vendors_per_discovery_run": 5,
+    "max_candidate_sources_per_report": 10,
+    "max_reviewed_actions_per_plan": 5
+  },
+  "source_types": ["dpa"],
+  "discovery_modes": ["seed_file_vendor_discovery"],
+  "cohorts": [
+    {"cohort_id": "cloud", "coverage_lane": "cloud_platforms", "target_vendor_candidates": 4, "priority": "high", "status": "queued"}
+  ]
+}
+""",
+        encoding="utf-8",
+    )
+    seed.write_text(
+        """
+- candidate_vendor_id: vendorone
+  display_name_candidate: Vendor One
+  official_domain_candidate: vendorone.test
+  coverage_lane: cloud_platforms
+  vendor_category_candidates: [cloud_infrastructure]
+  headquarters_country_candidate: US
+  source_index_url: https://vendorone.test
+  discovery_method: manual_seed
+  requires_review: true
+  writes_canonical_vendors: false
+  non_advisory: true
+- candidate_vendor_id: vendortwo
+  display_name_candidate: Vendor Two
+  official_domain_candidate: vendortwo.test
+  coverage_lane: cloud_platforms
+  vendor_category_candidates: [cloud_infrastructure]
+  headquarters_country_candidate: US
+  source_index_url: https://vendortwo.test
+  discovery_method: manual_seed
+  requires_review: true
+  writes_canonical_vendors: false
+  non_advisory: true
+- candidate_vendor_id: vendorthree
+  display_name_candidate: Vendor Three
+  official_domain_candidate: vendorthree.test
+  coverage_lane: cloud_platforms
+  vendor_category_candidates: [cloud_infrastructure]
+  headquarters_country_candidate: US
+  source_index_url: https://vendorthree.test
+  discovery_method: manual_seed
+  requires_review: true
+  writes_canonical_vendors: false
+  non_advisory: true
+- candidate_vendor_id: vendorfour
+  display_name_candidate: Vendor Four
+  official_domain_candidate: vendorfour.test
+  coverage_lane: cloud_platforms
+  vendor_category_candidates: [cloud_infrastructure]
+  headquarters_country_candidate: US
+  source_index_url: https://vendorfour.test
+  discovery_method: manual_seed
+  requires_review: true
+  writes_canonical_vendors: false
+  non_advisory: true
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    report = build_vendor_candidate_report(queue_path=queue, root=tmp_path)
+
+    assert report["summary"]["seed_candidate_count"] == 4
+    assert report["summary"]["candidate_vendor_count"] == 4
+    assert report["summary"]["catalog_vendor_count_cap"] is None
+
+
 def test_vendor_candidate_discovery_does_not_construct_google_queries(tmp_path):
     queue = tmp_path / "maintenance/queues/catalog-growth-discovery.json"
     taxonomy = tmp_path / "config/category-taxonomy.yaml"
