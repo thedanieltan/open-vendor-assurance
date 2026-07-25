@@ -281,8 +281,6 @@ def build_vendor_candidate_report(
             cohort_count += 1
             if cohort_count >= int(cohort["target_vendor_candidates"]):
                 break
-            if seed_candidate_count >= int(queue["limits"]["target_vendor_candidates"]):
-                break
 
     breadth_candidate_count = 0
     invalid_breadth_candidate_count = 0
