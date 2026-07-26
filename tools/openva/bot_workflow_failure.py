@@ -18,6 +18,58 @@ def load_json_if_present(path: Path | None) -> dict[str, Any] | None:
     return data
 
 
+def default_release_gates_report() -> dict[str, Any] | None:
+    candidates: list[Path] = []
+    runner_temp = os.environ.get("RUNNER_TEMP")
+    if runner_temp:
+        candidates.append(Path(runner_temp) / "release-gates.json")
+    candidates.append(ROOT / "release-gates.json")
+    for candidate in candidates:
+        report = load_json_if_present(candidate)
+        if report is not None:
+            return report
+    return None
+
+
+def release_gate_failed(report: dict[str, Any] | None) -> bool:
+    if not report:
+        return False
+    summary = report.get("summary") if isinstance(report.get("summary"), dict) else {}
+    if int(summary.get("blocking_failures", 0) or 0) > 0:
+        return True
+    if report.get("decision") == "blocked":
+        return True
+    for gate in report.get("gates") or []:
+        if isinstance(gate, dict) and gate.get("blocking") is True and gate.get("status") == "fail":
+            return True
+    return False
+
+
+def compact_release_gates_report(report: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not report:
+        return None
+    gates = [gate for gate in report.get("gates") or [] if isinstance(gate, dict)]
+    blocking_failures = [
+        {
+            "gate_id": gate.get("gate_id"),
+            "category": gate.get("category"),
+            "status": gate.get("status"),
+            "blocking": gate.get("blocking"),
+            "summary": gate.get("summary"),
+            "details": list(gate.get("details") or [])[:10],
+        }
+        for gate in gates
+        if gate.get("blocking") is True and gate.get("status") == "fail"
+    ]
+    return {
+        "report_type": report.get("report_type"),
+        "profile": report.get("profile"),
+        "decision": report.get("decision"),
+        "summary": report.get("summary"),
+        "blocking_failures": blocking_failures[:10],
+    }
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -49,6 +101,7 @@ def build_observation(
     failure_code: str | None = None,
     queue_report: dict[str, Any] | None = None,
     source_preflight_report: dict[str, Any] | None = None,
+    release_gates_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     inferred_code = failure_code
     inferred_message = message
@@ -57,6 +110,9 @@ def build_observation(
         inferred_code = "source_preflight_failure"
         inferred_message = "source preflight failed for changed source records"
         inferred_artifact = inferred_artifact or "source-preflight-report.json"
+    if release_gate_failed(release_gates_report):
+        inferred_message = "source-intelligence release gate failed"
+        inferred_artifact = inferred_artifact or "release-gates.json"
 
     observation: dict[str, Any] = {
         "version": 1,
@@ -92,6 +148,9 @@ def build_observation(
             "failed_count": source_preflight_report.get("failed_count"),
             "checked_count": source_preflight_report.get("checked_count"),
         }
+    compact_release_report = compact_release_gates_report(release_gates_report)
+    if compact_release_report:
+        observation["release_gates_report"] = compact_release_report
     return observation
 
 
@@ -106,6 +165,7 @@ def main(argv: list[str] | None = None) -> int:
     build_parser.add_argument("--failure-code")
     build_parser.add_argument("--queue-report", type=Path)
     build_parser.add_argument("--source-preflight-report", type=Path)
+    build_parser.add_argument("--release-gates-report", type=Path)
     build_parser.add_argument("--out", type=Path, required=True)
     build_parser.add_argument(
         "--preserve-existing",
@@ -127,6 +187,7 @@ def main(argv: list[str] | None = None) -> int:
             failure_code=args.failure_code,
             queue_report=load_json_if_present(args.queue_report),
             source_preflight_report=load_json_if_present(args.source_preflight_report),
+            release_gates_report=load_json_if_present(args.release_gates_report) or default_release_gates_report(),
         )
         write_json(output, observation)
         print(json.dumps({"failure_input": str(output), "preserved": False}, sort_keys=True))
