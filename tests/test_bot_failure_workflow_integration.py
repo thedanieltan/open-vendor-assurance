@@ -5,7 +5,7 @@ from pathlib import Path
 
 import yaml
 
-from tools.openva.bot_failure_router import route_failure
+from tools.openva.bot_failure_router import render_markdown, route_failure
 from tools.openva.bot_workflow_failure import build_observation
 
 WORKFLOW_DIR = Path(".github/workflows")
@@ -84,6 +84,40 @@ def data_vendor_digest() -> str:
             digest.update(path.as_posix().encode("utf-8"))
             digest.update(path.read_bytes())
     return digest.hexdigest()
+
+
+def release_gate_report() -> dict:
+    return {
+        "report_type": "release_gates_report",
+        "profile": "pr",
+        "decision": "blocked",
+        "summary": {
+            "gate_count": 2,
+            "passed": 1,
+            "failed": 1,
+            "warned": 0,
+            "skipped": 0,
+            "blocking_failures": 1,
+        },
+        "gates": [
+            {
+                "gate_id": "material_change_surfaced",
+                "category": "core",
+                "status": "fail",
+                "blocking": True,
+                "summary": "1 latest material change not surfaced into changes export",
+                "details": ["example-source / obs-123"],
+            },
+            {
+                "gate_id": "catalog_validation",
+                "category": "core",
+                "status": "pass",
+                "blocking": True,
+                "summary": "catalog validation passed",
+                "details": [],
+            },
+        ],
+    }
 
 
 def test_integrated_workflows_invoke_failure_router_on_failure_paths():
@@ -180,6 +214,28 @@ def test_workflow_failure_helper_infers_source_preflight_failure():
 
     assert observation["failure"]["code"] == "source_preflight_failure"
     assert report["matched_failure_code"] == "source_preflight_failure"
+
+
+def test_workflow_failure_helper_embeds_release_gate_context():
+    observation = build_observation(
+        workflow="agent-automerge.yml",
+        lane_id="pr_safety",
+        message="automerge lane mismatch in observation ledger lane",
+        failure_code="automerge_lane_mismatch",
+        release_gates_report=release_gate_report(),
+    )
+
+    report = route_failure(observation)
+    markdown = render_markdown(report)
+
+    assert observation["failure"]["code"] == "automerge_lane_mismatch"
+    assert observation["failure"]["message"] == "source-intelligence release gate failed"
+    assert observation["failure"]["artifact"] == "release-gates.json"
+    assert observation["release_gates_report"]["decision"] == "blocked"
+    assert observation["release_gates_report"]["blocking_failures"][0]["gate_id"] == "material_change_surfaced"
+    assert report["matched_failure_code"] == "automerge_lane_mismatch"
+    assert report["release_gates_report"]["blocking_failures"][0]["details"] == ["example-source / obs-123"]
+    assert "material_change_surfaced" in markdown
 
 
 def test_failure_router_and_helper_do_not_call_github_apis():
