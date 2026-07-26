@@ -119,6 +119,21 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- Queue reasons: `{', '.join(source.get('queue_reasons') or [])}`",
         "",
     ]
+    release_report = report.get("release_gates_report") or {}
+    if release_report:
+        lines += [
+            "## Release gates",
+            "",
+            f"- Decision: `{release_report.get('decision')}`",
+            f"- Profile: `{release_report.get('profile')}`",
+            f"- Summary: `{release_report.get('summary')}`",
+            "",
+        ]
+        for gate in release_report.get("blocking_failures") or []:
+            lines.append(f"### `{gate.get('gate_id')}` — {gate.get('summary')}")
+            for detail in gate.get("details") or []:
+                lines.append(f"- {detail}")
+            lines.append("")
     return "\n".join(lines)
 
 
@@ -152,6 +167,20 @@ def message_for(observation: dict[str, Any]) -> str:
 def queue_report(observation: dict[str, Any]) -> dict[str, Any]:
     value = observation.get("queue_report")
     return value if isinstance(value, dict) else {}
+
+
+def release_gates_report(observation: dict[str, Any]) -> dict[str, Any] | None:
+    value = observation.get("release_gates_report")
+    return value if isinstance(value, dict) else None
+
+
+def source_context(observation: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "message": message_for(observation) or None,
+        "artifact": failure_block(observation).get("artifact") or observation.get("artifact"),
+        "queue_decision": queue_report(observation).get("decision"),
+        "queue_reasons": queue_report(observation).get("reasons", []),
+    }
 
 
 def match_failure_code(observation: dict[str, Any], taxonomy: dict[str, Any]) -> tuple[str | None, str, str]:
@@ -216,12 +245,8 @@ def manual_review_report(observation: dict[str, Any], match_basis: str) -> dict[
         "stop_lane": True,
         "next_safe_action": next_safe_action_for(None),
         "explanation": "The failure did not match a known taxonomy code or conservative message rule.",
-        "source": {
-            "message": message_for(observation) or None,
-            "artifact": failure_block(observation).get("artifact") or observation.get("artifact"),
-            "queue_decision": queue_report(observation).get("decision"),
-            "queue_reasons": queue_report(observation).get("reasons", []),
-        },
+        "source": source_context(observation),
+        "release_gates_report": release_gates_report(observation),
     }
 
 
@@ -249,12 +274,8 @@ def route_failure(observation: dict[str, Any], *, taxonomy: dict[str, Any] | Non
         "stop_lane": entry["stop_lane"],
         "next_safe_action": next_safe_action_for(entry),
         "explanation": entry["summary"],
-        "source": {
-            "message": message_for(observation) or None,
-            "artifact": failure_block(observation).get("artifact") or observation.get("artifact"),
-            "queue_decision": queue_report(observation).get("decision"),
-            "queue_reasons": queue_report(observation).get("reasons", []),
-        },
+        "source": source_context(observation),
+        "release_gates_report": release_gates_report(observation),
     }
 
 
