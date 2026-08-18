@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from tools.openva.capabilities import availability, load_manifest, source_type_ids
 from tools.openva.catalog_growth_discovery_queue import (
     MODE_CAPABILITIES,
     SITEMAP_DISCOVERY_MODE,
@@ -10,6 +11,7 @@ from tools.openva.catalog_growth_discovery_queue import (
     expected_posture,
     validate_queue,
 )
+from tools.openva.source_discovery import parse_source_types
 
 
 def test_rejection_reason_codes_cannot_leak_raw_text():
@@ -33,8 +35,11 @@ def _write(tmp_path, queue):
     return path
 
 
-def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
+def test_catalog_growth_discovery_queue_is_taxonomy_driven_bounded_and_runtime_supported():
     summary = validate_queue(QUEUE)
+    manifest = load_manifest()
+    canonical_source_types = set(source_type_ids(manifest))
+    discovery_supported = set(availability(manifest, "discovery_supported"))
 
     assert summary["queue_type"] == "catalog_growth_discovery_queue"
     assert summary["cohort_count"] >= 10
@@ -43,21 +48,19 @@ def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
     assert "cloud_platforms" in summary["coverage_lane_counts"]
     assert "security_identity" in summary["coverage_lane_counts"]
     assert "regional_apac" in summary["coverage_lane_counts"]
-    assert set(summary["source_types"]) == {
-        "dpa",
-        "subprocessors_list",
-        "privacy_notice",
-        "trust_center",
-        "security_page",
-        "compliance_page",
-        "certification_reference",
+
+    # The queue drives this runtime, so its executable source-type list must be
+    # exactly what the capability manifest says source_discovery can handle.
+    # Canonical catalog coverage remains broader and is not narrowed by this list.
+    assert set(summary["source_types"]) == discovery_supported
+    assert set(parse_source_types(",".join(summary["source_types"]))) == discovery_supported
+    assert canonical_source_types > discovery_supported
+    assert canonical_source_types - discovery_supported == {
         "terms_of_service",
         "kyc_statement",
         "aml_statement",
-        "ai_terms",
         "government_request_policy",
         "transparency_report",
-        "status_page",
         "other_public_source",
     }
 
