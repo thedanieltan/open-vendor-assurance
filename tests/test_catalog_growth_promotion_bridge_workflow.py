@@ -1,11 +1,14 @@
 """Contract pins for the catalog-growth-promotion-bridge workflow (WP zero-install PR2).
 
 These assert the structural guarantees of the discovery -> strict-growth promotion
-handoff: it only auto-runs after a successful *scheduled* main-branch discovery run, it
-reads the upstream event from authoritative run metadata, it fails closed via the
-eligibility gate, it dedups against active promotion runs, it dispatches the single
-existing mutation workflow and nothing else, it never writes catalog state or opens a
-PR, and it is registered consistently across the operating-model contracts.
+handoff: the promotion job only auto-runs after a successful *scheduled* main-branch
+discovery run, reads the upstream event from authoritative run metadata, fails closed via
+the eligibility gate, dedups against active promotion runs, dispatches the single existing
+mutation workflow and nothing else, never writes catalog state or opens a PR, and is
+registered consistently across the operating-model contracts. The workflow also hosts a
+separate exact-gated Discovery Mesh acceptance-dispatch job; promotion-job assertions are
+scoped to the promotion job so that independent authority boundary is not conflated with
+the strict-growth handoff.
 """
 
 from __future__ import annotations
@@ -45,6 +48,10 @@ def step_named(prefix: str) -> dict:
     return next(s for s in steps() if s.get("name", "").startswith(prefix))
 
 
+def promotion_job_run_text() -> str:
+    return "\n".join(str(step.get("run") or "") for step in steps())
+
+
 def inventory_entry() -> dict:
     entries = yaml.safe_load(WORKFLOW_INVENTORY.read_text(encoding="utf-8"))["public_workflows"]
     return next(entry for entry in entries if entry["name"] == NAME)
@@ -72,18 +79,18 @@ def test_triggers_on_discovery_completion_and_manual_exact_id():
     trig = triggers(workflow)
     body = text()
     assert set(trig.keys()) == {"workflow_run", "workflow_dispatch"}
-    assert trig["workflow_run"]["workflows"] == ["catalog-growth-discovery"]
+    assert trig["workflow_run"]["workflows"] == ["catalog-growth-discovery", "discovery-mesh"]
     assert trig["workflow_run"]["types"] == ["completed"]
     # Manual dispatch must require an EXACT run id.
     assert trig["workflow_dispatch"]["inputs"]["discovery_run_id"]["required"] is True
     assert "github.event.workflow_run.id" in body
 
 
-def test_job_level_guard_requires_successful_workflow_run():
-    workflow = load()
-    assert workflow["jobs"][JOB]["if"] == (
-        "${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}"
-    )
+def test_job_level_guard_requires_successful_catalog_growth_workflow_run():
+    guard = str(load()["jobs"][JOB]["if"])
+    assert "github.event_name == 'workflow_dispatch'" in guard
+    assert "github.event.workflow_run.name == 'catalog-growth-discovery'" in guard
+    assert "github.event.workflow_run.conclusion == 'success'" in guard
 
 
 def test_reads_upstream_event_from_authoritative_run_metadata():
@@ -124,8 +131,9 @@ def test_all_downstream_steps_are_gated_on_eligibility():
 def test_does_not_infer_a_latest_discovery_run():
     body = text()
     # The discovery run id comes only from the dispatch input or the workflow_run id;
-    # we never list discovery runs to pick a "latest" one.
-    assert "--limit 1" not in body
+    # the promotion job never lists discovery runs to pick a "latest" one. The separate
+    # acceptance job may use a bounded --limit 100 query for deduplication.
+    assert "--limit 1 " not in body
     assert "gh run list --workflow \"$DISCOVERY_WORKFLOW\"" not in body
     assert 'gh run list --workflow "$DISCOVERY_WORKFLOW"' not in body
 
@@ -158,15 +166,17 @@ def test_computes_hold_and_open_growth_pr_state():
     assert "--label catalog-growth" in body
 
 
-def test_dispatches_only_the_existing_mutation_workflow():
-    body = text()
+def test_promotion_job_dispatches_only_the_existing_mutation_workflow():
+    job_body = promotion_job_run_text()
     workflow = load()
     env = workflow["jobs"][JOB]["env"]
     assert env["MUTATION_WORKFLOW"] == MUTATION_WORKFLOW == "candidate-promotion-pr.yml"
-    # Exactly one workflow-dispatch call, targeting the single mutation workflow.
-    assert body.count("gh workflow run") == 1
-    assert 'gh workflow run "$MUTATION_WORKFLOW"' in body
-    assert "promotion_plan_mode=$MODE" in body
+    # The promotion job has exactly one workflow-dispatch call, targeting the single
+    # canonical mutation workflow. A separate job may dispatch Discovery Mesh acceptance.
+    assert job_body.count("gh workflow run") == 1
+    assert 'gh workflow run "$MUTATION_WORKFLOW"' in job_body
+    assert "gh workflow run discovery-mesh.yml" not in job_body
+    assert "promotion_plan_mode=$MODE" in job_body
     assert DISPATCH_MODE == "strict-growth-latest"
 
 
@@ -266,7 +276,7 @@ def test_download_state_decide_dispatch_gated_on_ancestry():
 
 def test_no_latest_successful_run_fallback():
     body = text()
-    assert "--limit 1" not in body
+    assert "--limit 1 " not in body
     assert 'gh run list --workflow "$DISCOVERY_WORKFLOW"' not in body
 
 
