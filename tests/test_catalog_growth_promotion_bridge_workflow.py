@@ -3,12 +3,13 @@
 These assert the structural guarantees of the discovery -> strict-growth promotion
 handoff: the promotion job only auto-runs after a successful *scheduled* main-branch
 discovery run, reads the upstream event from authoritative run metadata, fails closed via
-the eligibility gate, dedups against active promotion runs, dispatches the single existing
-mutation workflow and nothing else, never writes catalog state or opens a PR, and is
-registered consistently across the operating-model contracts. The workflow also hosts a
-separate exact-gated Discovery Mesh acceptance-dispatch job; promotion-job assertions are
-scoped to the promotion job so that independent authority boundary is not conflated with
-the strict-growth handoff.
+the eligibility gate, waits boundedly for transient active promotion runs to drain,
+re-checks promotion-run state before dispatch, dispatches the single existing mutation
+workflow and nothing else, never writes catalog state or opens a PR, and is registered
+consistently across the operating-model contracts. The workflow also hosts a separate
+exact-gated Discovery Mesh acceptance-dispatch job; promotion-job assertions are scoped
+to the promotion job so that independent authority boundary is not conflated with the
+strict-growth handoff.
 """
 
 from __future__ import annotations
@@ -121,6 +122,7 @@ def test_all_downstream_steps_are_gated_on_eligibility():
     for prefix in (
         "Verify upstream commit",
         "Download strict-growth promotion plan",
+        "Wait for active promotion lane",
         "Compute hold",
         "Decide promotion dispatch",
         "Dispatch existing strict-growth promotion workflow",
@@ -144,12 +146,38 @@ def test_reads_strict_growth_plan_from_discovery_artifact():
     assert "strict-growth-promotion-plan.json" in body
 
 
-def test_queries_active_promotion_runs_scoped_to_main():
-    body = text()
-    # Dedup against queued/in-progress promotion runs, scoped to main.
-    assert 'gh run list --workflow "$MUTATION_WORKFLOW" --branch main' in body
-    assert 'select(.status == "queued" or .status == "in_progress")' in body
-    assert "--active-promotion-run-count" in body
+def test_waits_boundedly_for_active_promotion_runs_scoped_to_main():
+    workflow = load()
+    wait = step_named("Wait for active promotion lane")
+    wait_run = wait["run"]
+    env = workflow["jobs"][JOB]["env"]
+    assert env["PROMOTION_LANE_WAIT_ATTEMPTS"] == "30"
+    assert env["PROMOTION_LANE_WAIT_SECONDS"] == "60"
+    assert workflow["jobs"][JOB]["timeout-minutes"] == 45
+    assert 'gh run list --workflow "$MUTATION_WORKFLOW" --branch main' in wait_run
+    assert 'select(.status == "queued" or .status == "in_progress")' in wait_run
+    assert "sleep \"$SLEEP_SECONDS\"" in wait_run
+    assert "ATTEMPT<=ATTEMPTS" in wait_run
+    assert "promotion lane remained active for the full bounded wait" in wait_run
+    assert "refusing to drop or race the discovery handoff" in wait_run
+    assert "|| echo 0" not in wait_run
+    assert "|| true" not in wait_run
+    assert "set -euo pipefail" in wait_run
+
+
+def test_wait_precedes_final_active_run_recheck():
+    names = [s.get("name", "") for s in steps()]
+    wait_idx = next(i for i, n in enumerate(names) if n.startswith("Wait for active promotion lane"))
+    state_idx = next(i for i, n in enumerate(names) if n.startswith("Compute hold"))
+    assert wait_idx < state_idx
+
+    state_run = step_named("Compute hold")["run"]
+    # The post-wait query is retained as a race guard rather than treating the initial
+    # contention observation as a terminal no-op.
+    assert 'gh run list --workflow "$MUTATION_WORKFLOW" --branch main' in state_run
+    assert 'select(.status == "queued" or .status == "in_progress")' in state_run
+    assert "final fail-closed" in state_run
+    assert "--active-promotion-run-count" in text()
 
 
 def test_uses_decision_module_gate_with_all_state_inputs():
@@ -223,7 +251,7 @@ def test_pause_state_queries_are_mandatory_and_fail_closed():
 
 
 def test_state_and_decide_and_ancestry_steps_have_no_continue_on_error():
-    for prefix in ("Verify upstream commit", "Compute hold", "Decide promotion dispatch"):
+    for prefix in ("Verify upstream commit", "Wait for active promotion lane", "Compute hold", "Decide promotion dispatch"):
         assert step_named(prefix).get("continue-on-error") in (None, False), prefix
 
 
@@ -267,6 +295,7 @@ def test_download_state_decide_dispatch_gated_on_ancestry():
     gate = "steps.ancestry.outputs.ancestor == 'true'"
     for prefix in (
         "Download strict-growth promotion plan",
+        "Wait for active promotion lane",
         "Compute hold",
         "Decide promotion dispatch",
         "Dispatch existing strict-growth promotion workflow",
