@@ -5,9 +5,10 @@ name: catalog-growth-promotion-bridge
 #
 # After a successful SCHEDULED catalog-growth-discovery run on main, this bridge reads
 # the strict-growth promotion plan emitted by that run and, only when the plan contains
-# eligible promotion actions and no global hold, no active promotion run, and no open
-# growth PR blocks it, dispatches the SINGLE existing mutation workflow
-# (candidate-promotion-pr.yml) in strict-growth-latest mode.
+# eligible promotion actions and no global hold or open growth PR blocks it, dispatches
+# the SINGLE existing mutation workflow (candidate-promotion-pr.yml) in
+# strict-growth-latest mode. If that mutation workflow is already queued/in progress,
+# the bridge waits for a bounded interval and then re-checks live state before dispatch.
 #
 # Authority boundary (fail closed):
 #   * Automatic path (workflow_run): the triggering discovery run's own event must be
@@ -19,6 +20,8 @@ name: catalog-growth-promotion-bridge
 #     main; a historical run from a commit outside main history cannot promote.
 #   * Live safety-state queries (pause, open growth PR, active promotion run) are
 #     mandatory and authoritative; a GitHub API failure stops the run before dispatch.
+#   * Active promotion-lane contention is retried for a bounded interval. If it does
+#     not drain, the bridge fails visibly; it never assumes an active lane is safe.
 #
 # This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
 # or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
@@ -65,9 +68,12 @@ jobs:
         )
       }}
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       MUTATION_WORKFLOW: candidate-promotion-pr.yml
       DISCOVERY_WORKFLOW: catalog-growth-discovery
+      PROMOTION_LANE_WAIT_ATTEMPTS: "30"
+      PROMOTION_LANE_WAIT_SECONDS: "60"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -175,6 +181,47 @@ jobs:
           DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
           echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
 
+      - name: Wait for active promotion lane to drain (bounded, fail closed)
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          ATTEMPTS="$PROMOTION_LANE_WAIT_ATTEMPTS"
+          SLEEP_SECONDS="$PROMOTION_LANE_WAIT_SECONDS"
+          case "$ATTEMPTS" in ''|*[!0-9]*) echo "::error::invalid promotion lane wait attempt count"; exit 1 ;; esac
+          case "$SLEEP_SECONDS" in ''|*[!0-9]*) echo "::error::invalid promotion lane wait interval"; exit 1 ;; esac
+          if [ "$ATTEMPTS" = "0" ] || [ "$SLEEP_SECONDS" = "0" ]; then
+            echo "::error::promotion lane wait bounds must be positive"
+            exit 1
+          fi
+
+          for ((ATTEMPT=1; ATTEMPT<=ATTEMPTS; ATTEMPT++)); do
+            ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
+              --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
+            case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
+            if [ "$ACTIVE_PROMOTION_RUNS" = "0" ]; then
+              {
+                echo "### Promotion lane contention"
+                echo "Discovery run \`$RUN_ID\`: promotion lane available after attempt \`$ATTEMPT/$ATTEMPTS\`."
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Promotion lane busy ($ACTIVE_PROMOTION_RUNS active run(s)); attempt $ATTEMPT/$ATTEMPTS."
+            if [ "$ATTEMPT" -lt "$ATTEMPTS" ]; then
+              sleep "$SLEEP_SECONDS"
+            fi
+          done
+
+          {
+            echo "### Promotion lane contention"
+            echo "Discovery run \`$RUN_ID\`: promotion lane remained active for the full bounded wait."
+            echo "The bridge is failing closed; replay this exact run id after contention clears."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::candidate-promotion-pr remained active after bounded wait; refusing to drop or race the discovery handoff"
+          exit 1
+
       - name: Compute hold, open growth PR, and active promotion-run state (mandatory, fail closed)
         if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
         id: state
@@ -205,8 +252,9 @@ jobs:
           OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length')"
           case "$OPEN_GROWTH_PRS" in ''|*[!0-9]*) echo "::error::invalid open growth PR count"; exit 1 ;; esac
 
-          # Queued/in-progress promotion runs on main, so a second dispatch cannot race
-          # the PR-creation window of an already-active promotion run.
+          # Re-check queued/in-progress promotion runs on main after the bounded wait.
+          # A new run can race in between checks, so this remains a final fail-closed
+          # deduplication guard before dispatch.
           ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
             --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
           case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
