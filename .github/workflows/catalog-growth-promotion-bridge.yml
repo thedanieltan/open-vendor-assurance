@@ -244,6 +244,9 @@ jobs:
           OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length')"
           case "$OPEN_GROWTH_PRS" in ''|*[!0-9]*) echo "::error::invalid open growth PR count"; exit 1 ;; esac
 
+          # Re-check queued/in-progress promotion runs on main after the bounded wait.
+          # A new run can race in between checks, so this remains a final fail-closed
+          # deduplication guard before dispatch.
           ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
             --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
           case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
@@ -307,6 +310,9 @@ jobs:
           if [ -n "$CAP" ]; then
             ARGS+=(-f "max_promotion_actions_per_pr=$CAP")
           fi
+          # Provenance remains in this step's audit and workflow summary; the
+          # downstream run receipt additionally binds the source discovery run to the
+          # exact candidate-promotion run that accepted the dispatch.
           DISPATCH_TOKEN="${OPENVA_AUTOMERGE_TOKEN:-$GH_TOKEN}"
           echo "Dispatching $MUTATION_WORKFLOW on main (mode=$MODE, source discovery run=$RUN_ID)"
           GH_TOKEN="$DISPATCH_TOKEN" gh workflow run "$MUTATION_WORKFLOW" --ref main "${ARGS[@]}"
