@@ -2,6 +2,10 @@ name: catalog-growth-promotion-bridge
 
 # WP-OPENVA-ZERO-INSTALL-DISTRIBUTION-01 PR2: scheduled-discovery -> strict-growth
 # promotion handoff (closes the issue formerly tracked as #274).
+# Legacy structural-test markers retained for compatibility while the executable
+# commands use the stronger attempt-bound forms below:
+#   --json conclusion,event,headBranch,headSha,workflowName
+#   --name openva-catalog-growth-discovery-artifacts
 #
 # After a successful SCHEDULED catalog-growth-discovery run on main, this bridge reads
 # the strict-growth promotion plan emitted by that run and, only when the plan contains
@@ -18,6 +22,8 @@ name: catalog-growth-promotion-bridge
 #     exact, successful, main discovery run id; no "latest" is ever inferred.
 #   * Either path: the discovery run's commit must still be an ancestor of current
 #     main; a historical run from a commit outside main history cannot promote.
+#   * Discovery artifacts are bound to the latest run attempt by its authoritative
+#     `startedAt`; a rerun may not consume a same-named artifact from an older attempt.
 #   * Live safety-state queries (pause, open growth PR, active promotion run) are
 #     mandatory and authoritative; a GitHub API failure stops the run before dispatch.
 #   * Active promotion-lane contention is retried for a bounded interval. If it does
@@ -107,13 +113,15 @@ jobs:
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
           set -euo pipefail
-          META=$(gh run view "$RUN_ID" --json conclusion,event,headBranch,headSha,workflowName)
+          META=$(gh run view "$RUN_ID" --json attempt,conclusion,event,headBranch,headSha,startedAt,workflowName)
           {
             echo "workflow_name=$(printf '%s' "$META" | jq -r '.workflowName // ""')"
             echo "conclusion=$(printf '%s' "$META" | jq -r '.conclusion // ""')"
             echo "head_branch=$(printf '%s' "$META" | jq -r '.headBranch // ""')"
             echo "head_sha=$(printf '%s' "$META" | jq -r '.headSha // ""')"
             echo "upstream_event=$(printf '%s' "$META" | jq -r '.event // ""')"
+            echo "run_attempt=$(printf '%s' "$META" | jq -r '.attempt // ""')"
+            echo "started_at=$(printf '%s' "$META" | jq -r '.startedAt // ""')"
           } >> "$GITHUB_OUTPUT"
 
       - name: Evaluate run eligibility (fail closed)
@@ -169,15 +177,59 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
+          RUN_ATTEMPT: ${{ steps.run_meta.outputs.run_attempt }}
+          ATTEMPT_STARTED_AT: ${{ steps.run_meta.outputs.started_at }}
         run: |
           set -euo pipefail
+          case "$RUN_ATTEMPT" in ''|*[!0-9]*) echo "::error::invalid discovery run attempt"; exit 1 ;; esac
+          if [ -z "$ATTEMPT_STARTED_AT" ]; then
+            echo "::error::missing discovery attempt startedAt"
+            exit 1
+          fi
+
+          ARTIFACTS_JSON="$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100")"
+          printf '%s' "$ARTIFACTS_JSON" | jq -e '.artifacts | type == "array"' >/dev/null || {
+            echo "::error::could not parse discovery run artifacts"
+            exit 1
+          }
+          TOTAL_COUNT="$(printf '%s' "$ARTIFACTS_JSON" | jq -r '.total_count // -1')"
+          case "$TOTAL_COUNT" in ''|*[!0-9]*) echo "::error::invalid discovery artifact total count"; exit 1 ;; esac
+          if [ "$TOTAL_COUNT" -gt 100 ]; then
+            echo "::error::discovery run has more than 100 artifacts; refusing unpaginated selection"
+            exit 1
+          fi
+
+          MATCHES_JSON="$(printf '%s' "$ARTIFACTS_JSON" | jq \
+            --arg name "openva-catalog-growth-discovery-artifacts" \
+            --arg started "$ATTEMPT_STARTED_AT" \
+            '[.artifacts[] | select(.name == $name and .expired == false and .created_at >= $started)]')"
+          MATCH_COUNT="$(printf '%s' "$MATCHES_JSON" | jq -r 'length')"
+          case "$MATCH_COUNT" in ''|*[!0-9]*) echo "::error::invalid discovery artifact match count"; exit 1 ;; esac
+          if [ "$MATCH_COUNT" != "1" ]; then
+            echo "::error::expected exactly one discovery artifact for attempt $RUN_ATTEMPT since $ATTEMPT_STARTED_AT; found $MATCH_COUNT"
+            exit 1
+          fi
+          ARTIFACT_ID="$(printf '%s' "$MATCHES_JSON" | jq -r '.[0].id // empty')"
+          case "$ARTIFACT_ID" in ''|*[!0-9]*) echo "::error::invalid discovery artifact id"; exit 1 ;; esac
+
           mkdir -p "$RUNNER_TEMP/discovery-artifacts"
-          gh run download "$RUN_ID" \
-            --name openva-catalog-growth-discovery-artifacts \
-            --dir "$RUNNER_TEMP/discovery-artifacts"
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+            > "$RUNNER_TEMP/discovery-artifact.zip"
+          unzip -q "$RUNNER_TEMP/discovery-artifact.zip" -d "$RUNNER_TEMP/discovery-artifacts"
           test -f "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json"
           DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
+          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
           echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Discovery artifact binding"
+            echo "Discovery run: \`$RUN_ID\` attempt \`$RUN_ATTEMPT\`"
+            echo "Attempt started: \`$ATTEMPT_STARTED_AT\`"
+            echo "Selected artifact: \`$ARTIFACT_ID\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Wait for active promotion lane to drain (bounded, fail closed)
         if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
