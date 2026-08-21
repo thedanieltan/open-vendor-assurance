@@ -22,6 +22,8 @@ name: catalog-growth-promotion-bridge
 #     mandatory and authoritative; a GitHub API failure stops the run before dispatch.
 #   * Active promotion-lane contention is retried for a bounded interval. If it does
 #     not drain, the bridge fails visibly; it never assumes an active lane is safe.
+#   * Dispatch uses the repository's autonomous workflow token when available, targets
+#     main explicitly, and must produce a verifiable new candidate-promotion run.
 #
 # This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
 # or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
@@ -74,6 +76,8 @@ jobs:
       DISCOVERY_WORKFLOW: catalog-growth-discovery
       PROMOTION_LANE_WAIT_ATTEMPTS: "30"
       PROMOTION_LANE_WAIT_SECONDS: "60"
+      DISPATCH_RECEIPT_WAIT_ATTEMPTS: "12"
+      DISPATCH_RECEIPT_WAIT_SECONDS: "5"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -103,8 +107,6 @@ jobs:
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
           set -euo pipefail
-          # Authoritative run metadata, including the run's own triggering event and
-          # head commit. No "latest run" is ever inferred.
           META=$(gh run view "$RUN_ID" --json conclusion,event,headBranch,headSha,workflowName)
           {
             echo "workflow_name=$(printf '%s' "$META" | jq -r '.workflowName // ""')"
@@ -149,10 +151,6 @@ jobs:
           HEAD_SHA: ${{ steps.run_meta.outputs.head_sha }}
         run: |
           set -euo pipefail
-          # A successful historical discovery run must not promote if its commit is no
-          # longer part of current main. Applies to both the automatic and the explicit
-          # operator-recovery paths. Same authority pattern as
-          # discovery-ledger-append-pr.yml.
           if [ -z "$HEAD_SHA" ]; then
             echo "::error::missing discovery run head SHA"
             exit 1
@@ -229,11 +227,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          # Every query below is authoritative and mandatory. Under set -euo pipefail a
-          # GitHub API/auth/rate-limit failure aborts this step (the job fails and no
-          # dispatch occurs); failures are never converted to an unblocked state.
-
-          # Global pause state.
           LABELS_JSON="$(gh label list --json name)"
           printf '%s' "$LABELS_JSON" | jq -e 'type == "array"' >/dev/null || { echo "::error::could not parse repository labels"; exit 1; }
           HAS_PAUSE_LABEL="$(printf '%s' "$LABELS_JSON" | jq -r 'map(.name) | index("openva-bot-paused") != null')"
@@ -248,7 +241,6 @@ jobs:
             exit 1
           fi
 
-          # Open catalog-growth PR count.
           OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length')"
           case "$OPEN_GROWTH_PRS" in ''|*[!0-9]*) echo "::error::invalid open growth PR count"; exit 1 ;; esac
 
@@ -300,24 +292,107 @@ jobs:
 
       - name: Dispatch existing strict-growth promotion workflow
         if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true' && steps.decide.outputs.dispatch == 'true'
+        id: dispatch
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          OPENVA_AUTOMERGE_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
           MODE: ${{ steps.decide.outputs.mode }}
           CAP: ${{ steps.decide.outputs.cap }}
         run: |
           set -euo pipefail
-          # Hand the single authorised cycle to the one existing mutation workflow.
-          # This bridge never writes catalog state itself; candidate-promotion-pr.yml
-          # regenerates/re-validates current evidence and remains the sole catalog
-          # write authority. Provenance remains in this step's audit and workflow summary;
-          # the dispatched PR title must match the generated-catalog automerge lane.
+          BEFORE_MAX="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --event workflow_dispatch --limit 50 \
+            --json databaseId --jq 'map(.databaseId) | max // 0')"
+          case "$BEFORE_MAX" in ''|*[!0-9]*) echo "::error::invalid pre-dispatch workflow run id watermark"; exit 1 ;; esac
+          TARGET_HEAD_SHA="$(git rev-parse origin/main)"
+          REQUESTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           ARGS=(-f "promotion_plan_mode=$MODE" -f "pr_title=Catalog: apply reviewed candidate source promotion")
           if [ -n "$CAP" ]; then
             ARGS+=(-f "max_promotion_actions_per_pr=$CAP")
           fi
-          echo "Dispatching $MUTATION_WORKFLOW (mode=$MODE, source discovery run=$RUN_ID)"
-          gh workflow run "$MUTATION_WORKFLOW" "${ARGS[@]}"
+          # Provenance remains in this step's audit and workflow summary; the
+          # downstream run receipt additionally binds the source discovery run to the
+          # exact candidate-promotion run that accepted the dispatch.
+          DISPATCH_TOKEN="${OPENVA_AUTOMERGE_TOKEN:-$GH_TOKEN}"
+          echo "Dispatching $MUTATION_WORKFLOW on main (mode=$MODE, source discovery run=$RUN_ID)"
+          GH_TOKEN="$DISPATCH_TOKEN" gh workflow run "$MUTATION_WORKFLOW" --ref main "${ARGS[@]}"
+          echo "before_max=$BEFORE_MAX" >> "$GITHUB_OUTPUT"
+          echo "target_head_sha=$TARGET_HEAD_SHA" >> "$GITHUB_OUTPUT"
+          echo "requested_at=$REQUESTED_AT" >> "$GITHUB_OUTPUT"
+
+      - name: Verify promotion workflow dispatch receipt (bounded, fail closed)
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true' && steps.decide.outputs.dispatch == 'true'
+        id: dispatch_receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+          BEFORE_MAX: ${{ steps.dispatch.outputs.before_max }}
+          TARGET_HEAD_SHA: ${{ steps.dispatch.outputs.target_head_sha }}
+          REQUESTED_AT: ${{ steps.dispatch.outputs.requested_at }}
+        run: |
+          set -euo pipefail
+          ATTEMPTS="$DISPATCH_RECEIPT_WAIT_ATTEMPTS"
+          SLEEP_SECONDS="$DISPATCH_RECEIPT_WAIT_SECONDS"
+          case "$ATTEMPTS" in ''|*[!0-9]*) echo "::error::invalid dispatch receipt wait attempt count"; exit 1 ;; esac
+          case "$SLEEP_SECONDS" in ''|*[!0-9]*) echo "::error::invalid dispatch receipt wait interval"; exit 1 ;; esac
+          if [ "$ATTEMPTS" = "0" ] || [ "$SLEEP_SECONDS" = "0" ]; then
+            echo "::error::dispatch receipt wait bounds must be positive"
+            exit 1
+          fi
+
+          DOWNSTREAM_RUN_ID=""
+          for ((ATTEMPT=1; ATTEMPT<=ATTEMPTS; ATTEMPT++)); do
+            RUNS_JSON="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --event workflow_dispatch --limit 50 \
+              --json databaseId,createdAt,headSha,status)"
+            printf '%s' "$RUNS_JSON" | jq -e 'type == "array"' >/dev/null || { echo "::error::could not parse candidate-promotion run list"; exit 1; }
+            DOWNSTREAM_RUN_ID="$(printf '%s' "$RUNS_JSON" | jq -r \
+              --argjson before "$BEFORE_MAX" \
+              --arg requested "$REQUESTED_AT" \
+              --arg head "$TARGET_HEAD_SHA" \
+              '[.[] | select(.databaseId > $before and .createdAt >= $requested and .headSha == $head)] | sort_by(.databaseId) | .[0].databaseId // empty')"
+            if [ -n "$DOWNSTREAM_RUN_ID" ]; then
+              break
+            fi
+            echo "Candidate-promotion dispatch receipt not visible yet; attempt $ATTEMPT/$ATTEMPTS."
+            if [ "$ATTEMPT" -lt "$ATTEMPTS" ]; then
+              sleep "$SLEEP_SECONDS"
+            fi
+          done
+
+          if [ -z "$DOWNSTREAM_RUN_ID" ]; then
+            echo "::error::workflow dispatch returned without a verifiable candidate-promotion run; failing closed"
+            exit 1
+          fi
+          case "$DOWNSTREAM_RUN_ID" in *[!0-9]*) echo "::error::invalid downstream workflow run id"; exit 1 ;; esac
+          export DOWNSTREAM_RUN_ID
+
+          mkdir -p reports
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          receipt = {
+              "schema_version": "0.1.0",
+              "report_type": "catalog_growth_promotion_bridge_dispatch_receipt",
+              "source_discovery_run_id": os.environ["RUN_ID"],
+              "downstream_candidate_promotion_run_id": os.environ["DOWNSTREAM_RUN_ID"],
+              "target_head_sha": os.environ["TARGET_HEAD_SHA"],
+              "requested_at": os.environ["REQUESTED_AT"],
+              "not_advice": True,
+          }
+          Path("reports/promotion-bridge-dispatch-receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          echo "downstream_run_id=$DOWNSTREAM_RUN_ID" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Catalog growth promotion dispatch receipt"
+            echo "Source discovery run: \`$RUN_ID\`"
+            echo "Candidate-promotion run: \`$DOWNSTREAM_RUN_ID\`"
+            echo "Target main SHA: \`$TARGET_HEAD_SHA\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload promotion bridge decision artifacts
         if: always()
@@ -327,6 +402,7 @@ jobs:
           path: |
             reports/promotion-bridge-eligibility.json
             reports/promotion-bridge-decision.json
+            reports/promotion-bridge-dispatch-receipt.json
           if-no-files-found: warn
 
   dispatch-full-catalog-rendered-acceptance:
