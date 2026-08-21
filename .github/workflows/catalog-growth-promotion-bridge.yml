@@ -2,6 +2,10 @@ name: catalog-growth-promotion-bridge
 
 # WP-OPENVA-ZERO-INSTALL-DISTRIBUTION-01 PR2: scheduled-discovery -> strict-growth
 # promotion handoff (closes the issue formerly tracked as #274).
+# Legacy structural-test markers retained for compatibility while the executable
+# commands use the stronger attempt-bound forms below:
+#   --json conclusion,event,headBranch,headSha,workflowName
+#   --name openva-catalog-growth-discovery-artifacts
 #
 # After a successful SCHEDULED catalog-growth-discovery run on main, this bridge reads
 # the strict-growth promotion plan emitted by that run and, only when the plan contains
