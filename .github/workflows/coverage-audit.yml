@@ -22,4 +22,6 @@ jobs:
       - name: Build clean production commit object
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python tools/openva/zz_temp_rebuild_artifact_bound.py
+        run: |
+          git show f2d04de162abc2dcdbafe3594badbc9a68cf0908:.github/workflows/zz-temp-artifact-bound-patch.yml > .github/workflows/zz-temp-artifact-bound-patch.yml
+          python tools/openva/zz_temp_rebuild_artifact_bound.py
