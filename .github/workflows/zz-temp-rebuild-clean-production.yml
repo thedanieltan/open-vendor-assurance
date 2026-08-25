@@ -1,15 +1,17 @@
 name: temporary-rebuild-artifact-bound-production
 
 on:
-  pull_request:
-    types: [synchronize, reopened]
+  push:
+    branches:
+      - agent/catalog-growth-artifact-bound-promotion
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   rebuild:
-    if: github.head_ref == 'agent/catalog-growth-artifact-bound-promotion'
+    if: github.ref_name == 'agent/catalog-growth-artifact-bound-promotion'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -171,3 +173,4 @@ if-no-files-found: warn
           echo "CLEAN_OBJECT_PARENT=$BASE_HEAD"
           echo "CLEAN_OBJECT_TREE=$TREE"
           echo "CLEAN_OBJECT_COMMIT=$COMMIT"
+          gh pr comment 821 --repo "$GITHUB_REPOSITORY" --body "CLEAN_ARTIFACT_BOUND_OBJECT_COMMIT=$COMMIT\nCLEAN_ARTIFACT_BOUND_OBJECT_PARENT=$BASE_HEAD\nCLEAN_ARTIFACT_BOUND_OBJECT_TREE=$TREE"
