@@ -35,6 +35,17 @@ jobs:
           PY
           python /tmp/apply_artifact_bound_patch.py
           rm -f .github/workflows/zz-temp-pr-runner.yml
+      - name: Export generated production files
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-artifact-bound-promotion-generated-files
+          path: |
+            .github/workflows/candidate-promotion-pr.yml
+            .github/workflows/catalog-growth-promotion-bridge.yml
+            tools/openva/discovery_promotion_bridge.py
+            tests/test_discovery_promotion_bridge.py
+            tests/test_catalog_growth_artifact_bound_promotion.py
+          if-no-files-found: error
       - name: Commit final production diff
         run: |
           set -euo pipefail
