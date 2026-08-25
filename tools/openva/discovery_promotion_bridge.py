@@ -4,11 +4,12 @@ Pure decision functions for the ``catalog-growth-promotion-bridge`` workflow. Af
 successful scheduled ``catalog-growth-discovery`` run on ``main``, the bridge reads the
 strict-growth promotion plan that run produced and decides whether to dispatch the
 **existing** mutation workflow (``candidate-promotion-pr.yml``) in
-``strict-growth-latest`` mode.
+``strict-growth-artifact`` mode.
 
 It never writes catalog state, opens a PR, evaluates candidate eligibility, or
-implements a second mutation path. The discovery plan is a dispatch **signal** only:
-the dispatched promotion workflow regenerates and re-validates current evidence and
+implements a second mutation path. The discovery plan is a dispatch **signal** rather than merge authority. The
+dispatched promotion workflow binds the exact discovery artifact, reclassifies its
+captured source evidence against current main, rebuilds the bounded shortlist, and
 remains the sole catalog write authority.
 
 Two fail-closed gates live here so they are unit-testable independently of GitHub:
@@ -43,7 +44,7 @@ from pathlib import Path
 from typing import Any
 
 STRICT_GROWTH_PLAN_TYPE = "strict_growth_promotion_plan"
-DISPATCH_MODE = "strict-growth-latest"
+DISPATCH_MODE = "strict-growth-artifact"
 MUTATION_WORKFLOW = "candidate-promotion-pr.yml"
 EXPECTED_DISCOVERY_WORKFLOW = "catalog-growth-discovery"
 DEFAULT_MAX_OPEN_GROWTH_PRS = 1

@@ -12,7 +12,7 @@ Two fail-closed gates are proven here:
   global hold -> active promotion run -> open growth PR -> authorised dispatch.
 
 The dispatched target is always the single existing mutation workflow in
-strict-growth-latest mode; this module never opens a PR or writes catalog state.
+strict-growth-artifact mode; this module never opens a PR or writes catalog state.
 """
 
 from __future__ import annotations
@@ -132,7 +132,7 @@ def test_dispatch_when_eligible_actions_and_no_blocks():
 
     assert decision["dispatch"] is True
     assert decision["reason"] == "promotion_dispatch_authorised"
-    assert decision["mode"] == DISPATCH_MODE == "strict-growth-latest"
+    assert decision["mode"] == DISPATCH_MODE == "strict-growth-artifact"
     assert decision["mutation_workflow"] == MUTATION_WORKFLOW == "candidate-promotion-pr.yml"
     assert decision["action_count"] == 2
     assert decision["max_promotion_actions_per_pr"] == 10
@@ -356,7 +356,7 @@ def test_cli_decide_writes_decision_json(tmp_path):
     assert result == 0
     decision = json.loads(out.read_text(encoding="utf-8"))
     assert decision["dispatch"] is True
-    assert decision["mode"] == "strict-growth-latest"
+    assert decision["mode"] == "strict-growth-artifact"
     assert decision["source_discovery_run_id"] == "999"
 
 

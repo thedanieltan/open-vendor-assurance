@@ -6,12 +6,13 @@ name: catalog-growth-promotion-bridge
 # commands use the stronger attempt-bound forms below:
 #   --json conclusion,event,headBranch,headSha,workflowName
 #   --name openva-catalog-growth-discovery-artifacts
+#   strict-growth-latest
 #
 # After a successful SCHEDULED catalog-growth-discovery run on main, this bridge reads
 # the strict-growth promotion plan emitted by that run and, only when the plan contains
 # eligible promotion actions and no global hold or open growth PR blocks it, dispatches
 # the SINGLE existing mutation workflow (candidate-promotion-pr.yml) in
-# strict-growth-latest mode. If that mutation workflow is already queued/in progress,
+# strict-growth-artifact mode, binding it to this exact run/artifact/plan digest. If that mutation workflow is already queued/in progress,
 # the bridge waits for a bounded interval and then re-checks live state before dispatch.
 #
 # Authority boundary (fail closed):
@@ -33,8 +34,8 @@ name: catalog-growth-promotion-bridge
 #
 # This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
 # or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
-# not final merge authority: candidate-promotion-pr.yml regenerates and re-validates
-# current evidence and remains the sole catalog write authority, gated by its own
+# not final merge authority: candidate-promotion-pr.yml reclassifies the captured source
+# evidence against current main, rebuilds the bounded shortlist, and remains the sole catalog write authority, gated by its own
 # queue, stale-evidence, source-preflight, and strict-growth automerge checks.
 #
 # A separate exact-gated job may dispatch one uncapped discovery-mesh acceptance run
@@ -156,379 +157,4 @@ jobs:
         if: steps.eligibility.outputs.eligible == 'true'
         id: ancestry
         env:
-          HEAD_SHA: ${{ steps.run_meta.outputs.head_sha }}
-        run: |
-          set -euo pipefail
-          if [ -z "$HEAD_SHA" ]; then
-            echo "::error::missing discovery run head SHA"
-            exit 1
-          fi
-          git fetch origin main
-          if git merge-base --is-ancestor "$HEAD_SHA" origin/main; then
-            echo "ancestor=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::error::discovery run commit is not an ancestor of current main"
-            exit 1
-          fi
-
-      - name: Download strict-growth promotion plan
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
-        id: artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ steps.resolve.outputs.run_id }}
-          RUN_ATTEMPT: ${{ steps.run_meta.outputs.run_attempt }}
-          ATTEMPT_STARTED_AT: ${{ steps.run_meta.outputs.started_at }}
-        run: |
-          set -euo pipefail
-          case "$RUN_ATTEMPT" in ''|*[!0-9]*) echo "::error::invalid discovery run attempt"; exit 1 ;; esac
-          if [ -z "$ATTEMPT_STARTED_AT" ]; then
-            echo "::error::missing discovery attempt startedAt"
-            exit 1
-          fi
-
-          ARTIFACTS_JSON="$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100")"
-          printf '%s' "$ARTIFACTS_JSON" | jq -e '.artifacts | type == "array"' >/dev/null || {
-            echo "::error::could not parse discovery run artifacts"
-            exit 1
-          }
-          TOTAL_COUNT="$(printf '%s' "$ARTIFACTS_JSON" | jq -r '.total_count // -1')"
-          case "$TOTAL_COUNT" in ''|*[!0-9]*) echo "::error::invalid discovery artifact total count"; exit 1 ;; esac
-          if [ "$TOTAL_COUNT" -gt 100 ]; then
-            echo "::error::discovery run has more than 100 artifacts; refusing unpaginated selection"
-            exit 1
-          fi
-
-          MATCHES_JSON="$(printf '%s' "$ARTIFACTS_JSON" | jq \
-            --arg name "openva-catalog-growth-discovery-artifacts" \
-            --arg started "$ATTEMPT_STARTED_AT" \
-            '[.artifacts[] | select(.name == $name and .expired == false and .created_at >= $started)]')"
-          MATCH_COUNT="$(printf '%s' "$MATCHES_JSON" | jq -r 'length')"
-          case "$MATCH_COUNT" in ''|*[!0-9]*) echo "::error::invalid discovery artifact match count"; exit 1 ;; esac
-          if [ "$MATCH_COUNT" != "1" ]; then
-            echo "::error::expected exactly one discovery artifact for attempt $RUN_ATTEMPT since $ATTEMPT_STARTED_AT; found $MATCH_COUNT"
-            exit 1
-          fi
-          ARTIFACT_ID="$(printf '%s' "$MATCHES_JSON" | jq -r '.[0].id // empty')"
-          case "$ARTIFACT_ID" in ''|*[!0-9]*) echo "::error::invalid discovery artifact id"; exit 1 ;; esac
-
-          mkdir -p "$RUNNER_TEMP/discovery-artifacts"
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
-            > "$RUNNER_TEMP/discovery-artifact.zip"
-          unzip -q "$RUNNER_TEMP/discovery-artifact.zip" -d "$RUNNER_TEMP/discovery-artifacts"
-          test -f "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json"
-          DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
-          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
-          echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
-          {
-            echo "### Discovery artifact binding"
-            echo "Discovery run: \`$RUN_ID\` attempt \`$RUN_ATTEMPT\`"
-            echo "Attempt started: \`$ATTEMPT_STARTED_AT\`"
-            echo "Selected artifact: \`$ARTIFACT_ID\`"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Wait for active promotion lane to drain (bounded, fail closed)
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ steps.resolve.outputs.run_id }}
-        run: |
-          set -euo pipefail
-          ATTEMPTS="$PROMOTION_LANE_WAIT_ATTEMPTS"
-          SLEEP_SECONDS="$PROMOTION_LANE_WAIT_SECONDS"
-          case "$ATTEMPTS" in ''|*[!0-9]*) echo "::error::invalid promotion lane wait attempt count"; exit 1 ;; esac
-          case "$SLEEP_SECONDS" in ''|*[!0-9]*) echo "::error::invalid promotion lane wait interval"; exit 1 ;; esac
-          if [ "$ATTEMPTS" = "0" ] || [ "$SLEEP_SECONDS" = "0" ]; then
-            echo "::error::promotion lane wait bounds must be positive"
-            exit 1
-          fi
-
-          for ((ATTEMPT=1; ATTEMPT<=ATTEMPTS; ATTEMPT++)); do
-            ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
-              --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
-            case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
-            if [ "$ACTIVE_PROMOTION_RUNS" = "0" ]; then
-              {
-                echo "### Promotion lane contention"
-                echo "Discovery run \`$RUN_ID\`: promotion lane available after attempt \`$ATTEMPT/$ATTEMPTS\`."
-              } >> "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
-            echo "Promotion lane busy ($ACTIVE_PROMOTION_RUNS active run(s)); attempt $ATTEMPT/$ATTEMPTS."
-            if [ "$ATTEMPT" -lt "$ATTEMPTS" ]; then
-              sleep "$SLEEP_SECONDS"
-            fi
-          done
-
-          {
-            echo "### Promotion lane contention"
-            echo "Discovery run \`$RUN_ID\`: promotion lane remained active for the full bounded wait."
-            echo "The bridge is failing closed; replay this exact run id after contention clears."
-          } >> "$GITHUB_STEP_SUMMARY"
-          echo "::error::candidate-promotion-pr remained active after bounded wait; refusing to drop or race the discovery handoff"
-          exit 1
-
-      - name: Compute hold, open growth PR, and active promotion-run state (mandatory, fail closed)
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
-        id: state
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          LABELS_JSON="$(gh label list --json name)"
-          printf '%s' "$LABELS_JSON" | jq -e 'type == "array"' >/dev/null || { echo "::error::could not parse repository labels"; exit 1; }
-          HAS_PAUSE_LABEL="$(printf '%s' "$LABELS_JSON" | jq -r 'map(.name) | index("openva-bot-paused") != null')"
-          if [ "$HAS_PAUSE_LABEL" = "true" ]; then
-            PAUSED_OPEN="$(gh issue list --label openva-bot-paused --state open --json number --jq 'length')"
-            case "$PAUSED_OPEN" in ''|*[!0-9]*) echo "::error::invalid paused issue count"; exit 1 ;; esac
-            if [ "$PAUSED_OPEN" != "0" ]; then PAUSE="true"; else PAUSE="false"; fi
-          elif [ "$HAS_PAUSE_LABEL" = "false" ]; then
-            PAUSE="false"
-          else
-            echo "::error::could not determine pause label state"
-            exit 1
-          fi
-
-          OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length')"
-          case "$OPEN_GROWTH_PRS" in ''|*[!0-9]*) echo "::error::invalid open growth PR count"; exit 1 ;; esac
-
-          # Re-check queued/in-progress promotion runs on main after the bounded wait.
-          # A new run can race in between checks, so this remains a final fail-closed
-          # deduplication guard before dispatch.
-          ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
-            --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
-          case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
-
-          echo "pause=$PAUSE" >> "$GITHUB_OUTPUT"
-          echo "open_growth_prs=$OPEN_GROWTH_PRS" >> "$GITHUB_OUTPUT"
-          echo "active_promotion_runs=$ACTIVE_PROMOTION_RUNS" >> "$GITHUB_OUTPUT"
-
-      - name: Decide promotion dispatch (bounded bridge gate)
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
-        id: decide
-        env:
-          RUN_ID: ${{ steps.resolve.outputs.run_id }}
-          HOLD: ${{ steps.state.outputs.pause }}
-          OPEN_GROWTH_PRS: ${{ steps.state.outputs.open_growth_prs }}
-          ACTIVE_PROMOTION_RUNS: ${{ steps.state.outputs.active_promotion_runs }}
-          PLAN_DIGEST: ${{ steps.artifact.outputs.plan_digest }}
-        run: |
-          set -euo pipefail
-          mkdir -p reports
-          python -m tools.openva.discovery_promotion_bridge decide \
-            --plan "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" \
-            --hold-active "$HOLD" \
-            --open-growth-pr-count "$OPEN_GROWTH_PRS" \
-            --active-promotion-run-count "$ACTIVE_PROMOTION_RUNS" \
-            --source-run-id "$RUN_ID" \
-            --plan-digest "$PLAN_DIGEST" \
-            --output reports/promotion-bridge-decision.json
-          DISPATCH="$(python -c 'import json;print(str(json.load(open("reports/promotion-bridge-decision.json"))["dispatch"]).lower())')"
-          MODE="$(python -c 'import json;print(json.load(open("reports/promotion-bridge-decision.json"))["mode"])')"
-          CAP="$(python -c 'import json;d=json.load(open("reports/promotion-bridge-decision.json"));c=d.get("max_promotion_actions_per_pr");print("" if c is None else c)')"
-          echo "dispatch=$DISPATCH" >> "$GITHUB_OUTPUT"
-          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
-          echo "cap=$CAP" >> "$GITHUB_OUTPUT"
-          {
-            echo "### Catalog growth promotion bridge decision";
-            echo "Source discovery run: \`$RUN_ID\` (plan digest \`$PLAN_DIGEST\`)";
-            echo "Dispatch: \`$DISPATCH\`";
-            echo '```json';
-            cat reports/promotion-bridge-decision.json;
-            echo '```';
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Dispatch existing strict-growth promotion workflow
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true' && steps.decide.outputs.dispatch == 'true'
-        id: dispatch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          OPENVA_AUTOMERGE_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
-          RUN_ID: ${{ steps.resolve.outputs.run_id }}
-          MODE: ${{ steps.decide.outputs.mode }}
-          CAP: ${{ steps.decide.outputs.cap }}
-        run: |
-          set -euo pipefail
-          BEFORE_MAX="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --event workflow_dispatch --limit 50 \
-            --json databaseId --jq 'map(.databaseId) | max // 0')"
-          case "$BEFORE_MAX" in ''|*[!0-9]*) echo "::error::invalid pre-dispatch workflow run id watermark"; exit 1 ;; esac
-          TARGET_HEAD_SHA="$(git rev-parse origin/main)"
-          REQUESTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          ARGS=(-f "promotion_plan_mode=$MODE" -f "pr_title=Catalog: apply reviewed candidate source promotion")
-          if [ -n "$CAP" ]; then
-            ARGS+=(-f "max_promotion_actions_per_pr=$CAP")
-          fi
-          # Provenance remains in this step's audit and workflow summary; the
-          # downstream run receipt additionally binds the source discovery run to the
-          # exact candidate-promotion run that accepted the dispatch.
-          DISPATCH_TOKEN="${OPENVA_AUTOMERGE_TOKEN:-$GH_TOKEN}"
-          echo "Dispatching $MUTATION_WORKFLOW on main (mode=$MODE, source discovery run=$RUN_ID)"
-          GH_TOKEN="$DISPATCH_TOKEN" gh workflow run "$MUTATION_WORKFLOW" --ref main "${ARGS[@]}"
-          echo "before_max=$BEFORE_MAX" >> "$GITHUB_OUTPUT"
-          echo "target_head_sha=$TARGET_HEAD_SHA" >> "$GITHUB_OUTPUT"
-          echo "requested_at=$REQUESTED_AT" >> "$GITHUB_OUTPUT"
-
-      - name: Verify promotion workflow dispatch receipt (bounded, fail closed)
-        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true' && steps.decide.outputs.dispatch == 'true'
-        id: dispatch_receipt
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ steps.resolve.outputs.run_id }}
-          BEFORE_MAX: ${{ steps.dispatch.outputs.before_max }}
-          TARGET_HEAD_SHA: ${{ steps.dispatch.outputs.target_head_sha }}
-          REQUESTED_AT: ${{ steps.dispatch.outputs.requested_at }}
-        run: |
-          set -euo pipefail
-          ATTEMPTS="$DISPATCH_RECEIPT_WAIT_ATTEMPTS"
-          SLEEP_SECONDS="$DISPATCH_RECEIPT_WAIT_SECONDS"
-          case "$ATTEMPTS" in ''|*[!0-9]*) echo "::error::invalid dispatch receipt wait attempt count"; exit 1 ;; esac
-          case "$SLEEP_SECONDS" in ''|*[!0-9]*) echo "::error::invalid dispatch receipt wait interval"; exit 1 ;; esac
-          if [ "$ATTEMPTS" = "0" ] || [ "$SLEEP_SECONDS" = "0" ]; then
-            echo "::error::dispatch receipt wait bounds must be positive"
-            exit 1
-          fi
-
-          DOWNSTREAM_RUN_ID=""
-          for ((ATTEMPT=1; ATTEMPT<=ATTEMPTS; ATTEMPT++)); do
-            RUNS_JSON="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --event workflow_dispatch --limit 50 \
-              --json databaseId,createdAt,headSha,status)"
-            printf '%s' "$RUNS_JSON" | jq -e 'type == "array"' >/dev/null || { echo "::error::could not parse candidate-promotion run list"; exit 1; }
-            DOWNSTREAM_RUN_ID="$(printf '%s' "$RUNS_JSON" | jq -r \
-              --argjson before "$BEFORE_MAX" \
-              --arg requested "$REQUESTED_AT" \
-              --arg head "$TARGET_HEAD_SHA" \
-              '[.[] | select(.databaseId > $before and .createdAt >= $requested and .headSha == $head)] | sort_by(.databaseId) | .[0].databaseId // empty')"
-            if [ -n "$DOWNSTREAM_RUN_ID" ]; then
-              break
-            fi
-            echo "Candidate-promotion dispatch receipt not visible yet; attempt $ATTEMPT/$ATTEMPTS."
-            if [ "$ATTEMPT" -lt "$ATTEMPTS" ]; then
-              sleep "$SLEEP_SECONDS"
-            fi
-          done
-
-          if [ -z "$DOWNSTREAM_RUN_ID" ]; then
-            echo "::error::workflow dispatch returned without a verifiable candidate-promotion run; failing closed"
-            exit 1
-          fi
-          case "$DOWNSTREAM_RUN_ID" in *[!0-9]*) echo "::error::invalid downstream workflow run id"; exit 1 ;; esac
-          export DOWNSTREAM_RUN_ID
-
-          mkdir -p reports
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-
-          receipt = {
-              "schema_version": "0.1.0",
-              "report_type": "catalog_growth_promotion_bridge_dispatch_receipt",
-              "source_discovery_run_id": os.environ["RUN_ID"],
-              "downstream_candidate_promotion_run_id": os.environ["DOWNSTREAM_RUN_ID"],
-              "target_head_sha": os.environ["TARGET_HEAD_SHA"],
-              "requested_at": os.environ["REQUESTED_AT"],
-              "not_advice": True,
-          }
-          Path("reports/promotion-bridge-dispatch-receipt.json").write_text(
-              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          PY
-          echo "downstream_run_id=$DOWNSTREAM_RUN_ID" >> "$GITHUB_OUTPUT"
-          {
-            echo "### Catalog growth promotion dispatch receipt"
-            echo "Source discovery run: \`$RUN_ID\`"
-            echo "Candidate-promotion run: \`$DOWNSTREAM_RUN_ID\`"
-            echo "Target main SHA: \`$TARGET_HEAD_SHA\`"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload promotion bridge decision artifacts
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: openva-catalog-growth-promotion-bridge
-          path: |
-            reports/promotion-bridge-eligibility.json
-            reports/promotion-bridge-decision.json
-            reports/promotion-bridge-dispatch-receipt.json
-          if-no-files-found: warn
-
-  dispatch-full-catalog-rendered-acceptance:
-    if: >-
-      ${{
-        github.event_name == 'workflow_run' &&
-        github.event.workflow_run.name == 'discovery-mesh' &&
-        github.event.workflow_run.event == 'push' &&
-        github.event.workflow_run.conclusion == 'success'
-      }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Resolve exact acceptance pull request
-        id: acceptance
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          set -euo pipefail
-          PR_JSON=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
-            --jq '.[0] // empty')
-          if [ -z "$PR_JSON" ]; then
-            echo "dispatch=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          PR_TITLE=$(printf '%s' "$PR_JSON" | jq -r '.title // ""')
-          PR_HEAD=$(printf '%s' "$PR_JSON" | jq -r '.head.ref // ""')
-          PR_AUTHOR=$(printf '%s' "$PR_JSON" | jq -r '.user.login // ""')
-          PR_MERGED=$(printf '%s' "$PR_JSON" | jq -r '.merged_at // ""')
-          if [ "$PR_TITLE" != "Trigger full-catalog rendered-discovery acceptance" ]; then
-            echo "dispatch=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          case "$PR_HEAD" in
-            agent/full-catalog-rendered-acceptance-*) ;;
-            *) echo "::error::acceptance PR branch is not authorized: $PR_HEAD"; exit 1 ;;
-          esac
-          if [ "$PR_AUTHOR" != "$GITHUB_REPOSITORY_OWNER" ]; then
-            echo "::error::acceptance PR must be owned by repository owner"
-            exit 1
-          fi
-          if [ -z "$PR_MERGED" ]; then
-            echo "::error::acceptance PR must be merged"
-            exit 1
-          fi
-          EXISTING=$(gh run list \
-            --workflow discovery-mesh.yml \
-            --branch main \
-            --event workflow_dispatch \
-            --limit 100 \
-            --json headSha,status,conclusion,databaseId \
-            --jq "[.[] | select(.headSha == \"${HEAD_SHA}\")] | length")
-          case "$EXISTING" in ''|*[!0-9]*) echo "::error::invalid prior acceptance run count"; exit 1 ;; esac
-          if [ "$EXISTING" != "0" ]; then
-            echo "dispatch=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "dispatch=true" >> "$GITHUB_OUTPUT"
-      - name: Dispatch uncapped full-catalog discovery mesh
-        if: steps.acceptance.outputs.dispatch == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          gh workflow run discovery-mesh.yml --ref main
-          {
-            echo "### Full-catalog rendered-discovery acceptance dispatch"
-            echo ""
-            echo "- Source smoke run: \`${{ github.event.workflow_run.id }}\`"
-            echo "- Source commit: \`${{ github.event.workflow_run.head_sha }}\`"
-            echo "- Target workflow: \`discovery-mesh.yml\`"
-            echo "- Target ref: \`main\`"
-            echo "- Input overrides: none"
-            echo "- Expected matrix: \`32 shards / no vendor limit\`"
-          } >> "$GITHUB_STEP_SUMMARY"
+     ²È="24‘íì¥Ñ¡Õˆ¹Ñ½­•¸õô(€€€€€€€€€IU9}%è€‘íìÍÑ•ÁÌ¹É•Í½±Ù”¹½ÕÑÁÕÑÌ¹ÉÕ¹}¥õô(€€€€€€€€€	=I}5`è€‘íìÍÑ•ÁÌ¹‘¥ÍÁ…Ñ ¹½ÕÑÁÕÑÌ¹‰•™½É•}µ…àõô(€€€€€€€€€QIQ}!}M!è€‘íìÍÑ•ÁÌ¹‘¥ÍÁ…Ñ ¹½ÕÑÁÕÑÌ¹Ñ…É•Ñ}¡•…‘}Í¡„õô(€€€€€€€€€IEUMQ}Pè€‘íìÍÑ•ÁÌ¹‘¥ÍÁ…Ñ ¹½ÕÑÁÕÑÌ¹É•ÅÕ•ÍÑ•‘}…Ðõô(€€€€€€€€€M=UI}IQ%Q}%è€‘íìÍÑ•ÁÌ¹…ÉÑ¥™…Ð¹½ÕÑÁÕÑÌ¹…ÉÑ¥™…Ñ}¥õô(€€€€€€€€€M=UI}A19}%MPè€‘íìÍÑ•ÁÌ¹…ÉÑ¥™…Ð¹½ÕÑÁÕÑÌ¹Á±…¹}‘¥•ÍÐõô(€€€€€€€ÉÕ¸èð(€€€€€€€€€Í•Ð€µ•Õ¼Á¥Á•™…¥°(€€€€€€€€€QQ5AQLôˆ‘%MAQ!}I%AQ}]%Q}QQ5AQLˆ(€€€€€€€€€M1A}M=9Lôˆ‘%MAQ!}I%AQ}]%Q}M=9Lˆ(€€€€€€€€€…Í”€ˆ‘QQ5AQLˆ¥¸€œð©l„À´åt¨¤•¡¼€ˆèé•ÉÉ½Èèé¥¹Ù…±¥‘¥ÍÁ…Ñ É••¥ÁÐÝ…¥Ð…ÑÑ•µÁÐ½Õ¹Ðˆì•á¥Ð€Ä€ìì•Í…Œ(€€€€€€€€€…Í”€ˆ‘M1A}M=9Lˆ¥¸€œð©l„À´åt¨¤•¡¼€ˆèé•ÉÉ½Èèé¥¹Ù…±¥‘¥ÍÁ…Ñ É••¥ÁÐÝ…¥Ð¥¹Ñ•ÉÙ…°ˆì•á¥Ð€Ä€ìì•Í…Œ(€€€€€€€€€¥˜l€ˆ‘QQ5AQLˆ€ô€ˆÀˆtñðl€ˆ‘M1A}M=9Lˆ€ô€ˆÀˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€ˆèé•ÉÉ½Èèé‘¥ÍÁ…Ñ É••¥ÁÐÝ…¥Ð‰½Õ¹‘ÌµÕÍÐ‰”Á½Í¥Ñ¥Ù”ˆ(€€€€€€€€€€€•á¥Ð€Ä(€€€€€€€€€™¤((€€€€€€€€€=]9MQI5}IU9}%ôˆˆ(€€€€€€€€€™½È€ ¡QQ5APôÄìQQ5APðõQQ5AQLìQQ5AP¬¬¤¤ì‘¼(€€€€€€€€€€€IU9M})M=8ôˆ¡ ÉÕ¸±¥ÍÐ€´µÝ½É­™±½Ü€ˆ‘5UQQ%=9}]=I-1=\ˆ€´µ‰É…¹ µ…¥¸€´µ•Ù•¹ÐÝ½É­™±½Ý}‘¥ÍÁ…Ñ €´µ±¥µ¥Ð€ÔÀp(€€€€€€€€€€€€€€´µ©Í½¸‘…Ñ…‰…Í•%±É•…Ñ•‘Ð±¡•…‘M¡„±ÍÑ…ÑÕÌ¤ˆ(€€€€€€€€€€€ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘IU9M})M=8ˆð©Ä€µ”€ÑåÁ”€ôô€‰…ÉÉ…äˆœ€ø½‘•Ø½¹Õ±°ñðì•¡¼€ˆèé•ÉÉ½Èèé½Õ±¹½ÐÁ…ÉÍ”…¹‘¥‘…Ñ”µÁÉ½µ½Ñ¥½¸ÉÕ¸±¥ÍÐˆì•á¥Ð€Äìô(€€€€€€€€€€€=]9MQI5}IU9}%ôˆ¡ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘IU9M})M=8ˆð©Ä€µÈp(€€€€€€€€€€€€€€´µ…É©Í½¸‰•™½É”€ˆ‘	=I}5`ˆp(€€€€€€€€€€€€€€´µ…ÉœÉ•ÅÕ•ÍÑ•€ˆ‘IEUMQ}Pˆp(€€€€€€€€€€€€€€´µ…Éœ¡•…€ˆ‘QIQ}!}M!ˆp(€€€€€€€€€€€€€€l¹mtðÍ•±•Ð ¹‘…Ñ…‰…Í•%€ø€‘‰•™½É”…¹€¹É•…Ñ•‘Ð€øô€‘É•ÅÕ•ÍÑ•…¹€¹¡•…‘M¡„€ôô€‘¡•…¥tðÍ½ÉÑ}‰ä ¹‘…Ñ…‰…Í•%¤ð€¹lÁt¹‘…Ñ…‰…Í•%€¼¼•µÁÑäœ¤ˆ(€€€€€€€€€€€¥˜l€µ¸€ˆ‘=]9MQI5}IU9}%ˆtìÑ¡•¸(€€€€€€€€€€€€€‰É•…¬(€€€€€€€€€€€™¤(€€€€€€€€€€€•¡¼€‰…¹‘¥‘…Ñ”µÁÉ½µ½Ñ¥½¸‘¥ÍÁ…Ñ É••¥ÁÐ¹½ÐÙ¥Í¥‰±”å•Ðì…ÑÑ•µÁÐ€‘QQ5AP¼‘QQ5AQL¸ˆ(€€€€€€€€€€€¥˜l€ˆ‘QQ5APˆ€µ±Ð€ˆ‘QQ5AQLˆtìÑ¡•¸(€€€€€€€€€€€€€Í±••À€ˆ‘M1A}M=9Lˆ(€€€€€€€€€€€™¤(€€€€€€€€€‘½¹”((€€€€€€€€€¥˜l€µè€ˆ‘=]9MQI5}IU9}%ˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€ˆèé•ÉÉ½ÈèéÝ½É­™±½Ü‘¥ÍÁ…Ñ É•ÑÕÉ¹•Ý¥Ñ¡½ÕÐ„Ù•É¥™¥…‰±”…¹‘¥‘…Ñ”µÁÉ½µ½Ñ¥½¸ÉÕ¸ì™…¥±¥¹œ±½Í•ˆ(€€€€€€€€€€€•á¥Ð€Ä(€€€€€€€€€™¤(€€€€€€€€€…Í”€ˆ‘=]9MQI5}IU9}%ˆ¥¸€©l„À´åt¨¤•¡¼€ˆèé•ÉÉ½Èèé¥¹Ù…±¥‘½Ý¹ÍÑÉ•…´Ý½É­™±½ÜÉÕ¸¥ˆì•á¥Ð€Ä€ìì•Í…Œ(€€€€€€€€€•áÁ½ÉÐ=]9MQI5}IU9}%((€€€€€€€€€µ­‘¥È€µÀÉ•Á½ÉÑÌ(€€€€€€€€€ÁåÑ¡½¸€´€ððAdœ(€€€€€€€€€¥µÁ½ÉÐ©Í½¸(€€€€€€€€€¥µÁ½ÉÐ½Ì(€€€€€€€€€™É½´Á…Ñ¡±¥ˆ¥µÁ½ÉÐA…Ñ ((€€€€€€€€€É••¥ÁÐ€ôì(€€€€€€€€€€€€€€‰Í¡•µ…}Ù•ÉÍ¥½¸ˆè€ˆÀ¸Ä¸Àˆ°(€€€€€€€€€€€€€€‰É•Á½ÉÑ}ÑåÁ”ˆè€‰…Ñ…±½}É½ÝÑ¡}ÁÉ½µ½Ñ¥½¹}‰É¥‘•}‘¥ÍÁ…Ñ¡}É••¥ÁÐˆ°(€€€€€€€€€€€€€€‰Í½ÕÉ•}‘¥Í½Ù•Éå}ÉÕ¹}¥ˆè½Ì¹•¹Ù¥É½¹l‰IU9}%‰t°(€€€€€€€€€€€€€€‰Í½ÕÉ•}‘¥Í½Ù•Éå}…ÉÑ¥™…Ñ}¥ˆè½Ì¹•¹Ù¥É½¹l‰M=UI}IQ%Q}%‰t°(€€€€€€€€€€€€€€‰Í½ÕÉ•}‘¥Í½Ù•Éå}Á±…¹}‘¥•ÍÐˆè½Ì¹•¹Ù¥É½¹l‰M=UI}A19}%MP‰t°(€€€€€€€€€€€€€€‰‘½Ý¹ÍÑÉ•…µ}…¹‘¥‘…Ñ•}ÁÉ½µ½Ñ¥½¹}ÉÕ¹}¥ˆè½Ì¹•¹Ù¥É½¹l‰=]9MQI5}IU9}%‰t°(€€€€€€€€€€€€€€‰Ñ…É•Ñ}¡•…‘}Í¡„ˆè½Ì¹•¹Ù¥É½¹l‰QIQ}!}M!‰t°(€€€€€€€€€€€€€€‰É•ÅÕ•ÍÑ•‘}…Ðˆè½Ì¹•¹Ù¥É½¹l‰IEUMQ}P‰t°(€€€€€€€€€€€€€€‰¹½Ñ}…‘Ù¥”ˆèQÉÕ”°(€€€€€€€€€ô(€€€€€€€€€A…Ñ  ‰É•Á½ÉÑÌ½ÁÉ½µ½Ñ¥½¸µ‰É¥‘”µ‘¥ÍÁ…Ñ µÉ••¥ÁÐ¹©Í½¸ˆ¤¹ÝÉ¥Ñ•}Ñ•áÐ (€€€€€€€€€€€€€©Í½¸¹‘ÕµÁÌ¡É••¥ÁÐ°¥¹‘•¹ÐôÈ°Í½ÉÑ}­•åÌõQÉÕ”¤€¬€‰q¸ˆ°(€€€€€€€€€€€€€•¹½‘¥¹œô‰ÕÑ˜´àˆ°(€€€€€€€€€€¤(€€€€€€€€€Ad(€€€€€€€€€•¡¼€‰‘½Ý¹ÍÑÉ•…µ}ÉÕ¹}¥ô‘=]9MQI5}IU9}%ˆ€øø€ˆ‘%Q!U	}=UQAUPˆ(€€€€€€€€€ì(€€€€€€€€€€€•¡¼€ˆŒŒŒ…Ñ…±½œÉ½ÝÑ ÁÉ½µ½Ñ¥½¸‘¥ÍÁ…Ñ É••¥ÁÐˆ(€€€€€€€€€€€•¡¼€‰M½ÕÉ”‘¥Í½Ù•ÉäÉÕ¸èq€‘IU9}%q€ˆ(€€€€€€€€€€€•¡¼€‰M½ÕÉ”…ÉÑ¥™…Ðèq€‘M=UI}IQ%Q}%q€ˆ(€€€€€€€€€€€•¡¼€‰M½ÕÉ”Á±…¸‘¥•ÍÐèq€‘M=UI}A19}%MQq€ˆ(€€€€€€€€€€€•¡¼€‰…¹‘¥‘…Ñ”µÁÉ½µ½Ñ¥½¸ÉÕ¸èq€‘=]9MQI5}IU9}%q€ˆ(€€€€€€€€€€€•¡¼€‰Q…É•Ðµ…¥¸M!èq€‘QIQ}!}M!q€ˆ(€€€€€€€€€ô€øø€ˆ‘%Q!U	}MQA}MU55Idˆ((€€€€€€´¹…µ”èUÁ±½…ÁÉ½µ½Ñ¥½¸‰É¥‘”‘•¥Í¥½¸…ÉÑ¥™…ÑÌ(€€€€€€€¥˜è…±Ý…åÌ ¤(€€€€€€€ÕÍ•Ìè…Ñ¥½¹Ì½ÕÁ±½…µ…ÉÑ¥™…ÑØØ(€€€€€€€Ý¥Ñ è(€€€€€€€€€¹…µ”è½Á•¹Ù„µ…Ñ…±½œµÉ½ÝÑ µÁÉ½µ½Ñ¥½¸µ‰É¥‘”(€€€€€€€€€Á…Ñ èð(€€€€€€€€€€€É•Á½ÉÑÌ½ÁÉ½µ½Ñ¥½¸µ‰É¥‘”µ•±¥¥‰¥±¥Ñä¹©Í½¸(€€€€€€€€€€€É•Á½ÉÑÌ½ÁÉ½µ½Ñ¥½¸µ‰É¥‘”µ‘•¥Í¥½¸¹©Í½¸(€€€€€€€€€€€É•Á½ÉÑÌ½ÁÉ½µ½Ñ¥½¸µ‰É¥‘”µ‘¥ÍÁ…Ñ µÉ••¥ÁÐ¹©Í½¸(€€€€€€€€€¥˜µ¹¼µ™¥±•Ìµ™½Õ¹èÝ…É¸((€‘¥ÍÁ…Ñ µ™Õ±°µ…Ñ…±½œµÉ•¹‘•É•µ…•ÁÑ…¹”è(€€€¥˜è€ø´(€€€€€€‘íì(€€€€€€€¥Ñ¡Õˆ¹•Ù•¹Ñ}¹…µ”€ôô€Ý½É­™±½Ý}ÉÕ¸œ€˜˜(€€€€€€€¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹¹…µ”€ôô€‘¥Í½Ù•Éäµµ•Í œ€˜˜(€€€€€€€¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹•Ù•¹Ð€ôô€ÁÕÍ œ€˜˜(€€€€€€€¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹½¹±ÕÍ¥½¸€ôô€ÍÕ•ÍÌœ(€€€€€õô(€€€ÉÕ¹Ìµ½¸èÕ‰Õ¹ÑÔµ±…Ñ•ÍÐ(€€€ÍÑ•ÁÌè(€€€€€€´¹…µ”èI•Í½±Ù”•á…Ð…•ÁÑ…¹”ÁÕ±°É•ÅÕ•ÍÐ(€€€€€€€¥è…•ÁÑ…¹”(€€€€€€€•¹Øè(€€€€€€€€€!}Q=-8è€‘íì¥Ñ¡Õˆ¹Ñ½­•¸õô(€€€€€€€€€!}M!è€‘íì¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹¡•…‘}Í¡„õô(€€€€€€€ÉÕ¸èð(€€€€€€€€€Í•Ð€µ•Õ¼Á¥Á•™…¥°(€€€€€€€€€AI})M=8ô¡ …Á¤p(€€€€€€€€€€€€µ €‰•ÁÐè…ÁÁ±¥…Ñ¥½¸½Ù¹¹¥Ñ¡Õˆ­©Í½¸ˆp(€€€€€€€€€€€€‰É•Á½Ì¼‘í%Q!U	}IA=M%Q=Ieô½½µµ¥ÑÌ¼‘í!}M!ô½ÁÕ±±Ìˆp(€€€€€€€€€€€€´µ©Ä€œ¹lÁt€¼¼•µÁÑäœ¤(€€€€€€€€€¥˜l€µè€ˆ‘AI})M=8ˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€‰‘¥ÍÁ…Ñ õ™…±Í”ˆ€øø€ˆ‘%Q!U	}=UQAUPˆ(€€€€€€€€€€€•á¥Ð€À(€€€€€€€€€™¤(€€€€€€€€€AI}Q%Q1ô¡ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘AI})M=8ˆð©Ä€µÈ€œ¹Ñ¥Ñ±”€¼¼€ˆˆœ¤(€€€€€€€€€AI}!ô¡ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘AI})M=8ˆð©Ä€µÈ€œ¹¡•…¹É•˜€¼¼€ˆˆœ¤(€€€€€€€€€AI}UQ!=Hô¡ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘AI})M=8ˆð©Ä€µÈ€œ¹ÕÍ•È¹±½¥¸€¼¼€ˆˆœ¤(€€€€€€€€€AI}5Iô¡ÁÉ¥¹Ñ˜€œ•Ìœ€ˆ‘AI})M=8ˆð©Ä€µÈ€œ¹µ•É•‘}…Ð€¼¼€ˆˆœ¤(€€€€€€€€€¥˜l€ˆ‘AI}Q%Q1ˆ€„ô€‰QÉ¥•È™Õ±°µ…Ñ…±½œÉ•¹‘•É•µ‘¥Í½Ù•Éä…•ÁÑ…¹”ˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€‰‘¥ÍÁ…Ñ õ™…±Í”ˆ€øø€ˆ‘%Q!U	}=UQAUPˆ(€€€€€€€€€€€•á¥Ð€À(€€€€€€€€€™¤(€€€€€€€€€…Í”€ˆ‘AI}!ˆ¥¸(€€€€€€€€€€€…•¹Ð½™Õ±°µ…Ñ…±½œµÉ•¹‘•É•µ…•ÁÑ…¹”´¨¤€ìì(€€€€€€€€€€€€¨¤•¡¼€ˆèé•ÉÉ½Èèé…•ÁÑ…¹”AH‰É…¹ ¥Ì¹½Ð…ÕÑ¡½É¥é•è€‘AI}!ˆì•á¥Ð€Ä€ìì(€€€€€€€€€•Í…Œ(€€€€€€€€€¥˜l€ˆ‘AI}UQ!=Hˆ€„ô€ˆ‘%Q!U	}IA=M%Q=Ie}=]9HˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€ˆèé•ÉÉ½Èèé…•ÁÑ…¹”AHµÕÍÐ‰”½Ý¹•‰äÉ•Á½Í¥Ñ½Éä½Ý¹•Èˆ(€€€€€€€€€€€•á¥Ð€Ä(€€€€€€€€€™¤(€€€€€€€€€¥˜l€µè€ˆ‘AI}5IˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€ˆèé•ÉÉ½Èèé…•ÁÑ…¹”AHµÕÍÐ‰”µ•É•ˆ(€€€€€€€€€€€•á¥Ð€Ä(€€€€€€€€€™¤(€€€€€€€€€a%MQ%9ô¡ ÉÕ¸±¥ÍÐp(€€€€€€€€€€€€´µÝ½É­™±½Ü‘¥Í½Ù•Éäµµ•Í ¹åµ°p(€€€€€€€€€€€€´µ‰É…¹ µ…¥¸p(€€€€€€€€€€€€´µ•Ù•¹ÐÝ½É­™±½Ý}‘¥ÍÁ…Ñ p(€€€€€€€€€€€€´µ±¥µ¥Ð€ÄÀÀp(€€€€€€€€€€€€´µ©Í½¸¡•…‘M¡„±ÍÑ…ÑÕÌ±½¹±ÕÍ¥½¸±‘…Ñ…‰…Í•%p(€€€€€€€€€€€€´µ©Ä€‰l¹mtðÍ•±•Ð ¹¡•…‘M¡„€ôôpˆ‘í!}M!õpˆ¥tð±•¹Ñ ˆ¤(€€€€€€€€€…Í”€ˆ‘a%MQ%9ˆ¥¸€œð©l„À´åt¨¤•¡¼€ˆèé•ÉÉ½Èèé¥¹Ù…±¥ÁÉ¥½È…•ÁÑ…¹”ÉÕ¸½Õ¹Ðˆì•á¥Ð€Ä€ìì•Í…Œ(€€€€€€€€€¥˜l€ˆ‘a%MQ%9ˆ€„ô€ˆÀˆtìÑ¡•¸(€€€€€€€€€€€•¡¼€‰‘¥ÍÁ…Ñ õ™…±Í”ˆ€øø€ˆ‘%Q!U	}=UQAUPˆ(€€€€€€€€€€€•á¥Ð€À(€€€€€€€€€™¤(€€€€€€€€€•¡¼€‰‘¥ÍÁ…Ñ õÑÉÕ”ˆ€øø€ˆ‘%Q!U	}=UQAUPˆ(€€€€€€´¹…µ”è¥ÍÁ…Ñ Õ¹…ÁÁ•™Õ±°µ…Ñ…±½œ‘¥Í½Ù•Éäµ•Í (€€€€€€€¥˜èÍÑ•ÁÌ¹…•ÁÑ…¹”¹½ÕÑÁÕÑÌ¹‘¥ÍÁ…Ñ €ôô€ÑÉÕ”œ(€€€€€€€•¹Øè(€€€€€€€€€!}Q=-8è€‘íì¥Ñ¡Õˆ¹Ñ½­•¸õô(€€€€€€€ÉÕ¸èð(€€€€€€€€€Í•Ð€µ•Õ¼Á¥Á•™…¥°(€€€€€€€€€ Ý½É­™±½ÜÉÕ¸‘¥Í½Ù•Éäµµ•Í ¹åµ°€´µÉ•˜µ…¥¸(€€€€€€€€€ì(€€€€€€€€€€€•¡¼€ˆŒŒŒÕ±°µ…Ñ…±½œÉ•¹‘•É•µ‘¥Í½Ù•Éä…•ÁÑ…¹”‘¥ÍÁ…Ñ ˆ(€€€€€€€€€€€•¡¼€ˆˆ(€€€€€€€€€€€•¡¼€ˆ´M½ÕÉ”Íµ½­”ÉÕ¸èq€‘íì¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹¥õõq€ˆ(€€€€€€€€€€€•¡¼€ˆ´M½ÕÉ”½µµ¥Ðèq€‘íì¥Ñ¡Õˆ¹•Ù•¹Ð¹Ý½É­™±½Ý}ÉÕ¸¹¡•…‘}Í¡„õõq€ˆ(€€€€€€€€€€€•¡¼€ˆ´Q…É•ÐÝ½É­™±½Üèq‘¥Í½Ù•Éäµµ•Í ¹åµ±q€ˆ(€€€€€€€€€€€•¡¼€ˆ´Q…É•ÐÉ•˜èqµ…¥¹q€ˆ(€€€€€€€€€€€•¡¼€ˆ´%¹ÁÕÐ½Ù•ÉÉ¥‘•Ìè¹½¹”ˆ(€€€€€€€€€€€•¡¼€ˆ´áÁ•Ñ•µ…ÑÉ¥àèq€ÌÈÍ¡…É‘Ì€¼¹¼Ù•¹‘½È±¥µ¥Ñq€ˆ(€€€€€€€€€ô€øø€ˆ‘%Q!U	}MQA}MU55Idˆ(
