@@ -16,6 +16,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: agent/catalog-growth-artifact-bound-promotion
+          token: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
