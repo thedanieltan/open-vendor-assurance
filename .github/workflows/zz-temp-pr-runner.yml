@@ -1,0 +1,46 @@
+name: temporary-artifact-bound-pr-runner
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.head_ref == 'agent/catalog-growth-artifact-bound-promotion'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: agent/catalog-growth-artifact-bound-promotion
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Extract and run exact patch program
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          source = Path('.github/workflows/zz-temp-artifact-bound-patch.yml').read_text(encoding='utf-8')
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n      - name: Commit patched branch"
+          start = source.index(start_marker) + len(start_marker)
+          end = source.index(end_marker, start)
+          program = textwrap.dedent(source[start:end])
+          Path('/tmp/apply_artifact_bound_patch.py').write_text(program, encoding='utf-8')
+          PY
+          python /tmp/apply_artifact_bound_patch.py
+          rm -f .github/workflows/zz-temp-pr-runner.yml
+      - name: Commit final production diff
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Bind catalog growth promotion to discovery artifact"
+          git push origin HEAD:agent/catalog-growth-artifact-bound-promotion
