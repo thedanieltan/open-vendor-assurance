@@ -23,14 +23,14 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import textwrap
 
           source = Path('.github/workflows/zz-temp-artifact-bound-patch.yml').read_text(encoding='utf-8')
           start_marker = "          python - <<'PY'\n"
           end_marker = "\n          PY\n      - name: Commit patched branch"
           start = source.index(start_marker) + len(start_marker)
           end = source.index(end_marker, start)
-          program = textwrap.dedent(source[start:end])
+          lines = source[start:end].splitlines()
+          program = "\n".join(line[10:] if line.startswith("          ") else line for line in lines) + "\n"
           Path('/tmp/apply_artifact_bound_patch.py').write_text(program, encoding='utf-8')
           PY
           python /tmp/apply_artifact_bound_patch.py
