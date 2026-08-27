@@ -265,7 +265,7 @@ jobs:
             echo ""
             echo "Completion and differential evidence remain the responsibility of the existing Discovery Mesh outcome reporter."
           } > "$BODY"
-          gh pr comment "$PR_NUMBER" --body-file "$BODY"
+          gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$BODY"
           cat "$BODY" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload dispatch receipt
