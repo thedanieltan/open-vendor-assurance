@@ -1,0 +1,294 @@
+name: discovery-cycle
+
+# Discovery Consolidation programme: one scheduled discovery authority.
+#
+# A successful production Discovery Mesh run supplies the fresh vendor-breadth
+# projection. This workflow selects a bounded rotating workset, performs source
+# discovery ONCE for that workset, and projects the result through the existing
+# unified candidate record + CatalogQueueIngress into maintenance/candidates/**.
+# The resulting PR is noncanonical staging only. After it merges, the existing
+# autonomous-catalog-growth controller and candidate-bound mode of
+# candidate-promotion-pr.yml retain decision and canonical mutation authority.
+#
+# Raw discovery evidence stays in the workflow artifact. Git receives only the
+# bounded unified candidate records needed by the existing lifecycle.
+
+on:
+  workflow_run:
+    workflows: ["discovery-mesh"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Exact successful discovery-mesh run id to consume"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: discovery-cycle
+  cancel-in-progress: false
+
+jobs:
+  discovery-cycle:
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event.workflow_run.name == 'discovery-mesh' &&
+          github.event.workflow_run.conclusion == 'success' &&
+          (
+            github.event.workflow_run.event == 'schedule' ||
+            github.event.workflow_run.event == 'workflow_dispatch'
+          )
+        )
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Require autonomous PR token
+        env:
+          OPENVA_AUTOMERGE_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENVA_AUTOMERGE_TOKEN:-}" ]; then
+            echo "::error::OPENVA_AUTOMERGE_TOKEN is required so candidate-intake PR events trigger their governed automerge lane"
+            exit 1
+          fi
+
+      - name: Resolve exact Discovery Mesh run
+        id: source
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RUN_ID="${{ inputs.source_run_id }}"
+          else
+            RUN_ID="${{ github.event.workflow_run.id }}"
+          fi
+          case "$RUN_ID" in ''|*[!0-9]*) echo "source_run_id must be numeric" >&2; exit 1 ;; esac
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Read and validate source-run metadata
+        id: meta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.source.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          META="$(gh run view "$RUN_ID" --json attempt,conclusion,event,headBranch,headSha,number,startedAt,workflowName)"
+          WORKFLOW="$(printf '%s' "$META" | jq -r '.workflowName // ""')"
+          CONCLUSION="$(printf '%s' "$META" | jq -r '.conclusion // ""')"
+          EVENT="$(printf '%s' "$META" | jq -r '.event // ""')"
+          BRANCH="$(printf '%s' "$META" | jq -r '.headBranch // ""')"
+          HEAD_SHA="$(printf '%s' "$META" | jq -r '.headSha // ""')"
+          ATTEMPT="$(printf '%s' "$META" | jq -r '.attempt // ""')"
+          RUN_NUMBER="$(printf '%s' "$META" | jq -r '.number // ""')"
+          STARTED_AT="$(printf '%s' "$META" | jq -r '.startedAt // ""')"
+          [ "$WORKFLOW" = "discovery-mesh" ] || { echo "::error::source run is not discovery-mesh"; exit 1; }
+          [ "$CONCLUSION" = "success" ] || { echo "::error::source run did not succeed"; exit 1; }
+          [ "$BRANCH" = "main" ] || { echo "::error::source run must originate from main"; exit 1; }
+          case "$EVENT" in schedule|workflow_dispatch) : ;; *) echo "::error::source event must be schedule or workflow_dispatch"; exit 1 ;; esac
+          case "$ATTEMPT" in ''|*[!0-9]*) echo "::error::invalid source attempt"; exit 1 ;; esac
+          case "$RUN_NUMBER" in ''|*[!0-9]*) echo "::error::invalid source run number"; exit 1 ;; esac
+          [ -n "$STARTED_AT" ] || { echo "::error::missing source attempt startedAt"; exit 1; }
+          git fetch origin main
+          git merge-base --is-ancestor "$HEAD_SHA" origin/main || { echo "::error::source commit is not an ancestor of current main"; exit 1; }
+          {
+            echo "head_sha=$HEAD_SHA"
+            echo "attempt=$ATTEMPT"
+            echo "run_number=$RUN_NUMBER"
+            echo "started_at=$STARTED_AT"
+            echo "event=$EVENT"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Download exact current-attempt aggregate artifact
+        id: artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.source.outputs.run_id }}
+          ATTEMPT_STARTED_AT: ${{ steps.meta.outputs.started_at }}
+        run: |
+          set -euo pipefail
+          ARTIFACTS="$(gh api -H "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100")"
+          printf '%s' "$ARTIFACTS" | jq -e '.artifacts | type == "array"' >/dev/null
+          TOTAL="$(printf '%s' "$ARTIFACTS" | jq -r '.total_count // -1')"
+          case "$TOTAL" in ''|*[!0-9]*) echo "::error::invalid artifact count"; exit 1 ;; esac
+          [ "$TOTAL" -le 100 ] || { echo "::error::source run has more than 100 artifacts; refusing unpaginated selection"; exit 1; }
+          MATCHES="$(printf '%s' "$ARTIFACTS" | jq --arg started "$ATTEMPT_STARTED_AT" '[.artifacts[] | select(.name == "openva-discovery-mesh-aggregate" and .expired == false and .created_at >= $started)]')"
+          COUNT="$(printf '%s' "$MATCHES" | jq -r 'length')"
+          [ "$COUNT" = "1" ] || { echo "::error::expected exactly one current-attempt Discovery Mesh aggregate artifact; found $COUNT"; exit 1; }
+          ARTIFACT_ID="$(printf '%s' "$MATCHES" | jq -r '.[0].id')"
+          mkdir -p "$RUNNER_TEMP/discovery-mesh-aggregate"
+          gh api -H "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" > "$RUNNER_TEMP/discovery-mesh-aggregate.zip"
+          unzip -q "$RUNNER_TEMP/discovery-mesh-aggregate.zip" -d "$RUNNER_TEMP/discovery-mesh-aggregate"
+          mapfile -t BREADTH < <(find "$RUNNER_TEMP/discovery-mesh-aggregate" -type f -name vendor-breadth-candidates.json | sort)
+          [ "${#BREADTH[@]}" = "1" ] || { echo "::error::expected exactly one vendor-breadth-candidates.json"; exit 1; }
+          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
+          echo "breadth_candidates=${BREADTH[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve bounded discovery capabilities
+        run: |
+          set -euo pipefail
+          python -m tools.openva.catalog_growth_discovery_queue validate --output catalog-growth-discovery-queue-summary.json
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json
+          queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
+          print(f"DISCOVERY_VENDOR_LIMIT={queue['max_vendors_per_discovery_run']}")
+          print("DISCOVERY_SOURCE_TYPES=" + ",".join(queue.get('source_types') or []))
+          PY
+
+      - name: Select fair rotating workset
+        id: workset
+        env:
+          BREADTH_CANDIDATES: ${{ steps.artifact.outputs.breadth_candidates }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          CYCLE_NUMBER: ${{ steps.meta.outputs.run_number }}
+        run: |
+          set -euo pipefail
+          python -m tools.openva.discovery_cycle select-workset \
+            --candidates "$BREADTH_CANDIDATES" \
+            --limit "$DISCOVERY_VENDOR_LIMIT" \
+            --cycle-number "$CYCLE_NUMBER" \
+            --source-run-id "$SOURCE_RUN_ID" \
+            --output discovery-cycle-workset.json
+          COUNT="$(python -c 'import json; print(json.load(open("discovery-cycle-workset.json"))["summary"]["candidate_vendor_count"])')"
+          case "$COUNT" in ''|*[!0-9]*) echo "::error::invalid workset count"; exit 1 ;; esac
+          echo "candidate_count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Discover public sources once for selected vendor candidates
+        if: steps.workset.outputs.candidate_count != '0'
+        run: |
+          set -euo pipefail
+          python -m tools.openva.source_discovery discover-vendor-candidates \
+            --vendor-candidates discovery-cycle-workset.json \
+            --vendor-limit "$DISCOVERY_VENDOR_LIMIT" \
+            --source-types "$DISCOVERY_SOURCE_TYPES" \
+            --max-urls-per-type 4 \
+            --fetch-timeout 3 \
+            --output discovery-cycle-source-discovery.json
+
+      - name: Project evidence through canonical candidate ingress
+        if: steps.workset.outputs.candidate_count != '0'
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python -m tools.openva.discovery_cycle_ingress ingest \
+            --vendor-candidates discovery-cycle-workset.json \
+            --source-discovery discovery-cycle-source-discovery.json \
+            --root . \
+            --output reports/discovery-cycle-candidate-ingress.json
+
+      - name: Build immutable discovery-cycle bundle
+        if: steps.workset.outputs.candidate_count != '0'
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_ATTEMPT: ${{ steps.meta.outputs.attempt }}
+          SOURCE_HEAD_SHA: ${{ steps.meta.outputs.head_sha }}
+          CYCLE_NUMBER: ${{ steps.meta.outputs.run_number }}
+          BREADTH_CANDIDATES: ${{ steps.artifact.outputs.breadth_candidates }}
+        run: |
+          set -euo pipefail
+          python -m tools.openva.discovery_cycle build-bundle \
+            --file "breadth_candidates=$BREADTH_CANDIDATES" \
+            --file "workset=discovery-cycle-workset.json" \
+            --file "source_discovery=discovery-cycle-source-discovery.json" \
+            --file "candidate_ingress=reports/discovery-cycle-candidate-ingress.json" \
+            --source-run-id "$SOURCE_RUN_ID" \
+            --source-run-attempt "$SOURCE_ATTEMPT" \
+            --source-commit-sha "$SOURCE_HEAD_SHA" \
+            --cycle-number "$CYCLE_NUMBER" \
+            --output reports/discovery-cycle-bundle.json
+
+      - name: Collect bounded candidate-intake changes
+        id: staged
+        if: steps.workset.outputs.candidate_count != '0'
+        run: |
+          set -euo pipefail
+          git add maintenance/candidates 2>/dev/null || true
+          git diff --cached --name-only > "$RUNNER_TEMP/discovery-cycle-changed.txt"
+          if [ ! -s "$RUNNER_TEMP/discovery-cycle-changed.txt" ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            case "$path" in maintenance/candidates/*.json) : ;; *) echo "::error::out-of-scope candidate intake path: $path"; exit 1 ;; esac
+          done < "$RUNNER_TEMP/discovery-cycle-changed.txt"
+          python -m tools.openva.candidate_intake_guard \
+            --paths-file "$RUNNER_TEMP/discovery-cycle-changed.txt" \
+            --labels "candidate-intake,automerge:candidate-intake" \
+            --root .
+          python -m tools.openva.candidate_activation verify-intake \
+            --paths-file "$RUNNER_TEMP/discovery-cycle-changed.txt" \
+            --root .
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update governed candidate-intake PR
+        if: steps.staged.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_ATTEMPT: ${{ steps.meta.outputs.attempt }}
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact_id }}
+        run: |
+          set -euo pipefail
+          PR_BRANCH="agent-candidate-intake-discovery-cycle-${SOURCE_RUN_ID}-${SOURCE_ATTEMPT}"
+          PR_TITLE="Candidate intake: stage discovered candidate records"
+          BUNDLE_DIGEST="$(python -c 'import json; print(json.load(open("reports/discovery-cycle-bundle.json"))["bundle_digest"])')"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$PR_BRANCH"
+          git commit -m "$PR_TITLE"
+          # Use the workflow-triggering token for both push and PR operations.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force-with-lease origin "$PR_BRANCH"
+          {
+            echo "## Discovery Cycle candidate intake"
+            echo ""
+            echo "Stages bounded noncanonical candidate records produced from one exact Discovery Mesh cycle."
+            echo ""
+            echo "- Source Discovery Mesh run: \`${SOURCE_RUN_ID}\` attempt \`${SOURCE_ATTEMPT}\`"
+            echo "- Source aggregate artifact: \`${ARTIFACT_ID}\`"
+            echo "- Discovery bundle digest: \`${BUNDLE_DIGEST}\`"
+            echo "- Candidate paths: \`maintenance/candidates/*.json\` only"
+            echo "- Canonical mutation authority: \`candidate-promotion-pr.yml\` (unchanged)"
+            echo ""
+            echo "Raw crawl/source-discovery evidence remains in the Discovery Cycle artifact; this PR contains only unified candidate staging records."
+          } > "$RUNNER_TEMP/discovery-cycle-pr.md"
+          EXISTING="$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')"
+          if [ -n "$EXISTING" ]; then
+            PR_NUMBER="$EXISTING"
+            gh pr edit "$PR_NUMBER" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/discovery-cycle-pr.md"
+          else
+            PR_URL="$(gh pr create --base main --head "$PR_BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/discovery-cycle-pr.md")"
+            PR_NUMBER="${PR_URL##*/}"
+          fi
+          gh pr edit "$PR_NUMBER" --add-label candidate-intake --add-label automerge:candidate-intake
+          echo "Candidate-intake PR: #$PR_NUMBER" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Discovery Cycle evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-discovery-cycle-${{ steps.source.outputs.run_id || github.run_id }}
+          path: |
+            catalog-growth-discovery-queue-summary.json
+            discovery-cycle-workset.json
+            discovery-cycle-source-discovery.json
+            reports/discovery-cycle-candidate-ingress.json
+            reports/discovery-cycle-bundle.json
+          if-no-files-found: warn
+          retention-days: 30

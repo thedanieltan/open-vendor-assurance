@@ -122,6 +122,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: discovery-cycle.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_run, workflow_dispatch]
+    permissions: {actions: read, contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
   - name: discovery-mesh-intake-recovery.yml
     loop: catalog_growth
     status: core
