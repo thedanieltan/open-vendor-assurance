@@ -670,3 +670,51 @@ work_packages:
     description: Documentation-only refresh of the top-level README scope list — replaces internal jargon in the "OpenVA is:" property list with plain, factual phrasing. No behaviour, contract, schema, or data change.
     allowed_paths:
       - README.md
+
+  WP-OPENVA-DISCOVERY-CONSOLIDATION-01:
+    description: Consolidate autonomous discovery around Discovery Mesh with immutable run-bundle evidence, due-work scheduling, exact bound promotion, durable checkpoint state, and governed retirement of redundant discovery/bridge paths. Preserve public-source-only discovery, fail-closed controls, uncapped catalog breadth, and candidate-promotion-pr.yml as the sole canonical mutation authority.
+    allowed_paths:
+      - .github/workflows/discovery-mesh.yml
+      - .github/workflows/discovery-mesh-intake-recovery.yml
+      - .github/workflows/discovery-mesh-intake-recovery-request.yml
+      - .github/workflows/catalog-growth-discovery.yml
+      - .github/workflows/catalog-growth-promotion-bridge.yml
+      - .github/workflows/candidate-promotion-pr.yml
+      - .github/workflows/autonomous-catalog-growth.yml
+      - .github/workflows/discovery-ledger-append-pr.yml
+      - docs/operations/DISCOVERY_MESH_OPERATING_MODEL.md
+      - docs/operations/DISCOVERY_MESH_INTAKE_RECOVERY.md
+      - docs/operations/WORKFLOW_OPERATING_MODEL.md
+      - docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md
+      - docs/operations/WORKFLOW_RETIREMENT_PLAN.md
+      - docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md
+      - docs/operations/contracts/workflow-inventory.yaml
+      - docs/operations/contracts/workflow-retirement.yaml
+      - docs/operations/contracts/workflow-schedule-budget.yaml
+      - maintenance/generated/vendor-breadth-*.json
+      - maintenance/discovery-events/*.ndjson
+      - tools/openva/discovery_mesh.py
+      - tools/openva/discovery_mesh_config.py
+      - tools/openva/discovery_mesh_runner.py
+      - tools/openva/rendered_discovery_runner.py
+      - tools/openva/vendor_breadth_replenishment.py
+      - tools/openva/vendor_candidate_discovery.py
+      - tools/openva/source_discovery.py
+      - tools/openva/catalog_growth_eligibility.py
+      - tools/openva/promotion_planner.py
+      - tools/openva/materialization_envelope.py
+      - tools/openva/autonomous_growth_controller.py
+      - tools/openva/discovery_ledger.py
+      - tools/openva/discovery_run_bundle.py
+      - tools/openva/discovery_work_scheduler.py
+      - tests/test_discovery_mesh*.py
+      - tests/test_vendor_candidate*.py
+      - tests/test_source_discovery.py
+      - tests/test_catalog_growth*.py
+      - tests/test_candidate_promotion_workflow.py
+      - tests/test_autonomous_growth_workflow.py
+      - tests/test_discovery_ledger*.py
+      - tests/test_workflow*.py
+      - tests/test_ci_readiness.py
+      - tests/test_discovery_run_bundle.py
+      - tests/test_discovery_work_scheduler.py
