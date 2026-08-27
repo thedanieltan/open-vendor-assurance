@@ -278,6 +278,30 @@ jobs:
             --promotion-plan "$PLAN_PATH" \
             --output "$PLAN_PATH" \
             --viability-report "maintenance/generated/discovery-mesh-promotion-viability-${RUN_KEY}.json"
+          python - "maintenance/generated/discovery-mesh-candidate-manifest-${RUN_KEY}.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          manifest_path = Path(sys.argv[1])
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          paths = [Path(value) for value in manifest.get("candidate_paths", []) or []]
+          removed = 0
+          for path in paths:
+              if path.is_file():
+                  path.unlink()
+                  removed += 1
+              parent = path.parent
+              if parent.name == "candidate_sources" and parent.is_dir() and not any(parent.iterdir()):
+                  parent.rmdir()
+          remaining = [path.as_posix() for path in paths if path.exists()]
+          if remaining:
+              raise SystemExit(
+                  "transient discovery candidates remained after viability filtering: "
+                  + ", ".join(remaining[:10])
+              )
+          print(f"Removed {removed} transient candidate-source files after viability filtering.")
+          PY
       - name: Replenish stable vendor breadth state
         if: github.event_name != 'push'
         run: |
