@@ -219,6 +219,22 @@ def _known_vendor_identity(root: Path) -> tuple[set[str], set[str]]:
     return ids, domains
 
 
+def _normalized_candidate_url(candidate: dict[str, Any]) -> str:
+    return str(candidate.get("candidate_url") or "").rstrip("/")
+
+
+def _known_candidate_urls(root: Path) -> set[str]:
+    urls: set[str] = set()
+    for path in sorted((root / "data" / "vendors").glob("*/candidate_sources/*.yaml")):
+        candidate = load_yaml(path)
+        if not isinstance(candidate, dict):
+            continue
+        url = _normalized_candidate_url(candidate)
+        if url:
+            urls.add(url)
+    return urls
+
+
 def aggregate_shard_reports(
     reports: list[dict[str, Any]],
     *,
@@ -231,6 +247,7 @@ def aggregate_shard_reports(
     frontiers: list[dict[str, Any]] = []
     signals: list[dict[str, Any]] = []
     seen_candidates: set[str] = set()
+    seen_candidate_urls = _known_candidate_urls(root)
     manifest_paths: list[str] = []
 
     for report in reports:
@@ -240,9 +257,14 @@ def aggregate_shard_reports(
             unique_candidates = []
             for candidate in vendor.get("candidates", []) or []:
                 candidate_id = str(candidate.get("candidate_source_id") or "")
+                candidate_url = _normalized_candidate_url(candidate)
                 if not candidate_id or candidate_id in seen_candidates:
                     continue
+                if candidate_url and candidate_url in seen_candidate_urls:
+                    continue
                 seen_candidates.add(candidate_id)
+                if candidate_url:
+                    seen_candidate_urls.add(candidate_url)
                 unique_candidates.append(candidate)
             merged_vendor = {**vendor, "candidates": unique_candidates}
             vendors.append(merged_vendor)
