@@ -56,6 +56,9 @@ def test_controller_is_exact_gated_and_returns_a_durable_run_receipt() -> None:
     assert "openva-full-catalog-run-id=" in text
     assert "openva-full-catalog-dispatch-receipt" in text
     assert "default 32-shard matrix / no vendor limit" in text
+    # This controller intentionally has no checkout. GitHub CLI PR commands must
+    # therefore carry explicit repository context rather than relying on .git.
+    assert 'gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$BODY"' in text
 
 
 def test_controller_does_not_write_catalog_state_or_create_pull_requests() -> None:
