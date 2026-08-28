@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/discovery-mesh.yml"
       - "tools/openva/discovery_mesh_config.py"
+      - "tools/openva/discovery_mesh_runner.py"
       - "tools/openva/rendered_discovery.py"
       - "tools/openva/rendered_discovery_runner.py"
   workflow_dispatch:
