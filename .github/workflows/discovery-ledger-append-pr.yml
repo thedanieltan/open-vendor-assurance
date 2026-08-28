@@ -209,6 +209,7 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/jobs?per_page=100" \
             > "$RUNNER_TEMP/discovery-mesh-smoke/jobs.json"
           if gh run download "$RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
             --name openva-discovery-mesh-aggregate \
             --dir "$RUNNER_TEMP/discovery-mesh-smoke/aggregate"; then
             echo "aggregate artifact downloaded"
@@ -324,7 +325,7 @@ jobs:
           PY
           cat "$BODY_FILE" >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$PR_NUMBER" ]; then
-            gh pr comment "$PR_NUMBER" --body-file "$BODY_FILE"
+            gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$BODY_FILE"
           else
             echo "No pull request associated with ${HEAD_SHA}; outcome retained in workflow summary."
           fi
