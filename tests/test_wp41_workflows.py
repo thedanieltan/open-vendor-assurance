@@ -14,7 +14,7 @@ CATALOG_PR_GUARD = Path(".github/workflows/catalog-pr-guard.yml")
 def test_discovery_ledger_append_authenticates_source_run_and_artifact():
     text = DISCOVERY_LEDGER.read_text(encoding="utf-8")
 
-    assert 'workflows: ["catalog-growth-discovery"]' in text
+    assert 'workflows: ["catalog-growth-discovery", "discovery-mesh"]' in text
     assert "conclusion == 'success'" in text
     assert 'gh run view "$RUN_ID" --json attempt,conclusion,headBranch,headSha,workflowName' in text
     assert 'if [ "$WORKFLOW_NAME" != "catalog-growth-discovery" ]; then' in text
@@ -294,7 +294,7 @@ def test_agent_automerge_has_generated_catalog_lane_scoped_to_generated_prs():
 
     assert "schedule:" in text
     assert "workflow_run:" not in text
-    assert 'cron: "*/10 * * * *"' in text
+    assert 'cron: "*/30 * * * *"' in text
     assert "startsWith(github.event.pull_request.head.ref, 'agent-candidate-promotion-')" in job
     assert (
         "github.event.pull_request.title == 'Catalog: apply reviewed candidate source promotion'"
