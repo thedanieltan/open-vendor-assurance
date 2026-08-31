@@ -64,9 +64,9 @@ def test_growth_lane_capacity_counts_only_growth_mutation_prs():
     # These are the branch families emitted by candidate-promotion-pr.yml for
     # catalog growth. Discovery ledgers, observation ledgers, quarantine, and
     # unrelated agent work must not consume catalog-growth lane capacity.
-    assert 'startswith(\"agent-candidate-bound-\")' in lane_query
-    assert 'startswith(\"agent-candidate-promotion-\")' in lane_query
-    assert 'startswith(\"agent-\")' not in lane_query
+    assert 'startswith("agent-candidate-bound-")' in lane_query
+    assert 'startswith("agent-candidate-promotion-")' in lane_query
+    assert 'startswith("agent-")' not in lane_query
 
 
 def test_global_bot_budget_counts_only_bot_owned_agent_prs():
@@ -75,5 +75,5 @@ def test_global_bot_budget_counts_only_bot_owned_agent_prs():
 
     # Preserve the global bot PR limits, but do not charge maintainer/human PRs
     # against them. Bot-created operational branches use the agent-* convention.
-    assert budget_block.count('startswith(\"agent-\")') == 2
+    assert budget_block.count('startswith("agent-")') == 2
     assert budget_block.count("--json number,headRefName --limit 100") == 2
