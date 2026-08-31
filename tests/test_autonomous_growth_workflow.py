@@ -59,7 +59,7 @@ def test_workflow_uses_live_state_source():
 
 def test_growth_lane_capacity_counts_only_growth_mutation_prs():
     text = WORKFLOW.read_text(encoding="utf-8")
-    lane_query = text.split('OPEN_PRS_JSON="', 1)[1].split('OPEN_COUNT="', 1)[0]
+    lane_query = text.split('OPEN_PRS_JSON="', 1)[1].split('# Global work-capacity accounting', 1)[0]
 
     # These are the branch families emitted by candidate-promotion-pr.yml for
     # catalog growth. Discovery ledgers, observation ledgers, quarantine, and
@@ -69,11 +69,13 @@ def test_growth_lane_capacity_counts_only_growth_mutation_prs():
     assert 'startswith("agent-")' not in lane_query
 
 
-def test_global_bot_budget_counts_only_bot_owned_agent_prs():
+def test_global_capacity_and_bot_budgets_count_only_bot_owned_agent_prs():
     text = WORKFLOW.read_text(encoding="utf-8")
-    budget_block = text.split("# Global bot PR budgets", 1)[1].split("# Global hold", 1)[0]
+    global_block = text.split("# Global work-capacity accounting", 1)[1].split("# Global hold", 1)[0]
 
-    # Preserve the global bot PR limits, but do not charge maintainer/human PRs
-    # against them. Bot-created operational branches use the agent-* convention.
-    assert budget_block.count('startswith("agent-")') == 2
-    assert budget_block.count("--json number,headRefName --limit 100") == 2
+    # Preserve both repository-wide capacity and day/week bot limits while not
+    # charging maintainer/human PRs against bot activity.
+    assert global_block.count('startswith("agent-")') == 3
+    assert global_block.count("--json number,headRefName --limit 100") == 3
+    assert "BOT_OPEN_COUNT=" in global_block
+    assert '--open-prs-total "${BOT_OPEN_COUNT:-0}"' in text
