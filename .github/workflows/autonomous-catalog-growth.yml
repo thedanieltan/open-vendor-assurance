@@ -59,13 +59,19 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p reports
-          # Live open bot PRs for the growth lane (head branches that start with agent-).
+          # Live open PRs for this growth lane only. Candidate-bound materialization
+          # and candidate-promotion PRs are the two mutation branch families owned by
+          # candidate-promotion-pr.yml; unrelated agent PRs must not consume this
+          # lane's single-open-PR capacity or trigger its duplicate-PR policy.
           OPEN_PRS_JSON="$(gh pr list --state open --json number,headRefName --limit 100 \
-            --jq '[.[] | select(.headRefName | startswith("agent-")) | {number: .number, lane_id: env.GROWTH_LANE}]' || echo '[]')"
+            --jq '[.[] | select((.headRefName | startswith("agent-candidate-bound-")) or (.headRefName | startswith("agent-candidate-promotion-"))) | {number: .number, lane_id: env.GROWTH_LANE}]' || echo '[]')"
           OPEN_COUNT="$(printf '%s' "$OPEN_PRS_JSON" | python -c 'import json,sys; print(len(json.load(sys.stdin)))')"
-          # Recent bot PR counts (last day / week) for budget enforcement.
-          DAY_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '1 day ago' +%Y-%m-%d)" --json number --jq 'length' || echo 0)"
-          WEEK_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '7 days ago' +%Y-%m-%d)" --json number --jq 'length' || echo 0)"
+          # Global bot PR budgets count bot-owned agent-* PRs only. Human/maintainer
+          # PRs are not bot activity and must not consume the bot creation budget.
+          DAY_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '1 day ago' +%Y-%m-%d)" --json number,headRefName --limit 100 \
+            --jq '[.[] | select(.headRefName | startswith("agent-"))] | length' || echo 0)"
+          WEEK_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '7 days ago' +%Y-%m-%d)" --json number,headRefName --limit 100 \
+            --jq '[.[] | select(.headRefName | startswith("agent-"))] | length' || echo 0)"
           # Global hold (pause) state.
           PAUSE="false"
           if gh label list --json name --jq '.[].name' | grep -qx "openva-bot-paused"; then
