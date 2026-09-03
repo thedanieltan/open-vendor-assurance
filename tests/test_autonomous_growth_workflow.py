@@ -55,3 +55,27 @@ def test_workflow_runs_controller_and_dispatches_candidate_bound_mutation():
 def test_workflow_uses_live_state_source():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "github_live" in text
+
+
+def test_growth_lane_capacity_counts_only_growth_mutation_prs():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    lane_query = text.split('OPEN_PRS_JSON="', 1)[1].split('# Global work-capacity accounting', 1)[0]
+
+    # These are the branch families emitted by candidate-promotion-pr.yml for
+    # catalog growth. Discovery ledgers, observation ledgers, quarantine, and
+    # unrelated agent work must not consume catalog-growth lane capacity.
+    assert 'startswith("agent-candidate-bound-")' in lane_query
+    assert 'startswith("agent-candidate-promotion-")' in lane_query
+    assert 'startswith("agent-")' not in lane_query
+
+
+def test_global_capacity_and_bot_budgets_count_only_bot_owned_agent_prs():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    global_block = text.split("# Global work-capacity accounting", 1)[1].split("# Global hold", 1)[0]
+
+    # Preserve both repository-wide capacity and day/week bot limits while not
+    # charging maintainer/human PRs against bot activity.
+    assert global_block.count('startswith("agent-")') == 3
+    assert global_block.count("--json number,headRefName --limit 100") == 3
+    assert "BOT_OPEN_COUNT=" in global_block
+    assert '--open-prs-total "${BOT_OPEN_COUNT:-0}"' in text
