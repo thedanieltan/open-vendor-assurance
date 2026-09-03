@@ -40,12 +40,10 @@ on:
         default: "3"
         type: string
   schedule:
-    # Four deterministic shard runs per week keep every source inside a seven-day
-    # observation cycle, leaving margin beneath the strictest 14-day freshness SLA.
+    # Preserve the reviewed twice-weekly run budget. Scheduled runs verify two
+    # deterministic halves, giving every source a <=7 day observation cycle.
+    - cron: "29 5 * * 3"
     - cron: "29 5 * * 0"
-    - cron: "29 5 * * 2"
-    - cron: "29 5 * * 4"
-    - cron: "29 5 * * 6"
 
 permissions:
   contents: read
@@ -107,12 +105,11 @@ jobs:
           if [ "$SCOPE" = "full" ]; then
             echo "Running full source verification."
           elif [ "$SCOPE" = "scheduled_shard" ]; then
-            if [ "${{ github.event_name }}" = "schedule" ] && [ "$SHARD_COUNT" = "4" ]; then
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              SHARD_COUNT="2"
               case "${{ github.event.schedule }}" in
-                "29 5 * * 0") SHARD_INDEX=0 ;;
-                "29 5 * * 2") SHARD_INDEX=1 ;;
-                "29 5 * * 4") SHARD_INDEX=2 ;;
-                "29 5 * * 6") SHARD_INDEX=3 ;;
+                "29 5 * * 3") SHARD_INDEX=0 ;;
+                "29 5 * * 0") SHARD_INDEX=1 ;;
                 *) echo "Unknown scheduled source-maintenance cron: ${{ github.event.schedule }}" >&2; exit 2 ;;
               esac
             else
