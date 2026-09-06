@@ -18,7 +18,7 @@ on:
         default: "4"
         type: string
       source_shard_index:
-        description: "Shard index for custom_shard verification; scheduled_shard derives this from run number"
+        description: "Shard index for custom_shard verification; scheduled_shard derives this from the schedule or run number"
         required: false
         type: string
       source_limit:
@@ -40,8 +40,8 @@ on:
         default: "3"
         type: string
   schedule:
-    # WP35.5: twice weekly (Wed + Sun) so sharded observation coverage cycles
-    # in ~2 weeks and the autonomous append loop keeps the ledger fresh.
+    # Preserve the reviewed twice-weekly run budget. Scheduled runs verify two
+    # deterministic halves, giving every source a <=7 day observation cycle.
     - cron: "29 5 * * 3"
     - cron: "29 5 * * 0"
 
@@ -105,7 +105,16 @@ jobs:
           if [ "$SCOPE" = "full" ]; then
             echo "Running full source verification."
           elif [ "$SCOPE" = "scheduled_shard" ]; then
-            SHARD_INDEX=$(( ${{ github.run_number }} % SHARD_COUNT ))
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              SHARD_COUNT="2"
+              case "${{ github.event.schedule }}" in
+                "29 5 * * 3") SHARD_INDEX=0 ;;
+                "29 5 * * 0") SHARD_INDEX=1 ;;
+                *) echo "Unknown scheduled source-maintenance cron: ${{ github.event.schedule }}" >&2; exit 2 ;;
+              esac
+            else
+              SHARD_INDEX=$(( ${{ github.run_number }} % SHARD_COUNT ))
+            fi
             echo "Running scheduled source verification shard ${SHARD_INDEX}/${SHARD_COUNT}."
             VERIFY_ARGS+=(--shard-count "$SHARD_COUNT" --shard-index "$SHARD_INDEX")
           elif [ "$SCOPE" = "custom_shard" ]; then
