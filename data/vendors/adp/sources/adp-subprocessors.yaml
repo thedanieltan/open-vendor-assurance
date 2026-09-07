@@ -17,3 +17,15 @@ provenance:
   observer: human
   confidence: low
 not_advice: true
+review_state: quarantined
+quarantine:
+  reason: persistent_not_found
+  quarantined_by: quarantine-controller
+  quarantined_at: '2026-08-26T09:26:23.606491Z'
+  prior_review_state: null
+  decision_id: adp-subprocessors-quarantine
+  reversal:
+    method: revert_quarantine
+    reference: Revert the quarantine PR for adp-subprocessors; restores the prior
+      review_state. See decision adp-subprocessors-quarantine.
+    reversal_decision_id: null
