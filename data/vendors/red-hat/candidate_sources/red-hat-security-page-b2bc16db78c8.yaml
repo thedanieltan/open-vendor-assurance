@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-b2bc16db78c8
+candidate_status: selected
+candidate_url: https://access.redhat.com/security
+canonical_candidate_url: https://access.redhat.com/security/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Red Hat Customer Portal - Product Security Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d74f6fa6c089f8bcd6baf8bd726c6d01335ac639279bc4c783c8b8f4321c9b69
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/
+requested_url: https://access.redhat.com/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

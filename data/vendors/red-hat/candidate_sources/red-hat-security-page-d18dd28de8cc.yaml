@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-d18dd28de8cc
+candidate_status: selected
+candidate_url: https://access.redhat.com/products/red-hat-insights
+canonical_candidate_url: https://access.redhat.com/products/red-hat-lightspeed/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/products/red-hat-lightspeed/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Red Hat Lightspeed - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:cd4853c8e3891306be9bba5a6e8aa5340a7fc0727d30f79d8b0e14ccffcedfe1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/products/red-hat-lightspeed/
+requested_url: https://access.redhat.com/products/red-hat-insights
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

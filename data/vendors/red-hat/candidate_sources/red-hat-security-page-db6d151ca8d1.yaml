@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-db6d151ca8d1
+candidate_status: selected
+candidate_url: https://access.redhat.com/support/cases
+canonical_candidate_url: https://access.redhat.com/support/cases/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/support/cases/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Support
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:de834d39ead3c7c49020249c9ba7cdc3b34acfe60af060372efb548c98afd273
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/support/cases/
+requested_url: https://access.redhat.com/support/cases
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

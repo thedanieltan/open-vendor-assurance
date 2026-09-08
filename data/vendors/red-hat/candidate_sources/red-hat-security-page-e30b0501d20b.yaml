@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-e30b0501d20b
+candidate_status: selected
+candidate_url: https://access.redhat.com/products/red-hat-build-eclipse-vertx
+canonical_candidate_url: https://access.redhat.com/products/red-hat-build-eclipse-vertx/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/products/red-hat-build-eclipse-vertx/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Red Hat build of Eclipse Vert.x - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:01867f51db88e9b6b02030cc2d32701cf49a6f75ea035a7f6a2613b5448a4228
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/products/red-hat-build-eclipse-vertx/
+requested_url: https://access.redhat.com/products/red-hat-build-eclipse-vertx
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

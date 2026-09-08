@@ -1,0 +1,31 @@
+candidate_source_id: pagerduty-trust-center-dc02ab535e35
+candidate_status: selected
+candidate_url: https://www.pagerduty.com/fr/demo
+canonical_candidate_url: https://www.pagerduty.com/fr/demo/
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.pagerduty.com/fr/demo/
+  http_status: 200
+  matched_terms:
+  - trust
+  - compliance
+  page_title: D&eacute;mo de PagerDuty | PagerDuty
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:70636a5e9a63a4b06231d4188cf4772f002447b194b692af07e96719283b6e79
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.pagerduty.com/fr/demo/
+requested_url: https://www.pagerduty.com/fr/demo
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

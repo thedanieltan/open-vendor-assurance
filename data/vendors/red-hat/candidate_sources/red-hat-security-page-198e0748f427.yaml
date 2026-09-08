@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-198e0748f427
+candidate_status: selected
+candidate_url: https://catalog.redhat.com/
+canonical_candidate_url: https://catalog.redhat.com/en
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://catalog.redhat.com/en
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Home - Red Hat Ecosystem Catalog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:75b80773ee1a137e515d5a3b54d5c317f2d6479fcaee3b69d16883a81c75cb41
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://catalog.redhat.com/en
+requested_url: https://catalog.redhat.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

@@ -1,0 +1,32 @@
+candidate_source_id: pagerduty-trust-center-c037b6a16815
+candidate_status: selected
+candidate_url: https://www.pagerduty.com/foundation
+canonical_candidate_url: https://www.pagerduty.com/impact-hub/
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.pagerduty.com/impact-hub/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Impact Hub | PagerDuty
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:991a428494e2de2794dbd00badc0c1593750d073c0512b309ca6ca26e79bdee8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.pagerduty.com/impact-hub/
+requested_url: https://www.pagerduty.com/foundation
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

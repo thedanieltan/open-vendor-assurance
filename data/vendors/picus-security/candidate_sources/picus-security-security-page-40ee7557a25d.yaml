@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-40ee7557a25d
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/tag/webinar
+canonical_candidate_url: https://www.picussecurity.com/resource/tag/webinar
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.349173Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/tag/webinar
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Resources | Picus Security | Webinar
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:df0d0b84abd12dcd7489cdfae8eda8966245fd666ffd53d7f2714a799e364ff4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/tag/webinar
+requested_url: https://www.picussecurity.com/resource/tag/webinar
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.349173Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security

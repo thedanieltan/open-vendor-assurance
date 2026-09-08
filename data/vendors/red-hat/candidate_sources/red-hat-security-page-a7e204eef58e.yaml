@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-a7e204eef58e
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/updates/classification
+canonical_candidate_url: https://access.redhat.com/security/updates/classification
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/updates/classification
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - trust
+  page_title: Severity ratings | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:206cbe0d31f8fadc8b882798a6184fabacc5d364cabe1d9c0dbab7a95496c665
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/updates/classification
+requested_url: https://access.redhat.com/security/updates/classification
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

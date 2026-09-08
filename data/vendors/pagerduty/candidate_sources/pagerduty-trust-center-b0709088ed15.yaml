@@ -1,0 +1,33 @@
+candidate_source_id: pagerduty-trust-center-b0709088ed15
+candidate_status: selected
+candidate_url: https://www.pagerduty.com/ops-guides
+canonical_candidate_url: https://www.pagerduty.com/ops-guides/
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.pagerduty.com/ops-guides/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Ops Guides | PagerDuty
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fa7506edaab68075db421f5964ab13c7305a1ce0ca6274bc89aaa52db4d1e1a9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.pagerduty.com/ops-guides/
+requested_url: https://www.pagerduty.com/ops-guides
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

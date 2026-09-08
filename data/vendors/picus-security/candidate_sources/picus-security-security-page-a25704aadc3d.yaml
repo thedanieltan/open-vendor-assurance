@@ -1,0 +1,32 @@
+candidate_source_id: picus-security-security-page-a25704aadc3d
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/about-us
+canonical_candidate_url: https://www.picussecurity.com/about-us
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.349173Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/about-us
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: About Us
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d4465208d6ae7a567a2ec8aa87afea69716483a856bc94bca799ac2534dd2849
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/about-us
+requested_url: https://www.picussecurity.com/about-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.349173Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security

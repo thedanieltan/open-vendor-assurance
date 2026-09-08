@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-bb345885fcfa
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2025-001
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2025-001
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2025-001
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: RHSB-2025-001 vLLM Distributed KV cache features - (CVE-2025-47277)
+    | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f2e76d2623627c608024ff89798716bcc12c9aa14e5a065742d1ced8a90b8744
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2025-001
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2025-001
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

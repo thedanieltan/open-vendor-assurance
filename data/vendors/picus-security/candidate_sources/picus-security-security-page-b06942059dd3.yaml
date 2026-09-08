@@ -1,0 +1,32 @@
+candidate_source_id: picus-security-security-page-b06942059dd3
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/mitre-attack-framework
+canonical_candidate_url: https://www.picussecurity.com/mitre-attack-framework
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.349173Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/mitre-attack-framework
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: 'MITRE ATT&amp;CK® Framework Guide: Tactics, Techniques &amp; More'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f904a3662a519c1c7162dd8ca9ba31bef0772798a5e129eb519d82f8fe5ecb98
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/mitre-attack-framework
+requested_url: https://www.picussecurity.com/mitre-attack-framework
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.349173Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security

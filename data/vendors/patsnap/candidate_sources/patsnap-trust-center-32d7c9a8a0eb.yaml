@@ -1,0 +1,32 @@
+candidate_source_id: patsnap-trust-center-32d7c9a8a0eb
+candidate_status: selected
+candidate_url: https://www.patsnap.com/resources/blog/tag/rd
+canonical_candidate_url: https://www.patsnap.com/resources/blog/tag/rd/
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.005220Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.patsnap.com/resources/blog/tag/rd/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: R&amp;D Archives | Patsnap
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b3c240b55d9228a39ce8058c7d7ed7ef6fbf307a8e1f665c80ccb03a26d333f9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.patsnap.com/resources/blog/tag/rd/
+requested_url: https://www.patsnap.com/resources/blog/tag/rd
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.005220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: patsnap

@@ -1,0 +1,31 @@
+candidate_source_id: pagerduty-trust-center-1f178278624f
+candidate_status: selected
+candidate_url: https://www.pagerduty.com/fr/website-terms-of-use
+canonical_candidate_url: https://www.pagerduty.com/fr/website-terms-of-use/
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.pagerduty.com/fr/website-terms-of-use/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - privacy
+  page_title: Website Terms of Use | PagerDuty
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:220c795a080f4d724cc4c8b1ce00ec4aa68dbc791851a8dd46a4ff8d35c3b4c7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.pagerduty.com/fr/website-terms-of-use/
+requested_url: https://www.pagerduty.com/fr/website-terms-of-use
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

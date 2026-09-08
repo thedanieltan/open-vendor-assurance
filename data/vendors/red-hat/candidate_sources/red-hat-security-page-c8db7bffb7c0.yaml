@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-c8db7bffb7c0
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2022-001
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2022-001
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2022-001
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: RHSB-2022-001 Polkit Privilege Escalation - (CVE-2021-4034) | Red Hat
+    Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:53fa0976d33a1c2a362732e9ff570541f0a6abbd9806e17c9514b75a35012346
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2022-001
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2022-001
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
