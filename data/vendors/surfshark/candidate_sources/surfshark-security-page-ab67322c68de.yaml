@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-security-page-ab67322c68de
+candidate_status: selected
+candidate_url: https://surfshark.com/dns
+canonical_candidate_url: https://surfshark.com/dns
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/dns
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Surfshark DNS servers
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:bb59ca120fc197f4bc928a28b29a97169308617f58d429d2a01f84378bc90a85
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/dns
+requested_url: https://surfshark.com/dns
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

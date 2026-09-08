@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-dbf2a4c8fd86
+candidate_status: selected
+candidate_url: https://surfshark.com/fr/blog/surfshark-securing-infrastructure-audit
+canonical_candidate_url: https://surfshark.com/fr/blog/surfshark-securing-infrastructure-audit
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://surfshark.com/fr/blog/surfshark-securing-infrastructure-audit
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  page_title: Surfshark a fait l’objet d’un audit de son infrastructure
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:53d73c82f94899163a3d8e3007fc647b611b5e0e2223982f5bc66ab86c4451b9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/fr/blog/surfshark-securing-infrastructure-audit
+requested_url: https://surfshark.com/fr/blog/surfshark-securing-infrastructure-audit
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

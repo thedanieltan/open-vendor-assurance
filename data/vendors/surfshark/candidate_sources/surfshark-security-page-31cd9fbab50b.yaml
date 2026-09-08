@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-security-page-31cd9fbab50b
+candidate_status: selected
+candidate_url: https://surfshark.com/research/chart/duolingo-data-leak
+canonical_candidate_url: https://surfshark.com/research/chart/duolingo-data-leak
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/research/chart/duolingo-data-leak
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: US was hit the hardest by the Duolingo data leak - Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e973b1ec2aba93337029f9c6d94372d104a9692eeef2c35129bd228f882de40d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/research/chart/duolingo-data-leak
+requested_url: https://surfshark.com/research/chart/duolingo-data-leak
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

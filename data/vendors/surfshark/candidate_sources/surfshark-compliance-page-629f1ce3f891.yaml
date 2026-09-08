@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-629f1ce3f891
+candidate_status: selected
+candidate_url: https://surfshark.com/it/download/linux
+canonical_candidate_url: https://surfshark.com/it/download/linux
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://surfshark.com/it/download/linux
+  http_status: 200
+  matched_terms:
+  - iso
+  - trust
+  page_title: Scarica la migliore VPN per Linux - Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:908558dad31bb5cd4082f883f4e927f1098026f07102c6990f9e9e21ce5cc773
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/it/download/linux
+requested_url: https://surfshark.com/it/download/linux
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark
