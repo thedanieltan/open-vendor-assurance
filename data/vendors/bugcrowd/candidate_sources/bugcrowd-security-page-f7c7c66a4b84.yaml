@@ -1,0 +1,31 @@
+candidate_source_id: bugcrowd-security-page-f7c7c66a4b84
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/glossary/advanced-persistent-threat-apt
+canonical_candidate_url: https://www.bugcrowd.com/glossary/advanced-persistent-threat-apt/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/glossary/advanced-persistent-threat-apt/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Advanced Persistent Threat (APT) | Bugcrowd
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:28c9ebc3d52dcfc26a15d2c08b6006e39b8c1b3a6c66eeb6995585fe73155e22
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/glossary/advanced-persistent-threat-apt/
+requested_url: https://www.bugcrowd.com/glossary/advanced-persistent-threat-apt
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd

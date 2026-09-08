@@ -1,0 +1,32 @@
+candidate_source_id: comarch-compliance-page-69145e842e6e
+candidate_status: selected
+candidate_url: https://www.comarch.com/cyber-security/articles/why-should-security-not-be-underestimated
+canonical_candidate_url: https://www.comarch.com/cyber-security/articles/why-should-security-not-be-underestimated/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.comarch.com/cyber-security/articles/why-should-security-not-be-underestimated/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Why should security not be underestimated? | COMARCH SA
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ea2fff01ca16c28b05ed7a6090557d3522a86ee126d5bd4409436e2a212834a8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.comarch.com/cyber-security/articles/why-should-security-not-be-underestimated/
+requested_url: https://www.comarch.com/cyber-security/articles/why-should-security-not-be-underestimated
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: comarch

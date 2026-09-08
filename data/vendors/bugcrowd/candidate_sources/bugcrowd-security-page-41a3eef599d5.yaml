@@ -1,0 +1,33 @@
+candidate_source_id: bugcrowd-security-page-41a3eef599d5
+candidate_status: selected
+candidate_url: https://docs.bugcrowd.com/changelog
+canonical_candidate_url: https://docs.bugcrowd.com/changelog/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.bugcrowd.com/changelog/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Changelog | Bugcrowd Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:047835d18fb684afb409508f677e4169b45132f99438a3c5cb1111494dd53849
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.bugcrowd.com/changelog/
+requested_url: https://docs.bugcrowd.com/changelog
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd

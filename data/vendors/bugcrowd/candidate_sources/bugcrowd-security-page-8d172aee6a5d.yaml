@@ -1,0 +1,34 @@
+candidate_source_id: bugcrowd-security-page-8d172aee6a5d
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/blog/mfa-security-part-2-how-to-prevent-mfa-bypass
+canonical_candidate_url: https://www.bugcrowd.com/blog/mfa-security-part-2-how-to-prevent-mfa-bypass/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/blog/mfa-security-part-2-how-to-prevent-mfa-bypass/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - incident
+  - trust
+  page_title: 'MFA security part 2: How to prevent MFA bypass | @Bugcrowd'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4be8885436b287456c0fb3ff30ca714859cd67d7738f194cb82f45a4ffe84494
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/blog/mfa-security-part-2-how-to-prevent-mfa-bypass/
+requested_url: https://www.bugcrowd.com/blog/mfa-security-part-2-how-to-prevent-mfa-bypass
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
