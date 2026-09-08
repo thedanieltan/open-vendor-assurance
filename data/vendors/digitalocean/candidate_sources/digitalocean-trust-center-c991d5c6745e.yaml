@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-c991d5c6745e
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/release-notes/uptime
+canonical_candidate_url: https://docs.digitalocean.com/release-notes/uptime/
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/release-notes/uptime/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Uptime | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9a16b2c8a6ba6c2519899b26d4bcd5a6e8bba16f91231c0252fa486a1fb1e814
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/release-notes/uptime/
+requested_url: https://docs.digitalocean.com/release-notes/uptime
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

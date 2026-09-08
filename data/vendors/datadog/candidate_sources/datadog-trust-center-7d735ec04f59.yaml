@@ -1,0 +1,32 @@
+candidate_source_id: datadog-trust-center-7d735ec04f59
+candidate_status: selected
+candidate_url: https://www.datadoghq.com/product/sast
+canonical_candidate_url: https://www.datadoghq.com/product/static-code-analysis/
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.datadoghq.com/product/static-code-analysis/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Static Code Analysis (SAST) | Datadog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:42796acdc9eda72244f9da071b85740cc8a9fcd4ea2479cce532a7a71956990c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.datadoghq.com/product/static-code-analysis/
+requested_url: https://www.datadoghq.com/product/sast
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog

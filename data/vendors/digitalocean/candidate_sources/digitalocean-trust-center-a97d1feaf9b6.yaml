@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-a97d1feaf9b6
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/platform/ddos-protection
+canonical_candidate_url: https://docs.digitalocean.com/platform/ddos-protection/
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/platform/ddos-protection/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: DDoS Protection | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d6fa2e93569e4e9885476cad3320b55e6864d4fecf82eed8f257735980f5e07a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/platform/ddos-protection/
+requested_url: https://docs.digitalocean.com/platform/ddos-protection
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

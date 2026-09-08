@@ -1,0 +1,32 @@
+candidate_source_id: dropbox-trust-center-4241604e9da5
+candidate_status: selected
+candidate_url: https://www.dropbox.com/features/content-collaboration/annotations
+canonical_candidate_url: https://www.dropbox.com/features/content-collaboration/annotations
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.dropbox.com/features/content-collaboration/annotations
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Annotate PDFs, Photos, and Files Securely - Dropbox
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:76571771a7923a22ec077e38343b40d5ca940be6d267d05b8580969b8a626cd4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.dropbox.com/features/content-collaboration/annotations
+requested_url: https://www.dropbox.com/features/content-collaboration/annotations
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: dropbox

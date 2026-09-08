@@ -1,0 +1,33 @@
+candidate_source_id: datadog-trust-center-901dce0059e4
+candidate_status: selected
+candidate_url: https://www.datadoghq.com/esg-report
+canonical_candidate_url: https://www.datadoghq.com/esg-report/
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.datadoghq.com/esg-report/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Environmental, Social, and Governance Report | Datadog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c6720061af41cd934270f9da57b311e5c1dda74824eb17ed0c09f43596f85a4f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.datadoghq.com/esg-report/
+requested_url: https://www.datadoghq.com/esg-report
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog

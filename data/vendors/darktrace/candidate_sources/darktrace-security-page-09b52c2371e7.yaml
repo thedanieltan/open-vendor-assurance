@@ -1,0 +1,32 @@
+candidate_source_id: darktrace-security-page-09b52c2371e7
+candidate_status: selected
+candidate_url: https://www.darktrace.com/ja/products/operational-technology
+canonical_candidate_url: https://www.darktrace.com/ja/products/operational-technology
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.darktrace.com/ja/products/operational-technology
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Operational Technology (OT) Cyber Security Solutions
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fc7c00ae50778e282d018a08ecefb9051ba74385a27885762941e26f26baf1e1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.darktrace.com/ja/products/operational-technology
+requested_url: https://www.darktrace.com/ja/products/operational-technology
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: darktrace

@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-e8d14e7313d5
+candidate_status: selected
+candidate_url: https://www.digitalocean.com/partners
+canonical_candidate_url: https://www.digitalocean.com/partners
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.digitalocean.com/partners
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Partners | DigitalOcean
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:30dc33d675ec713ca598ccec748baaba77e23b714dc8d3be7adff187e0a5ba12
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.digitalocean.com/partners
+requested_url: https://www.digitalocean.com/partners
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

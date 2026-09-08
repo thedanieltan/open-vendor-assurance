@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-4aed637a9f04
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/platform/billing
+canonical_candidate_url: https://docs.digitalocean.com/platform/billing/
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/platform/billing/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Billing | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8618be951249f959a4c8428559ac1a8ac0361e7d7d040eb4a00fdada8f9a6f3d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/platform/billing/
+requested_url: https://docs.digitalocean.com/platform/billing
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean
