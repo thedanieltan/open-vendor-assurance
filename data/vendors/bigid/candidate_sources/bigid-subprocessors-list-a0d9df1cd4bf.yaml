@@ -1,0 +1,31 @@
+candidate_source_id: bigid-subprocessors-list-a0d9df1cd4bf
+candidate_status: selected
+candidate_url: https://bigid.com/compliance/finra
+canonical_candidate_url: https://bigid.com/compliance/finra/
+confidence: likely
+discovered_at: '2026-09-08T08:18:30.741605Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://bigid.com/compliance/finra/
+  http_status: 200
+  matched_terms:
+  - sub-processors
+  - sub-processor
+  page_title: FINRA Compliance Software | Financial Data Governance | BigID
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d088653d152128c7d5c8bd13b03bae4fb2afeb9e60589f1136b664a9d2831b4a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://bigid.com/compliance/finra/
+requested_url: https://bigid.com/compliance/finra
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:30.741605Z'
+source_type_candidate: subprocessors_list
+superseded_by_candidate_id: null
+vendor_id: bigid
