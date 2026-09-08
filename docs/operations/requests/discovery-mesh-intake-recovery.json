@@ -1,17 +1,17 @@
 {
   "schema_version": "0.1.0",
   "request_type": "discovery_mesh_intake_recovery",
-  "request_id": "recover-run-29637347015-attempt-3",
-  "source_run_id": 29637347015,
+  "request_id": "recover-run-34020859579-run-bound-selector-1",
+  "source_run_id": 34020859579,
   "expected_workflow": "discovery-mesh",
-  "expected_event": "workflow_dispatch",
+  "expected_event": "schedule",
   "expected_conclusion": "failure",
-  "expected_head_sha": "5f055af2e2a6c067c91b6225e533806c8d3a51a1",
+  "expected_head_sha": "d5f9bf6f495e8b23550eb326954ac28fa3a8025f",
   "transaction_max_files": 2500,
   "transaction_max_bytes": 25000000,
   "catalog_vendor_count_cap": null,
   "total_action_count_cap": null,
-  "requested_on": "2026-07-21",
-  "reason": "Corrects the reviewed expected_conclusion from a mistaken 'success' to the verified GitHub value 'failure': run 29637347015's aggregate job completed all 32 discover shards and uploaded a healthy 45.6MB aggregate artifact, but its own 'Validate staged candidate intake' step failed on the monolithic transaction this recovery program exists to fix. Attempts 1-2 (PR #757, #758) failed identity verification against this exact mismatch. Recovery still fail-closed verifies run id, workflow, event, head SHA, and completed status against live GitHub state, and separately verifies the aggregate's own health report before any transaction opens.",
+  "requested_on": "2026-09-08",
+  "reason": "Replays exact Discovery Mesh run 34020859579 after PR #848 repaired recovery plan selection to bind the promotion plan to the source run ID. The source run completed all discovery shards and published the aggregate artifact, but the run itself concluded failure before downstream intake. Recovery remains fail-closed on run identity, workflow, event, conclusion, head SHA, aggregate health, non-advisory posture, and exact plan-referenced candidate accounting. Repository transaction budgets partition writes only; catalog breadth and total actions remain uncapped.",
   "non_advisory": true
 }
