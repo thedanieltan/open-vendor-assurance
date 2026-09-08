@@ -1,0 +1,31 @@
+candidate_source_id: wiz-security-page-46e58e7ad29e
+candidate_status: selected
+candidate_url: https://www.wiz.io/academy/detection-and-response/mitre-attack-framework
+canonical_candidate_url: https://www.wiz.io/academy/detection-and-response/mitre-attack-framework
+confidence: likely
+discovered_at: '2026-09-08T08:18:12.364725Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/academy/detection-and-response/mitre-attack-framework
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: 'MITRE ATTACK Framework: Tactics, Techniques, and More | Wiz'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4ca86bb7435ad128f3412b07fa7c5575d4a66db5c7cb2423f73c76be70332d6f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/academy/detection-and-response/mitre-attack-framework
+requested_url: https://www.wiz.io/academy/detection-and-response/mitre-attack-framework
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:12.364725Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz

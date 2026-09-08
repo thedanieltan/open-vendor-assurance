@@ -1,0 +1,32 @@
+candidate_source_id: xero-trust-center-782f445aefac
+candidate_status: selected
+candidate_url: https://learning.central.xero.com/student/path/400-migrate-your-practice-and-clients-to-xero
+canonical_candidate_url: https://learning.central.xero.com/student/path/400-migrate-your-practice-and-clients-to-xero
+confidence: likely
+discovered_at: '2026-09-08T08:18:44.459517Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dexternal_intellum_lms%26redirect_uri%3Dhttps%253A%252F%252Flearning.central.xero.com%252Fauth%252Fopenid_connect%252Fcallback%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26state%3DDg6t6pKpY9XnApX5JxG9IAMMzk0PxLSYHhI7JH3f1EFAfRps
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Login | Xero Accounting Software
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:f101d4fd7dfd2ef2c62451698e06680776b54d0189035abc6e09008efecd0706
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://login.xero.com/identity/user/login?ReturnUrl=%2Fidentity%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dexternal_intellum_lms%26redirect_uri%3Dhttps%253A%252F%252Flearning.central.xero.com%252Fauth%252Fopenid_connect%252Fcallback%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%26state%3DDg6t6pKpY9XnApX5JxG9IAMMzk0PxLSYHhI7JH3f1EFAfRps
+requested_url: https://learning.central.xero.com/student/path/400-migrate-your-practice-and-clients-to-xero
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:44.459517Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: xero

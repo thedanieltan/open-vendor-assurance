@@ -1,0 +1,33 @@
+candidate_source_id: xero-trust-center-c55cadac424c
+candidate_status: selected
+candidate_url: https://www.xero.com/us/security
+canonical_candidate_url: https://www.xero.com/us/security/
+confidence: likely
+discovered_at: '2026-09-08T08:18:44.459517Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://www.xero.com/us/security/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Security at Xero | Xero US
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:412c0b37a5d156f710db8dfff18298bbedf98564a4583c19d46cb02948e802ec
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.xero.com/us/security/
+requested_url: https://www.xero.com/us/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:44.459517Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: xero

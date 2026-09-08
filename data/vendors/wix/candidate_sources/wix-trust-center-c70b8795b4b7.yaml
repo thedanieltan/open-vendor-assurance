@@ -1,0 +1,32 @@
+candidate_source_id: wix-trust-center-c70b8795b4b7
+candidate_status: selected
+candidate_url: https://support.wix.com/en/article/reporting-a-security-issue
+canonical_candidate_url: https://support.wix.com/en/article/reporting-a-security-issue
+confidence: likely
+discovered_at: '2026-09-08T08:18:23.144892Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.wix.com/en/article/reporting-a-security-issue
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Reporting a Security Issue | Help Center | Wix.com
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b9e20bb71e2dc272c71236174da54779b5d952198fbb578cdde160f4c363365e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.wix.com/en/article/reporting-a-security-issue
+requested_url: https://support.wix.com/en/article/reporting-a-security-issue
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:23.144892Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: wix

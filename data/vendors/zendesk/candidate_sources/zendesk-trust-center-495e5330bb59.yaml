@@ -1,0 +1,32 @@
+candidate_source_id: zendesk-trust-center-495e5330bb59
+candidate_status: selected
+candidate_url: https://support.zendesk.com/hc/en-us/articles/6388012977306
+canonical_candidate_url: https://support.zendesk.com/hc/en-us/articles/6388012977306-Creating-ticket-deletion-schedules
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.zendesk.com/hc/en-us/articles/6388012977306-Creating-ticket-deletion-schedules
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Creating ticket deletion schedules &ndash; Zendesk help
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:db9f7cd7e2742894838a77c9d82747f2cbd489236da7be424b87e4232d2c8af5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.zendesk.com/hc/en-us/articles/6388012977306-Creating-ticket-deletion-schedules
+requested_url: https://support.zendesk.com/hc/en-us/articles/6388012977306
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: zendesk
