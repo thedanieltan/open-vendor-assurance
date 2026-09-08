@@ -1,0 +1,33 @@
+candidate_source_id: zscaler-security-page-21f8b6092a03
+candidate_status: selected
+candidate_url: https://www.zscaler.com/resources/webinars?_bg=68568468716&_bk=%2Bzscaler+%2Bwebinar&_bm=b&_bn=g&_bt=453387383236
+canonical_candidate_url: https://www.zscaler.com/resources/webinars?_bg=68568468716&_bk=%2Bzscaler+%2Bwebinar&_bm=b&_bn=g&_bt=453387383236
+confidence: likely
+discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zscaler.com/resources/webinars?_bg=68568468716&_bk=%2Bzscaler+%2Bwebinar&_bm=b&_bn=g&_bt=453387383236
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Webinars - Unveiling Security Insights | Zscaler
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:25fe4f75d199de1364377f6e6a7787bfea53a125eabcaa3f4ed640b3a4836a35
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zscaler.com/resources/webinars?_bg=68568468716&_bk=%2Bzscaler+%2Bwebinar&_bm=b&_bn=g&_bt=453387383236
+requested_url: https://www.zscaler.com/resources/webinars?_bg=68568468716&_bk=%2Bzscaler+%2Bwebinar&_bm=b&_bn=g&_bt=453387383236
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:47.566016Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler

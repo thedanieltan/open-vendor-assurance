@@ -1,0 +1,33 @@
+candidate_source_id: zscaler-security-page-f8009b3daeb8
+candidate_status: selected
+candidate_url: https://www.zscaler.com/technology/cloud-identity-and-entitlements
+canonical_candidate_url: https://www.zscaler.com/products-and-solutions/data-security-posture-management-dspm
+confidence: likely
+discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zscaler.com/products-and-solutions/data-security-posture-management-dspm
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'AI-Powered DSPM: Secure Data Across Hybrid &amp; Multi-Cloud |Zscaler'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:70afefae82a6af4dba2a1a04c15b0d2ef59de2e7d8b5b5eceedb41196c15fbb6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zscaler.com/products-and-solutions/data-security-posture-management-dspm
+requested_url: https://www.zscaler.com/technology/cloud-identity-and-entitlements
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:47.566016Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler

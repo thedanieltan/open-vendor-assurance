@@ -1,0 +1,32 @@
+candidate_source_id: zscaler-security-page-b6d550c689d9
+candidate_status: selected
+candidate_url: https://compliance.zscaler.com/?itemUid=c4cd6800-afff-42c7-afb2-0265fac436fb&source=click
+canonical_candidate_url: https://compliance.zscaler.com/?itemUid=c4cd6800-afff-42c7-afb2-0265fac436fb&source=click
+confidence: likely
+discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://compliance.zscaler.com/?itemUid=c4cd6800-afff-42c7-afb2-0265fac436fb&source=click
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Zscaler&#x27;s Compliance Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8d0e548182240ce460565bf25169370f4f33dfa03c536164229761b78258820a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://compliance.zscaler.com/?itemUid=c4cd6800-afff-42c7-afb2-0265fac436fb&source=click
+requested_url: https://compliance.zscaler.com/?itemUid=c4cd6800-afff-42c7-afb2-0265fac436fb&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:47.566016Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler
