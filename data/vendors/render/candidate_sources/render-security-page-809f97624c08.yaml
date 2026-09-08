@@ -1,0 +1,31 @@
+candidate_source_id: render-security-page-809f97624c08
+candidate_status: selected
+candidate_url: https://docs.render.com/api
+canonical_candidate_url: https://docs.render.com/api
+confidence: likely
+discovered_at: '2026-09-08T08:56:44.568759Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://render.com/docs/api
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: The Render API – Render Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:dd653e58244276f2dd61533d4b8ada1b3e5a69b069736ede200c9a19e601d663
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://render.com/docs/api
+requested_url: https://docs.render.com/api
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:56:44.568759Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: render

@@ -1,0 +1,31 @@
+candidate_source_id: salesforce-trust-center-7ae8e501e3f2
+candidate_status: selected
+candidate_url: https://security.salesforce.com/ko
+canonical_candidate_url: https://security.salesforce.com/ko/
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://security.salesforce.com/ko/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Salesforce 보안 &#8211; salesforcesecurity.go-vip.net
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f08cbc2468e1e0eff4e4cff647cec6a7f4e26d10f128f8efc1798318ae6e0c10
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://security.salesforce.com/ko/
+requested_url: https://security.salesforce.com/ko
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce
