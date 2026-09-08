@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-a001a7bf8299
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-009
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-009
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-009
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: RHSB-2026-009 IPv6 Fragmentation Container Escape - Linux Kernel (CVE-2026-53362)
+    - &quot;ipv6_frag_escape&quot; | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:65c4b5a17a5aac3f10cc0ec663ec593923e89eb1ef3cbaaa9051679c5fff2ce8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-009
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-009
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

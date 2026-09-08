@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-55a40c800a1a
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-008
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-008
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-008
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: RHSB-2026-008 Traffic Control Privilege Escalation - Linux Kernel (CVE-2026-46331)
+    | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:88044f458276650e9ee20d4f661506c4d5625757e428722f2be53e78b0cfeaaa
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-008
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-008
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

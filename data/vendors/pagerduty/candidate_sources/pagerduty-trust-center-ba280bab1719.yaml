@@ -1,0 +1,33 @@
+candidate_source_id: pagerduty-trust-center-ba280bab1719
+candidate_status: selected
+candidate_url: https://www.pagerduty.com/events
+canonical_candidate_url: https://www.pagerduty.com/events/
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.pagerduty.com/events/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Events | PagerDuty
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0f5bddbc32b35c3cc8de92df84660e19cea26783d80a0e6b46df26c0b29b6dc5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.pagerduty.com/events/
+requested_url: https://www.pagerduty.com/events
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

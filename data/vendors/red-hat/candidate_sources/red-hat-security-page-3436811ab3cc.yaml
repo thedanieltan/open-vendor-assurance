@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-3436811ab3cc
+candidate_status: selected
+candidate_url: https://access.redhat.com/compliance/accessibility
+canonical_candidate_url: https://access.redhat.com/compliance/accessibility
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://access.redhat.com/compliance/accessibility
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Accessibility - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d80cc741f1fef6e63bf57b77ee15642928cdfeb3764fff8a31118130c2d9842a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/compliance/accessibility
+requested_url: https://access.redhat.com/compliance/accessibility
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

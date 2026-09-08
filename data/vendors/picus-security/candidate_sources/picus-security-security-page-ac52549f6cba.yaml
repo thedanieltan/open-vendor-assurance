@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-ac52549f6cba
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/rogueplanet-anatomy-of-the-nightmare-eclipse-microsoft-defender-zero-day
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/rogueplanet-anatomy-of-the-nightmare-eclipse-microsoft-defender-zero-day
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.349173Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/rogueplanet-anatomy-of-the-nightmare-eclipse-microsoft-defender-zero-day
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'RoguePlanet: Anatomy of the Nightmare Eclipse Microsoft Defender Zero-Day'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:49e1ddc419d51866baaf076b01c316baeee28e9253cfd88d68c91c85d591f820
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/rogueplanet-anatomy-of-the-nightmare-eclipse-microsoft-defender-zero-day
+requested_url: https://www.picussecurity.com/resource/blog/rogueplanet-anatomy-of-the-nightmare-eclipse-microsoft-defender-zero-day
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.349173Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security

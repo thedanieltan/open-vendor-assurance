@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-ec143c1da752
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource
+canonical_candidate_url: https://www.picussecurity.com/resource
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.349173Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Resources | Picus Security
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:44df37d86b98288f41c4b91856bfc3ba68786b9d5a72809eb9315490948424c2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource
+requested_url: https://www.picussecurity.com/resource
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.349173Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security

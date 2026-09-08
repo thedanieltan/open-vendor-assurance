@@ -1,0 +1,33 @@
+candidate_source_id: quickbooks-trust-center-5dfbac40a0a6
+candidate_status: selected
+candidate_url: https://proadvisoracademy.intuit.com/
+canonical_candidate_url: https://proadvisoracademy.intuit.com/
+confidence: likely
+discovered_at: '2026-09-08T09:12:07.593931Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://accounts.intuit.com/app/sign-in?redirect_uri=https%3A%2F%2Fproadvisoracademy.intuit.com%2Fhome&single_sign_on=false&app_group=QBO&asset_alias=Intuit.help.learning.proadvisoracademywebapp&partner_uid_button=google&appfabric=true
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: 'QuickBooks Online Login: Sign in to Access Your QuickBooks Account'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:c6e2fada8fe82a4028bc0bf238fc8dcbb013053fcb2b9baf388a972838e497bf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://accounts.intuit.com/app/sign-in?redirect_uri=https%3A%2F%2Fproadvisoracademy.intuit.com%2Fhome&single_sign_on=false&app_group=QBO&asset_alias=Intuit.help.learning.proadvisoracademywebapp&partner_uid_button=google&appfabric=true
+requested_url: https://proadvisoracademy.intuit.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:07.593931Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: quickbooks

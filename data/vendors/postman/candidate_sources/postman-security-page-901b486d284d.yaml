@@ -1,0 +1,31 @@
+candidate_source_id: postman-security-page-901b486d284d
+candidate_status: selected
+candidate_url: https://www.postman.com/release-notes/postman-app
+canonical_candidate_url: https://www.postman.com/release-notes/postman-app/
+confidence: likely
+discovered_at: '2026-09-08T09:07:51.022710Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://www.postman.com/release-notes/postman-app/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Release Notes v12 | Postman
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b7e736b7d58380ecabbae2f2872bd8663defbf859287798506bd2c72293baea2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.postman.com/release-notes/postman-app/
+requested_url: https://www.postman.com/release-notes/postman-app
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:07:51.022710Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: postman

@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-ce8e6c04e2c1
+candidate_status: selected
+candidate_url: https://access.redhat.com/support/configurations/jboss
+canonical_candidate_url: https://access.redhat.com/support/configurations/jboss
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/support/configurations/jboss
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Red Hat Application Services Product Supported Configurations | Red
+    Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6912ff6c5afb043e23f9bc8a15438d3a635bb8e63ae641018ea1c770cfa77913
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/support/configurations/jboss
+requested_url: https://access.redhat.com/support/configurations/jboss
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

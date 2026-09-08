@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-35ab37267345
+candidate_status: selected
+candidate_url: https://access.redhat.com/bounce?externalURL=https%3A%2F%2Fwww.first.org%2Fcvss%2Fuser-guide
+canonical_candidate_url: https://access.redhat.com/bounce/?externalURL=https%3A%2F%2Fwww.first.org%2Fcvss%2Fuser-guide
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/bounce/?externalURL=https%3A%2F%2Fwww.first.org%2Fcvss%2Fuser-guide
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Bounce | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:0155a4b702ae776e32288e455f8bff497d117691e1bd9315061eea547e3ccedf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/bounce/?externalURL=https%3A%2F%2Fwww.first.org%2Fcvss%2Fuser-guide
+requested_url: https://access.redhat.com/bounce?externalURL=https%3A%2F%2Fwww.first.org%2Fcvss%2Fuser-guide
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-ce286df7bffc
+candidate_status: selected
+candidate_url: https://access.redhat.com/products/red-hat-openstack-services-openshift
+canonical_candidate_url: https://access.redhat.com/products/red-hat-openstack-services-openshift/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/products/red-hat-openstack-services-openshift/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Red Hat OpenStack Services on OpenShift - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5c391af104e012c412cd6331f71feb64e6aa5f10e0aa1da91f0188cf35aa4bb4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/products/red-hat-openstack-services-openshift/
+requested_url: https://access.redhat.com/products/red-hat-openstack-services-openshift
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

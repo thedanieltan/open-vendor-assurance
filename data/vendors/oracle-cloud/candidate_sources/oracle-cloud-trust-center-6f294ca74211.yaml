@@ -1,0 +1,31 @@
+candidate_source_id: oracle-cloud-trust-center-6f294ca74211
+candidate_status: selected
+candidate_url: https://www.oracle.com/cloud/free
+canonical_candidate_url: https://www.oracle.com/cloud/free/
+confidence: likely
+discovered_at: '2026-09-08T08:18:21.136196Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.oracle.com/cloud/free/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Oracle Cloud Free Tier | Oracle
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b272b2a4660382cba80cf04236c31c17588ef8c30b303751d6bd3b22754793ad
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.oracle.com/cloud/free/
+requested_url: https://www.oracle.com/cloud/free
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:21.136196Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: oracle-cloud

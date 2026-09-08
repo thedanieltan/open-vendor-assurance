@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-1d03b646428c
+candidate_status: selected
+candidate_url: https://catalog.redhat.com/en/search?searchType=Partners
+canonical_candidate_url: https://catalog.redhat.com/en/search?searchType=Partners
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://catalog.redhat.com/en/search?searchType=Partners
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - trust
+  page_title: Search results - Red Hat Ecosystem Catalog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a6e7e83265305ee8972ca39bd67115cff120d2eb315589a9b102287d359d7ae
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://catalog.redhat.com/en/search?searchType=Partners
+requested_url: https://catalog.redhat.com/en/search?searchType=Partners
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

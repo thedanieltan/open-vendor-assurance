@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-2b3afe654139
+candidate_status: selected
+candidate_url: https://access.redhat.com/errata/RHSA-2026:52968
+canonical_candidate_url: https://access.redhat.com/errata/RHSA-2026:52968
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/errata/RHSA-2026:52968
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: null
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2e1e6ed626d6b593206b3d7dd0e70fcba1dcd66b7d443ada65b9fd840be57777
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/errata/RHSA-2026:52968
+requested_url: https://access.redhat.com/errata/RHSA-2026:52968
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
