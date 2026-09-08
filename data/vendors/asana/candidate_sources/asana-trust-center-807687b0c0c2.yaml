@@ -1,0 +1,35 @@
+candidate_source_id: asana-trust-center-807687b0c0c2
+candidate_status: selected
+candidate_url: https://security.asana.com/?itemUid=b2671060-5c66-4d9c-b70f-af4ab3dbd45a&source=title
+canonical_candidate_url: https://security.asana.com/?itemUid=b2671060-5c66-4d9c-b70f-af4ab3dbd45a&source=title
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://trustcenter.asana.com/?source=title&itemUid=b2671060-5c66-4d9c-b70f-af4ab3dbd45a
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: Asana Trust Center | Powered by Conveyor
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: homepage_or_generic_redirect
+evidence_digest: sha256:38894804d29cc7fc49f4e7d0d7d08d07e3efeccc46305614c7ef6fd48e5a4669
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trustcenter.asana.com/?source=title&itemUid=b2671060-5c66-4d9c-b70f-af4ab3dbd45a
+requested_url: https://security.asana.com/?itemUid=b2671060-5c66-4d9c-b70f-af4ab3dbd45a&source=title
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: asana

@@ -1,0 +1,32 @@
+candidate_source_id: atlassian-trust-center-ceff23610814
+candidate_status: selected
+candidate_url: https://support.atlassian.com/provisioning-users/docs/link-domains-to-identity-provider-directories
+canonical_candidate_url: https://support.atlassian.com/provisioning-users/docs/link-domains-to-identity-provider-directories
+confidence: likely
+discovered_at: '2026-09-08T08:18:23.144892Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/provisioning-users/docs/link-domains-to-identity-provider-directories
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Link domains to identity provider directories | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7d734280dc45beada280b93d15965bafa500df460b1b7be7c9261666ba528967
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/provisioning-users/docs/link-domains-to-identity-provider-directories
+requested_url: https://support.atlassian.com/provisioning-users/docs/link-domains-to-identity-provider-directories
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:23.144892Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: atlassian
