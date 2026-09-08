@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-07-21T10:47:04Z",
+  "generated_at": "2026-09-08T12:01:23Z",
   "items": [
     {
       "candidate_vendor_id": "support",
-      "demand_count": 96,
+      "demand_count": 192,
       "display_name_candidate": "Support",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 1,
+      "observation_count": 2,
       "official_domain_candidate": "support.bigid.com",
-      "priority": 514,
+      "priority": 996,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -22,24 +22,25 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 1,
+      "signal_count": 2,
       "source_urls": [
-        "https://bigid.com/ai-data-labeling"
+        "https://bigid.com/ai-data-labeling",
+        "https://bigid.com/ai-instruction-file-security"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
       "candidate_vendor_id": "home",
-      "demand_count": 12,
+      "demand_count": 25,
       "display_name_candidate": "Brief Privacy Suite Product Brief Learn how BigID helps identify privacy risk, coordinate remediation, fulfill data rights requests, and stay compliant. Download the Brief \u2192",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 12,
+      "observation_count": 24,
       "official_domain_candidate": "home.bigid.com",
-      "priority": 116,
+      "priority": 205,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -50,7 +51,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 12,
+      "signal_count": 24,
       "source_urls": [
         "https://bigid.com/blog/5-steps-for-effective-data-security-governance",
         "https://bigid.com/blog/a-ciso-guide-to-secure-cloud-architecture",
@@ -59,8 +60,11 @@
         "https://bigid.com/blog/data-security-platform-architecture-access-controls",
         "https://bigid.com/blog/dspm-for-product-security-guide",
         "https://bigid.com/blog/headless-bigid",
+        "https://bigid.com/blog/maximizing-security-in-multi-tenant-cloud-environments",
+        "https://bigid.com/blog/tractor-supply-ccpa-violations",
         "https://bigid.com/certifications-and-assessments",
         "https://bigid.com/compliance/pci-dss",
+        "https://bigid.com/rfp-center",
         "https://bigid.com/solutions/privacy-compliance"
       ],
       "state": "needs_country",
@@ -68,15 +72,15 @@
     },
     {
       "candidate_vendor_id": "support",
-      "demand_count": 8,
+      "demand_count": 16,
       "display_name_candidate": "Automatically remove your candidates' data Eliminate manual tasks and keep your database organized by automatically removing candidates' data when they meet certain criteria.",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 8,
+      "observation_count": 16,
       "official_domain_candidate": "support.teamtailor.com",
-      "priority": 88,
+      "priority": 144,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -87,7 +91,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 8,
+      "signal_count": 16,
       "source_urls": [
         "https://www.teamtailor.com/en/all-features"
       ],
@@ -95,16 +99,45 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "media",
+      "demand_count": 14,
+      "display_name_candidate": "Fallbeispiel Wie ein Systemintegrator die digitale Sicherheit f\u00fcr alle niederl\u00e4ndischen Notare optimierte Jetzt lesen",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 11,
+      "official_domain_candidate": "media.globalsign.com",
+      "priority": 124,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-7e8121e86b10f32de585f2fa",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 11,
+      "source_urls": [
+        "https://www.globalsign.com/de-de/ressourcen/topic/83",
+        "https://www.globalsign.com/ru-ru/resources"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "firebase",
-      "demand_count": 2,
+      "demand_count": 3,
       "display_name_candidate": "Firebase Cloud Messaging (FCM)",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": "US",
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 2,
+      "observation_count": 3,
       "official_domain_candidate": "firebase.google.com",
-      "priority": 78,
+      "priority": 85,
       "provider_count": 2,
       "providers": [
         "openva_vibe_coder_saas_directory",
@@ -114,12 +147,68 @@
       "reason_codes": [],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 2,
+      "signal_count": 3,
       "source_urls": [
         "https://firebase.google.com",
         "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
       ],
       "state": "ready_for_source_discovery",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "click-here-to-download",
+      "demand_count": 9,
+      "display_name_candidate": "Click here to download",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": null,
+      "priority": 63,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-7974bd9c53481484a60f9069",
+      "reason_codes": [
+        "official_domain_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://help.practo.com/practo-feedback/feedback-blur-feature"
+      ],
+      "state": "needs_domain",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "shop",
+      "demand_count": 4,
+      "display_name_candidate": "PKI/SSL As a Service",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "shop.globalsign.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-deb2f586ba84ba8cf7c8f8c8",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://www.globalsign.com/de-de/produkte"
+      ],
+      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -6403,49 +6492,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "click-here-to-download",
-      "demand_count": 6,
-      "display_name_candidate": "Click here to download",
+      "candidate_vendor_id": "support",
+      "demand_count": 3,
+      "display_name_candidate": "Kontaktieren Sie hier den Support.",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
       "observation_count": 2,
-      "official_domain_candidate": null,
-      "priority": 46,
+      "official_domain_candidate": "support.globalsign.com",
+      "priority": 51,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-7974bd9c53481484a60f9069",
-      "reason_codes": [
-        "official_domain_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://help.practo.com/practo-feedback/feedback-blur-feature"
-      ],
-      "state": "needs_domain",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "shop",
-      "demand_count": 2,
-      "display_name_candidate": "PKI/SSL As a Service",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "shop.globalsign.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-deb2f586ba84ba8cf7c8f8c8",
+      "queue_id": "vbq-ce394e140d8c59370c57e5fc",
       "reason_codes": [
         "country_missing"
       ],
@@ -6460,15 +6521,15 @@
     },
     {
       "candidate_vendor_id": "amla",
-      "demand_count": 1,
+      "demand_count": 2,
       "display_name_candidate": "Anti-Money Laundering Authority.",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 1,
+      "observation_count": 2,
       "official_domain_candidate": "amla.europa.eu",
-      "priority": 39,
+      "priority": 46,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -6479,7 +6540,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 1,
+      "signal_count": 2,
       "source_urls": [
         "https://idnow.io/insights/blog/amlr-explained-financial-services-need-know"
       ],
@@ -6488,15 +6549,15 @@
     },
     {
       "candidate_vendor_id": "bigidprivacy",
-      "demand_count": 1,
+      "demand_count": 2,
       "display_name_candidate": "View Privacy Center",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 1,
+      "observation_count": 2,
       "official_domain_candidate": "bigidprivacy.cloud",
-      "priority": 39,
+      "priority": 46,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -6507,7 +6568,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 1,
+      "signal_count": 2,
       "source_urls": [
         "https://bigid.com/bigid-compliance"
       ],
@@ -6516,15 +6577,15 @@
     },
     {
       "candidate_vendor_id": "blog",
-      "demand_count": 1,
+      "demand_count": 2,
       "display_name_candidate": "Blog",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
-      "observation_count": 1,
+      "observation_count": 2,
       "official_domain_candidate": "blog.teamtailor.com",
-      "priority": 39,
+      "priority": 46,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -6535,9 +6596,345 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 1,
+      "signal_count": 2,
       "source_urls": [
         "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cloudsecurityalliance",
+      "demand_count": 2,
+      "display_name_candidate": "CSA Cloud Controls Matrix (CCM):",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "cloudsecurityalliance.org",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-847aa73e1077e212efdcafb7",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://bigid.com/blog/mastering-security-frameworks-comprehensive-guide"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cronofy",
+      "demand_count": 2,
+      "display_name_candidate": "Cronofy",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "cronofy.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "csrc",
+      "demand_count": 2,
+      "display_name_candidate": "NIST SP 800-144:",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "csrc.nist.gov",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-41130b65bb8c9eaff39be9ff",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://bigid.com/blog/mastering-security-frameworks-comprehensive-guide"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cyber-risk",
+      "demand_count": 2,
+      "display_name_candidate": "Get the full report Get the full report",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "cyber-risk.upguard.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-21d99d6c2677bbc46d51bd87",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://www.upguard.com/security-report/cisco"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "d1kwv30jm1b7sr",
+      "demand_count": 2,
+      "display_name_candidate": "their Security white paper.",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-80ac92394c426c366ab5d74f",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 2,
+      "display_name_candidate": "Apple Push Notification Service (APN)",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "developer.apple.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-4009ec89423ba523a888a3ad",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 2,
+      "display_name_candidate": "Huawei Push Service",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "developer.huawei.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "docs",
+      "demand_count": 2,
+      "display_name_candidate": "Configure Office 365 (Graph API)",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "docs.cronofy.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-737953765a8e5c01ecaa9491",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "en",
+      "demand_count": 2,
+      "display_name_candidate": "FIPS 140-2",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "en.wikipedia.org",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-843f88d361b05462fc46846b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "trust",
+      "demand_count": 2,
+      "display_name_candidate": "Request a Copy",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "trust.bigid.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0e3a6cc5d655b62bc2b7127e",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://bigid.com/bigid-compliance"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "updates",
+      "demand_count": 2,
+      "display_name_candidate": "Updates",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "updates.teamtailor.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-989e18a813e22a5087bab527",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "welcome",
+      "demand_count": 2,
+      "display_name_candidate": "Discover Qonto",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "welcome.qonto.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-fed6d683d43f45ae933cc567",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6571,21 +6968,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "cloudsecurityalliance",
+      "candidate_vendor_id": "cisco",
       "demand_count": 1,
-      "display_name_candidate": "CSA Cloud Controls Matrix (CCM):",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "Cisco Cisco",
+      "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
       "observation_count": 1,
-      "official_domain_candidate": "cloudsecurityalliance.org",
+      "official_domain_candidate": "cisco.com",
       "priority": 39,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-847aa73e1077e212efdcafb7",
+      "queue_id": "vbq-2c33f79d41daa6d19a1a5c23",
       "reason_codes": [
         "country_missing"
       ],
@@ -6593,27 +6990,27 @@
       "schema_version": "0.1.0",
       "signal_count": 1,
       "source_urls": [
-        "https://bigid.com/blog/mastering-security-frameworks-comprehensive-guide"
+        "https://www.upguard.com/security-report/cisco"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "cronofy",
+      "candidate_vendor_id": "cppa",
       "demand_count": 1,
-      "display_name_candidate": "Cronofy",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "Honda paid $632,500",
+      "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
       "observation_count": 1,
-      "official_domain_candidate": "cronofy.com",
+      "official_domain_candidate": "cppa.ca.gov",
       "priority": 39,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
+      "queue_id": "vbq-db53060912e5fb0ee65d85aa",
       "reason_codes": [
         "country_missing"
       ],
@@ -6621,27 +7018,27 @@
       "schema_version": "0.1.0",
       "signal_count": 1,
       "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "csrc",
+      "candidate_vendor_id": "darkreading",
       "demand_count": 1,
-      "display_name_candidate": "NIST SP 800-144:",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "tenant-to-tenant attacks",
+      "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-08T12:01:23Z",
       "not_advice": true,
       "observation_count": 1,
-      "official_domain_candidate": "csrc.nist.gov",
+      "official_domain_candidate": "darkreading.com",
       "priority": 39,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-41130b65bb8c9eaff39be9ff",
+      "queue_id": "vbq-4109b653b0f5aa944d1ef02d",
       "reason_codes": [
         "country_missing"
       ],
@@ -6649,147 +7046,7 @@
       "schema_version": "0.1.0",
       "signal_count": 1,
       "source_urls": [
-        "https://bigid.com/blog/mastering-security-frameworks-comprehensive-guide"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "d1kwv30jm1b7sr",
-      "demand_count": 1,
-      "display_name_candidate": "their Security white paper.",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-80ac92394c426c366ab5d74f",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "developer",
-      "demand_count": 1,
-      "display_name_candidate": "Apple Push Notification Service (APN)",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "developer.apple.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-4009ec89423ba523a888a3ad",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "developer",
-      "demand_count": 1,
-      "display_name_candidate": "Huawei Push Service",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "developer.huawei.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "docs",
-      "demand_count": 1,
-      "display_name_candidate": "Configure Office 365 (Graph API)",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "docs.cronofy.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-737953765a8e5c01ecaa9491",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "en",
-      "demand_count": 1,
-      "display_name_candidate": "FIPS 140-2",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "en.wikipedia.org",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-843f88d361b05462fc46846b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+        "https://bigid.com/blog/maximizing-security-in-multi-tenant-cloud-environments"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6823,6 +7080,146 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "gdpr",
+      "demand_count": 1,
+      "display_name_candidate": "GDPR",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "gdpr.eu",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-a90b7975d7a5e836d669b919",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "globalsign",
+      "demand_count": 1,
+      "display_name_candidate": "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430 \u0441\u0435\u0440\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0432 \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0430 \u0443\u0440\u043e\u0432\u043d\u044f \u0437\u0430\u0449\u0438\u0449\u0451\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 (SSL Server Test)",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "globalsign.ssllabs.com",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-72c7325ab66639467149b00e",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://www.globalsign.com/ru-ru/resources/topic/83"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "gov",
+      "demand_count": 1,
+      "display_name_candidate": "LGPD",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "gov.br",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-95f9ae6169ee692169a7ca5b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "gov",
+      "demand_count": 1,
+      "display_name_candidate": "California\u2019s SB 53",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "gov.ca.gov",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-515e9fef8e72b09c2a830901",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "hklaw",
+      "demand_count": 1,
+      "display_name_candidate": "Healthline\u2019s $1.55 million settlement",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "hklaw.com",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-ad3dee8c0ad233bf50122337",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "itsettled",
       "demand_count": 1,
       "display_name_candidate": "itsettled",
@@ -6851,6 +7248,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "jdsupra",
+      "demand_count": 1,
+      "display_name_candidate": "Todd Snyder",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "jdsupra.com",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-488c7d3a9735d850e6c4757b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "oag",
+      "demand_count": 1,
+      "display_name_candidate": "CCPA",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-08T12:01:23Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": "oag.ca.gov",
+      "priority": 39,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-3fe206947ff057421a6219ec",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "support",
       "demand_count": 1,
       "display_name_candidate": "support documentation",
@@ -6874,118 +7327,6 @@
       "signal_count": 1,
       "source_urls": [
         "https://blog.pleo.io/en/surviving-the-end-of-flat-rate-ai"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "support",
-      "demand_count": 1,
-      "display_name_candidate": "Kontaktieren Sie hier den Support.",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "support.globalsign.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-ce394e140d8c59370c57e5fc",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://www.globalsign.com/de-de/produkte"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "trust",
-      "demand_count": 1,
-      "display_name_candidate": "Request a Copy",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "trust.bigid.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-0e3a6cc5d655b62bc2b7127e",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://bigid.com/bigid-compliance"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "updates",
-      "demand_count": 1,
-      "display_name_candidate": "Updates",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "updates.teamtailor.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-989e18a813e22a5087bab527",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "welcome",
-      "demand_count": 1,
-      "display_name_candidate": "Discover Qonto",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "welcome.qonto.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-fed6d683d43f45ae933cc567",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -7057,11 +7398,11 @@
   "schema_version": "0.1.0",
   "summary": {
     "catalog_vendor_count_cap": null,
-    "queue_count": 266,
+    "queue_count": 278,
     "ready_for_source_discovery_count": 207,
     "state_counts": {
       "already_catalogued": 33,
-      "needs_country": 23,
+      "needs_country": 35,
       "needs_domain": 3,
       "ready_for_source_discovery": 207
     }
