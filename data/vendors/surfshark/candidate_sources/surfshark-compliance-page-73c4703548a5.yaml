@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-73c4703548a5
+candidate_status: selected
+candidate_url: https://surfshark.com/fr/download
+canonical_candidate_url: https://surfshark.com/fr/download
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://surfshark.com/fr/download
+  http_status: 200
+  matched_terms:
+  - soc
+  - trust
+  page_title: Télécharger un VPN gratuitement - Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2b9db46f0d6b0f224808aeefaafc6f908ede20e194c4dc364044cd2c21989f3b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/fr/download
+requested_url: https://surfshark.com/fr/download
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

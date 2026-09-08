@@ -1,0 +1,32 @@
+candidate_source_id: surfshark-security-page-e1b590882a27
+candidate_status: selected
+candidate_url: https://surfshark.com/what-is-my-ip
+canonical_candidate_url: https://surfshark.com/what-is-my-ip
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/what-is-my-ip
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - trust
+  page_title: What Is My IP Address - Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6ccdbac393a65cd5228c0f3af53696ee54fece09f05a2356b09193d124174d20
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/what-is-my-ip
+requested_url: https://surfshark.com/what-is-my-ip
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

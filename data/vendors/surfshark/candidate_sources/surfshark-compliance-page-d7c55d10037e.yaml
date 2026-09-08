@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-d7c55d10037e
+candidate_status: selected
+candidate_url: https://surfshark.com/fi/dns
+canonical_candidate_url: https://surfshark.com/fi/dns
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/fi/dns
+  http_status: 200
+  matched_terms:
+  - iso
+  - trust
+  page_title: Surfsharkin DNS-palvelimet
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:137ce3a91ea08ac56e7338bb102717e0a4684278598fe22e7fec6661fb097a26
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/fi/dns
+requested_url: https://surfshark.com/fi/dns
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark

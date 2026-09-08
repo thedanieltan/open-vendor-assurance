@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-security-page-6d1f4030486b
+candidate_status: selected
+candidate_url: https://surfshark.com/dns-leak-test
+canonical_candidate_url: https://surfshark.com/dns-leak-test
+confidence: likely
+discovered_at: '2026-09-08T08:18:02.607301Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/dns-leak-test
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: DNS leak test - Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:94624c14989517e2cbe3759f0c140cc3eea51817cb9a2e1a6ebc8d9121cd8507
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/dns-leak-test
+requested_url: https://surfshark.com/dns-leak-test
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:02.607301Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: surfshark
