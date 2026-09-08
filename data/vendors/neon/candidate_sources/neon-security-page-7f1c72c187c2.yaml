@@ -1,0 +1,32 @@
+candidate_source_id: neon-security-page-7f1c72c187c2
+candidate_status: selected
+candidate_url: https://www.databricks.com/feed
+canonical_candidate_url: https://www.databricks.com/feed
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: application/xml
+  final_url: https://www.databricks.com/feed
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Databricks
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:31ebcdf5b6ee98ea7669d10c730322f8fda7e2c931aa1c42b2e1834f19379c19
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.databricks.com/feed
+requested_url: https://www.databricks.com/feed
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon

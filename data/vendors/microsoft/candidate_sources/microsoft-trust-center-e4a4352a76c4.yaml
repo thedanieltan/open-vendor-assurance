@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-trust-center-e4a4352a76c4
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/compliance/assurance/assurance-audit-logging
+canonical_candidate_url: https://learn.microsoft.com/en-us/compliance/assurance/assurance-audit-logging
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/compliance/assurance/assurance-audit-logging
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: Audit logging and monitoring overview - Microsoft Service Assurance
+    | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:02b572e0b3a526b79d5e119dbe66604f5514bbb3d4f3b1b0b4bb4afd96457631
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/compliance/assurance/assurance-audit-logging
+requested_url: https://learn.microsoft.com/en-us/compliance/assurance/assurance-audit-logging
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

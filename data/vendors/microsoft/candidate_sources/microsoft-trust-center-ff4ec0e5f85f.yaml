@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-ff4ec0e5f85f
+candidate_status: selected
+candidate_url: https://support.microsoft.com/en-us/worldwide
+canonical_candidate_url: https://support.microsoft.com/en-us/worldwide
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.microsoft.com/en-us/worldwide
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Microsoft.com Worldwide
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:915699672b72f99c6fcbf3eb90633a6194f77a733432634be1d5fe0ce4f0ddba
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.microsoft.com/en-us/worldwide
+requested_url: https://support.microsoft.com/en-us/worldwide
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

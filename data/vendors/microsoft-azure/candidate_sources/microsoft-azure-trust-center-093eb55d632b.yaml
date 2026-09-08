@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-trust-center-093eb55d632b
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/azure
+canonical_candidate_url: https://learn.microsoft.com/en-us/azure/
+confidence: likely
+discovered_at: '2026-09-08T08:18:21.136196Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Azure documentation | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:b5e97912f9bfb4c3390c527643445c2620852f20af47a810fd85c01aff5d099b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/
+requested_url: https://learn.microsoft.com/azure
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:21.136196Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

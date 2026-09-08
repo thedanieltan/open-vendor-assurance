@@ -1,0 +1,32 @@
+candidate_source_id: netsuite-trust-center-fcd23a40e2f5
+candidate_status: selected
+candidate_url: https://linux.oracle.com/pls/apex/f?p=101%3A101%3A12583526614598%3A%3A%3A%3A%3A
+canonical_candidate_url: 'https://linux.oracle.com/ords/f?p=1101:110::::::'
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: 'https://linux.oracle.com/ords/f?p=1101:110::::::'
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: ULN - Landing Page
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:a7f63e1c3775804472e56c2e2688feb8301f73abbc1a77049ea7e8cb687a122b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: 'https://linux.oracle.com/ords/f?p=1101:110::::::'
+requested_url: https://linux.oracle.com/pls/apex/f?p=101%3A101%3A12583526614598%3A%3A%3A%3A%3A
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: netsuite

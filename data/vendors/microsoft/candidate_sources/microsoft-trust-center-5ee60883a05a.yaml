@@ -1,0 +1,35 @@
+candidate_source_id: microsoft-trust-center-5ee60883a05a
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-fips-140-2
+canonical_candidate_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-fips-140-2
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-fips-140-2
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: Federal Information Processing Standard (FIPS) Publication 140-2 - Microsoft
+    Compliance | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:45d80a127fe2b9092ad8974a39c0f587349a67b8db3fbc74dab5f392c843f946
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-fips-140-2
+requested_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-fips-140-2
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

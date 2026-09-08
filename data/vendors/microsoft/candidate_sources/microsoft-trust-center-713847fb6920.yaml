@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-trust-center-713847fb6920
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/security
+canonical_candidate_url: https://www.microsoft.com/en-us/security
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  page_title: Cloud Security Solutions | Microsoft Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a258d0cb7bf411c694f664bc0316297ce43fd5715f8d5c47dd86798e74a9e574
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/security
+requested_url: https://www.microsoft.com/en-us/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft
