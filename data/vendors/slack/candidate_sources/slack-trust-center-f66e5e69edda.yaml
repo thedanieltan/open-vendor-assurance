@@ -1,0 +1,33 @@
+candidate_source_id: slack-trust-center-f66e5e69edda
+candidate_status: selected
+candidate_url: https://slack.com/intl/en-in/security-practices
+canonical_candidate_url: https://slack.com/intl/en-in/security-practices
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.005220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://slack.com/intl/en-in/security-practices
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Security practices | Legal | Slack
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5e416e52f34dbdf949c48c910dc4b562b0eb7c855c26965baf4e4df25add30ef
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://slack.com/intl/en-in/security-practices
+requested_url: https://slack.com/intl/en-in/security-practices
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.005220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: slack

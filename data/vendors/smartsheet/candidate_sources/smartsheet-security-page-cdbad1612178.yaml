@@ -1,0 +1,31 @@
+candidate_source_id: smartsheet-security-page-cdbad1612178
+candidate_status: selected
+candidate_url: https://www.smartsheet.com/trust/compliance/fedramp
+canonical_candidate_url: https://www.smartsheet.com/trust/compliance/fedramp
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.smartsheet.com/trust/compliance/fedramp
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Federal Risk and Authorization Management Program (FedRAMP) | Smartsheet
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4f1209eee8dd85753a4ecec1cfadd414ad417a89defe7d54884040e10cef5d6d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.smartsheet.com/trust/compliance/fedramp
+requested_url: https://www.smartsheet.com/trust/compliance/fedramp
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: smartsheet

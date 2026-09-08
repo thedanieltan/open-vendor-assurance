@@ -1,0 +1,31 @@
+candidate_source_id: slack-trust-center-7817d4a99f3b
+candidate_status: selected
+candidate_url: https://slack.com/intl/zh-tw/security
+canonical_candidate_url: https://slack.com/intl/zh-tw/trust/security
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.005220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://slack.com/intl/zh-tw/trust/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Slack 安全性：企業級加密 | Slack
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:ec17b612c980224b555f7db701e7878031be88e5aaa2657907b3fcbfccfec4d2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://slack.com/intl/zh-tw/trust/security
+requested_url: https://slack.com/intl/zh-tw/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.005220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: slack

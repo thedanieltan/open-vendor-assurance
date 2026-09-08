@@ -1,0 +1,31 @@
+candidate_source_id: slack-trust-center-eaf97d7d21c2
+candidate_status: selected
+candidate_url: https://slack.com/intl/en-gb/get-started?entry_point=trust
+canonical_candidate_url: https://slack.com/intl/en-gb/get-started?entry_point=trust
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.005220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://slack.com/intl/en-gb/get-started?entry_point=trust
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Log in | Slack
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0df82f98292c136fa019df8adcabce9a77f79529fe146b4fa91d178e879b768f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://slack.com/intl/en-gb/get-started?entry_point=trust
+requested_url: https://slack.com/intl/en-gb/get-started?entry_point=trust
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.005220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: slack

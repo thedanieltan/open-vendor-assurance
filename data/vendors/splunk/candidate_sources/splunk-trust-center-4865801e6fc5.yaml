@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-4865801e6fc5
+candidate_status: selected
+candidate_url: https://conf.splunk.com/global-broadcast-details-post-event.html
+canonical_candidate_url: https://conf.splunk.com/global-broadcast-replays.html
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://conf.splunk.com/global-broadcast-replays.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: .conf25 Global Broadcast On Demand | Splunk | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:791862d746fe4bfb7b2412f2d7c64a2cf305dfca4ba070bbeb5febc90e8c1189
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://conf.splunk.com/global-broadcast-replays.html
+requested_url: https://conf.splunk.com/global-broadcast-details-post-event.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
