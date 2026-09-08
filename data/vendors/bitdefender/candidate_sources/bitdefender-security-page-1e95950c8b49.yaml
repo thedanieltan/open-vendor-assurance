@@ -1,0 +1,32 @@
+candidate_source_id: bitdefender-security-page-1e95950c8b49
+candidate_status: selected
+candidate_url: https://www.bitdefender.com/fr-fr/renewal
+canonical_candidate_url: https://www.bitdefender.com/fr-fr/renewal/
+confidence: likely
+discovered_at: '2026-09-08T08:18:21.136196Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.bitdefender.com/fr-fr/renewal/
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Centre de renouvellement Bitdefender - Renouvelez vos abonnements Bitdefender
+    ou mettez-les à niveau
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5ab9b1b2d8f779e020425aa7bd376bf67b1356f247525adafc12dd2172a0e57d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bitdefender.com/fr-fr/renewal/
+requested_url: https://www.bitdefender.com/fr-fr/renewal
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:21.136196Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitdefender
