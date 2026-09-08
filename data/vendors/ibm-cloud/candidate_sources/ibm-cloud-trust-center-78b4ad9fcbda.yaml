@@ -1,0 +1,32 @@
+candidate_source_id: ibm-cloud-trust-center-78b4ad9fcbda
+candidate_status: selected
+candidate_url: https://www.ibm.com/services/security
+canonical_candidate_url: https://www.ibm.com/services/security
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.ibm.com/services/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: IBM Security Services
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d0bba0440187a67e768d58b72777b39280cd64eb00d69599d370c9dd59f7d8f4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.ibm.com/services/security
+requested_url: https://www.ibm.com/services/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: ibm-cloud
