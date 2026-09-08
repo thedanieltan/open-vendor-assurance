@@ -1,0 +1,33 @@
+candidate_source_id: thales-security-page-e034c99a9a82
+candidate_status: selected
+candidate_url: https://cpl.thalesgroup.com/encryption/vormetric-transparent-encryption
+canonical_candidate_url: https://cpl.thalesgroup.com/encryption/vormetric-transparent-encryption
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://cpl.thalesgroup.com/encryption/vormetric-transparent-encryption
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - trust
+  page_title: '&quot;Encryption of Data - Transparent Encryption'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fc9915fa974d0377a0d0525f033a777fea22417d0f9e3a12d2247e3eab7977c4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://cpl.thalesgroup.com/encryption/vormetric-transparent-encryption
+requested_url: https://cpl.thalesgroup.com/encryption/vormetric-transparent-encryption
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: thales

@@ -1,0 +1,34 @@
+candidate_source_id: thales-security-page-9aa243e85875
+candidate_status: selected
+candidate_url: https://cpl.thalesgroup.com/encryption/hardware-security-modules/pcie-hsms
+canonical_candidate_url: https://cpl.thalesgroup.com/encryption/hardware-security-modules/pcie-hsms
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://cpl.thalesgroup.com/encryption/hardware-security-modules/pcie-hsms
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - trust
+  page_title: Luna PCIe HSM | Cryptographic Acceleration from an Embedded HSM | Thales
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d0f09c2d2153bf02f0d7b6c668defd27e64fc7f12d4e57cd5edf85281636c1cf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://cpl.thalesgroup.com/encryption/hardware-security-modules/pcie-hsms
+requested_url: https://cpl.thalesgroup.com/encryption/hardware-security-modules/pcie-hsms
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: thales
