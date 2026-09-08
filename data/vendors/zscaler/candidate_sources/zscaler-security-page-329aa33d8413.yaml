@@ -1,0 +1,33 @@
+candidate_source_id: zscaler-security-page-329aa33d8413
+candidate_status: selected
+candidate_url: https://www.zscaler.com/capabilities/bandwidth-control
+canonical_candidate_url: https://www.zscaler.com/products-and-solutions/bandwidth-control
+confidence: likely
+discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zscaler.com/products-and-solutions/bandwidth-control
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Zscaler Bandwidth Control | Achieve Superior Network Management
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:a7e6c0921f333c12c5a21ef2d6fdd451fed979533d9e6c9d456e38749662b691
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zscaler.com/products-and-solutions/bandwidth-control
+requested_url: https://www.zscaler.com/capabilities/bandwidth-control
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:47.566016Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler
