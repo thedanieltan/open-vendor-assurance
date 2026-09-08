@@ -1,0 +1,32 @@
+candidate_source_id: soldo-compliance-page-b14fc6d8bd8e
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-gb/customers
+canonical_candidate_url: https://www.soldo.com/en-gb/customers/
+confidence: likely
+discovered_at: '2026-09-08T08:57:30.539670Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-gb/customers/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  page_title: How thousands of businesses are controlling spend with Soldo
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:91da517f0331bf70c5247890892ad8abad8d73bba932fe25394a7ded0eadff1e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-gb/customers/
+requested_url: https://www.soldo.com/en-gb/customers
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:57:30.539670Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo

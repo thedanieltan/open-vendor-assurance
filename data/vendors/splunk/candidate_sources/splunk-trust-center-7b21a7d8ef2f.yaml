@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-7b21a7d8ef2f
+candidate_status: selected
+candidate_url: https://agent-observability-docs.splunk.com/concepts/evaluators/safety-and-compliance/pii
+canonical_candidate_url: https://agent-observability-docs.splunk.com/concepts/evaluators/safety-and-compliance/pii
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://agent-observability-docs.splunk.com/concepts/evaluators/safety-and-compliance/pii
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: PII - Splunk Agent Observability
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:77abe532dad55bbc53acea0883b9bce9022b582be10f48a628d736e1755c8459
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://agent-observability-docs.splunk.com/concepts/evaluators/safety-and-compliance/pii
+requested_url: https://agent-observability-docs.splunk.com/concepts/evaluators/safety-and-compliance/pii
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

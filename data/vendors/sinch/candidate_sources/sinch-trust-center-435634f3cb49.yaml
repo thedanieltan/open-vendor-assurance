@@ -1,0 +1,33 @@
+candidate_source_id: sinch-trust-center-435634f3cb49
+candidate_status: selected
+candidate_url: https://sinch.com/legal/privacy-notice
+canonical_candidate_url: https://sinch.com/legal/privacy-notice/
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://sinch.com/legal/privacy-notice/
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: Explore Privacy Notice - Sinch
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:bbd453d9032fa72981bee7bf41beadc5a4589e4a5ab0e4a7da385d18e67e90d3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sinch.com/legal/privacy-notice/
+requested_url: https://sinch.com/legal/privacy-notice
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: sinch

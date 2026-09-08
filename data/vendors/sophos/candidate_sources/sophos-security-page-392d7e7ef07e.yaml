@@ -1,0 +1,33 @@
+candidate_source_id: sophos-security-page-392d7e7ef07e
+candidate_status: selected
+candidate_url: https://www.sophos.com/en-gb/products/phish-threat
+canonical_candidate_url: https://www.sophos.com/en-gb/products/phish-threat
+confidence: likely
+discovered_at: '2026-09-08T08:18:21.136196Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.sophos.com/en-gb/products/phish-threat
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Phishing Attack Employee Training | Sophos Phish Threat
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:eb3f2e46d1d935068da3c50e56b125ccb01ac0d4d8f5cd89c43c2b8a81c4339f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.sophos.com/en-gb/products/phish-threat
+requested_url: https://www.sophos.com/en-gb/products/phish-threat
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:21.136196Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: sophos

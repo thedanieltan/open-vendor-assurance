@@ -1,0 +1,33 @@
+candidate_source_id: sophos-security-page-de0c32385d0b
+candidate_status: selected
+candidate_url: https://www.sophos.com/en-us/trust/responsible-disclosure
+canonical_candidate_url: https://www.sophos.com/en-us/trust/responsible-disclosure
+confidence: likely
+discovered_at: '2026-09-08T08:18:21.136196Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.sophos.com/en-us/trust/responsible-disclosure
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Responsible Disclosure - Sophos Trust Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9e2349b5a1cbf4a44797f7d67af1c1b84a23126df6c53105dd6fffa3a281925f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.sophos.com/en-us/trust/responsible-disclosure
+requested_url: https://www.sophos.com/en-us/trust/responsible-disclosure
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:21.136196Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: sophos

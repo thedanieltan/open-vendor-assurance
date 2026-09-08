@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-6e06ce7b60b7
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/customer-success.html
+canonical_candidate_url: https://www.splunk.com/en_us/customer-success.html
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.splunk.com/en_us/customer-success.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Customer Success | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3b3707c7dcc040d8e5b3d34009171da1fd22d8962b14f9cf69bd4e07d1056ad9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/customer-success.html
+requested_url: https://www.splunk.com/en_us/customer-success.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

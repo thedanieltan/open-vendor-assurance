@@ -1,0 +1,32 @@
+candidate_source_id: solaris-compliance-page-7cd6f0f7015b
+candidate_status: selected
+candidate_url: https://www.solarisgroup.com/de
+canonical_candidate_url: https://www.solarisgroup.com/de/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.solarisgroup.com/de/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  page_title: Bauen Sie Ihre eigenen Banking-Produkte mit uns | Solaris
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1eb7eed1f91318330ba34cee2c69941e4100d4913fba5a634a9a68cd4e827ae3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.solarisgroup.com/de/
+requested_url: https://www.solarisgroup.com/de
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: solaris

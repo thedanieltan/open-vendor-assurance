@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-f5e156379ac6
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/ethical-hacking.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/ethical-hacking.html
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/ethical-hacking.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: What is Ethical Hacking? | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:00189d82091bc11127b14e4756e35b77ff2c0570b0b8a823594fe9b4f04c523a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/ethical-hacking.html
+requested_url: https://www.splunk.com/en_us/blog/learn/ethical-hacking.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

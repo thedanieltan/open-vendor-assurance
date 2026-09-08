@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-9cde28db3660
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/training/course-catalog.html?filters=filterGroup4SplunkCloud&size=n_20_n&sort=Newest
+canonical_candidate_url: https://www.splunk.com/en_us/training/course-catalog.html?filters=filterGroup4SplunkCloud&size=n_20_n&sort=Newest
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.splunk.com/en_us/training/course-catalog.html?filters=filterGroup4SplunkCloud&size=n_20_n&sort=Newest
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Course Catalog | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6bd4aefb0b0cb84c43886120c2ee3c3e8d1245c867234414623c6f1dab9e446c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/training/course-catalog.html?filters=filterGroup4SplunkCloud&size=n_20_n&sort=Newest
+requested_url: https://www.splunk.com/en_us/training/course-catalog.html?filters=filterGroup4SplunkCloud&size=n_20_n&sort=Newest
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

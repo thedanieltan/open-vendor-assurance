@@ -1,0 +1,33 @@
+candidate_source_id: slack-trust-center-4fe47f10f946
+candidate_status: selected
+candidate_url: https://slack.com/intl/de-de/security
+canonical_candidate_url: https://slack.com/intl/de-de/trust/security
+confidence: likely
+discovered_at: '2026-09-08T08:18:43.005220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://slack.com/intl/de-de/trust/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: 'Sicherheit bei Slack: Verschlüsselung für Unternehmen | Slack'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:bab4a62d7af1ef85f58d39a0a50f535c051608423c449263c4caedbe9338a6aa
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://slack.com/intl/de-de/trust/security
+requested_url: https://slack.com/intl/de-de/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:43.005220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: slack
