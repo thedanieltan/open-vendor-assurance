@@ -1,0 +1,31 @@
+candidate_source_id: gmo-globalsign-security-page-3b151c6e577c
+candidate_status: selected
+candidate_url: https://www.globalsign.com/de-de/ssl-information-center/certificate-authority-root
+canonical_candidate_url: https://www.globalsign.com/de-de/ssl-information-center/certificate-authority-root
+confidence: likely
+discovered_at: '2026-09-08T08:18:27.734220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.globalsign.com/de-de/ssl-information-center/certificate-authority-root
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GlobalSign Root-Zertifikat | GlobalSign
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ce8fb0ba425abd8355c4d419f5ad1bf0a52b885dbe3e8de306c181dd815fd9cf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.globalsign.com/de-de/ssl-information-center/certificate-authority-root
+requested_url: https://www.globalsign.com/de-de/ssl-information-center/certificate-authority-root
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:27.734220Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gmo-globalsign
