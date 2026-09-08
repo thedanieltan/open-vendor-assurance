@@ -60,6 +60,17 @@ def test_recovery_filters_only_exact_plan_referenced_candidates() -> None:
     assert "tools.openva.discovery_mesh_intake materialize" in text
 
 
+def test_recovery_reconciles_plan_actions_already_durable_in_repository() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Resident promotion candidates reused" in text
+    assert "promotion candidate missing from source report and repository" in text
+    assert "resident promotion candidate vendor mismatch" in text
+    assert "resident promotion candidate id mismatch" in text
+    assert "resident promotion candidate URL mismatch" in text
+    assert "candidate reconciliation left" in text
+
+
 def test_recovery_uses_bounded_repository_transactions_not_catalog_limits() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
@@ -76,6 +87,16 @@ def test_recovery_waits_for_mergeable_before_enabling_automerge() -> None:
     assert 'gh pr view "$pr_number" --json mergeable --jq .mergeable' in text
     assert 'if [ "$mergeable" != "UNKNOWN" ]; then' in text
     assert 'EXISTING_STATE=$(jq -r \'.[0].state\' <<< "$EXISTING")' in text
+
+
+def test_recovery_passes_large_partition_json_by_file_not_argv() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert 'PARTITION_FILE="$RUNNER_TEMP/discovery-mesh-intake-partition-${PARTITION_ID}.json"' in text
+    assert 'printf \'%s\' "$PARTITION_JSON" > "$PARTITION_FILE"' in text
+    assert 'python - "$PARTITION_FILE" "$CHANGED"' in text
+    assert 'partition = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))' in text
+    assert 'python - "$PARTITION_JSON" "$CHANGED"' not in text
 
 
 def test_discovery_mesh_no_longer_attempts_monolithic_repository_intake() -> None:
