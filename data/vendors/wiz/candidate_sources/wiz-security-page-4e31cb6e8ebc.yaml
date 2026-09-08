@@ -1,0 +1,32 @@
+candidate_source_id: wiz-security-page-4e31cb6e8ebc
+candidate_status: selected
+candidate_url: https://www.wiz.io/feed/rss.xml
+canonical_candidate_url: https://www.wiz.io/feed/rss.xml
+confidence: likely
+discovered_at: '2026-09-08T08:18:12.364725Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/xml
+  final_url: https://www.wiz.io/feed/rss.xml
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Wiz Blog | RSS feed
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:765e21c65430bcdad773b6a4bac6adea09bf4c92ba8eb28cc63300101e5b385d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/feed/rss.xml
+requested_url: https://www.wiz.io/feed/rss.xml
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:12.364725Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz

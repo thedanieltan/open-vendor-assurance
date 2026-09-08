@@ -1,0 +1,34 @@
+candidate_source_id: zendesk-trust-center-f4608f143e8a
+candidate_status: selected
+candidate_url: https://support.zendesk.com/hc/en-us/articles/4408833510938-The-Zendesk-Shared-Responsibility-Model
+canonical_candidate_url: https://support.zendesk.com/hc/en-us/articles/4408833510938-The-Zendesk-Shared-Responsibility-Model
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.zendesk.com/hc/en-us/articles/4408833510938-The-Zendesk-Shared-Responsibility-Model
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: The Zendesk Shared Responsibility Model &ndash; Zendesk help
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b54bb811439c8c9dd4721b2da0f76e874245987f3ebecb83d3e4f1a72dcc6c56
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.zendesk.com/hc/en-us/articles/4408833510938-The-Zendesk-Shared-Responsibility-Model
+requested_url: https://support.zendesk.com/hc/en-us/articles/4408833510938-The-Zendesk-Shared-Responsibility-Model
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: zendesk

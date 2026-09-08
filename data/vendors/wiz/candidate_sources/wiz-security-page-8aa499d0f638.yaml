@@ -1,0 +1,33 @@
+candidate_source_id: wiz-security-page-8aa499d0f638
+candidate_status: selected
+candidate_url: https://www.wiz.io/blog/dirty-frag-linux-kernel-local-privilege-escalation-via-esp-and-rxrpc
+canonical_candidate_url: https://www.wiz.io/blog/dirty-frag-linux-kernel-local-privilege-escalation-via-esp-and-rxrpc
+confidence: likely
+discovered_at: '2026-09-08T08:18:12.364725Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/blog/dirty-frag-linux-kernel-local-privilege-escalation-via-esp-and-rxrpc
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Dirty Frag (CVE-2026-43284) Linux Privilege Escalation | Wiz Blog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a898b696f39dfb65d6f9a96bc735ebf028cae40417e7e4f00198943c500329fc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/blog/dirty-frag-linux-kernel-local-privilege-escalation-via-esp-and-rxrpc
+requested_url: https://www.wiz.io/blog/dirty-frag-linux-kernel-local-privilege-escalation-via-esp-and-rxrpc
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:12.364725Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz

@@ -1,0 +1,35 @@
+candidate_source_id: wiz-security-page-d621dc731f2a
+candidate_status: selected
+candidate_url: https://cloud.google.com/architecture/framework/security
+canonical_candidate_url: https://cloud.google.com/architecture/framework/security
+confidence: likely
+discovered_at: '2026-09-08T08:18:12.364725Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.cloud.google.com/architecture/framework/security
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - incident
+  - trust
+  page_title: 'Well-Architected Framework: Security, privacy, and compliance pillar
+    &nbsp;|&nbsp; Cloud Architecture Center &nbsp;|&nbsp; Google Cloud Documentation'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:743d175580a78111561d5ccb0add23beff6c752d1cd0d383c79ee8e1ba9fdd0f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.cloud.google.com/architecture/framework/security
+requested_url: https://cloud.google.com/architecture/framework/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:12.364725Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz

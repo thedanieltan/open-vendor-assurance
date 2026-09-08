@@ -1,0 +1,33 @@
+candidate_source_id: zendesk-trust-center-cf0c68e67ef8
+candidate_status: selected
+candidate_url: https://support.zendesk.com/hc/en-us/articles/4980543927322
+canonical_candidate_url: https://support.zendesk.com/hc/en-us/articles/4980543927322-How-We-Protect-Your-Service-Data-Enterprise-Services
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.zendesk.com/hc/en-us/articles/4980543927322-How-We-Protect-Your-Service-Data-Enterprise-Services
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: How We Protect Your Service Data (Enterprise Services) &ndash; Zendesk
+    help
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:6bcc03ada3ed3bba97c69b6c8d6b5b84c5a1d1fbcaea8b8ed0540fa6df7adb98
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.zendesk.com/hc/en-us/articles/4980543927322-How-We-Protect-Your-Service-Data-Enterprise-Services
+requested_url: https://support.zendesk.com/hc/en-us/articles/4980543927322
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: zendesk

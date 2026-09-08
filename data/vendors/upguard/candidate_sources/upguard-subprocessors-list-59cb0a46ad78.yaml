@@ -1,0 +1,31 @@
+candidate_source_id: upguard-subprocessors-list-59cb0a46ad78
+candidate_status: selected
+candidate_url: https://www.upguard.com/security-report/cisco
+canonical_candidate_url: https://www.upguard.com/security-report/cisco
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://www.upguard.com/security-report/cisco
+  http_status: 200
+  matched_terms:
+  - subprocessor
+  - service providers
+  page_title: Cisco Security Rating, Vendor Risk Report, and Data Breaches | UpGuard
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3ef67a65c65909e4e067f36af9f9051dbfecc5e8962e4507cd9c74ba53797995
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.upguard.com/security-report/cisco
+requested_url: https://www.upguard.com/security-report/cisco
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: subprocessors_list
+superseded_by_candidate_id: null
+vendor_id: upguard

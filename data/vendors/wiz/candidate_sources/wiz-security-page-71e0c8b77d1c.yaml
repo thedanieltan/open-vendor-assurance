@@ -1,0 +1,33 @@
+candidate_source_id: wiz-security-page-71e0c8b77d1c
+candidate_status: selected
+candidate_url: https://www.wiz.io/blog/amazon-q-vulnerability
+canonical_candidate_url: https://www.wiz.io/blog/amazon-q-vulnerability
+confidence: likely
+discovered_at: '2026-09-08T08:18:12.364725Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/blog/amazon-q-vulnerability
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: 'Amazon Q Vulnerability: Compromise via MCP Auto-Execution | Wiz Blog'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6127bc750a4150db6447af15a250598a607e9a4fee76cd9592f99bf931c3bef4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/blog/amazon-q-vulnerability
+requested_url: https://www.wiz.io/blog/amazon-q-vulnerability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:12.364725Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz

@@ -1,0 +1,34 @@
+candidate_source_id: zendesk-trust-center-733b547b40f8
+candidate_status: selected
+candidate_url: https://support.zendesk.com/hc/en-us/articles/6059285322522-Generative-AI-at-Zendesk
+canonical_candidate_url: https://support.zendesk.com/hc/en-us/articles/6059285322522-Generative-AI-at-Zendesk
+confidence: likely
+discovered_at: '2026-09-08T09:12:32.215849Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.zendesk.com/hc/en-us/articles/6059285322522-Generative-AI-at-Zendesk
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - compliance
+  - privacy
+  page_title: Generative AI at Zendesk &ndash; Zendesk help
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7f72a51de5542f805eba090497cd6ed8e8d3e72b32c66d0277837e60e570aa60
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.zendesk.com/hc/en-us/articles/6059285322522-Generative-AI-at-Zendesk
+requested_url: https://support.zendesk.com/hc/en-us/articles/6059285322522-Generative-AI-at-Zendesk
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:12:32.215849Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: zendesk
