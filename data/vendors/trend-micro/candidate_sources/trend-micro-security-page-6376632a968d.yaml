@@ -1,0 +1,34 @@
+candidate_source_id: trend-micro-security-page-6376632a968d
+candidate_status: selected
+candidate_url: https://www.trendmicro.com/vinfo/br/threat-encyclopedia/vulnerability
+canonical_candidate_url: https://www.trendmicro.com/vinfo/us/threat-encyclopedia/vulnerability
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.trendmicro.com/vinfo/us/threat-encyclopedia/vulnerability
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Vulnerabilities – Alerts & Solutions - Threat Encyclopedia | Trend Micro
+    (US)
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:9c2e8d0376734063c883baae2b80a53006df7b4cdeac0c69b3c9214c40cf779f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.trendmicro.com/vinfo/us/threat-encyclopedia/vulnerability
+requested_url: https://www.trendmicro.com/vinfo/br/threat-encyclopedia/vulnerability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro

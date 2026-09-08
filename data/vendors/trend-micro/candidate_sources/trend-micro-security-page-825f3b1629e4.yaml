@@ -1,0 +1,31 @@
+candidate_source_id: trend-micro-security-page-825f3b1629e4
+candidate_status: selected
+candidate_url: https://en.community.trendmicro.com/
+canonical_candidate_url: https://en.community.trendmicro.com/
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://discussions.trendmicro.com/en-us
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Home &nbsp;&middot; Community Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:4265cc119223da541a7d7daddf9a4a21b622b5fe922603ebabc564ea531db752
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://discussions.trendmicro.com/en-us
+requested_url: https://en.community.trendmicro.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro

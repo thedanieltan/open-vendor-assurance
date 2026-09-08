@@ -1,0 +1,32 @@
+candidate_source_id: trend-micro-security-page-4bb4e3e20602
+candidate_status: selected
+candidate_url: https://www.trendmicro.com/en_us/apache-log4j-vulnerability.html
+canonical_candidate_url: https://www.trendmicro.com/en_us/apache-log4j-vulnerability.html
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.trendmicro.com/en_us/apache-log4j-vulnerability.html
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Log4j (Log4Shell) Vulnerability - What To Know | Trend Micro (US)
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:71aa41add292aed5799986713b8e0d6530b8abb3f8242f5bf4c313fed280e864
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.trendmicro.com/en_us/apache-log4j-vulnerability.html
+requested_url: https://www.trendmicro.com/en_us/apache-log4j-vulnerability.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro
