@@ -1,0 +1,34 @@
+candidate_source_id: hubspot-trust-center-1bf482571b3c
+candidate_status: selected
+candidate_url: https://trust.hubspot.com/ai
+canonical_candidate_url: https://trust.hubspot.com/ai
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://trust.hubspot.com/ai
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  page_title: HubSpot&#x27;s AI Model Cards
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7ee543d19f60e39fe642f60843a6e0b4ce555c10102ca11faec1fa94267ec2de
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trust.hubspot.com/ai
+requested_url: https://trust.hubspot.com/ai
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: hubspot

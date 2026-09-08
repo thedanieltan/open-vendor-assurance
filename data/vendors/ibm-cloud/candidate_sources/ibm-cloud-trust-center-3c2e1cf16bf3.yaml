@@ -1,0 +1,31 @@
+candidate_source_id: ibm-cloud-trust-center-3c2e1cf16bf3
+candidate_status: selected
+candidate_url: https://www.ibm.com/think/topics/phishing
+canonical_candidate_url: https://www.ibm.com/think/topics/phishing
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.ibm.com/think/topics/phishing
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: What is Phishing? | IBM
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:570c8b6507e60311d9e366980ff53b859dc5beac10fc3690640f6bf2fd73e209
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.ibm.com/think/topics/phishing
+requested_url: https://www.ibm.com/think/topics/phishing
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: ibm-cloud

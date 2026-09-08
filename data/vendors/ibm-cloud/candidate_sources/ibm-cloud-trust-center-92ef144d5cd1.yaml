@@ -1,0 +1,33 @@
+candidate_source_id: ibm-cloud-trust-center-92ef144d5cd1
+candidate_status: selected
+candidate_url: https://www.ibm.com/products/cloud/compliance/iso-27001?contactmodule=
+canonical_candidate_url: https://www.ibm.com/products/cloud/compliance/iso-27001?contactmodule=
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.ibm.com/products/cloud/compliance/iso-27001?contactmodule=
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: What is ISO/IEC 27001? | IBM
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8c84e23bf4bd7d425ef76eed6de3ef9e682c29f0a0685b293e7b879c7223af0d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.ibm.com/products/cloud/compliance/iso-27001?contactmodule=
+requested_url: https://www.ibm.com/products/cloud/compliance/iso-27001?contactmodule=
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: ibm-cloud

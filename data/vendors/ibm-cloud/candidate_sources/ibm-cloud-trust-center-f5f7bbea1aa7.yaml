@@ -1,0 +1,33 @@
+candidate_source_id: ibm-cloud-trust-center-f5f7bbea1aa7
+candidate_status: selected
+candidate_url: https://cloud.ibm.com/docs/vpc?topic=vpc-alb-mtls-about
+canonical_candidate_url: https://cloud.ibm.com/docs/vpc?topic=vpc-alb-mtls-about
+confidence: likely
+discovered_at: '2026-09-08T08:19:51.124365Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://cloud.ibm.com/docs/vpc?topic=vpc-alb-mtls-about
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: About mutual TLS authentication for application load balancers | IBM
+    Cloud Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5f02d44816d07005eef8ec21fefb4679997d5af3ea61e650dd2575b0b02addfe
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://cloud.ibm.com/docs/vpc?topic=vpc-alb-mtls-about
+requested_url: https://cloud.ibm.com/docs/vpc?topic=vpc-alb-mtls-about
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:51.124365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: ibm-cloud
