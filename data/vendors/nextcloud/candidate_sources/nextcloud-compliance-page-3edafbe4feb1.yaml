@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-compliance-page-3edafbe4feb1
+candidate_status: selected
+candidate_url: https://docs.nextcloud.com/server/latest/admin_manual/release_schedule.html
+canonical_candidate_url: https://docs.nextcloud.com/server/latest/admin_manual/release_schedule.html
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.nextcloud.com/server/latest/admin_manual/release_schedule.html
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  page_title: Maintenance and release schedule &mdash; Nextcloud 35 Administration
+    Manual
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c2f21b013083ae49b46cf09a5acb63e052a8ea73a6498f2a984bcb5eb5eb9d8a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.nextcloud.com/server/latest/admin_manual/release_schedule.html
+requested_url: https://docs.nextcloud.com/server/latest/admin_manual/release_schedule.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

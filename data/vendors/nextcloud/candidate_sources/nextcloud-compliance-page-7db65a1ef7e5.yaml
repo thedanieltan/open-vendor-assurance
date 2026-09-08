@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-compliance-page-7db65a1ef7e5
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/admin_audit_http_client
+canonical_candidate_url: https://apps.nextcloud.com/apps/admin_audit_http_client
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/admin_audit_http_client
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  page_title: Auditing / HTTP Client Logging - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c4eb029017b90caf332ed414ece1d3f3983a66754e2dada6e7be7f80dfb92df7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/admin_audit_http_client
+requested_url: https://apps.nextcloud.com/apps/admin_audit_http_client
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

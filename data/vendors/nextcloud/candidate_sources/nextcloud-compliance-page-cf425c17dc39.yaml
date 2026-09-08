@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-compliance-page-cf425c17dc39
+candidate_status: selected
+candidate_url: https://nextcloud.com/platform
+canonical_candidate_url: https://nextcloud.com/platform/
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://nextcloud.com/platform/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  - trust
+  page_title: Nextcloud - One unified platform for all collaboration needs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2a0f240c6cdb74df5f01dab00f3f630b51510016b4bf8ac2608921c9fad8f43f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://nextcloud.com/platform/
+requested_url: https://nextcloud.com/platform
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

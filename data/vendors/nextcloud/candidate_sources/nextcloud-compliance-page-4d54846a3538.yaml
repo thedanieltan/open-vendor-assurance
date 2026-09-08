@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-compliance-page-4d54846a3538
+candidate_status: selected
+candidate_url: https://nextcloud.com/de/migration
+canonical_candidate_url: https://nextcloud.com/de/migration/
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://nextcloud.com/de/migration/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  page_title: 'Zu Nextcloud wechseln: Einfach und sicher'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2da409ad0370a8909dc19c074a9e20be02650541fcb84b5ac69c03de1f04fb0b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://nextcloud.com/de/migration/
+requested_url: https://nextcloud.com/de/migration
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud
