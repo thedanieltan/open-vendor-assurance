@@ -1,0 +1,32 @@
+candidate_source_id: render-security-page-4efe70261d42
+candidate_status: selected
+candidate_url: https://render.com/docs/shared-responsibility-model
+canonical_candidate_url: https://render.com/docs/shared-responsibility-model
+confidence: likely
+discovered_at: '2026-09-08T08:56:44.568759Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://render.com/docs/shared-responsibility-model
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - incident
+  page_title: Shared Responsibility Model – Render Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b2ee6c33be5d28f48f290d24871fcf4ac84d00b2c38e2fd7854878de50525d6c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://render.com/docs/shared-responsibility-model
+requested_url: https://render.com/docs/shared-responsibility-model
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:56:44.568759Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: render

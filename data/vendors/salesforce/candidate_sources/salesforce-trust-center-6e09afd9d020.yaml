@@ -1,0 +1,33 @@
+candidate_source_id: salesforce-trust-center-6e09afd9d020
+candidate_status: selected
+candidate_url: https://www.salesforce.com/products/what-is-salesforce
+canonical_candidate_url: https://www.salesforce.com/products/what-is-salesforce/?bc=HL
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.salesforce.com/products/what-is-salesforce/?bc=HL
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: What is Salesforce? | Salesforce
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:2005ea9000e6faf77ab62a37c25d36eae0b042f48e2d3c92eaabe9a227b6ac1f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.salesforce.com/products/what-is-salesforce/?bc=HL
+requested_url: https://www.salesforce.com/products/what-is-salesforce
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce

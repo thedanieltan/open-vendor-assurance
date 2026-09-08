@@ -1,0 +1,31 @@
+candidate_source_id: salesforce-trust-center-d4ab2d53b13a
+candidate_status: selected
+candidate_url: https://security.salesforce.com/zh-cn
+canonical_candidate_url: https://security.salesforce.com/zh-cn/
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://security.salesforce.com/zh-cn/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Salesforce 安全性 &#8211; salesforcesecurity.go-vip.net
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:25ae0da47b96624419c7990929debff7e91d11e989b509fb7757113a4648cf05
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://security.salesforce.com/zh-cn/
+requested_url: https://security.salesforce.com/zh-cn
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce

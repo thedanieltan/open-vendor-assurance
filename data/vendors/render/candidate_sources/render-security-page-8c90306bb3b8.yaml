@@ -1,0 +1,32 @@
+candidate_source_id: render-security-page-8c90306bb3b8
+candidate_status: selected
+candidate_url: https://render.com/docs/penetration-testing
+canonical_candidate_url: https://render.com/docs/penetration-testing
+confidence: likely
+discovered_at: '2026-09-08T08:56:44.568759Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://render.com/docs/penetration-testing
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: Render Penetration Testing Policy – Render Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5689b22754f2dd9a126920f74f8900a15843533eab04e2302c4f86c32a54113a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://render.com/docs/penetration-testing
+requested_url: https://render.com/docs/penetration-testing
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:56:44.568759Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: render

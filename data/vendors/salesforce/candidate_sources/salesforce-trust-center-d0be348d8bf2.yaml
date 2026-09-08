@@ -1,0 +1,33 @@
+candidate_source_id: salesforce-trust-center-d0be348d8bf2
+candidate_status: selected
+candidate_url: https://security.salesforce.com/zh-cn/contact
+canonical_candidate_url: https://security.salesforce.com/zh-cn/contact/
+confidence: likely
+discovered_at: '2026-09-08T09:21:32.640147Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://security.salesforce.com/zh-cn/contact/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: 联系 Salesforce 安全部门 &#8211; salesforcesecurity.go-vip.net
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5cd60fd4c22bc136edd439bd65625b45408a85ce1e6d1192fb16d9924dc66fd6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://security.salesforce.com/zh-cn/contact/
+requested_url: https://security.salesforce.com/zh-cn/contact
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:21:32.640147Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce

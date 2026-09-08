@@ -1,0 +1,34 @@
+candidate_source_id: render-security-page-25b8505a52b1
+candidate_status: selected
+candidate_url: https://render.com/security/hipaa
+canonical_candidate_url: https://render.com/features/hipaa
+confidence: likely
+discovered_at: '2026-09-08T08:56:44.568759Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://render.com/features/hipaa
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: HIPAA-Ready Infrastructure | Render
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:1fdefd056e7b04089d61837f5b16e2f0eb1654e080e190e2f657eaef843d9a5d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://render.com/features/hipaa
+requested_url: https://render.com/security/hipaa
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:56:44.568759Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: render

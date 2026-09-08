@@ -1,0 +1,31 @@
+candidate_source_id: rossum-security-page-6bcfbee20b3a
+candidate_status: selected
+candidate_url: https://status.rossum.ai/history.rss
+canonical_candidate_url: https://status.rossum.ai/history.rss
+confidence: likely
+discovered_at: '2026-09-08T08:18:11.979189Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/rss+xml; charset=utf-8
+  final_url: https://status.rossum.ai/history.rss
+  http_status: 200
+  matched_terms:
+  - availability
+  - incident
+  page_title: Rossum Status - Incident History
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f045c734f5a93f44200d093bbb3ac9153a443e68c3fb10f5787a26067501216a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.rossum.ai/history.rss
+requested_url: https://status.rossum.ai/history.rss
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:11.979189Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: rossum
