@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-compliance-page-13e069e2289a
+candidate_status: selected
+candidate_url: https://nextcloud.com/it/enterprise
+canonical_candidate_url: https://nextcloud.com/it/enterprise/
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://nextcloud.com/it/enterprise/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Enterprise - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:91cd9ca60b8c1fcf601b080e08b1ce8ff0a903f49cd5d5b0df0fb11e9d5f5013
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://nextcloud.com/it/enterprise/
+requested_url: https://nextcloud.com/it/enterprise
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

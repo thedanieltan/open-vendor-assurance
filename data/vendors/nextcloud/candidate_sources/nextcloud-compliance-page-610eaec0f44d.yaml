@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-compliance-page-610eaec0f44d
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/categories/security?order_by=rating_recent&ordering=desc
+canonical_candidate_url: https://apps.nextcloud.com/categories/security?order_by=rating_recent&ordering=desc
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/categories/security?order_by=rating_recent&ordering=desc
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  - trust
+  page_title: Security - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1143fd9f78143c188913320213fead7e3f441695321b8e56549733262428aa43
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/categories/security?order_by=rating_recent&ordering=desc
+requested_url: https://apps.nextcloud.com/categories/security?order_by=rating_recent&ordering=desc
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

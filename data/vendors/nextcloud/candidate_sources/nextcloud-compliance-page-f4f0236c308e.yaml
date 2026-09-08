@@ -1,0 +1,33 @@
+candidate_source_id: nextcloud-compliance-page-f4f0236c308e
+candidate_status: selected
+candidate_url: https://nextcloud.com/es/recursos
+canonical_candidate_url: https://nextcloud.com/es/recursos/
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://nextcloud.com/es/recursos/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  - iso
+  - audit
+  page_title: Recursos de conocimiento - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:767eb9eaf9c5ed4849e291da9b55ff269b4fb248e44b7c930fc098cb24574955
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://nextcloud.com/es/recursos/
+requested_url: https://nextcloud.com/es/recursos
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

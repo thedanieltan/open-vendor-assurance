@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-compliance-page-a83c122f41ad
+candidate_status: selected
+candidate_url: https://docs.nextcloud.com/server/latest/admin_manual/installation/server_tuning.html
+canonical_candidate_url: https://docs.nextcloud.com/server/latest/admin_manual/installation/server_tuning.html
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.nextcloud.com/server/latest/admin_manual/installation/server_tuning.html
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  - iso
+  page_title: Server tuning &mdash; Nextcloud 35 Administration Manual
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6a22100c052b3ca4ffb7b8439a0baf47f138145aa309e84ad47117acc14ccde3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.nextcloud.com/server/latest/admin_manual/installation/server_tuning.html
+requested_url: https://docs.nextcloud.com/server/latest/admin_manual/installation/server_tuning.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

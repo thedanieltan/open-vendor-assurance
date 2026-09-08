@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-trust-center-aca77c07227e
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/integration_jupyterhub
+canonical_candidate_url: https://apps.nextcloud.com/apps/integration_jupyterhub
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/integration_jupyterhub
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: JupyterHub Integration - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:15aa22e106463fbd27694f19bfcd440511071f8acd9dd1959c26bdd3835fc59f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/integration_jupyterhub
+requested_url: https://apps.nextcloud.com/apps/integration_jupyterhub
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud

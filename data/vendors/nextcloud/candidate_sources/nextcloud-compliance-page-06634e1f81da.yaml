@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-compliance-page-06634e1f81da
+candidate_status: selected
+candidate_url: https://nextcloud.com/de/verschlusselung
+canonical_candidate_url: https://nextcloud.com/de/datenverschluesselung/
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://nextcloud.com/de/datenverschluesselung/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  - audit
+  page_title: Verschlüsselung und Härtung in Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:40aabcd858d85fec85d2c1e65bb718ac3a7950203c28bd72bbd879fe6d6528db
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://nextcloud.com/de/datenverschluesselung/
+requested_url: https://nextcloud.com/de/verschlusselung
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: nextcloud

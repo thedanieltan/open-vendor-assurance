@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-trust-center-ca6d07c369c5
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/integration_signd
+canonical_candidate_url: https://apps.nextcloud.com/apps/integration_signd
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/integration_signd
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: signd.it Integration - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4da78e9562c6e32a837e0b9497337415b5ba6e3b2df8227e4d61d0d5bba731ea
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/integration_signd
+requested_url: https://apps.nextcloud.com/apps/integration_signd
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud
