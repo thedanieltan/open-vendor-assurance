@@ -1,0 +1,31 @@
+candidate_source_id: bugcrowd-security-page-0a4cadaa5807
+candidate_status: selected
+candidate_url: https://tracker.bugcrowd.com/products/pricing/vulnerability_disclosure
+canonical_candidate_url: https://tracker.bugcrowd.com/products/pricing/vulnerability_disclosure
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/bugcrowd-pricing/vulnerability_disclosure/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Vulnerability Disclosure Program Pricing | Bugcrowd
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:d749d7f15622fdf75dd5dcee78e140a60a6d34eee13309587b9f760f2e3e38e4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/bugcrowd-pricing/vulnerability_disclosure/
+requested_url: https://tracker.bugcrowd.com/products/pricing/vulnerability_disclosure
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd

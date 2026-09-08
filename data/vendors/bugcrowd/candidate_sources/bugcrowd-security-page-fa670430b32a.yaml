@@ -1,0 +1,33 @@
+candidate_source_id: bugcrowd-security-page-fa670430b32a
+candidate_status: selected
+candidate_url: https://docs.bugcrowd.com/customers/submission-management/severity-overview
+canonical_candidate_url: https://docs.bugcrowd.com/customers/submission-management/severity-overview/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.bugcrowd.com/customers/submission-management/severity-overview/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Managing Submission Severity | Bugcrowd Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b461c0efc4da4bf4d6c5166b3df20c43d2ae28e361f6207eb66a458f5d7503cc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.bugcrowd.com/customers/submission-management/severity-overview/
+requested_url: https://docs.bugcrowd.com/customers/submission-management/severity-overview
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd

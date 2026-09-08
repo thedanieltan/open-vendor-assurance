@@ -1,0 +1,32 @@
+candidate_source_id: bugcrowd-security-page-a2d6559b5fba
+candidate_status: selected
+candidate_url: https://docs.bugcrowd.com/researchers/managing-account/performance-metrics/average-severity
+canonical_candidate_url: https://docs.bugcrowd.com/researchers/managing-account/performance-metrics/average-severity/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.bugcrowd.com/researchers/managing-account/performance-metrics/average-severity/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Average Severity | Bugcrowd Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:bdc5c40a65a42844ad8d27310ebaa4dfd59e8c8a9d0cccbb4bc287202d0cf09e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.bugcrowd.com/researchers/managing-account/performance-metrics/average-severity/
+requested_url: https://docs.bugcrowd.com/researchers/managing-account/performance-metrics/average-severity
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
