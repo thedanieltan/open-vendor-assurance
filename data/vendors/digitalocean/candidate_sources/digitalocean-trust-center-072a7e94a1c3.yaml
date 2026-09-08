@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-072a7e94a1c3
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/platform/teams/details
+canonical_candidate_url: https://docs.digitalocean.com/platform/teams/
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/platform/teams/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: DigitalOcean Teams | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:95bec696ab336cc61f364bbbc98102b7062e05567fa2b16bee901daaa3a86c31
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/platform/teams/
+requested_url: https://docs.digitalocean.com/platform/teams/details
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-de704403b03b
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/products/kubernetes/details/availability
+canonical_candidate_url: https://docs.digitalocean.com/products/kubernetes/details/availability/
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/products/kubernetes/details/availability/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Kubernetes Availability | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3d8446821bd62fab8c0d3081cd573c9dbbd38fd894ca0eb2c98709acb919ba01
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/products/kubernetes/details/availability/
+requested_url: https://docs.digitalocean.com/products/kubernetes/details/availability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

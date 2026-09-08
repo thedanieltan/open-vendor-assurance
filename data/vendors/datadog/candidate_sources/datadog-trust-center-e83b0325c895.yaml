@@ -1,0 +1,32 @@
+candidate_source_id: datadog-trust-center-e83b0325c895
+candidate_status: selected
+candidate_url: https://www.datadoghq.com/product/audit-trail
+canonical_candidate_url: https://www.datadoghq.com/product/audit-trail/
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.datadoghq.com/product/audit-trail/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Audit Trail | Datadog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6b52e2f730a35a65dab7df5f01710ed40f2814ef40a5419f4bb9d04288f88640
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.datadoghq.com/product/audit-trail/
+requested_url: https://www.datadoghq.com/product/audit-trail
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog

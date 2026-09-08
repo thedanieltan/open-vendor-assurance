@@ -1,0 +1,32 @@
+candidate_source_id: datadog-trust-center-5b9879cf270d
+candidate_status: selected
+candidate_url: https://www.datadoghq.com/product/code-security
+canonical_candidate_url: https://www.datadoghq.com/product/code-security/
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.datadoghq.com/product/code-security/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Code Security Platform | Datadog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2aee82fc372a327d48998ba2c319cb22626e0a7566ede23973fee8f5546d1093
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.datadoghq.com/product/code-security/
+requested_url: https://www.datadoghq.com/product/code-security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog

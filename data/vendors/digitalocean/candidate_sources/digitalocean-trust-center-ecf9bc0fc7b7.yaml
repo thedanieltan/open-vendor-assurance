@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-ecf9bc0fc7b7
+candidate_status: selected
+candidate_url: https://www.digitalocean.com/legal/contact-security
+canonical_candidate_url: https://www.digitalocean.com/legal/contact-security
+confidence: likely
+discovered_at: '2026-09-08T08:18:08.131206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.digitalocean.com/legal/contact-security
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Legal - Contact Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e99bcd5f5f30e02d8966224da2334cdf870fcc1d90417b98605cc0ded6098bff
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.digitalocean.com/legal/contact-security
+requested_url: https://www.digitalocean.com/legal/contact-security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:08.131206Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

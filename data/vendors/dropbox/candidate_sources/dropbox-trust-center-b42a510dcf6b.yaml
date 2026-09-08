@@ -1,0 +1,33 @@
+candidate_source_id: dropbox-trust-center-b42a510dcf6b
+candidate_status: selected
+candidate_url: https://events.dropbox.com/
+canonical_candidate_url: https://events.dropbox.com/
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://events.dropbox.com/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Dropbox Events - Dropbox
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1f5770bfa99880153f05c27b49b452bb66b409461009bd46b3c586bf442c2313
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://events.dropbox.com/
+requested_url: https://events.dropbox.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: dropbox

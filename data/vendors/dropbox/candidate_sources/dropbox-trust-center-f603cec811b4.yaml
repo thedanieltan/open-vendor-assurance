@@ -1,0 +1,32 @@
+candidate_source_id: dropbox-trust-center-f603cec811b4
+candidate_status: selected
+candidate_url: https://www.dropbox.com/features/sync/transfer-photos
+canonical_candidate_url: https://www.dropbox.com/features/sync/transfer-photos
+confidence: likely
+discovered_at: '2026-09-08T08:18:39.023240Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.dropbox.com/features/sync/transfer-photos
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Secure Photo Transfer App for Mobile to Desktop - Dropbox
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:20f7d8866b6011347c35364a534fa2ca78f8effb7f3440f9e443d6889c61d2d4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.dropbox.com/features/sync/transfer-photos
+requested_url: https://www.dropbox.com/features/sync/transfer-photos
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:39.023240Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: dropbox

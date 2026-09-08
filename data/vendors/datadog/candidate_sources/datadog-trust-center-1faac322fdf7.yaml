@@ -1,0 +1,32 @@
+candidate_source_id: datadog-trust-center-1faac322fdf7
+candidate_status: selected
+candidate_url: https://www.datadoghq.com/product/metrics
+canonical_candidate_url: https://www.datadoghq.com/product/metrics/
+confidence: likely
+discovered_at: '2026-09-08T08:18:16.968099Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.datadoghq.com/product/metrics/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Metrics | Datadog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f5459d423562b3541e0dff2242c21419b86d24fca60c153d3f5f3ce2852e241a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.datadoghq.com/product/metrics/
+requested_url: https://www.datadoghq.com/product/metrics
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:16.968099Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog
