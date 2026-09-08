@@ -76,13 +76,14 @@ jobs:
         id: evidence
         env:
           ARTIFACT_ROOT: ${{ runner.temp }}/openva-discovery-mesh-aggregate
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
         run: |
           set -euo pipefail
           mapfile -t SOURCE_REPORTS < <(find "$ARTIFACT_ROOT" -type f -name source-discovery-report.json | sort)
-          mapfile -t PROMOTION_PLANS < <(find "$ARTIFACT_ROOT" -type f -name 'strict-growth-discovery-mesh-promotion-plan-*.json' | sort)
+          mapfile -t PROMOTION_PLANS < <(find "$ARTIFACT_ROOT" -type f -name "strict-growth-discovery-mesh-promotion-plan-${SOURCE_RUN_ID}-*.json" | sort)
           mapfile -t HEALTH_REPORTS < <(find "$ARTIFACT_ROOT" -type f -name 'discovery-mesh-health-*.json' | sort)
           [ "${#SOURCE_REPORTS[@]}" = "1" ] || { echo "expected one source discovery report" >&2; exit 1; }
-          [ "${#PROMOTION_PLANS[@]}" = "1" ] || { echo "expected one promotion plan" >&2; exit 1; }
+          [ "${#PROMOTION_PLANS[@]}" = "1" ] || { echo "expected one source-run-bound promotion plan" >&2; exit 1; }
           [ "${#HEALTH_REPORTS[@]}" = "1" ] || { echo "expected one discovery mesh health report" >&2; exit 1; }
           SOURCE_REPORT="${SOURCE_REPORTS[0]}"
           PROMOTION_PLAN="${PROMOTION_PLANS[0]}"
