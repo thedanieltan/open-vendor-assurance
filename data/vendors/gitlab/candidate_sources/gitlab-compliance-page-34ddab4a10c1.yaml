@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-34ddab4a10c1
+candidate_status: selected
+candidate_url: https://about.gitlab.com/es/whats-new
+canonical_candidate_url: https://about.gitlab.com/es/whats-new/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/es/whats-new/
+  http_status: 200
+  matched_terms:
+  - soc
+  - trust
+  page_title: 'GitLab: Novedades'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:259e04012e73ae22ccf6d66d3174f34f5b9e7b510453624d0b9147d145e7c5fd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/es/whats-new/
+requested_url: https://about.gitlab.com/es/whats-new
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

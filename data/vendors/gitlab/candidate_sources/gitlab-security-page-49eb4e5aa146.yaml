@@ -1,0 +1,34 @@
+candidate_source_id: gitlab-security-page-49eb4e5aa146
+candidate_status: selected
+candidate_url: https://about.gitlab.com/atom.xml
+canonical_candidate_url: https://about.gitlab.com/atom.xml
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/xml
+  final_url: https://about.gitlab.com/atom.xml
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - incident
+  - trust
+  page_title: GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cde76c75c4475a53f76766467c7b7601a5d18cf58f22f60c5c4113c9d02c52f7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/atom.xml
+requested_url: https://about.gitlab.com/atom.xml
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-a2039b58ed48
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user
+canonical_candidate_url: https://docs.gitlab.com/user/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  page_title: Use GitLab | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:61af75609a8416c3d229226212e7921ef37d35d6b3dc381e5077ea1a38c01587
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/
+requested_url: https://docs.gitlab.com/user
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

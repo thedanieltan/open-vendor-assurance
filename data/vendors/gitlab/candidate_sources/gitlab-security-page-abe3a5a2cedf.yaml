@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-abe3a5a2cedf
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/hosted-runners-for-gitlab-dedicated
+canonical_candidate_url: https://about.gitlab.com/blog/hosted-runners-for-gitlab-dedicated/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/hosted-runners-for-gitlab-dedicated/
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Scale software delivery without owning the runner fleet
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:98157d3fea691749ce9283791a74182b2da1d2f3bca0b68bc285932919d59897
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/hosted-runners-for-gitlab-dedicated/
+requested_url: https://about.gitlab.com/blog/hosted-runners-for-gitlab-dedicated
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-bd000b2633c6
+candidate_status: selected
+candidate_url: https://about.gitlab.com/es/get-help
+canonical_candidate_url: https://about.gitlab.com/es/get-help/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/es/get-help/
+  http_status: 200
+  matched_terms:
+  - soc
+  - trust
+  page_title: Obtener ayuda
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f46e709f1893b2f61a9d11d21b2b7c38da3ef4f4c44bfe731766bfaf23272db7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/es/get-help/
+requested_url: https://about.gitlab.com/es/get-help
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

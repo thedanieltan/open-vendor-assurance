@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-1927fb8c7193
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/ci/review_apps
+canonical_candidate_url: https://docs.gitlab.com/ci/review_apps/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/ci/review_apps/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Review apps | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2b00fcff29d3a7e67107eb790f906aa5e5e5da3b0c160658f3ab6af8382988e8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/ci/review_apps/
+requested_url: https://docs.gitlab.com/ci/review_apps
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

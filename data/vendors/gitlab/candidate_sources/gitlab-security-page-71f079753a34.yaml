@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-71f079753a34
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/251546
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/251546
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/251546
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Backport of &quot;Send Duo availability params only when changed&quot;
+    (19.2) (!251546) · Merge requests · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:04edf038b3cb259ccb75de1075f1b759bfff846340dc467d2c79a56f186f064d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/251546
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/251546
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

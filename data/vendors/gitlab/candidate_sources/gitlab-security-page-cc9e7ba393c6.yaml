@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-cc9e7ba393c6
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/gitlab-rotating-omnibus-linux-package-signing-key
+canonical_candidate_url: https://about.gitlab.com/blog/gitlab-rotating-omnibus-linux-package-signing-key/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/gitlab-rotating-omnibus-linux-package-signing-key/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GitLab rotating Omnibus Linux package signing key
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:775e95aad326e0434918b448148c8e707df3cf8c35902a085652c32396cd2879
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/gitlab-rotating-omnibus-linux-package-signing-key/
+requested_url: https://about.gitlab.com/blog/gitlab-rotating-omnibus-linux-package-signing-key
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

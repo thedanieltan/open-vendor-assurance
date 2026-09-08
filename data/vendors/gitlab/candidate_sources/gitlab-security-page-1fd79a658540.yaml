@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-1fd79a658540
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/2021/08/04/ubs-gitlab-devops-platform
+canonical_candidate_url: https://about.gitlab.com/blog/ubs-gitlab-devops-platform/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/ubs-gitlab-devops-platform/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: How UBS created their own DevOps platform using GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:e7c6e6ae89994230da83ccf93e5203a45a9f6ad743633f4c5b6b562626c1c9db
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/ubs-gitlab-devops-platform/
+requested_url: https://about.gitlab.com/blog/2021/08/04/ubs-gitlab-devops-platform
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

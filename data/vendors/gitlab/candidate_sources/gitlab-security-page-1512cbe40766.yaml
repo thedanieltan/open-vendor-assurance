@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-1512cbe40766
+candidate_status: selected
+candidate_url: https://about.gitlab.com/company
+canonical_candidate_url: https://about.gitlab.com/company/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/company/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: About GitLab - The Intelligent Orchestration Platform
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:505af12e49cc7979fff1ab569cf18d387d7bfd23a73a9a4bd6160c68d07e0b98
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/company/
+requested_url: https://about.gitlab.com/company
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

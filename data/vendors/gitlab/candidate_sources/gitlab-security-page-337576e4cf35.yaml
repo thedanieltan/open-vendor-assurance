@@ -1,0 +1,33 @@
+candidate_source_id: gitlab-security-page-337576e4cf35
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/install/azure
+canonical_candidate_url: https://docs.gitlab.com/install/azure/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/install/azure/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - trust
+  page_title: Install GitLab on Microsoft Azure | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7e6f21268aee2ac180d92bdfe99f54c5acd983a9de29a27b5653f0b1d9236ac5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/install/azure/
+requested_url: https://docs.gitlab.com/install/azure
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

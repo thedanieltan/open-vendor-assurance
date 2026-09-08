@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-compliance-page-4c2f06cc2c3c
+candidate_status: selected
+candidate_url: https://about.gitlab.com/fr-fr/dedicated
+canonical_candidate_url: https://about.gitlab.com/fr-fr/dedicated/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/fr-fr/dedicated/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  - trust
+  page_title: GitLab Dedicated
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:07edde434662e5423a25d6e6216871e31a1ba530bb9629c9c1488bdf1a604124
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/fr-fr/dedicated/
+requested_url: https://about.gitlab.com/fr-fr/dedicated
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

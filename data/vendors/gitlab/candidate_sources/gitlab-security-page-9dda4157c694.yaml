@@ -1,0 +1,33 @@
+candidate_source_id: gitlab-security-page-9dda4157c694
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/one-vulnerability-view
+canonical_candidate_url: https://about.gitlab.com/blog/one-vulnerability-view/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/one-vulnerability-view/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: 'One vulnerability view: From scanner coverage to AI governance'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8777df2ccb6d55144e742caa2b0ed4b70da426e7e262ec87c24ede1d8d022e34
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/one-vulnerability-view/
+requested_url: https://about.gitlab.com/blog/one-vulnerability-view
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

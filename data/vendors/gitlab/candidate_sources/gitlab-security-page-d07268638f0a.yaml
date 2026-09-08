@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-d07268638f0a
+candidate_status: selected
+candidate_url: https://about.gitlab.com/jobs/all-jobs
+canonical_candidate_url: https://about.gitlab.com/jobs/all-jobs/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/jobs/all-jobs/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GitLab Jobs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:29ed1654a7681e91a98fea39e7c5f34fad89233824fce9de2c58b3e0e729e96c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/jobs/all-jobs/
+requested_url: https://about.gitlab.com/jobs/all-jobs
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
