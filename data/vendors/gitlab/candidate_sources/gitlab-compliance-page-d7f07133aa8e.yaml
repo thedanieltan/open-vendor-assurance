@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-compliance-page-d7f07133aa8e
+candidate_status: selected
+candidate_url: https://about.gitlab.com/fr-fr/the-source
+canonical_candidate_url: https://about.gitlab.com/fr-fr/the-source/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/fr-fr/the-source/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  - trust
+  page_title: The Source, l&#x27;avenir du développement logiciel | GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:36f05ecd48bb036d61ccf9a3673a4665cc6dbebdeffd95303c3593739c134710
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/fr-fr/the-source/
+requested_url: https://about.gitlab.com/fr-fr/the-source
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

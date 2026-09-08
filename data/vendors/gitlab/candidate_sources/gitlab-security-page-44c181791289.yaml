@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-44c181791289
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/gitlab-scales-remediation
+canonical_candidate_url: https://about.gitlab.com/blog/gitlab-scales-remediation/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/gitlab-scales-remediation/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: When your backlog outgrows your team, GitLab scales remediation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4d440d93b302cb7a36c0d71fd12a065de9e4848c3b9e6ff1c7887a6e7d87efde
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/gitlab-scales-remediation/
+requested_url: https://about.gitlab.com/blog/gitlab-scales-remediation
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

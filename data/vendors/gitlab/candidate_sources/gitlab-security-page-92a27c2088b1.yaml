@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-92a27c2088b1
+candidate_status: selected
+candidate_url: https://about.gitlab.com/customers/agoda
+canonical_candidate_url: https://about.gitlab.com/customers/agoda/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/customers/agoda/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Agoda
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ba1a49c6fae27afe84bb63624fde9e76d3981e736fa37ac3d1eca57998fbe7d8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/customers/agoda/
+requested_url: https://about.gitlab.com/customers/agoda
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

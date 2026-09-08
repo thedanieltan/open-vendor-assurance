@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-836dc5cd6bca
+candidate_status: selected
+candidate_url: https://about.gitlab.com/it-it/integrations
+canonical_candidate_url: https://about.gitlab.com/it-it/integrations/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/it-it/integrations/
+  http_status: 200
+  matched_terms:
+  - iso
+  - trust
+  page_title: Integrazione con GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:86f695c7f20706d7ad7ddff22a73a1a5231212a5ed15544cd0ce925dbd66940e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/it-it/integrations/
+requested_url: https://about.gitlab.com/it-it/integrations
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

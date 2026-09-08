@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-a574a1b44b06
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/cve_id_request
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/cve_id_request/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/cve_id_request/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: CVE ID request | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:98592ccdcff26b814a9343aaa164acd36ee2a74c3019240fe1cd1dd129f2af48
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/cve_id_request/
+requested_url: https://docs.gitlab.com/user/application_security/cve_id_request
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-e5e22f9542db
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/administration/gitlab_duo_self_hosted
+canonical_candidate_url: https://docs.gitlab.com/administration/gitlab_duo_self_hosted/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/administration/gitlab_duo_self_hosted/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: Self-hosted models | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0f039a9b4b3e8178031c65b6202c6b5c97ca50e2de05ce9ad79f52b7bd69d0d7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/administration/gitlab_duo_self_hosted/
+requested_url: https://docs.gitlab.com/administration/gitlab_duo_self_hosted
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

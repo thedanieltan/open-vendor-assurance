@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-42433f6a2a39
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/integration/jira
+canonical_candidate_url: https://docs.gitlab.com/integration/jira/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/integration/jira/
+  http_status: 200
+  matched_terms:
+  - availability
+  - vulnerability
+  page_title: Jira | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7412876f9868458e10b302f670d50467cd3e5608665b6c5a5f127410541b08e1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/integration/jira/
+requested_url: https://docs.gitlab.com/integration/jira
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

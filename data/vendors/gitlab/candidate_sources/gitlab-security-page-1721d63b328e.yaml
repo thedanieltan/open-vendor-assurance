@@ -1,0 +1,33 @@
+candidate_source_id: gitlab-security-page-1721d63b328e
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/security-configuration-profiles
+canonical_candidate_url: https://about.gitlab.com/blog/security-configuration-profiles/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/security-configuration-profiles/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: Full security scanner coverage of your codebase in minutes
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:32a8c42e15255751a84715fba29415a7c81e35f2ed9af4fed78be12ea7dbb10f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/security-configuration-profiles/
+requested_url: https://about.gitlab.com/blog/security-configuration-profiles
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-17a865d4e6d1
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/gitlab_advisory_database
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/gitlab_advisory_database/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/gitlab_advisory_database/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: GitLab advisory database | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1fc8e9de02ec4c6bd4a773983952d13f8a84079ba36c933c8b6b2a433158c13b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/gitlab_advisory_database/
+requested_url: https://docs.gitlab.com/user/application_security/gitlab_advisory_database
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

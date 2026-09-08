@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-3d98e357d273
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/duo_agent_platform/agents/external
+canonical_candidate_url: https://docs.gitlab.com/user/duo_agent_platform/agents/external/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/duo_agent_platform/agents/external/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: External agents | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0964f159add4950d8fa54202df8f52f2221944e3151ad433bb61373216895260
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/duo_agent_platform/agents/external/
+requested_url: https://docs.gitlab.com/user/duo_agent_platform/agents/external
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

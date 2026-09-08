@@ -1,0 +1,33 @@
+candidate_source_id: gitlab-security-page-da917e018657
+candidate_status: selected
+candidate_url: https://about.gitlab.com/customers/carrefour
+canonical_candidate_url: https://about.gitlab.com/customers/carrefour/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/customers/carrefour/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - incident
+  - trust
+  page_title: Carrefour
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:143b8e914a01123fedca1b01b34cd71c1478ee54286a5439d1184c6dea648f0b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/customers/carrefour/
+requested_url: https://about.gitlab.com/customers/carrefour
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-dec3f7c76606
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/tags/news
+canonical_candidate_url: https://about.gitlab.com/blog/tags/news/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/tags/news/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: News articles - GitLab Blog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c34afa36ac0770d86d802cf8c43beef5b0bf7f52e5e3019c8b223aa52f008071
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/tags/news/
+requested_url: https://about.gitlab.com/blog/tags/news
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

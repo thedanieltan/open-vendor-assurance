@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-8e9025fa8d86
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/gitlab-achieves-pci-dss-attestation-of-compliance
+canonical_candidate_url: https://about.gitlab.com/blog/gitlab-achieves-pci-dss-attestation-of-compliance/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/gitlab-achieves-pci-dss-attestation-of-compliance/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GitLab achieves PCI DSS Attestation of Compliance
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a3c087f67f2fdf4613e068e3fd9eed830d049a5ff5664993a11909d47f66772
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/gitlab-achieves-pci-dss-attestation-of-compliance/
+requested_url: https://about.gitlab.com/blog/gitlab-achieves-pci-dss-attestation-of-compliance
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-a14e553d212c
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/tags/ai
+canonical_candidate_url: https://about.gitlab.com/blog/tags/ai/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/tags/ai/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Ai articles - GitLab Blog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:df1b703203100ca5ec0ba49e2dcdd2853aa23df8542a2176e393f6af454ec6be
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/tags/ai/
+requested_url: https://about.gitlab.com/blog/tags/ai
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

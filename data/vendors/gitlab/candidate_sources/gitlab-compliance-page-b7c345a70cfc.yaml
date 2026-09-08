@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-compliance-page-b7c345a70cfc
+candidate_status: selected
+candidate_url: https://about.gitlab.com/pt-br/security
+canonical_candidate_url: https://about.gitlab.com/pt-br/security/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/pt-br/security/
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  - trust
+  page_title: Segurança
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f8366e9bcb5e75aa04ec41aa65eae8647df788b23d3c25d2bdc7ec6f06d9cd53
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/pt-br/security/
+requested_url: https://about.gitlab.com/pt-br/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

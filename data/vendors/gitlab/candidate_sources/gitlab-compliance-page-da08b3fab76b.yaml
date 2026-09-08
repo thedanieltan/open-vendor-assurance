@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-da08b3fab76b
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/group/settings/group_access_tokens
+canonical_candidate_url: https://docs.gitlab.com/user/group/settings/group_access_tokens/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/group/settings/group_access_tokens/
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  page_title: Group access tokens | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7652466e25111822715d326fb5c42b9328d5b0db2df461a06893964df30f94fb
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/group/settings/group_access_tokens/
+requested_url: https://docs.gitlab.com/user/group/settings/group_access_tokens
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
