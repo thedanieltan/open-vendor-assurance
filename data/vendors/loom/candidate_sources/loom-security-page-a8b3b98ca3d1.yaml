@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-a8b3b98ca3d1
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/integrate-intune-security-in-a-mobile-app-policy
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/integrate-intune-security-in-a-mobile-app-policy
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/integrate-intune-security-in-a-mobile-app-policy
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: Integrate Intune security in mobile app policy | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0125163a2265c7ca10da7632bf12d14cf70da3b2d8b1cd15652bd51eb84a6b5d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/integrate-intune-security-in-a-mobile-app-policy
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/integrate-intune-security-in-a-mobile-app-policy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

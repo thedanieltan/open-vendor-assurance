@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-a3493083f288
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/manage-access-to-external-sites
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/manage-access-to-external-sites
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/manage-access-to-external-sites
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: Manage access to external sites | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ef6fcc9fc242b340b679a569fe988e4b5bee4f1d4e7b784cfd52634368f08c99
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/manage-access-to-external-sites
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/manage-access-to-external-sites
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

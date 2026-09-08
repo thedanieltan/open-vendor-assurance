@@ -1,0 +1,34 @@
+candidate_source_id: loom-security-page-fd2704e108ad
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/how-does-automation-work-with-guard-detect
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/how-does-automation-work-with-guard-detect
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/how-does-automation-work-with-guard-detect
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - incident
+  - trust
+  page_title: How does automation work with Guard Detect? | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:473427c14d03398cae4a68008a394c2045f70999ee8585dcf99e60b49793f103
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/how-does-automation-work-with-guard-detect
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/how-does-automation-work-with-guard-detect
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

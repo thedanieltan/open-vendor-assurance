@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-921148ad0af8
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/gain-insights-into-product-usage-and-security-practices
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/gain-insights-into-product-usage-and-security-practices
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/gain-insights-into-product-usage-and-security-practices
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: Gain insights into app usage and security practices | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:afcc12768aca158d431e3443f9fc0cb1240820f75be635bdadaebde88e5402a9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/gain-insights-into-product-usage-and-security-practices
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/gain-insights-into-product-usage-and-security-practices
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

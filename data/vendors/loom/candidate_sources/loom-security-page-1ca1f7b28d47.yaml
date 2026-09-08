@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-1ca1f7b28d47
+candidate_status: selected
+candidate_url: https://support.atlassian.com/statuspage/docs/what-do-i-get-on-a-free-plan
+canonical_candidate_url: https://support.atlassian.com/statuspage/docs/what-do-i-get-on-a-free-plan
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/statuspage/docs/what-do-i-get-on-a-free-plan
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: What do I get on a Free plan? | Statuspage | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b8b0a96c6781751d5384a6d4a7accec77db3d0389ce3e1fefac584db6abbd0e1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/statuspage/docs/what-do-i-get-on-a-free-plan
+requested_url: https://support.atlassian.com/statuspage/docs/what-do-i-get-on-a-free-plan
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

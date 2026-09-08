@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-199389f6c29d
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/set-up-an-aws-account-and-create-iam-roles
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/set-up-an-aws-account-and-create-iam-roles
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/set-up-an-aws-account-and-create-iam-roles
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: Set up an AWS account and create an IAM role | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a526b7fcdc2ed4ad0a0c8e46b41477d7c98b3ed2db9304f7dd5ebe0d97b6443c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/set-up-an-aws-account-and-create-iam-roles
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/set-up-an-aws-account-and-create-iam-roles
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

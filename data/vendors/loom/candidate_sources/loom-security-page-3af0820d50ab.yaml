@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-3af0820d50ab
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/control-how-users-outside-your-organization-access-products
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/control-how-users-outside-your-organization-access-products
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/control-how-users-outside-your-organization-access-products
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Control how users outside your organization access apps | Atlassian
+    Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8476845430c53e5cef73b72719cf785fade3878027e512d3c7d0a1431b605fc4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/control-how-users-outside-your-organization-access-products
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/control-how-users-outside-your-organization-access-products
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
