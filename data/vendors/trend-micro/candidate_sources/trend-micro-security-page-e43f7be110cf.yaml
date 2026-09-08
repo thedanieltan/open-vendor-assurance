@@ -1,0 +1,31 @@
+candidate_source_id: trend-micro-security-page-e43f7be110cf
+candidate_status: selected
+candidate_url: https://www.trendmicro.com/vinfo/kr/security/all/page/1
+canonical_candidate_url: https://www.trendmicro.com/vinfo/kr/security/all/page/1
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.trendmicro.com/vinfo/kr/security/all/page/1
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Error Page - Trend Micro Inc.
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5143850f402eac70f75c58b4b8b5e2992b2d8a2f4bc5d92e64c105c0721c290b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.trendmicro.com/vinfo/kr/security/all/page/1
+requested_url: https://www.trendmicro.com/vinfo/kr/security/all/page/1
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro

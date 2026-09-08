@@ -1,0 +1,32 @@
+candidate_source_id: trend-micro-security-page-a9885fd0377a
+candidate_status: selected
+candidate_url: https://success.trendmicro.com/trendconnect
+canonical_candidate_url: https://success.trendmicro.com/en-US/trendconnect/
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://success.trendmicro.com/en-US/trendconnect/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - incident
+  page_title: TrendConnect
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:c7b21979447570cf451d3f852f8ad81ae03db4e51980421fc32a42367f8eaeba
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://success.trendmicro.com/en-US/trendconnect/
+requested_url: https://success.trendmicro.com/trendconnect
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro

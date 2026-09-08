@@ -1,0 +1,33 @@
+candidate_source_id: trend-micro-security-page-979abad5f7aa
+candidate_status: selected
+candidate_url: https://success.trendmicro.com/vulnerability-response
+canonical_candidate_url: https://success.trendmicro.com/en-US/vulnerability-response/
+confidence: likely
+discovered_at: '2026-09-08T08:18:18.667851Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://success.trendmicro.com/en-US/vulnerability-response/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - vulnerability
+  - incident
+  page_title: Vulnerability response&#65372;Trend Micro Business Success Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:639730a0801c79a3b25825e0fa0718582c706e825955605dd2130b2f1d44deae
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://success.trendmicro.com/en-US/vulnerability-response/
+requested_url: https://success.trendmicro.com/vulnerability-response
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:18.667851Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro
