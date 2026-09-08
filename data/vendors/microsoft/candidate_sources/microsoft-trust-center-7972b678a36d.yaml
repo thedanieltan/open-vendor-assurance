@@ -1,0 +1,35 @@
+candidate_source_id: microsoft-trust-center-7972b678a36d
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27017
+canonical_candidate_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27017
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27017
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: ISO/IEC 27017:2015 Code of Practice for Information Security Controls
+    - Microsoft Compliance | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:184467d063f30d5fcd91be6d7a60d7eb9b1343cb6a6ecbdd07ae143f7f55eebd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27017
+requested_url: https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-27017
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

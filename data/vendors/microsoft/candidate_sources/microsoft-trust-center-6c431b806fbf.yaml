@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-trust-center-6c431b806fbf
+candidate_status: selected
+candidate_url: https://www.microsoft.com/securityengineering/sdl
+canonical_candidate_url: https://www.microsoft.com/en-us/securityengineering/sdl
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/securityengineering/sdl
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: Microsoft Security Development Lifecycle
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:eb4beab688140f3ace7668247d9763375a70221212f7ba14bb263dff64b37141
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/securityengineering/sdl
+requested_url: https://www.microsoft.com/securityengineering/sdl
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

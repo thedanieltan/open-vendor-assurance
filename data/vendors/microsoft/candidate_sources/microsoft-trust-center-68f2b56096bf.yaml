@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-68f2b56096bf
+candidate_status: selected
+candidate_url: https://support.microsoft.com/help/12673/mobile-devices-sar-information
+canonical_candidate_url: https://support.microsoft.com/en-us/hardware-sar-information
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.microsoft.com/en-us/hardware-sar-information
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: SAR Information
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:96fc044068ef3c4c9a26d247a1ef8a8aa125b0bbbe1fc0f2fc7dbf7abbf33f3c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.microsoft.com/en-us/hardware-sar-information
+requested_url: https://support.microsoft.com/help/12673/mobile-devices-sar-information
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

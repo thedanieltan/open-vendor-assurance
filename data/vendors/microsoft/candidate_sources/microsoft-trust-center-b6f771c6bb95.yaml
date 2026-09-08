@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-trust-center-b6f771c6bb95
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/securityengineering
+canonical_candidate_url: https://www.microsoft.com/en-us/securityengineering
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/securityengineering
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: Microsoft Security Engineering
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0a2595899a85e4bf73d245d140872cebf71253fcf3ac6fb0499d796f01c24695
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/securityengineering
+requested_url: https://www.microsoft.com/en-us/securityengineering
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

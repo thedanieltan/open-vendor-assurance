@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-05cc9f35fb41
+candidate_status: selected
+candidate_url: https://news.microsoft.com/facts-about-microsoft
+canonical_candidate_url: https://news.microsoft.com/facts-about-microsoft/
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://news.microsoft.com/facts-about-microsoft/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Facts About Microsoft - Stories
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f8fe0846c81323286044bf427e49b5fcdbf51cad21be0fcc439be1d0febabe24
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://news.microsoft.com/facts-about-microsoft/
+requested_url: https://news.microsoft.com/facts-about-microsoft
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-trust-center-64d7f3d0a525
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-external-id
+canonical_candidate_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-external-id
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-external-id
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  page_title: Microsoft Entra External ID | Microsoft Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:84b4edd8cc758ecff6906a905ac4b0af57490d7f9e8c64a44e4b8536be7fffce
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-external-id
+requested_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-external-id
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

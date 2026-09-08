@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-8e18b537d9b0
+candidate_status: selected
+candidate_url: https://www.microsoft.com/about
+canonical_candidate_url: https://www.microsoft.com/en-us/about
+confidence: likely
+discovered_at: '2026-09-08T08:54:00.995522Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/about
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Our Mission and Values | About Microsoft
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:fb3b9a86f693755437b3549336ee55e4a51bdc7fe53916c608ac0930d3884931
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/about
+requested_url: https://www.microsoft.com/about
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:54:00.995522Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

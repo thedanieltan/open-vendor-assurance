@@ -1,0 +1,33 @@
+candidate_source_id: mixpanel-trust-center-66cf1da3eeb6
+candidate_status: selected
+candidate_url: https://mixpanel.com/legal/contact-us
+canonical_candidate_url: https://mixpanel.com/legal/contact-us/
+confidence: likely
+discovered_at: '2026-09-08T08:18:17.364984Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://mixpanel.com/legal/contact-us/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: Contact us | Legal | Mobile &amp; Web User Analytics | Mixpanel
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:32190f30a9a1eb1381a1cf1ae6c5ba5d19bbc06d99399a3ac150d5200f0f75e5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://mixpanel.com/legal/contact-us/
+requested_url: https://mixpanel.com/legal/contact-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:17.364984Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: mixpanel
