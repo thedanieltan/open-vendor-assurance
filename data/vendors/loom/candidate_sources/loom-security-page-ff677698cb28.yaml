@@ -1,0 +1,34 @@
+candidate_source_id: loom-security-page-ff677698cb28
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/apps-that-cannot-be-blocked-by-app-access-rules
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/apps-that-cannot-be-blocked-by-app-access-rules
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/apps-that-cannot-be-blocked-by-app-access-rules
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: What cannot be blocked by the Marketplace and custom app access control
+    | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0ebb38872677e9600a29238ba3d5905d87f0f1b85a22cd788ab999a16d92fab7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/apps-that-cannot-be-blocked-by-app-access-rules
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/apps-that-cannot-be-blocked-by-app-access-rules
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

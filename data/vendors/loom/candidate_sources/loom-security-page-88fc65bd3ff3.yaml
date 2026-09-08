@@ -1,0 +1,36 @@
+candidate_source_id: loom-security-page-88fc65bd3ff3
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/manage-third-party-spreadsheet-app-permissions-for-project-data
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/manage-third-party-spreadsheet-app-permissions-for-project-data
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/manage-third-party-spreadsheet-app-permissions-for-project-data
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Manage third-party spreadsheet app permissions for project data | Atlassian
+    Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e9c68a9982cac9db48959a803a1fb89003a10bf69789563b4139c64ee18c88a3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/manage-third-party-spreadsheet-app-permissions-for-project-data
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/manage-third-party-spreadsheet-app-permissions-for-project-data
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-5737745b05ed
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-attachment-downloads
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-attachment-downloads
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-attachment-downloads
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Prevent attachment downloads | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:154629e0a5957e5825e18e851c687228c8d342fbb1a79ff5c2c850226f2bc339
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-attachment-downloads
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-attachment-downloads
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

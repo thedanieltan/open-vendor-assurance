@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-9e13d025d4dc
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-rovo-mcp-server-settings
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-rovo-mcp-server-settings
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-rovo-mcp-server-settings
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - trust
+  page_title: Control Atlassian Rovo MCP server settings | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5a3a468848b1afc3e5de26f2b2c626cbc34b94ec1af4a2f24dad4563e93da9f3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-rovo-mcp-server-settings
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-rovo-mcp-server-settings
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

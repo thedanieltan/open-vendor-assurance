@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-e6bef14f5aa6
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-data-export
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-data-export
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-data-export
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Prevent data export | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1b0b92fc9911feab7cb350acb41d2827d66f7268c9b4938d07e1116e9b90ef72
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-data-export
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/prevent-data-export
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-bbf05af12cae
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/send-alerts-to-slack
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/send-alerts-to-slack
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/send-alerts-to-slack
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Send alerts to Slack | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9192f2175633074ce52125489061a57c453064023ba2ae206ccf2112d014add1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/send-alerts-to-slack
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/send-alerts-to-slack
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

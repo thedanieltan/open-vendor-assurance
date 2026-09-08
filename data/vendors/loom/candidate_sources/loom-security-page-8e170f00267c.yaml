@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-8e170f00267c
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/what-is-saml-single-logout
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/what-is-saml-single-logout
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/what-is-saml-single-logout
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: What is SAML single logout? | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2fad6827808845adaf8aa0bbb2f25961c6bdaf847e6e63410d3bae840a603fc4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/what-is-saml-single-logout
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/what-is-saml-single-logout
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

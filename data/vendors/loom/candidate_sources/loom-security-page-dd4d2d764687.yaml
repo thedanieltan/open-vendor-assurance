@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-dd4d2d764687
+candidate_status: selected
+candidate_url: https://support.atlassian.com/statuspage/docs/account-security-information
+canonical_candidate_url: https://support.atlassian.com/statuspage/docs/account-security-information
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/statuspage/docs/account-security-information
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Account security information | Statuspage | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:636bffe1b89b8e1f5a57fef6f458ff4a5207631bfc63571e05649420ae0b1b06
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/statuspage/docs/account-security-information
+requested_url: https://support.atlassian.com/statuspage/docs/account-security-information
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

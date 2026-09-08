@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-fc622def0fa8
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/exclude-a-user-from-a-detection
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/exclude-a-user-from-a-detection
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/exclude-a-user-from-a-detection
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Exclude a user from a detection | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6659fb0780dc24e2aa1d8f9b126800b8b5c7835384687f470d5a806ac55b66a6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/exclude-a-user-from-a-detection
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/exclude-a-user-from-a-detection
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

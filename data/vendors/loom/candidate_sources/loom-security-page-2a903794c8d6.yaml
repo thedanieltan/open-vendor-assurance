@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-2a903794c8d6
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/view-audit-log-activities
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/view-audit-log-activities
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/view-audit-log-activities
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: View audit log activities | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:23ac000a94b22b48306a91aed0b4de7b13ac838c2bd31a199adc3531b7feb5d8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/view-audit-log-activities
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/view-audit-log-activities
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom

@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-ea1215a1e0eb
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/what-happens-when-data-is-redacted
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/what-happens-when-data-is-redacted
+confidence: likely
+discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/what-happens-when-data-is-redacted
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: What happens when data is redacted or deleted? | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:10a7ba7836e5ecefd9f2e21ad644604ab901c8d8107082ff0f8c1280b4d35f38
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/what-happens-when-data-is-redacted
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/what-happens-when-data-is-redacted
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:19:39.643491Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
