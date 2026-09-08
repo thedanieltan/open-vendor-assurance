@@ -1,0 +1,31 @@
+candidate_source_id: fly-io-security-page-008e3a9a2003
+candidate_status: selected
+candidate_url: https://fly.io/blog
+canonical_candidate_url: https://fly.io/blog/
+confidence: likely
+discovered_at: '2026-09-08T08:18:44.459517Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://fly.io/blog/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: The Fly Blog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:415cc7f4fc3e6ff1efbb21a1ad9a5346da4c59d98653ab2f5cd29de978822cd7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://fly.io/blog/
+requested_url: https://fly.io/blog
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:44.459517Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: fly-io

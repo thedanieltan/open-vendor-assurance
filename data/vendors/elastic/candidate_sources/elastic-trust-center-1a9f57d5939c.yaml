@@ -1,0 +1,31 @@
+candidate_source_id: elastic-trust-center-1a9f57d5939c
+candidate_status: selected
+candidate_url: https://www.elastic.co/security/siem
+canonical_candidate_url: https://www.elastic.co/security/siem
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/security/siem
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: SIEM platform | Security information and event management | Elastic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0eb0c2a0124c5056ffc0c5d555ab582ebf28b90cf1910779905c747715eb5f53
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/security/siem
+requested_url: https://www.elastic.co/security/siem
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic

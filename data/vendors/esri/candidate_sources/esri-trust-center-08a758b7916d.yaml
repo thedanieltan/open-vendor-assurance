@@ -1,0 +1,33 @@
+candidate_source_id: esri-trust-center-08a758b7916d
+candidate_status: selected
+candidate_url: https://www.esri.com/en-us/legal/copyright-inquiry
+canonical_candidate_url: https://www.esri.com/en-us/legal/copyright-inquiry
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://www.esri.com/en-us/legal/copyright-inquiry
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: Contracts Department Contact | Esri Privacy
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cf322c2a23911767edf826310913f436c83ad78333257ef4493caf7f742e9e3e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.esri.com/en-us/legal/copyright-inquiry
+requested_url: https://www.esri.com/en-us/legal/copyright-inquiry
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: esri

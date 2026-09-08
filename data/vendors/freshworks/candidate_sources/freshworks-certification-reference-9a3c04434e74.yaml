@@ -1,0 +1,33 @@
+candidate_source_id: freshworks-certification-reference-9a3c04434e74
+candidate_status: selected
+candidate_url: https://www.freshworks.com/academy
+canonical_candidate_url: https://www.freshworks.com/university/
+confidence: likely
+discovered_at: '2026-09-08T08:42:58.454636Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.freshworks.com/university/
+  http_status: 200
+  matched_terms:
+  - certification
+  - certificate
+  page_title: Freshworks University | Free Online Training for Customer &amp; Sales
+    Teams
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:b00492f1d568e2d275c8dd5951110f6eee3d28fbca1362053a44628950dd4288
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.freshworks.com/university/
+requested_url: https://www.freshworks.com/academy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:42:58.454636Z'
+source_type_candidate: certification_reference
+superseded_by_candidate_id: null
+vendor_id: freshworks

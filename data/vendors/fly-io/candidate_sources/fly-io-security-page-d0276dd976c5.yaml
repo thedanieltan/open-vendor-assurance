@@ -1,0 +1,34 @@
+candidate_source_id: fly-io-security-page-d0276dd976c5
+candidate_status: selected
+candidate_url: https://fly.io/docs/mpg
+canonical_candidate_url: https://fly.io/docs/mpg/
+confidence: likely
+discovered_at: '2026-09-08T08:18:44.459517Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://fly.io/docs/mpg/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - incident
+  - trust
+  page_title: Managed Postgres · Fly Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:397925ba53fcc5ebe6924bdf3dbf4cf7f616022f57d1e432b727ece12f88a5b9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://fly.io/docs/mpg/
+requested_url: https://fly.io/docs/mpg
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:44.459517Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: fly-io

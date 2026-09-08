@@ -1,0 +1,34 @@
+candidate_source_id: elastic-trust-center-60faad72aa68
+candidate_status: selected
+candidate_url: https://www.elastic.co/beats/auditbeat
+canonical_candidate_url: https://www.elastic.co/beats/auditbeat
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/beats/auditbeat
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: 'Auditbeat: Lightweight Shipper for Audit Data | Elastic'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f1a02d5417b6664106dcdfa9d36cce686e323ff37e8ff73b13f69e5b425e7f97
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/beats/auditbeat
+requested_url: https://www.elastic.co/beats/auditbeat
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic
