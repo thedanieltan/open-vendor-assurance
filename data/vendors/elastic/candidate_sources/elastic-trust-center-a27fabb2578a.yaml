@@ -1,0 +1,32 @@
+candidate_source_id: elastic-trust-center-a27fabb2578a
+candidate_status: selected
+candidate_url: https://discuss.elastic.co/
+canonical_candidate_url: https://discuss.elastic.co/
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://discuss.elastic.co/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Discuss the Elastic Stack - Official ELK / Elastic Stack, Elasticsearch,
+    Logstash, Kibana, Beats and more forums
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8b2f9fa62ea41933d60f6d04519470326d66de81ff513ca8917744fa467ec449
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://discuss.elastic.co/
+requested_url: https://discuss.elastic.co/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic

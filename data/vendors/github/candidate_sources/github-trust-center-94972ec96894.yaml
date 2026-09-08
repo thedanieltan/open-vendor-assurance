@@ -1,0 +1,32 @@
+candidate_source_id: github-trust-center-94972ec96894
+candidate_status: selected
+candidate_url: https://securitylab.github.com/resources/NSA-emissary
+canonical_candidate_url: https://securitylab.github.com/resources/NSA-emissary/
+confidence: likely
+discovered_at: '2026-09-08T08:18:27.734220Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://securitylab.github.com/resources/NSA-emissary/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: Don’t shoot the emissary | GitHub Security Lab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6d195c3afb3331897cd5db6d27069ace591561ca610ba2ac5249e3332b472fea
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://securitylab.github.com/resources/NSA-emissary/
+requested_url: https://securitylab.github.com/resources/NSA-emissary
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:27.734220Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: github

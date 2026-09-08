@@ -1,0 +1,31 @@
+candidate_source_id: elastic-trust-center-c89165398abe
+candidate_status: selected
+candidate_url: https://www.elastic.co/about
+canonical_candidate_url: https://www.elastic.co/about
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/about
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Hi, we&#x27;re Elastic | Elastic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:625c074a7a583c2d063fd7d21e835a03aa449af8a0bc554ba13ff5b36f45ff73
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/about
+requested_url: https://www.elastic.co/about
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic

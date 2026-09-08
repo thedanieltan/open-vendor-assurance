@@ -1,0 +1,31 @@
+candidate_source_id: elastic-trust-center-65da93b65beb
+candidate_status: selected
+candidate_url: https://www.elastic.co/kibana
+canonical_candidate_url: https://www.elastic.co/kibana
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/kibana
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: 'Kibana: Visualize, explore, and manage data in Elasticsearch | Elastic'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:792dfed5288a4b35055979b1af0a40d08203fed166272db1396dd1ee92a0cbac
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/kibana
+requested_url: https://www.elastic.co/kibana
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic

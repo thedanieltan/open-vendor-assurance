@@ -1,0 +1,31 @@
+candidate_source_id: fly-io-security-page-9cf331b34349
+candidate_status: selected
+candidate_url: https://fly.io/docs/reference/health-checks
+canonical_candidate_url: https://fly.io/docs/reference/health-checks/
+confidence: likely
+discovered_at: '2026-09-08T08:18:44.459517Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://fly.io/docs/reference/health-checks/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Health Checks · Fly Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:43f8e925fd7c9bd2923d729c2c2499fe7c40f8fd923de5fe967222ae7c9b47c9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://fly.io/docs/reference/health-checks/
+requested_url: https://fly.io/docs/reference/health-checks
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T08:18:44.459517Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: fly-io

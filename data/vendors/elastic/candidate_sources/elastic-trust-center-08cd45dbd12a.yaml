@@ -1,0 +1,31 @@
+candidate_source_id: elastic-trust-center-08cd45dbd12a
+candidate_status: selected
+candidate_url: https://www.elastic.co/security-labs
+canonical_candidate_url: https://www.elastic.co/security-labs
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/security-labs
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Elastic Security Labs | Elastic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3a94b3ce542f4cb3cbcd9ca0cdc12e0577eaef5a7656e7d75dc77ecf13ce8ed4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/security-labs
+requested_url: https://www.elastic.co/security-labs
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic

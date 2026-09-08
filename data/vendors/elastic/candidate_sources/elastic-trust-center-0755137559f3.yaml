@@ -1,0 +1,34 @@
+candidate_source_id: elastic-trust-center-0755137559f3
+candidate_status: selected
+candidate_url: https://www.elastic.co/legal/customer-agreements
+canonical_candidate_url: https://www.elastic.co/legal/customer-agreements
+confidence: likely
+discovered_at: '2026-09-08T09:17:51.399260Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/legal/customer-agreements
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: Elastic customer agreements | Elastic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:51560226e9963f39e2b6da83d5170ae6270b20a8a7a202e58cb7a390c0fe9838
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/legal/customer-agreements
+requested_url: https://www.elastic.co/legal/customer-agreements
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-08T09:17:51.399260Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic
