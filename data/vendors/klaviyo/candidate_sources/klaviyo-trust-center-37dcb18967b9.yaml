@@ -1,0 +1,33 @@
+candidate_source_id: klaviyo-trust-center-37dcb18967b9
+candidate_status: selected
+candidate_url: https://www.klaviyo.com/legal/partner-terms-conditions
+canonical_candidate_url: https://www.klaviyo.com/legal/partner-terms-conditions
+confidence: likely
+discovered_at: '2026-09-09T08:21:42.336016Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://www.klaviyo.com/legal/partner-terms-conditions
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Partner Program Agreement - Klaviyo
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:511ead11734789c282cdc5b154e40cbb468eae43b95bd27b76b7a7f7a7931a8b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.klaviyo.com/legal/partner-terms-conditions
+requested_url: https://www.klaviyo.com/legal/partner-terms-conditions
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-09T08:21:42.336016Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: klaviyo
