@@ -1,0 +1,33 @@
+candidate_source_id: scrut-automation-trust-center-6ef432218ea3
+candidate_status: selected
+candidate_url: https://www.scrut.io/partners/partner-directory
+canonical_candidate_url: https://www.scrut.io/partners/partner-directory
+confidence: likely
+discovered_at: '2026-09-09T08:21:34.669915Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.scrut.io/partners/partner-directory
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Explore Trusted Scrut Partners | Scrut
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4dfa2cd4856630de8d68a8de1ba0956ba15c1534e2481cf52a4e392f8316cd82
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.scrut.io/partners/partner-directory
+requested_url: https://www.scrut.io/partners/partner-directory
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-09T08:21:34.669915Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: scrut-automation
