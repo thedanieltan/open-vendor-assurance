@@ -1,0 +1,32 @@
+candidate_source_id: bitbucket-security-page-ad2c222da857
+candidate_status: selected
+candidate_url: https://www.atlassian.com/security
+canonical_candidate_url: https://www.atlassian.com/trust/data-protection
+confidence: likely
+discovered_at: '2026-09-09T09:00:28.380174Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=UTF-8
+  final_url: https://www.atlassian.com/trust/data-protection
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Comprehensive Data Protection | Atlassian
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:92d23e2cc12efa7ca8a56aa53d89c207913b139da17e69deb87703a3caf3f285
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.atlassian.com/trust/data-protection
+requested_url: https://www.atlassian.com/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-09T09:00:28.380174Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
