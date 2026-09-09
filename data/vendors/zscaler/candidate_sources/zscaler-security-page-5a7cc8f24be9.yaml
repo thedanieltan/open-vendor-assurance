@@ -1,33 +1,31 @@
 candidate_source_id: zscaler-security-page-5a7cc8f24be9
 candidate_status: selected
-candidate_url: https://www.zscaler.com/technology/cloud-firewall
+candidate_url: https://www.zscaler.com/products-and-solutions/cloud-firewall
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/cloud-firewall
 confidence: likely
-discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_at: '2026-09-09T08:21:29.081802Z'
 discovered_by: agent
-discovery_method: rendered_dom_locator_verification
+discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/cloud-firewall
   http_status: 200
   matched_terms:
   - security
-  - vulnerability
   - trust
   page_title: Zero Trust Cloud Firewall | Zscaler
-  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:e3d2501578f079fc9f39dc9f8b82fde81e31c4e01fb8767b27b12dec935ab6f3
+  verification_status: ok
+evidence_digest: sha256:4360ed1c67da7cf6c0f9c624f31f0e9101f91b11b3396213f966c2119a19d4f3
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/cloud-firewall
-requested_url: https://www.zscaler.com/technology/cloud-firewall
+requested_url: https://www.zscaler.com/products-and-solutions/cloud-firewall
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-08T08:18:47.566016Z'
+selection_run_id: '2026-09-09T08:21:29.081802Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
