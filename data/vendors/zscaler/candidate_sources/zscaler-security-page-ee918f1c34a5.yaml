@@ -1,33 +1,31 @@
 candidate_source_id: zscaler-security-page-ee918f1c34a5
 candidate_status: selected
-candidate_url: https://www.zscaler.com/capabilities/secure-access-service-edge
+candidate_url: https://www.zscaler.com/products-and-solutions/secure-access-service-edge-sase
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/secure-access-service-edge-sase
 confidence: likely
-discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_at: '2026-09-09T08:21:29.081802Z'
 discovered_by: agent
-discovery_method: rendered_dom_locator_verification
+discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/secure-access-service-edge-sase
   http_status: 200
   matched_terms:
   - security
-  - vulnerability
   - trust
   page_title: Zscaler Zero Trust SASE | AI-Ready
-  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:12bb050e5103615a708bd48b024fa54189667d8ef9a7685eadf25d715fa9b60a
+  verification_status: ok
+evidence_digest: sha256:ae81351575e6f17ec3b390e173b7397c8d22a71396d0d986bae6c6afada88e41
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/secure-access-service-edge-sase
-requested_url: https://www.zscaler.com/capabilities/secure-access-service-edge
+requested_url: https://www.zscaler.com/products-and-solutions/secure-access-service-edge-sase
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-08T08:18:47.566016Z'
+selection_run_id: '2026-09-09T08:21:29.081802Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
