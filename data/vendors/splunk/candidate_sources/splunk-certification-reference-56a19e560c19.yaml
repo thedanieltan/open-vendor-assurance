@@ -1,0 +1,31 @@
+candidate_source_id: splunk-certification-reference-56a19e560c19
+candidate_status: selected
+candidate_url: https://www.splunk.com/ja_jp/blog/it/regulatory-compliance.html
+canonical_candidate_url: https://www.splunk.com/ja_jp/blog/it/regulatory-compliance.html
+confidence: likely
+discovered_at: '2026-09-09T09:07:02.042249Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/ja_jp/blog/it/regulatory-compliance.html
+  http_status: 200
+  matched_terms:
+  - iso 27001
+  - pci dss
+  page_title: 規制コンプライアンス入門：知っておきたい基礎知識 | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d94f9c54092905d31abff09f24839bda86ce65775f5601c6f50b0d80b15d4c7f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/ja_jp/blog/it/regulatory-compliance.html
+requested_url: https://www.splunk.com/ja_jp/blog/it/regulatory-compliance.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-09T09:07:02.042249Z'
+source_type_candidate: certification_reference
+superseded_by_candidate_id: null
+vendor_id: splunk
