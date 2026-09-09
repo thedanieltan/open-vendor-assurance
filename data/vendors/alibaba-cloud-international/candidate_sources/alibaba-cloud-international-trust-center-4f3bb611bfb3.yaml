@@ -1,13 +1,13 @@
 candidate_source_id: alibaba-cloud-international-trust-center-4f3bb611bfb3
 candidate_status: selected
-candidate_url: https://www.alibabacloud.com/en/trust-center/vietnam?_p_lc=1
+candidate_url: https://www.alibabacloud.com/trust-center/vietnam
 canonical_candidate_url: https://www.alibabacloud.com/en/trust-center/vietnam?_p_lc=1
 confidence: likely
-discovered_at: '2026-07-18T08:23:17.698076Z'
+discovered_at: '2026-09-09T08:21:35.427742Z'
 discovered_by: agent
-discovery_method: rendered_dom_locator_verification
+discovery_method: sitemap_locator_verification
 evidence:
-  content_type: text/html; charset=utf-8; rendered=playwright
+  content_type: text/html;charset=utf-8
   final_url: https://www.alibabacloud.com/en/trust-center/vietnam?_p_lc=1
   http_status: 200
   matched_terms:
@@ -17,19 +17,18 @@ evidence:
   - compliance
   - privacy
   page_title: Security Compliance in Vietnam - Alibaba Cloud
-  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:f9e9a264581594db9b1c78d42063b36f7fb86987cf3f1cd0e8cf24449060580d
+  verification_status: redirected
+evidence_digest: sha256:004e7a63e3dbbd5fd0dd1992a92a82754bb11df3162bd4e66aa7d5a8586be726
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.alibabacloud.com/en/trust-center/vietnam?_p_lc=1
-requested_url: https://www.alibabacloud.com/en/trust-center/vietnam?_p_lc=1
+requested_url: https://www.alibabacloud.com/trust-center/vietnam
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-07-18T08:23:17.698076Z'
+selection_run_id: '2026-09-09T08:21:35.427742Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: alibaba-cloud-international
