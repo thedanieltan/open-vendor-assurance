@@ -531,7 +531,7 @@ def discover_for_vendor(
     if fetcher is None:
         fetcher = safe_discovery_fetcher(vendor, fetch_timeout)
     vendor_id = str(vendor["vendor_id"])
-    existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types_for_vendor(vendor_id, root)
+    existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types(vendor_id, root)
     discovered_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     discovery_run_id = f"{vendor_id}-{discovered_at}"
     next_review_after = (date.today() + timedelta(days=90)).isoformat()
