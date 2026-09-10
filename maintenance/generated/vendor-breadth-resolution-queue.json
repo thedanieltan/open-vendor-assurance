@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T12:47:13Z",
+  "generated_at": "2026-09-10T12:51:06Z",
   "items": [
     {
       "candidate_vendor_id": "support",
@@ -32,15 +32,15 @@
     },
     {
       "candidate_vendor_id": "home",
-      "demand_count": 36,
+      "demand_count": 47,
       "display_name_candidate": "Brief Privacy Suite Product Brief Learn how BigID helps identify privacy risk, coordinate remediation, fulfill data rights requests, and stay compliant. Download the Brief \u2192",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
+      "last_seen_at": "2026-09-10T12:51:06Z",
       "not_advice": true,
-      "observation_count": 35,
+      "observation_count": 46,
       "official_domain_candidate": "home.bigid.com",
-      "priority": 282,
+      "priority": 359,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -51,7 +51,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 35,
+      "signal_count": 46,
       "source_urls": [
         "https://bigid.com/blog/5-steps-for-effective-data-security-governance",
         "https://bigid.com/blog/a-ciso-guide-to-secure-cloud-architecture",
@@ -66,6 +66,35 @@
         "https://bigid.com/compliance/pci-dss",
         "https://bigid.com/rfp-center",
         "https://bigid.com/solutions/privacy-compliance"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "media",
+      "demand_count": 32,
+      "display_name_candidate": "Fallbeispiel Wie ein Systemintegrator die digitale Sicherheit f\u00fcr alle niederl\u00e4ndischen Notare optimierte Jetzt lesen",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 29,
+      "official_domain_candidate": "media.globalsign.com",
+      "priority": 250,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-7e8121e86b10f32de585f2fa",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 29,
+      "source_urls": [
+        "https://www.globalsign.com/de-de/ressourcen/topic/83",
+        "https://www.globalsign.com/ru-ru/resources"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -94,35 +123,6 @@
       "signal_count": 24,
       "source_urls": [
         "https://www.teamtailor.com/en/all-features"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "media",
-      "demand_count": 23,
-      "display_name_candidate": "Fallbeispiel Wie ein Systemintegrator die digitale Sicherheit f\u00fcr alle niederl\u00e4ndischen Notare optimierte Jetzt lesen",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 20,
-      "official_domain_candidate": "media.globalsign.com",
-      "priority": 187,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-7e8121e86b10f32de585f2fa",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 20,
-      "source_urls": [
-        "https://www.globalsign.com/de-de/ressourcen/topic/83",
-        "https://www.globalsign.com/ru-ru/resources"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -235,6 +235,62 @@
       "signal_count": 4,
       "source_urls": [
         "https://www.upguard.com/security-report/cisco"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "docs",
+      "demand_count": 4,
+      "display_name_candidate": "Configure Office 365 (Graph API)",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "docs.cronofy.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-737953765a8e5c01ecaa9491",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "en",
+      "demand_count": 4,
+      "display_name_candidate": "FIPS 140-2",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "en.wikipedia.org",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-843f88d361b05462fc46846b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://bigid.com/blog/data-security-platform-architecture-access-controls"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6632,21 +6688,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "docs",
+      "candidate_vendor_id": "gdpr",
       "demand_count": 3,
-      "display_name_candidate": "Configure Office 365 (Graph API)",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "GDPR",
+      "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
+      "last_seen_at": "2026-09-10T12:51:06Z",
       "not_advice": true,
       "observation_count": 3,
-      "official_domain_candidate": "docs.cronofy.com",
+      "official_domain_candidate": "gdpr.eu",
       "priority": 53,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-737953765a8e5c01ecaa9491",
+      "queue_id": "vbq-a90b7975d7a5e836d669b919",
       "reason_codes": [
         "country_missing"
       ],
@@ -6654,27 +6710,27 @@
       "schema_version": "0.1.0",
       "signal_count": 3,
       "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "en",
+      "candidate_vendor_id": "globalsign",
       "demand_count": 3,
-      "display_name_candidate": "FIPS 140-2",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430 \u0441\u0435\u0440\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0432 \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0430 \u0443\u0440\u043e\u0432\u043d\u044f \u0437\u0430\u0449\u0438\u0449\u0451\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 (SSL Server Test)",
+      "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
+      "last_seen_at": "2026-09-10T12:51:06Z",
       "not_advice": true,
       "observation_count": 3,
-      "official_domain_candidate": "en.wikipedia.org",
+      "official_domain_candidate": "globalsign.ssllabs.com",
       "priority": 53,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-843f88d361b05462fc46846b",
+      "queue_id": "vbq-72c7325ab66639467149b00e",
       "reason_codes": [
         "country_missing"
       ],
@@ -6682,7 +6738,147 @@
       "schema_version": "0.1.0",
       "signal_count": 3,
       "source_urls": [
-        "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+        "https://www.globalsign.com/ru-ru/resources/topic/83"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "gov",
+      "demand_count": 3,
+      "display_name_candidate": "LGPD",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "gov.br",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-95f9ae6169ee692169a7ca5b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "gov",
+      "demand_count": 3,
+      "display_name_candidate": "California\u2019s SB 53",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "gov.ca.gov",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-515e9fef8e72b09c2a830901",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "hklaw",
+      "demand_count": 3,
+      "display_name_candidate": "Healthline\u2019s $1.55 million settlement",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "hklaw.com",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-ad3dee8c0ad233bf50122337",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "jdsupra",
+      "demand_count": 3,
+      "display_name_candidate": "Todd Snyder",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "jdsupra.com",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-488c7d3a9735d850e6c4757b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "oag",
+      "demand_count": 3,
+      "display_name_candidate": "CCPA",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "oag.ca.gov",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-3fe206947ff057421a6219ec",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6996,21 +7192,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "gdpr",
+      "candidate_vendor_id": "itsettled",
       "demand_count": 2,
-      "display_name_candidate": "GDPR",
-      "first_seen_at": "2026-09-08T12:01:23Z",
+      "display_name_candidate": "itsettled",
+      "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
+      "last_seen_at": "2026-09-10T12:51:06Z",
       "not_advice": true,
       "observation_count": 2,
-      "official_domain_candidate": "gdpr.eu",
+      "official_domain_candidate": "itsettled.co.uk",
       "priority": 46,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-a90b7975d7a5e836d669b919",
+      "queue_id": "vbq-8896231ee9d6102c8cef632a",
       "reason_codes": [
         "country_missing"
       ],
@@ -7018,175 +7214,7 @@
       "schema_version": "0.1.0",
       "signal_count": 2,
       "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "globalsign",
-      "demand_count": 2,
-      "display_name_candidate": "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430 \u0441\u0435\u0440\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0432 \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0430 \u0443\u0440\u043e\u0432\u043d\u044f \u0437\u0430\u0449\u0438\u0449\u0451\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 (SSL Server Test)",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "globalsign.ssllabs.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-72c7325ab66639467149b00e",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://www.globalsign.com/ru-ru/resources/topic/83"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "gov",
-      "demand_count": 2,
-      "display_name_candidate": "LGPD",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "gov.br",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-95f9ae6169ee692169a7ca5b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "gov",
-      "demand_count": 2,
-      "display_name_candidate": "California\u2019s SB 53",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "gov.ca.gov",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-515e9fef8e72b09c2a830901",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "hklaw",
-      "demand_count": 2,
-      "display_name_candidate": "Healthline\u2019s $1.55 million settlement",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "hklaw.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-ad3dee8c0ad233bf50122337",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "jdsupra",
-      "demand_count": 2,
-      "display_name_candidate": "Todd Snyder",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "jdsupra.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-488c7d3a9735d850e6c4757b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "oag",
-      "demand_count": 2,
-      "display_name_candidate": "CCPA",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "oag.ca.gov",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-3fe206947ff057421a6219ec",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        "https://blog.pleo.io/en/what-a-new-cfo-actually-walks-into"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -7276,21 +7304,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "itsettled",
+      "candidate_vendor_id": "portalone",
       "demand_count": 1,
-      "display_name_candidate": "itsettled",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "PortalOne",
+      "first_seen_at": "2026-09-10T12:51:06Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-07-21T10:47:04Z",
+      "last_seen_at": "2026-09-10T12:51:06Z",
       "not_advice": true,
       "observation_count": 1,
-      "official_domain_candidate": "itsettled.co.uk",
+      "official_domain_candidate": "portalone.com",
       "priority": 39,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-8896231ee9d6102c8cef632a",
+      "queue_id": "vbq-cb79bc0f1211b225e77aa277",
       "reason_codes": [
         "country_missing"
       ],
@@ -7298,7 +7326,7 @@
       "schema_version": "0.1.0",
       "signal_count": 1,
       "source_urls": [
-        "https://blog.pleo.io/en/what-a-new-cfo-actually-walks-into"
+        "https://blog.pleo.io/en/pleos-onboarding-gave-portalone-a-faster-close-and-full-spend-visibility"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -7357,6 +7385,34 @@
         "https://blog.pleo.io/en/surviving-the-end-of-flat-rate-ai"
       ],
       "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cecilia-manduca",
+      "demand_count": 1,
+      "display_name_candidate": "Cecilia Manduca",
+      "first_seen_at": "2026-09-10T12:51:06Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-10T12:51:06Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "official_domain_candidate": null,
+      "priority": 19,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-93fd4be8f99422ca92e20161",
+      "reason_codes": [
+        "official_domain_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 1,
+      "source_urls": [
+        "https://blog.pleo.io/en/pleos-onboarding-gave-portalone-a-faster-close-and-full-spend-visibility"
+      ],
+      "state": "needs_domain",
       "writes_canonical_vendors": false
     },
     {
@@ -7426,12 +7482,12 @@
   "schema_version": "0.1.0",
   "summary": {
     "catalog_vendor_count_cap": null,
-    "queue_count": 279,
+    "queue_count": 281,
     "ready_for_source_discovery_count": 207,
     "state_counts": {
       "already_catalogued": 33,
-      "needs_country": 36,
-      "needs_domain": 3,
+      "needs_country": 37,
+      "needs_domain": 4,
       "ready_for_source_discovery": 207
     }
   }
