@@ -20,28 +20,27 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
 
           path = Path('docs/operations/contracts/work-package-scope.yaml')
-          text = path.read_text(encoding='utf-8')
-          pattern = re.compile(
-              r"  WP-OPENVA-DATA-PLANE-BOUNDARY-01:\n"
-              r"    description: .*?\n"
-              r"    allowed_paths:\n"
-              r"(?:      - .*\n)+?"
-              r"(?=\n  [A-Z0-9-]+:|\Z)",
-              re.MULTILINE,
-          )
-          replacement = '''  WP-OPENVA-DATA-PLANE-BOUNDARY-01:
+          lines = path.read_text(encoding='utf-8').splitlines()
+          start = lines.index('  WP-OPENVA-DATA-PLANE-BOUNDARY-01:')
+          end = start + 1
+          while end < len(lines):
+              line = lines[end]
+              if line.startswith('  WP-') and line.endswith(':'):
+                  break
+              end += 1
+          block = '''  WP-OPENVA-DATA-PLANE-BOUNDARY-01:
     description: Machine-enforce the discovery/canonical and discovery/delivery boundaries. Discovery candidate records remain schema-validated and store-addressable, but noncanonical discovery bulk must not amplify into public/generated catalog delivery. Allows bounded candidate metadata repair and deterministic projection updates; physical relocation to an external append-only store remains a later infrastructure-gated increment.
     allowed_paths:
       - tools/openva/data_plane_boundary.py
       - tools/openva/validate.py
       - tools/openva/indexes.py
+      - tools/openva/source_discovery.py
       - site/build_core.py
-      - site/src/app.js
       - tests/test_data_plane_boundary.py
       - tests/test_discovery_delivery_boundary.py
+      - tests/test_source_discovery.py
       - tests/test_adapter_contract.py
       - tests/test_source_type_labels.py
       - docs/architecture/adr/*
@@ -49,12 +48,9 @@ jobs:
       - data/vendors/*/candidate_sources/*.yaml
       - indexes/*.json
       - dist/vendors/*.json
-      - openva-pack.json
-'''
-          new, count = pattern.subn(replacement, text, count=1)
-          if count != 1:
-              raise SystemExit(f'expected one data-plane work-package block, replaced {count}')
-          path.write_text(new, encoding='utf-8')
+      - openva-pack.json'''.splitlines()
+          new_lines = lines[:start] + block + [''] + lines[end:]
+          path.write_text('\n'.join(new_lines) + '\n', encoding='utf-8')
           PY
       - name: Commit scope update
         run: |
