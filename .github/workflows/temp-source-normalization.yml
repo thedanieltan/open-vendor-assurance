@@ -1,0 +1,61 @@
+name: temp-source-normalization
+
+on:
+  push:
+    branches:
+      - fix/source-discovery-page-title-normalization
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-test:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: pip install -e '.[dev]'
+      - name: Patch producer and regression test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path('tools/openva/source_discovery.py')
+          text = source.read_text(encoding='utf-8')
+          marker = 'TRACKING_QUERY_PREFIXES = ("utm_",)\n'
+          insertion = '''MAX_CANDIDATE_PAGE_TITLE_LENGTH = 300\n\n\ndef bounded_page_title(data: bytes, content_type: str | None) -> str | None:\n    title = title_from_sample(data, content_type)\n    if title is None:\n        return None\n    return title[:MAX_CANDIDATE_PAGE_TITLE_LENGTH].rstrip()\n\n\nTRACKING_QUERY_PREFIXES = ("utm_",)\n'''
+          if 'MAX_CANDIDATE_PAGE_TITLE_LENGTH = 300' not in text:
+              if marker not in text:
+                  raise SystemExit('source insertion marker not found')
+              text = text.replace(marker, insertion, 1)
+          old = '"page_title": title_from_sample(result.body_sample, result.content_type),'
+          new = '"page_title": bounded_page_title(result.body_sample, result.content_type),'
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('candidate page-title assignment not found')
+              text = text.replace(old, new, 1)
+          source.write_text(text, encoding='utf-8')
+
+          test = Path('tests/test_source_discovery.py')
+          test_text = test.read_text(encoding='utf-8')
+          test_name = 'test_candidate_record_bounds_page_title_to_schema_limit'
+          if test_name not in test_text:
+              test_text += '''\n\ndef test_candidate_record_bounds_page_title_to_schema_limit() -> None:\n    import json\n    from pathlib import Path\n\n    from tools.openva.source_discovery import (\n        MAX_CANDIDATE_PAGE_TITLE_LENGTH,\n        candidate_record,\n        evidence_digest,\n    )\n    from tools.openva.source_verification import FetchResult\n\n    schema = json.loads(\n        Path("schemas/openva/candidate-source.schema.json").read_text(encoding="utf-8")\n    )\n    schema_limit = schema["properties"]["evidence"]["properties"]["page_title"]["maxLength"]\n    assert MAX_CANDIDATE_PAGE_TITLE_LENGTH == schema_limit == 300\n\n    long_title = "A" * 350\n    body = (\n        f"<html><head><title>{long_title}</title></head>"\n        "<body>security trust compliance</body></html>"\n    ).encode("utf-8")\n    result = FetchResult(\n        requested_url="https://example.com/security",\n        final_url="https://example.com/security",\n        http_status=200,\n        content_type="text/html; charset=utf-8",\n        content_length=len(body),\n        etag=None,\n        last_modified=None,\n        body_sample=body,\n    )\n    record = candidate_record(\n        "example-vendor",\n        "security_page",\n        "https://example.com/security",\n        result,\n        {"status": "strong", "matched_terms": ["security", "trust"]},\n        "2026-09-10T00:00:00Z",\n    )\n\n    page_title = record["evidence"]["page_title"]\n    assert page_title == long_title[:schema_limit]\n    assert len(page_title) == schema_limit\n    assert record["evidence_digest"] == evidence_digest(record["evidence"])\n'''
+          test.write_text(test_text, encoding='utf-8')
+          PY
+      - name: Run focused tests
+        run: pytest -q tests/test_source_discovery.py tests/test_candidate_source_schema.py
+      - name: Commit permanent fix only
+        run: |
+          rm .github/workflows/temp-source-normalization.yml
+          git config user.name 'openva-stabilization'
+          git config user.email 'openva-stabilization@users.noreply.github.com'
+          git add tools/openva/source_discovery.py tests/test_source_discovery.py .github/workflows/temp-source-normalization.yml
+          git commit -m 'Bound candidate page titles at discovery ingress'
+          git push origin HEAD:fix/source-discovery-page-title-normalization
