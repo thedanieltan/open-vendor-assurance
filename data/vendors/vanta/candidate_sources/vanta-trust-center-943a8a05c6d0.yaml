@@ -1,0 +1,33 @@
+candidate_source_id: vanta-trust-center-943a8a05c6d0
+candidate_status: selected
+candidate_url: https://community.vanta.com/events
+canonical_candidate_url: https://community.vanta.com/events
+confidence: likely
+discovered_at: '2026-09-10T08:22:10.590325Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://community.vanta.com/events
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - compliance
+  page_title: Events | Vanta Community
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3169b78c501d6522ed15b392f1b11a1cde9929a7c9556e5fb421b9c2eca563a0
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://community.vanta.com/events
+requested_url: https://community.vanta.com/events
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-10T08:22:10.590325Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: vanta
