@@ -1,0 +1,38 @@
+name: diagnose-candidate-bulk
+
+on:
+  push:
+    branches:
+      - fix/openva-manual-stabilization-clean
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install PyYAML
+      - name: Count candidate sources by discovery date
+        run: |
+          python - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          import yaml
+
+          counts = Counter()
+          total = 0
+          for path in Path('data/vendors').glob('*/candidate_sources/*.yaml'):
+              data = yaml.safe_load(path.read_text(encoding='utf-8'))
+              discovered = str((data or {}).get('discovered_at') or 'missing')
+              day = discovered[:10] if discovered != 'missing' else discovered
+              counts[day] += 1
+              total += 1
+          print(f'TOTAL={total}')
+          for day, count in sorted(counts.items()):
+              print(f'{day}={count}')
+          PY
