@@ -45,12 +45,24 @@ work_packages:
       - docs/architecture/adr/*
 
   WP-OPENVA-DATA-PLANE-BOUNDARY-01:
-    description: Machine-enforce the discovery/canonical plane boundary with a fail-closed guard wired into validate_all — proves the discovery plane is store-addressable by its deterministic identity and keeps discovery-plane bulk out of the canonical catalog schema. Additive and backward-compatible; no files moved, no workflow removed, no data mutation; the physical relocation of candidate records to an external store is a later infrastructure-gated increment.
+    description: Machine-enforce the discovery/canonical and discovery/delivery boundaries. Discovery candidate records remain schema-validated and store-addressable, but noncanonical discovery bulk must not amplify into public/generated catalog delivery. Allows bounded candidate metadata repair and deterministic projection updates; physical relocation to an external append-only store remains a later infrastructure-gated increment.
     allowed_paths:
       - tools/openva/data_plane_boundary.py
       - tools/openva/validate.py
+      - tools/openva/indexes.py
+      - tools/openva/source_discovery.py
+      - site/build_core.py
       - tests/test_data_plane_boundary.py
+      - tests/test_discovery_delivery_boundary.py
+      - tests/test_source_discovery.py
+      - tests/test_adapter_contract.py
+      - tests/test_source_type_labels.py
       - docs/architecture/adr/*
+      - docs/adapter-contract.md
+      - data/vendors/*/candidate_sources/*.yaml
+      - indexes/*.json
+      - dist/vendors/*.json
+      - openva-pack.json
 
   WP-OPENVA-LIVE-RESOLVER-BOUNDARY-01:
     description: Introduce one shared JS matcher core (openva-matcher-core.js) mirroring the authoritative Python core, prove cross-runtime normalization parity with a committed Node conformance harness driven by Python-generated vectors, and rewire the browser resolver (app.js, ui-fixes.js) to consume the shared core instead of hand-maintained copies. Live matching behaviour preserved for ASCII identities; internationalized-domain normalization is aligned to the Python authority. Additive; the Worker's fetch-safety domain validation and the full match-decision reconciliation are out of scope.
