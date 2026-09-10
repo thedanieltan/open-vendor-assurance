@@ -31,7 +31,117 @@
       "vendor_id": "gupy"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/gupy/candidate_sources/gupy-compliance-page-012bf2e1601b.yaml",
+      "candidate_source_id": "gupy-compliance-page-012bf2e1601b",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.gupy.io/gupy-para-pessoas-candidatas",
+      "canonical_candidate_url": "https://www.gupy.io/gupy-para-pessoas-candidatas",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:19:51.124365Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://portal.gupy.io/",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso",
+          "audit"
+        ],
+        "page_title": "Portal Gupy | Encontre Vagas de Emprego que Impulsionam sua Carreira",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "homepage_or_generic_redirect"
+      },
+      "evidence_digest": "sha256:2afe74aa7fc9d2fc456df5dc5e07dc169bcdc850a9c6b53a29bc83d918ca3813",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://portal.gupy.io/",
+      "requested_url": "https://www.gupy.io/gupy-para-pessoas-candidatas",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:19:51.124365Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gupy"
+    },
+    {
+      "_openva_path": "data/vendors/gupy/candidate_sources/gupy-compliance-page-21e524418bd1.yaml",
+      "candidate_source_id": "gupy-compliance-page-21e524418bd1",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.gupy.io/blog-do-emprego/vagas-falsas",
+      "canonical_candidate_url": "https://www.gupy.io/blog-do-emprego/vagas-falsas",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:19:51.124365Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.gupy.io/blog-do-emprego/vagas-falsas",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "Vagas falsas: aprenda como identificar golpes",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:9573b3fb2868c5131482792cf70d78219f28963249ed4e296d5160e818d708de",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.gupy.io/blog-do-emprego/vagas-falsas",
+      "requested_url": "https://www.gupy.io/blog-do-emprego/vagas-falsas",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:19:51.124365Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gupy"
+    },
+    {
+      "_openva_path": "data/vendors/gupy/candidate_sources/gupy-compliance-page-e8b604fb8665.yaml",
+      "candidate_source_id": "gupy-compliance-page-e8b604fb8665",
+      "candidate_status": "selected",
+      "candidate_url": "https://portal.gupy.io/",
+      "canonical_candidate_url": "https://portal.gupy.io/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:19:51.124365Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://portal.gupy.io/",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso",
+          "audit"
+        ],
+        "page_title": "Portal Gupy | Encontre Vagas de Emprego que Impulsionam sua Carreira",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:1d8a39b4b98e2fc9b93b3aa9129e1fc2c5ebe7aa7f82aa1e7d954ecd677b81b2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://portal.gupy.io/",
+      "requested_url": "https://portal.gupy.io/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:19:51.124365Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gupy"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/gupy/sources/gupy-status-page.yaml",
@@ -89,8 +199,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 3,
+    "candidate_source_types": [
+      "compliance_page"
+    ],
     "canonical_source_count": 1,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

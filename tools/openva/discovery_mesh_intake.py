@@ -90,8 +90,21 @@ def canonical_json_bytes(value: Any) -> bytes:
     ).encode("utf-8")
 
 
+MAX_PAGE_TITLE_LENGTH = 300
+
+
+def normalize_candidate_for_storage(value: dict[str, Any]) -> dict[str, Any]:
+    normalized = deepcopy(value)
+    evidence = normalized.get("evidence")
+    if isinstance(evidence, dict):
+        page_title = evidence.get("page_title")
+        if isinstance(page_title, str) and len(page_title) > MAX_PAGE_TITLE_LENGTH:
+            evidence["page_title"] = page_title[:MAX_PAGE_TITLE_LENGTH].rstrip()
+    return normalized
+
+
 def yaml_text(value: dict[str, Any]) -> str:
-    return yaml.safe_dump(value, sort_keys=False, allow_unicode=True)
+    return yaml.safe_dump(normalize_candidate_for_storage(value), sort_keys=False, allow_unicode=True)
 
 
 def parent_plan_digest(plan: dict[str, Any]) -> str:

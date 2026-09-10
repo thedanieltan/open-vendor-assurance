@@ -61,7 +61,148 @@
       "vendor_id": "gojek"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/gojek/candidate_sources/gojek-security-page-5e1b1ab8a858.yaml",
+      "candidate_source_id": "gojek-security-page-5e1b1ab8a858",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.gojek.com/blog/gocar/asuransi-kecelakaan-gocar",
+      "canonical_candidate_url": "https://www.gojek.com/blog/gocar/asuransi-kecelakaan-gocar",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:56:44.568759Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.gojek.com/blog/gocar/asuransi-kecelakaan-gocar",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident"
+        ],
+        "page_title": "GoCar’s Passenger Insurance Claim Guide",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c04d8c8ce0ff90ef7fbe6b91664a4d5c90b71652b101c1a3a8fcc6e182af28d1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.gojek.com/blog/gocar/asuransi-kecelakaan-gocar",
+      "requested_url": "https://www.gojek.com/blog/gocar/asuransi-kecelakaan-gocar",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:56:44.568759Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gojek"
+    },
+    {
+      "_openva_path": "data/vendors/gojek/candidate_sources/gojek-security-page-b00aa8013bb1.yaml",
+      "candidate_source_id": "gojek-security-page-b00aa8013bb1",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.gojek.com/blog/goride/asuransi",
+      "canonical_candidate_url": "https://www.gojek.com/blog/goride/asuransi",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:56:44.568759Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.gojek.com/blog/goride/asuransi",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident"
+        ],
+        "page_title": "A Complete Guide for GoRide’s Passenger Insurance Claim",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:482ad9f84e10ec30312bca5ca565b62d31aa649cf9ab521fa80e00af07552a3d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.gojek.com/blog/goride/asuransi",
+      "requested_url": "https://www.gojek.com/blog/goride/asuransi",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:56:44.568759Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gojek"
+    },
+    {
+      "_openva_path": "data/vendors/gojek/candidate_sources/gojek-trust-center-244292903015.yaml",
+      "candidate_source_id": "gojek-trust-center-244292903015",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.gojek.com/en-id/driver",
+      "canonical_candidate_url": "https://www.gojek.com/en-id/driver",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:56:44.568759Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.gojek.com/en-id/driver",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Driver",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5a7a6f54e7946063c969458742d709bc26dcc4ea6f6bd0e25ee1a282edc4ba92",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.gojek.com/en-id/driver",
+      "requested_url": "https://www.gojek.com/en-id/driver",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:56:44.568759Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gojek"
+    },
+    {
+      "_openva_path": "data/vendors/gojek/candidate_sources/gojek-trust-center-abccc9874bb5.yaml",
+      "candidate_source_id": "gojek-trust-center-abccc9874bb5",
+      "candidate_status": "selected",
+      "candidate_url": "https://gojek.com/en-id/driver",
+      "canonical_candidate_url": "https://gojek.com/en-id/driver",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:56:44.568759Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gojek.com/en-id/driver",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Driver",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:ec639eec8cd0e82d6220fbf514966e58bb1f6c2042664a9dff1eb42e480a1c7d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gojek.com/en-id/driver",
+      "requested_url": "https://gojek.com/en-id/driver",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:56:44.568759Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gojek"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/gojek/sources/gojek-privacy-notice.yaml",
@@ -159,8 +300,11 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 4,
+    "candidate_source_types": [
+      "security_page",
+      "trust_center"
+    ],
     "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

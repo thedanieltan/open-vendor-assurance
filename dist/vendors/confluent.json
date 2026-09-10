@@ -121,7 +121,43 @@
       "vendor_id": "confluent"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/confluent/candidate_sources/confluent-ai-terms-91a16021967c.yaml",
+      "candidate_source_id": "confluent-ai-terms-91a16021967c",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.confluent.io/generative-ai",
+      "canonical_candidate_url": "https://www.confluent.io/generative-ai/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:56:44.568759Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.confluent.io/generative-ai/",
+        "http_status": 200,
+        "matched_terms": [
+          "artificial intelligence",
+          "generative ai"
+        ],
+        "page_title": "Generative Artificial Intelligence (GenAI) | Confluent",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:4b220ab12c517f8d124ef7e6fbf64c07ac16e5917bb8b5e3741da987e72052fd",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.confluent.io/generative-ai/",
+      "requested_url": "https://www.confluent.io/generative-ai",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:56:44.568759Z",
+      "source_type_candidate": "ai_terms",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "confluent"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/confluent/sources/confluent-compliance-page.yaml",
@@ -304,8 +340,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 1,
+    "candidate_source_types": [
+      "ai_terms"
+    ],
     "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
