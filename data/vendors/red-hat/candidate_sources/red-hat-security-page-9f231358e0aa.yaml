@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-9f231358e0aa
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7133381
+canonical_candidate_url: https://access.redhat.com/solutions/7133381
+confidence: likely
+discovered_at: '2026-09-10T08:22:48.651921Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7133381
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'RHEL-10: Kernel panic at netfs_unlock_read_folio+0x27 - Red Hat Customer
+    Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b3689c5bc46e80e604287858dd198ab19a9d22bd4aff342c2f6fd402ed33055c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7133381
+requested_url: https://access.redhat.com/solutions/7133381
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-10T08:22:48.651921Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

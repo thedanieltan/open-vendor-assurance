@@ -1,0 +1,33 @@
+candidate_source_id: sapiens-security-page-85675bbdf572
+candidate_status: selected
+candidate_url: https://sapiens.com/us/partners?partnerstags%5B%5D=workers-compensation
+canonical_candidate_url: https://sapiens.com/us/partners/?partnerstags%5B%5D=workers-compensation
+confidence: likely
+discovered_at: '2026-09-10T08:22:31.905876Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://sapiens.com/us/partners/?partnerstags%5B%5D=workers-compensation
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Partners | Sapiens
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: true
+  verification_status: soft_not_found
+evidence_digest: sha256:6bbb1873dee9962f43d921f130344c903427ee5d1c04ca40f382d28c2cf75321
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sapiens.com/us/partners/?partnerstags%5B%5D=workers-compensation
+requested_url: https://sapiens.com/us/partners?partnerstags%5B%5D=workers-compensation
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-10T08:22:31.905876Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: sapiens
