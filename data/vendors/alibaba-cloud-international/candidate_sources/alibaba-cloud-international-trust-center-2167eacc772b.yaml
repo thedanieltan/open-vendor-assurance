@@ -1,13 +1,13 @@
 candidate_source_id: alibaba-cloud-international-trust-center-2167eacc772b
 candidate_status: selected
-candidate_url: https://www.alibabacloud.com/trust-center/ospar
+candidate_url: https://www.alibabacloud.com/en/trust-center/ospar?_p_lc=1
 canonical_candidate_url: https://www.alibabacloud.com/en/trust-center/ospar?_p_lc=1
 confidence: likely
-discovered_at: '2026-09-09T08:21:35.427742Z'
+discovered_at: '2026-09-08T08:18:16.968099Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
-  content_type: text/html;charset=utf-8
+  content_type: text/html; charset=utf-8; rendered=playwright
   final_url: https://www.alibabacloud.com/en/trust-center/ospar?_p_lc=1
   http_status: 200
   matched_terms:
@@ -18,18 +18,19 @@ evidence:
   - privacy
   page_title: 'OSPAR Compliance: Guidelines for Outsourced Service Providers - Alibaba
     Cloud'
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:8e0e24f8efb2d3badcd7569a9686893ec95177997053a8b3bc7d0523dc2251fe
+  verification_status: ok
+evidence_digest: sha256:460ebfe80552543d96b4654ce34c4395f7dc6240bd015c1e7209d829c95826cc
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.alibabacloud.com/en/trust-center/ospar?_p_lc=1
-requested_url: https://www.alibabacloud.com/trust-center/ospar
+requested_url: https://www.alibabacloud.com/en/trust-center/ospar?_p_lc=1
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-09T08:21:35.427742Z'
+selection_run_id: '2026-09-08T08:18:16.968099Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: alibaba-cloud-international

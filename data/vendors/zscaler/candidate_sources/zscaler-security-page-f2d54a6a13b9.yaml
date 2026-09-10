@@ -1,31 +1,33 @@
 candidate_source_id: zscaler-security-page-f2d54a6a13b9
 candidate_status: selected
-candidate_url: https://www.zscaler.com/products-and-solutions/zscaler-ai
+candidate_url: https://www.zscaler.com/capabilities/machine-learning
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/zscaler-ai
 confidence: likely
-discovered_at: '2026-09-09T08:21:29.081802Z'
+discovered_at: '2026-09-08T08:18:47.566016Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/zscaler-ai
   http_status: 200
   matched_terms:
   - security
+  - vulnerability
   - trust
   page_title: Zscaler AI Security | Secure GenAI, Data &amp; AI Applications
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:51a788b22f8ba3b5cda7835d0335d24e668f4efc610a1e6da7112c450af95754
+  verification_status: redirected
+evidence_digest: sha256:6d1fb9700af00a1991d2cd1fe1774ae41f96f62351385209cba721432ca98d07
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/zscaler-ai
-requested_url: https://www.zscaler.com/products-and-solutions/zscaler-ai
+requested_url: https://www.zscaler.com/capabilities/machine-learning
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-09T08:21:29.081802Z'
+selection_run_id: '2026-09-08T08:18:47.566016Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
