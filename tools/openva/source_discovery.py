@@ -306,6 +306,16 @@ def is_candidate_match(source_type: str, result: FetchResult) -> tuple[bool, dic
     return semantic.get("status") in {"strong", "weak", "not_evaluated_pdf_sample"}, semantic
 
 
+MAX_CANDIDATE_PAGE_TITLE_LENGTH = 300
+
+
+def bounded_page_title(data: bytes, content_type: str | None) -> str | None:
+    title = title_from_sample(data, content_type)
+    if title is None:
+        return None
+    return title[:MAX_CANDIDATE_PAGE_TITLE_LENGTH].rstrip()
+
+
 TRACKING_QUERY_PREFIXES = ("utm_",)
 TRACKING_QUERY_KEYS = {"fbclid", "gclid", "msclkid"}
 
@@ -374,7 +384,7 @@ def candidate_record(
     verification_status = classify_status(verification_source, result, semantic)
     canonical_candidate_url = result.final_url if same_authority(url, result.final_url) else url
     evidence = {
-        "page_title": title_from_sample(result.body_sample, result.content_type),
+        "page_title": bounded_page_title(result.body_sample, result.content_type),
         "matched_terms": semantic.get("matched_terms", []),
         "final_url": result.final_url,
         "http_status": result.http_status,
@@ -521,7 +531,7 @@ def discover_for_vendor(
     if fetcher is None:
         fetcher = safe_discovery_fetcher(vendor, fetch_timeout)
     vendor_id = str(vendor["vendor_id"])
-    existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types(vendor_id, root)
+    existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types_for_vendor(vendor_id, root)
     discovered_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     discovery_run_id = f"{vendor_id}-{discovered_at}"
     next_review_after = (date.today() + timedelta(days=90)).isoformat()
