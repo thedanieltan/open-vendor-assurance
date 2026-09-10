@@ -1,0 +1,65 @@
+name: patch-data-plane-scope
+
+on:
+  push:
+    branches:
+      - policy/openva-discovery-delivery-boundary
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: policy/openva-discovery-delivery-boundary
+      - name: Expand data-plane work-package scope
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('docs/operations/contracts/work-package-scope.yaml')
+          text = path.read_text(encoding='utf-8')
+          pattern = re.compile(
+              r"  WP-OPENVA-DATA-PLANE-BOUNDARY-01:\n"
+              r"    description: .*?\n"
+              r"    allowed_paths:\n"
+              r"(?:      - .*\n)+?"
+              r"(?=\n  [A-Z0-9-]+:|\Z)",
+              re.MULTILINE,
+          )
+          replacement = '''  WP-OPENVA-DATA-PLANE-BOUNDARY-01:
+    description: Machine-enforce the discovery/canonical and discovery/delivery boundaries. Discovery candidate records remain schema-validated and store-addressable, but noncanonical discovery bulk must not amplify into public/generated catalog delivery. Allows bounded candidate metadata repair and deterministic projection updates; physical relocation to an external append-only store remains a later infrastructure-gated increment.
+    allowed_paths:
+      - tools/openva/data_plane_boundary.py
+      - tools/openva/validate.py
+      - tools/openva/indexes.py
+      - site/build_core.py
+      - site/src/app.js
+      - tests/test_data_plane_boundary.py
+      - tests/test_discovery_delivery_boundary.py
+      - tests/test_adapter_contract.py
+      - tests/test_source_type_labels.py
+      - docs/architecture/adr/*
+      - docs/adapter-contract.md
+      - data/vendors/*/candidate_sources/*.yaml
+      - indexes/*.json
+      - dist/vendors/*.json
+      - openva-pack.json
+'''
+          new, count = pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit(f'expected one data-plane work-package block, replaced {count}')
+          path.write_text(new, encoding='utf-8')
+          PY
+      - name: Commit scope update
+        run: |
+          git config user.name 'OpenVA scope policy'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/operations/contracts/work-package-scope.yaml
+          git commit -m 'Expand data-plane boundary scope for delivery separation'
+          git push origin HEAD:policy/openva-discovery-delivery-boundary
