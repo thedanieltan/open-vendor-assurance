@@ -30,25 +30,27 @@ jobs:
               if line.startswith('  WP-') and line.endswith(':'):
                   break
               end += 1
-          block = '''  WP-OPENVA-DATA-PLANE-BOUNDARY-01:
-    description: Machine-enforce the discovery/canonical and discovery/delivery boundaries. Discovery candidate records remain schema-validated and store-addressable, but noncanonical discovery bulk must not amplify into public/generated catalog delivery. Allows bounded candidate metadata repair and deterministic projection updates; physical relocation to an external append-only store remains a later infrastructure-gated increment.
-    allowed_paths:
-      - tools/openva/data_plane_boundary.py
-      - tools/openva/validate.py
-      - tools/openva/indexes.py
-      - tools/openva/source_discovery.py
-      - site/build_core.py
-      - tests/test_data_plane_boundary.py
-      - tests/test_discovery_delivery_boundary.py
-      - tests/test_source_discovery.py
-      - tests/test_adapter_contract.py
-      - tests/test_source_type_labels.py
-      - docs/architecture/adr/*
-      - docs/adapter-contract.md
-      - data/vendors/*/candidate_sources/*.yaml
-      - indexes/*.json
-      - dist/vendors/*.json
-      - openva-pack.json'''.splitlines()
+          block = [
+              '  WP-OPENVA-DATA-PLANE-BOUNDARY-01:',
+              '    description: Machine-enforce the discovery/canonical and discovery/delivery boundaries. Discovery candidate records remain schema-validated and store-addressable, but noncanonical discovery bulk must not amplify into public/generated catalog delivery. Allows bounded candidate metadata repair and deterministic projection updates; physical relocation to an external append-only store remains a later infrastructure-gated increment.',
+              '    allowed_paths:',
+              '      - tools/openva/data_plane_boundary.py',
+              '      - tools/openva/validate.py',
+              '      - tools/openva/indexes.py',
+              '      - tools/openva/source_discovery.py',
+              '      - site/build_core.py',
+              '      - tests/test_data_plane_boundary.py',
+              '      - tests/test_discovery_delivery_boundary.py',
+              '      - tests/test_source_discovery.py',
+              '      - tests/test_adapter_contract.py',
+              '      - tests/test_source_type_labels.py',
+              '      - docs/architecture/adr/*',
+              '      - docs/adapter-contract.md',
+              '      - data/vendors/*/candidate_sources/*.yaml',
+              '      - indexes/*.json',
+              '      - dist/vendors/*.json',
+              '      - openva-pack.json',
+          ]
           new_lines = lines[:start] + block + [''] + lines[end:]
           path.write_text('\n'.join(new_lines) + '\n', encoding='utf-8')
           PY
