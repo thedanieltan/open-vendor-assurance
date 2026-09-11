@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-20079de6e02a
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/mdr-managed-detection-response.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/mdr-managed-detection-response.html
+confidence: likely
+discovered_at: '2026-09-11T08:31:11.097777Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/mdr-managed-detection-response.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: 'Managed Detection &#x26; Response: MDR Explained | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8446862b8229891c8ae54ad30e5a560fb2c9eb9d53e53ab071e762923b87708c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/mdr-managed-detection-response.html
+requested_url: https://www.splunk.com/en_us/blog/learn/mdr-managed-detection-response.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:31:11.097777Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
