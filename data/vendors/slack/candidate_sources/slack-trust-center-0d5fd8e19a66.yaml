@@ -1,28 +1,29 @@
-candidate_source_id: slack-trust-center-4313ef252b07
+candidate_source_id: slack-trust-center-0d5fd8e19a66
 candidate_status: selected
-candidate_url: https://slack.com/intl/pt-br/trust/compliance/gdpr
-canonical_candidate_url: https://slack.com/intl/pt-br/trust/compliance/gdpr
+candidate_url: https://slack.com/intl/de-de/terms-of-service/user
+canonical_candidate_url: https://slack.com/intl/de-de/terms-of-service/user
 confidence: likely
 discovered_at: '2026-09-11T08:16:30.400326Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/intl/pt-br/trust/compliance/gdpr
+  final_url: https://slack.com/intl/de-de/terms-of-service/user
   http_status: 200
   matched_terms:
+  - trust
+  - security
   - compliance
-  - privacy
-  page_title: Compromisso do Slack com o GDPR | Jurídico | Slack
+  page_title: Nutzungsbedingungen für Benutzer | Rechtliches | Slack
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:8c097ad6115e62bce4948b280c5e2c733c894a8b2ef3f94b4b6f706f3ff27304
+evidence_digest: sha256:74329b5e26e0ade3a7834283b8025199832953c2c442341014a50e6a49680c0b
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/intl/pt-br/trust/compliance/gdpr
-requested_url: https://slack.com/intl/pt-br/trust/compliance/gdpr
+observed_final_url: https://slack.com/intl/de-de/terms-of-service/user
+requested_url: https://slack.com/intl/de-de/terms-of-service/user
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-11T08:16:30.400326Z'
