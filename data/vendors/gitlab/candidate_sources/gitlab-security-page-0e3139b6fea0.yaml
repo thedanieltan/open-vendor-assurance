@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-0e3139b6fea0
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/secret_detection/secret_push_protection
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/secret_detection/secret_push_protection/
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/secret_detection/secret_push_protection/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - vulnerability
+  page_title: Secret push protection | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:279de4c8858d4c44061b294924d37f989a5632e46a4c710a1c77ef9b6241b186
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/secret_detection/secret_push_protection/
+requested_url: https://docs.gitlab.com/user/application_security/secret_detection/secret_push_protection
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

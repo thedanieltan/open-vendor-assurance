@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-3385886db4fb
+candidate_status: selected
+candidate_url: https://about.gitlab.com/events/epic-munich
+canonical_candidate_url: https://about.gitlab.com/events/epic-munich/
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/events/epic-munich/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Epic Munich
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7a2cb34ef702faa2cb9498de7df1090989c0b3e6ef9096c99770fe738c3cc25e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/events/epic-munich/
+requested_url: https://about.gitlab.com/events/epic-munich
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

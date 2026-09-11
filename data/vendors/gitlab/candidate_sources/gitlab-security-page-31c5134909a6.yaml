@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-31c5134909a6
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies/
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: Merge request approval policies | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2058ff6fff716f446b02c6a7c45a1670a25294047bff3a21abddcc179d416282
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies/
+requested_url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
