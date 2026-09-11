@@ -1,0 +1,34 @@
+candidate_source_id: bitbucket-security-page-585cd316b9ab
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-git-repository-on-bitbucket-cloud
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-git-repository-on-bitbucket-cloud
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-git-repository-on-bitbucket-cloud
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Pull changes from your Git repository on Bitbucket Cloud | Bitbucket
+    Cloud | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cd3c8a864b23915f293a74290ea70bd029ba1118b3392fc0e0659935c1144fc6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-git-repository-on-bitbucket-cloud
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-git-repository-on-bitbucket-cloud
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
