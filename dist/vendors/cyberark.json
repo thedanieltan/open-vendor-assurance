@@ -197,7 +197,80 @@
       "vendor_id": "cyberark"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/cyberark/candidate_sources/cyberark-security-page-33e76598bf00.yaml",
+      "candidate_source_id": "cyberark-security-page-33e76598bf00",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.cyberark.com/?amp%3Bamp%3Bamp%3Bsource=click&amp%3Bamp%3BitemUid=ec55ac65-9b85-44f3-b147-fea32d96ac9c&amp%3Bamp%3Bsource=click&amp%3BitemUid=54c8c787-c7f7-4e06-9658-6434ef912512&amp%3Bsource=click&itemName=certifications&itemUid=a5bb6b4d-c23b-4d4f-9da1-bedf5dc74ff5&source=click",
+      "canonical_candidate_url": "https://trust.cyberark.com/?amp%3Bamp%3Bamp%3Bsource=click&amp%3Bamp%3BitemUid=ec55ac65-9b85-44f3-b147-fea32d96ac9c&amp%3Bamp%3Bsource=click&amp%3BitemUid=54c8c787-c7f7-4e06-9658-6434ef912512&amp%3Bsource=click&itemName=certifications&itemUid=a5bb6b4d-c23b-4d4f-9da1-bedf5dc74ff5&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-11T08:16:29.454284Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.cyberark.com/?amp%3Bamp%3Bamp%3Bsource=click&amp%3Bamp%3BitemUid=ec55ac65-9b85-44f3-b147-fea32d96ac9c&amp%3Bamp%3Bsource=click&amp%3BitemUid=54c8c787-c7f7-4e06-9658-6434ef912512&amp%3Bsource=click&itemName=certifications&itemUid=a5bb6b4d-c23b-4d4f-9da1-bedf5dc74ff5&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability",
+          "trust"
+        ],
+        "page_title": "CyberArk CyberArk Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e131b9eb4560c2a4b04456a0b6f8b83aa05c6a14e74c73114b4e5d584b128cc2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.cyberark.com/?amp%3Bamp%3Bamp%3Bsource=click&amp%3Bamp%3BitemUid=ec55ac65-9b85-44f3-b147-fea32d96ac9c&amp%3Bamp%3Bsource=click&amp%3BitemUid=54c8c787-c7f7-4e06-9658-6434ef912512&amp%3Bsource=click&itemName=certifications&itemUid=a5bb6b4d-c23b-4d4f-9da1-bedf5dc74ff5&source=click",
+      "requested_url": "https://trust.cyberark.com/?amp%3Bamp%3Bamp%3Bsource=click&amp%3Bamp%3BitemUid=ec55ac65-9b85-44f3-b147-fea32d96ac9c&amp%3Bamp%3Bsource=click&amp%3BitemUid=54c8c787-c7f7-4e06-9658-6434ef912512&amp%3Bsource=click&itemName=certifications&itemUid=a5bb6b4d-c23b-4d4f-9da1-bedf5dc74ff5&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-11T08:16:29.454284Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/candidate_sources/cyberark-security-page-61941e691cc3.yaml",
+      "candidate_source_id": "cyberark-security-page-61941e691cc3",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=1f0bd979-1753-4816-b548-b08c79caa697&loginRequest=true&source=click",
+      "canonical_candidate_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=1f0bd979-1753-4816-b548-b08c79caa697&loginRequest=true&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:24:44.145698Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=1f0bd979-1753-4816-b548-b08c79caa697&loginRequest=true&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability",
+          "trust"
+        ],
+        "page_title": "CyberArk CyberArk Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e8d5740712cf3f85ca61c119276635ecf490da4f335b7965803e2d10ad0f85f8",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=1f0bd979-1753-4816-b548-b08c79caa697&loginRequest=true&source=click",
+      "requested_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=1f0bd979-1753-4816-b548-b08c79caa697&loginRequest=true&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:24:44.145698Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cyberark"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/cyberark/sources/cyberark-certification-reference.yaml",
@@ -449,8 +522,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 6,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 2,
+    "candidate_source_types": [
+      "security_page"
+    ],
     "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

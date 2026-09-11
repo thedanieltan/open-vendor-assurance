@@ -91,7 +91,219 @@
       "vendor_id": "sleekflow"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-dpa-e248fd73f0ec.yaml",
+      "candidate_source_id": "sleekflow-dpa-e248fd73f0ec",
+      "candidate_status": "selected",
+      "candidate_url": "https://app.sleekflow.io/",
+      "canonical_candidate_url": "https://app.sleekflow.io/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://app.sleekflow.io/",
+        "http_status": 200,
+        "matched_terms": [
+          "dpa",
+          "controller"
+        ],
+        "page_title": "SleekFlow",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:f4b4334c077b1feaee59895e2f683990c63e1fb25edc1ce6509516bc5dff0bc9",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://app.sleekflow.io/",
+      "requested_url": "https://app.sleekflow.io/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "dpa",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    },
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-security-page-508dbb078222.yaml",
+      "candidate_source_id": "sleekflow-security-page-508dbb078222",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.sleekflow.io/en_US/general-settings/ip-allowlisting",
+      "canonical_candidate_url": "https://help.sleekflow.io/en_US/general-settings/ip-allowlisting",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.sleekflow.io/en_US/general-settings/ip-allowlisting",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "IP allowlisting | SleekFlow Help",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d93ff4bdddbb1c38a11e25adafd5749e256e3298c23e5567faf012d83bec67cf",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.sleekflow.io/en_US/general-settings/ip-allowlisting",
+      "requested_url": "https://help.sleekflow.io/en_US/general-settings/ip-allowlisting",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    },
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-security-page-6818f6df6c57.yaml",
+      "candidate_source_id": "sleekflow-security-page-6818f6df6c57",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.sleekflow.io/en_US/general-settings/security-overview",
+      "canonical_candidate_url": "https://help.sleekflow.io/en_US/general-settings/security-overview",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.sleekflow.io/en_US/general-settings/security-overview",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Security overview | SleekFlow Help",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c79ecbb89b215a41c98b2ff712aafcd7e5b1ecf72ce5da49e806c202736a92e7",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.sleekflow.io/en_US/general-settings/security-overview",
+      "requested_url": "https://help.sleekflow.io/en_US/general-settings/security-overview",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    },
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-security-page-bd0d2e3de378.yaml",
+      "candidate_source_id": "sleekflow-security-page-bd0d2e3de378",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.sleekflow.io/en_US/general-settings/plans-and-billing",
+      "canonical_candidate_url": "https://help.sleekflow.io/en_US/general-settings/plans-and-billing",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.sleekflow.io/en_US/general-settings/plans-and-billing",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Plans and billing | SleekFlow Help",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:695e2caac5349a546979e62afeeadef195dbf0c3903153e7eb32f9669d79a5f0",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.sleekflow.io/en_US/general-settings/plans-and-billing",
+      "requested_url": "https://help.sleekflow.io/en_US/general-settings/plans-and-billing",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    },
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-security-page-f7499d1b5580.yaml",
+      "candidate_source_id": "sleekflow-security-page-f7499d1b5580",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.sleekflow.io/en_US/general-settings/managing-users",
+      "canonical_candidate_url": "https://help.sleekflow.io/en_US/general-settings/managing-users",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.sleekflow.io/en_US/general-settings/managing-users",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability"
+        ],
+        "page_title": "Managing users | SleekFlow Help",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:53cb512df79b96fb088a74cd9500aa04c563bebda83ad90d3b177ba779c888d2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.sleekflow.io/en_US/general-settings/managing-users",
+      "requested_url": "https://help.sleekflow.io/en_US/general-settings/managing-users",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    },
+    {
+      "_openva_path": "data/vendors/sleekflow/candidate_sources/sleekflow-trust-center-31000129b942.yaml",
+      "candidate_source_id": "sleekflow-trust-center-31000129b942",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.sleekflow.io/en_US/general-settings/data-masking",
+      "canonical_candidate_url": "https://help.sleekflow.io/en_US/general-settings/data-masking",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:19.755585Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.sleekflow.io/en_US/general-settings/data-masking",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Data masking | SleekFlow Help",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:1d33b5a6659bdd2a4d6e09f5ac240707acf8d3f6bae6bcd54480b6ed283e53f4",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.sleekflow.io/en_US/general-settings/data-masking",
+      "requested_url": "https://help.sleekflow.io/en_US/general-settings/data-masking",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:19.755585Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sleekflow"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/sleekflow/sources/sleekflow-privacy-notice.yaml",
@@ -229,8 +441,12 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 6,
+    "candidate_source_types": [
+      "dpa",
+      "security_page",
+      "trust_center"
+    ],
     "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

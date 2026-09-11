@@ -121,7 +121,113 @@
       "vendor_id": "staffbase"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/staffbase/candidate_sources/staffbase-security-page-56c1cc971625.yaml",
+      "candidate_source_id": "staffbase-security-page-56c1cc971625",
+      "candidate_status": "selected",
+      "candidate_url": "https://developers.staffbase.com/changelog",
+      "canonical_candidate_url": "https://developers.staffbase.com/changelog/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:18:12.364725Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://developers.staffbase.com/changelog/",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident"
+        ],
+        "page_title": "Changelog | Staffbase Developer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2408e2097845d9525293b83410bac3a6fc685469e15151f2a6f207303439ae33",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://developers.staffbase.com/changelog/",
+      "requested_url": "https://developers.staffbase.com/changelog",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:18:12.364725Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "staffbase"
+    },
+    {
+      "_openva_path": "data/vendors/staffbase/candidate_sources/staffbase-security-page-75da7b34aadc.yaml",
+      "candidate_source_id": "staffbase-security-page-75da7b34aadc",
+      "candidate_status": "selected",
+      "candidate_url": "https://status.staffbase.com/",
+      "canonical_candidate_url": "https://status.staffbase.com/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:18:12.364725Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://status.staffbase.com/",
+        "http_status": 200,
+        "matched_terms": [
+          "availability",
+          "incident"
+        ],
+        "page_title": "Staffbase Status",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:cead30189f138a7a410d2adbfa47ab6e85a4aae65a7974dcd70c7974c30dae91",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://status.staffbase.com/",
+      "requested_url": "https://status.staffbase.com/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:18:12.364725Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "staffbase"
+    },
+    {
+      "_openva_path": "data/vendors/staffbase/candidate_sources/staffbase-security-page-ad537a5e62ff.yaml",
+      "candidate_source_id": "staffbase-security-page-ad537a5e62ff",
+      "candidate_status": "selected",
+      "candidate_url": "https://staffbase.com/demo",
+      "canonical_candidate_url": "https://staffbase.com/demo",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:18:12.364725Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://staffbase.com/demo",
+        "http_status": 200,
+        "matched_terms": [
+          "availability",
+          "trust"
+        ],
+        "page_title": "AI-native employee experience platform for Comms, HR, &amp; IT | Book your demo | Staffbase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:321643b47bc6c25567f0497ddc927d54d2d97472b67ec36323d17b157f46697d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://staffbase.com/demo",
+      "requested_url": "https://staffbase.com/demo",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:18:12.364725Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "staffbase"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/staffbase/sources/staffbase-compliance-page.yaml",
@@ -299,8 +405,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 3,
+    "candidate_source_types": [
+      "security_page"
+    ],
     "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

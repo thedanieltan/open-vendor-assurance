@@ -61,7 +61,114 @@
       "vendor_id": "jisr"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/jisr/candidate_sources/jisr-certification-reference-2c5ea140a27a.yaml",
+      "candidate_source_id": "jisr-certification-reference-2c5ea140a27a",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.jisr.net/ar/payroll-management",
+      "canonical_candidate_url": "https://www.jisr.net/ar/payroll-management",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.jisr.net/ar/payroll-management",
+        "http_status": 200,
+        "matched_terms": [
+          "soc 2",
+          "iso 27001"
+        ],
+        "page_title": "نظام إدارة الرواتب - أتمتة مسير رواتب الموارد البشرية مع جسر",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0659f9a3aa0bc8ff8facc156c409c93e8ab5b6d81dc8fed538f0657b9b915e60",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.jisr.net/ar/payroll-management",
+      "requested_url": "https://www.jisr.net/ar/payroll-management",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "certification_reference",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "jisr"
+    },
+    {
+      "_openva_path": "data/vendors/jisr/candidate_sources/jisr-certification-reference-dbe3c7f0733c.yaml",
+      "candidate_source_id": "jisr-certification-reference-dbe3c7f0733c",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.jisr.net/ar/solutions/finance",
+      "canonical_candidate_url": "https://www.jisr.net/ar/solutions/finance",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.jisr.net/ar/solutions/finance",
+        "http_status": 200,
+        "matched_terms": [
+          "soc 2",
+          "iso 27001"
+        ],
+        "page_title": "مع نظام جسر اربط الموارد البشرية بالمالية وحسن التدفق النقدي",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2a44432b8e33f2ae5bbbde2029fc85a872170403108ffe596dc120fc91e224a9",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.jisr.net/ar/solutions/finance",
+      "requested_url": "https://www.jisr.net/ar/solutions/finance",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "certification_reference",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "jisr"
+    },
+    {
+      "_openva_path": "data/vendors/jisr/candidate_sources/jisr-trust-center-4316e0628558.yaml",
+      "candidate_source_id": "jisr-trust-center-4316e0628558",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.jisr.net/en/jisr/careers-page?host=1&id=e88c56fd-404e-43ce-9f9f-0eec32c7f599",
+      "canonical_candidate_url": "https://www.jisr.net/en/jisr/careers-page?host=1&id=e88c56fd-404e-43ce-9f9f-0eec32c7f599",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.jisr.net/en/jisr/careers-page?host=1&id=e88c56fd-404e-43ce-9f9f-0eec32c7f599",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "compliance"
+        ],
+        "page_title": "ATS Career Website",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:863f25829476bb6e531c7eb0db2b78543d4e4e28cd35ac0791ad02d267caa14b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.jisr.net/en/jisr/careers-page?host=1&id=e88c56fd-404e-43ce-9f9f-0eec32c7f599",
+      "requested_url": "https://www.jisr.net/en/jisr/careers-page?host=1&id=e88c56fd-404e-43ce-9f9f-0eec32c7f599",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "jisr"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/jisr/sources/jisr-compliance-page.yaml",
@@ -159,8 +266,11 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 3,
+    "candidate_source_types": [
+      "certification_reference",
+      "trust_center"
+    ],
     "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

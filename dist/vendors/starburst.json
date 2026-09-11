@@ -121,7 +121,43 @@
       "vendor_id": "starburst"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/starburst/candidate_sources/starburst-ai-terms-15e45e104c34.yaml",
+      "candidate_source_id": "starburst-ai-terms-15e45e104c34",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.starburst.io/blog/what-is-column-level-security",
+      "canonical_candidate_url": "https://www.starburst.io/blog/what-is-column-level-security/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:33:08.817814Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.starburst.io/blog/what-is-column-level-security/",
+        "http_status": 200,
+        "matched_terms": [
+          "machine learning",
+          "customer data"
+        ],
+        "page_title": "What is Column-Level Security? | Starburst",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:bdd5cc7afc191afdac3fd371d7b33fe6e5f99f0b3fdcea5d29832845c38223eb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.starburst.io/blog/what-is-column-level-security/",
+      "requested_url": "https://www.starburst.io/blog/what-is-column-level-security",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:33:08.817814Z",
+      "source_type_candidate": "ai_terms",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "starburst"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/starburst/sources/starburst-compliance-page.yaml",
@@ -287,8 +323,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 1,
+    "candidate_source_types": [
+      "ai_terms"
+    ],
     "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

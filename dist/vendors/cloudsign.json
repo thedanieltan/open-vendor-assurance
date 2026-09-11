@@ -61,7 +61,148 @@
       "vendor_id": "cloudsign"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/cloudsign/candidate_sources/cloudsign-compliance-page-01a8bfb7ff79.yaml",
+      "candidate_source_id": "cloudsign-compliance-page-01a8bfb7ff79",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.cloudsign.jp/",
+      "canonical_candidate_url": "https://www.cloudsign.jp/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://www.cloudsign.jp/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "クラウドサイン | 国内シェアNo.1の電子契約サービス",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:1a7782e97ed4d12f71aa67766fe9efe12b4566bd459388d1e89d0e2155a7d0f2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.cloudsign.jp/",
+      "requested_url": "https://www.cloudsign.jp/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cloudsign"
+    },
+    {
+      "_openva_path": "data/vendors/cloudsign/candidate_sources/cloudsign-compliance-page-33946fe07b6e.yaml",
+      "candidate_source_id": "cloudsign-compliance-page-33946fe07b6e",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.cloudsign.jp/enterprise",
+      "canonical_candidate_url": "https://www.cloudsign.jp/enterprise/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://www.cloudsign.jp/enterprise/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "大企業のご担当者様へ | クラウドサイン | 国内シェアNo.1の電子契約サービス",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b1f5ea5f8c81c1005592fb5687cdc243aab404afbd100aecc04b3412b10d14d3",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.cloudsign.jp/enterprise/",
+      "requested_url": "https://www.cloudsign.jp/enterprise",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cloudsign"
+    },
+    {
+      "_openva_path": "data/vendors/cloudsign/candidate_sources/cloudsign-compliance-page-6f9f6472d6ac.yaml",
+      "candidate_source_id": "cloudsign-compliance-page-6f9f6472d6ac",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.cloudsign.jp/government",
+      "canonical_candidate_url": "https://www.cloudsign.jp/government/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://www.cloudsign.jp/government/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "電子契約で地方自治体のDXを推進 | クラウドサイン | 国内シェアNo.1の電子契約サービス",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:7707355c1de1cede014fe6eb8be343b8cafb3e8c525dc367a2767a0c08508f19",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.cloudsign.jp/government/",
+      "requested_url": "https://www.cloudsign.jp/government",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cloudsign"
+    },
+    {
+      "_openva_path": "data/vendors/cloudsign/candidate_sources/cloudsign-compliance-page-a9cf56465b88.yaml",
+      "candidate_source_id": "cloudsign-compliance-page-a9cf56465b88",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.cloudsign.jp/ja/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3?hsLang=ja",
+      "canonical_candidate_url": "https://help.cloudsign.jp/ja/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:12:07.593931Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://help.cloudsign.jp/ja/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "セキュリティ | クラウドサイン ヘルプセンター",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:b19225b808371a8548d087f7304e0c0883dd5feccd3a4d6a6f328be24ae28a1b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.cloudsign.jp/ja/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3",
+      "requested_url": "https://help.cloudsign.jp/ja/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3?hsLang=ja",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:12:07.593931Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cloudsign"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/cloudsign/sources/cloudsign-privacy-notice.yaml",
@@ -159,8 +300,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 4,
+    "candidate_source_types": [
+      "compliance_page"
+    ],
     "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

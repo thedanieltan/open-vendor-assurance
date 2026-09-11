@@ -61,7 +61,43 @@
       "vendor_id": "hrbrain"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/hrbrain/candidate_sources/hrbrain-trust-center-94b7e3b166f6.yaml",
+      "candidate_source_id": "hrbrain-trust-center-94b7e3b166f6",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.hrbrain.co.jp/cookies",
+      "canonical_candidate_url": "https://www.hrbrain.co.jp/cookies/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:22:13.348959Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.hrbrain.co.jp/cookies/",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "privacy"
+        ],
+        "page_title": "クッキーポリシー | 株式会社HRBrain",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e1cb0ca29b219823f974b861d454607713c2e91f5797cb4a5c24ba67b2bbf28c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.hrbrain.co.jp/cookies/",
+      "requested_url": "https://www.hrbrain.co.jp/cookies",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:22:13.348959Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "hrbrain"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/hrbrain/sources/hrbrain-privacy-notice.yaml",
@@ -159,8 +195,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 1,
+    "candidate_source_types": [
+      "trust_center"
+    ],
     "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

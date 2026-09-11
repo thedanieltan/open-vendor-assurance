@@ -31,7 +31,79 @@
       "vendor_id": "zoop"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/zoop/candidate_sources/zoop-trust-center-a427768ef041.yaml",
+      "candidate_source_id": "zoop-trust-center-a427768ef041",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.zoop.com.br/politicas/cookies",
+      "canonical_candidate_url": "https://www.zoop.com.br/politicas/cookies",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:18:43.005220Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.zoop.com.br/politicas/cookies",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Política de Segurança da Informação e Cibernética | Zoop",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:49dff79502faf9b9df4cf44f6f27f0b69d0773dfb94767700e6d2efce9e29418",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.zoop.com.br/politicas/cookies",
+      "requested_url": "https://www.zoop.com.br/politicas/cookies",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:18:43.005220Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "zoop"
+    },
+    {
+      "_openva_path": "data/vendors/zoop/candidate_sources/zoop-trust-center-b0f02c2ef1d5.yaml",
+      "candidate_source_id": "zoop-trust-center-b0f02c2ef1d5",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.zoop.com.br/politicas/declaracao-de-privacidade-pago",
+      "canonical_candidate_url": "https://www.zoop.com.br/politicas/declaracao-de-privacidade-pago",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:18:43.005220Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.zoop.com.br/politicas/declaracao-de-privacidade-pago",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "compliance"
+        ],
+        "page_title": "Declaração de Privacidade iFood Pago | Zoop",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:25812c58509e4dcb933091ce2e0b688e097c0a68e268505778c42098d6c73f33",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.zoop.com.br/politicas/declaracao-de-privacidade-pago",
+      "requested_url": "https://www.zoop.com.br/politicas/declaracao-de-privacidade-pago",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:18:43.005220Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "zoop"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/zoop/sources/zoop-compliance-page.yaml",
@@ -89,8 +161,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 2,
+    "candidate_source_types": [
+      "trust_center"
+    ],
     "canonical_source_count": 1,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
