@@ -1,14 +1,14 @@
 candidate_source_id: atlassian-trust-center-5f89a8fac429
 candidate_status: selected
-candidate_url: https://www.atlassian.com/nl/licensing/fisheye-and-crucible
-canonical_candidate_url: https://www.atlassian.com/nl/licensing/server-end-of-support#fisheye-cruicible-eos
+candidate_url: https://www.atlassian.com/nl/licensing/server-end-of-support
+canonical_candidate_url: https://www.atlassian.com/nl/licensing/server-end-of-support
 confidence: likely
-discovered_at: '2026-09-10T08:33:08.817814Z'
+discovered_at: '2026-09-11T09:04:02.549761Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html;charset=UTF-8
-  final_url: https://www.atlassian.com/nl/licensing/server-end-of-support#fisheye-cruicible-eos
+  final_url: https://www.atlassian.com/nl/licensing/server-end-of-support
   http_status: 200
   matched_terms:
   - trust
@@ -16,16 +16,16 @@ evidence:
   page_title: Veelgestelde vragen over de beëindiging van de Server-ondersteuning
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:6ed2a96f366a2dd5b25c122775e81efb65ef0830dbcc74e73378adf41d2d4f4a
+  verification_status: ok
+evidence_digest: sha256:9ca9e26a955622c02bfc437de4976562e0945332733369a479d327811cf15c40
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://www.atlassian.com/nl/licensing/server-end-of-support#fisheye-cruicible-eos
-requested_url: https://www.atlassian.com/nl/licensing/fisheye-and-crucible
+observed_final_url: https://www.atlassian.com/nl/licensing/server-end-of-support
+requested_url: https://www.atlassian.com/nl/licensing/server-end-of-support
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-10T08:33:08.817814Z'
+selection_run_id: '2026-09-11T09:04:02.549761Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: atlassian
