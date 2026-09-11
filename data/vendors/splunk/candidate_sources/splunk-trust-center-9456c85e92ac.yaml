@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-9456c85e92ac
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/surge/log4shell-log4j-response-overview.html
+canonical_candidate_url: https://www.splunk.com/en_us/surge/log4shell-log4j-response-overview.html
+confidence: likely
+discovered_at: '2026-09-11T08:31:11.097777Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.splunk.com/en_us/surge/log4shell-log4j-response-overview.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: Log4Shell Overview and Resources for Log4j Vulnerabilities | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:11dfd0eb5766ee8b3e399f9c290a48ce07d79d2b3880fd1a55ec7e820b80d9cc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/surge/log4shell-log4j-response-overview.html
+requested_url: https://www.splunk.com/en_us/surge/log4shell-log4j-response-overview.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:31:11.097777Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
