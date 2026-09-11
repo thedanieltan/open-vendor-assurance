@@ -1,11 +1,11 @@
 candidate_source_id: zscaler-security-page-a0576ebd4d2a
 candidate_status: selected
-candidate_url: https://www.zscaler.com/products-and-solutions/cloud-sandbox
+candidate_url: https://www.zscaler.com/technology/cloud-sandbox
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/cloud-sandbox
 confidence: likely
-discovered_at: '2026-09-09T08:21:29.081802Z'
+discovered_at: '2026-09-11T09:08:42.655875Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/cloud-sandbox
@@ -14,18 +14,19 @@ evidence:
   - security
   - trust
   page_title: Zscaler Cloud Sandbox - AI-Powered Malware Defense
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:beb7df3ed4b5d4134d29baafa50a4e09cfdb2764c6316c61536e809f3a7f2c62
+  verification_status: redirected
+evidence_digest: sha256:19940249c49d8e68191680fde6b692681407a1daf28723e3499279240d4acdcd
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/cloud-sandbox
-requested_url: https://www.zscaler.com/products-and-solutions/cloud-sandbox
+requested_url: https://www.zscaler.com/technology/cloud-sandbox
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-09T08:21:29.081802Z'
+selection_run_id: '2026-09-11T09:08:42.655875Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler

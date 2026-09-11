@@ -1,0 +1,32 @@
+candidate_source_id: zscaler-security-page-21082aa0c22e
+candidate_status: selected
+candidate_url: https://revolutionaries.zscaler.com/?_ga=2.151768250.2027759391.1650903129-362109076.1634062207&_gac=1.220648810.1651088882.Cj0KCQjw06OTBhC_ARIsAAU1yOV9wtZUyHoUkLwBTk1nxgGIMW8TxQXWxbA34cRKtyKGLR2LtlZ9WoUaAgbQEALw_wcB&_gl=1%2A1tdyqpo%2A_ga%2AMzYyMTA5MDc2LjE2MzQwNjIyMDc.%2A_ga_10SPJ4YJL9%2AMTY1MTA4ODUyNi42NS4xLjE2NTEwODg4ODkuNDc
+canonical_candidate_url: https://revolutionaries.zscaler.com/?_ga=2.151768250.2027759391.1650903129-362109076.1634062207&_gac=1.220648810.1651088882.Cj0KCQjw06OTBhC_ARIsAAU1yOV9wtZUyHoUkLwBTk1nxgGIMW8TxQXWxbA34cRKtyKGLR2LtlZ9WoUaAgbQEALw_wcB&_gl=1%2A1tdyqpo%2A_ga%2AMzYyMTA5MDc2LjE2MzQwNjIyMDc.%2A_ga_10SPJ4YJL9%2AMTY1MTA4ODUyNi42NS4xLjE2NTEwODg4ODkuNDc
+confidence: likely
+discovered_at: '2026-09-11T09:08:42.655875Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zscaler.com:443/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Leading Cloud Enterprise Security Provider for Zero Trust
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: homepage_or_generic_redirect
+evidence_digest: sha256:65f11510f4526727fa99468dc43e6561c91af68b84f0f4d12b9c29f621476144
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zscaler.com:443/
+requested_url: https://revolutionaries.zscaler.com/?_ga=2.151768250.2027759391.1650903129-362109076.1634062207&_gac=1.220648810.1651088882.Cj0KCQjw06OTBhC_ARIsAAU1yOV9wtZUyHoUkLwBTk1nxgGIMW8TxQXWxbA34cRKtyKGLR2LtlZ9WoUaAgbQEALw_wcB&_gl=1%2A1tdyqpo%2A_ga%2AMzYyMTA5MDc2LjE2MzQwNjIyMDc.%2A_ga_10SPJ4YJL9%2AMTY1MTA4ODUyNi42NS4xLjE2NTEwODg4ODkuNDc
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T09:08:42.655875Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler

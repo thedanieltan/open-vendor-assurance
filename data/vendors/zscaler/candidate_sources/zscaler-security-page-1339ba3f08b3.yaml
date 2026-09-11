@@ -1,32 +1,32 @@
 candidate_source_id: zscaler-security-page-1339ba3f08b3
 candidate_status: selected
-candidate_url: https://www.zscaler.com/products-and-solutions/zero-trust-browser
+candidate_url: https://www.zscaler.com/technology/browser-isolation
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/zero-trust-browser
 confidence: likely
-discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_at: '2026-09-11T09:08:42.655875Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/zero-trust-browser
   http_status: 200
   matched_terms:
   - security
-  - vulnerability
   - trust
   page_title: Zscaler Zero Trust Browser
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:215fb871c7fcfce98e1daf934b49ba9a32c5f81fe0c5a3699b85ae77a4cf60da
+  verification_status: redirected
+evidence_digest: sha256:83d2dc307f4081eb53cb7fd74afa8f5c08237cf43fd8f35126e742fbd786f55c
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/zero-trust-browser
-requested_url: https://www.zscaler.com/products-and-solutions/zero-trust-browser
+requested_url: https://www.zscaler.com/technology/browser-isolation
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-08T08:18:47.566016Z'
+selection_run_id: '2026-09-11T09:08:42.655875Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
