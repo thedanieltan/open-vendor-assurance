@@ -1,13 +1,13 @@
 {
   "candidate_source_type_counts": {
-    "ai_terms": 283,
-    "certification_reference": 204,
-    "compliance_page": 8042,
-    "dpa": 592,
-    "privacy_notice": 5654,
-    "security_page": 20731,
-    "subprocessors_list": 399,
-    "trust_center": 13403
+    "ai_terms": 300,
+    "certification_reference": 216,
+    "compliance_page": 8137,
+    "dpa": 594,
+    "privacy_notice": 5748,
+    "security_page": 21387,
+    "subprocessors_list": 409,
+    "trust_center": 13901
   },
   "coverage_claim_role_counts": {
     "certification_reference": 3,
@@ -649,7 +649,9 @@
       "vendor_id": "alegra"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -1852,7 +1854,8 @@
     {
       "candidate_source_types": [
         "compliance_page",
-        "privacy_notice"
+        "privacy_notice",
+        "security_page"
       ],
       "canonical_source_types": [
         "terms_of_service"
@@ -1864,7 +1867,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7663,6 +7665,8 @@
     },
     {
       "candidate_source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "security_page"
       ],
@@ -7675,7 +7679,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13401,7 +13404,8 @@
     },
     {
       "candidate_source_types": [
-        "ai_terms"
+        "ai_terms",
+        "certification_reference"
       ],
       "canonical_source_types": [
         "compliance_page",
@@ -15451,6 +15455,7 @@
     },
     {
       "candidate_source_types": [
+        "ai_terms",
         "trust_center"
       ],
       "canonical_source_types": [

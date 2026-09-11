@@ -9315,6 +9315,41 @@
       "vendor_id": "loom"
     },
     {
+      "_openva_path": "data/vendors/loom/candidate_sources/loom-security-page-92d1fb3ca0f9.yaml",
+      "candidate_source_id": "loom-security-page-92d1fb3ca0f9",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.atlassian.com/software/guard/premium-demo",
+      "canonical_candidate_url": "https://www.atlassian.com/software/guard/premium-demo",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:07:02.042249Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html;charset=UTF-8",
+        "final_url": "https://www.atlassian.com/software/guard/premium-demo",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident"
+        ],
+        "page_title": "Guard Premium | Demo | Atlassian",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2ac3739ad7eda3a0515fa809ab10d9495d203363c22e64c20505fd384dbc1d21",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.atlassian.com/software/guard/premium-demo",
+      "requested_url": "https://www.atlassian.com/software/guard/premium-demo",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:07:02.042249Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "loom"
+    },
+    {
       "_openva_path": "data/vendors/loom/candidate_sources/loom-security-page-93495891a442.yaml",
       "candidate_source_id": "loom-security-page-93495891a442",
       "candidate_status": "selected",
@@ -15485,7 +15520,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 7,
-    "candidate_source_count": 406,
+    "candidate_source_count": 407,
     "candidate_source_types": [
       "ai_terms",
       "security_page"

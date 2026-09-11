@@ -455,6 +455,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-ai-terms-1c89153fac91.yaml",
+      "candidate_source_id": "red-hat-ai-terms-1c89153fac91",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux/ai",
+      "canonical_candidate_url": "https://www.redhat.com/en/products/ai/enterprise-linux-ai?extIdCarryOver=true&sc_cid=RHCTG0180000382538",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.redhat.com/en/products/ai/enterprise-linux-ai?extIdCarryOver=true&sc_cid=RHCTG0180000382538",
+        "http_status": 200,
+        "matched_terms": [
+          "artificial intelligence",
+          "machine learning"
+        ],
+        "page_title": "Red Hat Enterprise Linux AI",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:a9b3c48e151d42b8131801b9e01765152f0099e19fcc659870b05fcfdf3a1170",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.redhat.com/en/products/ai/enterprise-linux-ai?extIdCarryOver=true&sc_cid=RHCTG0180000382538",
+      "requested_url": "https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux/ai",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "ai_terms",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-ai-terms-1f0432b5ec8d.yaml",
       "candidate_source_id": "red-hat-ai-terms-1f0432b5ec8d",
       "candidate_status": "selected",
@@ -3752,6 +3787,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-04b8084260a1.yaml",
+      "candidate_source_id": "red-hat-security-page-04b8084260a1",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7147243",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7147243",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7147243",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "NooBaa PostgreSQL database pod in CrashLoopBackOff with &quot;requested timeline X is not a child of this server&#039;s history&quot; in OpenShift Data Foundation - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b871c14edd863ba4b4356fd5cb5de09ac7cc1612cf799bf511b38e4f63251773",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7147243",
+      "requested_url": "https://access.redhat.com/solutions/7147243",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-063966f1b99a.yaml",
       "candidate_source_id": "red-hat-security-page-063966f1b99a",
       "candidate_status": "selected",
@@ -5659,6 +5729,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-20b8e0ec6305.yaml",
+      "candidate_source_id": "red-hat-security-page-20b8e0ec6305",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7003847",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7003847",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7003847",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Create a custom rbac role with minimal privileges to perform `oc debug/node` in RHOCP4 - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:dbc8efcb03ee7726f62501d6de1422b1576a31c2d5c1465a8bd67a140ec452cb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7003847",
+      "requested_url": "https://access.redhat.com/solutions/7003847",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "red-hat"
@@ -8217,6 +8322,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-46d82cf85c8c.yaml",
+      "candidate_source_id": "red-hat-security-page-46d82cf85c8c",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7147849",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7147849",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7147849",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Pod vg-manager stuck in CrashLoopBack and LVMCluster shows Failed status - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5fc25bd0b4cd0c0e552250662111dcb6882e80a91f8ecc60cef03356e32ca97b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7147849",
+      "requested_url": "https://access.redhat.com/solutions/7147849",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-47cfbc79064f.yaml",
       "candidate_source_id": "red-hat-security-page-47cfbc79064f",
       "candidate_status": "selected",
@@ -9535,6 +9675,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-5f0469c86fbf.yaml",
+      "candidate_source_id": "red-hat-security-page-5f0469c86fbf",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/6985897",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/6985897",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/6985897",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "The production.log is filled with huge traceback errors after executing &quot;satellite-maintain plugin purge-puppet&quot; in Red Hat Satellite 6.11 - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c7be34676325766cbbf965870fb0d963c417faaf4d0fe785151df8fea0358cc4",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/6985897",
+      "requested_url": "https://access.redhat.com/solutions/6985897",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-6082d79880ab.yaml",
       "candidate_source_id": "red-hat-security-page-6082d79880ab",
       "candidate_status": "selected",
@@ -10165,6 +10340,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-69a0a95547c0.yaml",
+      "candidate_source_id": "red-hat-security-page-69a0a95547c0",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/5596221",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/5596221",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/5596221",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "sssd.service: main process exited, code=exited, status=7/NOTRUNNING - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0fc8b72f20884187cca6ddcf3c999d7fceaa2eaacf948b8f754f396906c3ebe8",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/5596221",
+      "requested_url": "https://access.redhat.com/solutions/5596221",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "red-hat"
@@ -13152,6 +13362,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-8fbe45a57d97.yaml",
+      "candidate_source_id": "red-hat-security-page-8fbe45a57d97",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7147848",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7147848",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7147848",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "The InfiniBand XDR feature is Partner-Validated in this Certification - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2a44a6413f7927896e4d8c2d3cef95a821ffd5f98adc01a530fe52519d316da1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7147848",
+      "requested_url": "https://access.redhat.com/solutions/7147848",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-90715a47cda5.yaml",
       "candidate_source_id": "red-hat-security-page-90715a47cda5",
       "candidate_status": "selected",
@@ -14680,6 +14925,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-ad41fc7555c7.yaml",
+      "candidate_source_id": "red-hat-security-page-ad41fc7555c7",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/6221251",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/6221251",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/6221251",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Pods using Persistent Volumes with high file counts fail to start or take an excessive amount of time in OpenShift - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:efa8257efab339baf3b31c1b77c610fb687ac7bcf7c17a97e660a7adce2dab7f",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/6221251",
+      "requested_url": "https://access.redhat.com/solutions/6221251",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-ae6f08f02b44.yaml",
       "candidate_source_id": "red-hat-security-page-ae6f08f02b44",
       "candidate_status": "selected",
@@ -15738,6 +16018,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-bb35d1d139fe.yaml",
+      "candidate_source_id": "red-hat-security-page-bb35d1d139fe",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7145998",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7145998",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7145998",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Ansible cisco.iosxr collection crashes during BGP global fact gathering in version 10.3.1 and higher - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b3860f3fae6798b92ceb277b875abee804209dcb2d95a46af78c120951bafc07",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7145998",
+      "requested_url": "https://access.redhat.com/solutions/7145998",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "red-hat"
@@ -18838,6 +19153,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-ec76dbbd71e9.yaml",
+      "candidate_source_id": "red-hat-security-page-ec76dbbd71e9",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7020921",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7020921",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7020921",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "OCS/ODF Upgrade Not Progressing - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:f5b2dc5d1f524377cf19f9bf241b7ce4a04c3f892ed02cf43e8432019352f92e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7020921",
+      "requested_url": "https://access.redhat.com/solutions/7020921",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-ede1e0986efc.yaml",
       "candidate_source_id": "red-hat-security-page-ede1e0986efc",
       "candidate_status": "selected",
@@ -19512,6 +19862,41 @@
       "vendor_id": "red-hat"
     },
     {
+      "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-faed4e730a6b.yaml",
+      "candidate_source_id": "red-hat-security-page-faed4e730a6b",
+      "candidate_status": "selected",
+      "candidate_url": "https://access.redhat.com/solutions/7147744",
+      "canonical_candidate_url": "https://access.redhat.com/solutions/7147744",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T09:00:28.380174Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://access.redhat.com/solutions/7147744",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Automation Hub services fail with 502 error and &#039;failed to write a heartbeat to the database&#039; after upgrading to Ansible Automation Platform 2.7 - Red Hat Customer Portal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d4d7eb3de1ffbbbf360b855b3a2c07158463c6bfa9570013c4acca87c677c0ba",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://access.redhat.com/solutions/7147744",
+      "requested_url": "https://access.redhat.com/solutions/7147744",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "red-hat"
+    },
+    {
       "_openva_path": "data/vendors/red-hat/candidate_sources/red-hat-security-page-fb07e103779e.yaml",
       "candidate_source_id": "red-hat-security-page-fb07e103779e",
       "candidate_status": "selected",
@@ -19931,7 +20316,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 556,
+    "candidate_source_count": 567,
     "candidate_source_types": [
       "ai_terms",
       "security_page"

@@ -873,6 +873,45 @@
       "vendor_id": "asana"
     },
     {
+      "_openva_path": "data/vendors/asana/candidate_sources/asana-trust-center-3cacbceaf4b5.yaml",
+      "candidate_source_id": "asana-trust-center-3cacbceaf4b5",
+      "candidate_status": "selected",
+      "candidate_url": "https://trustcenter.asana.com/d/asana-iso-27701-certificate-1899896-1/9z8ZJO",
+      "canonical_candidate_url": "https://trustcenter.asana.com/d/asana-iso-27701-certificate-1899896-1/9z8ZJO",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:21:55.310078Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trustcenter.asana.com/d/asana-iso-27701-certificate-1899896-1/9z8ZJO",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Asana Trust Center | Powered by Conveyor",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e7e19b6831325501899fd63f95c92b85644f7d803bdcfdbf533649192edbe8bc",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trustcenter.asana.com/d/asana-iso-27701-certificate-1899896-1/9z8ZJO",
+      "requested_url": "https://trustcenter.asana.com/d/asana-iso-27701-certificate-1899896-1/9z8ZJO",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:21:55.310078Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "asana"
+    },
+    {
       "_openva_path": "data/vendors/asana/candidate_sources/asana-trust-center-3f429e85711f.yaml",
       "candidate_source_id": "asana-trust-center-3f429e85711f",
       "candidate_status": "selected",
@@ -2544,7 +2583,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 54,
+    "candidate_source_count": 55,
     "candidate_source_types": [
       "certification_reference",
       "trust_center"

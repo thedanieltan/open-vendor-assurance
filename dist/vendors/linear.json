@@ -655,6 +655,42 @@
       "vendor_id": "linear"
     },
     {
+      "_openva_path": "data/vendors/linear/candidate_sources/linear-security-page-9962a76ef615.yaml",
+      "candidate_source_id": "linear-security-page-9962a76ef615",
+      "candidate_status": "selected",
+      "candidate_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "canonical_candidate_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:22:13.254600Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://linear.app/developers/oauth-2-0-authentication",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident",
+          "trust"
+        ],
+        "page_title": null,
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2fae366bed2b54cc0e2f9f7f888ec94055d2953a31de3d6628e286c667077eab",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "requested_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:22:13.254600Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "linear"
+    },
+    {
       "_openva_path": "data/vendors/linear/candidate_sources/linear-security-page-bd4890e4c3b6.yaml",
       "candidate_source_id": "linear-security-page-bd4890e4c3b6",
       "candidate_status": "selected",
@@ -1055,7 +1091,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 19,
+    "candidate_source_count": 20,
     "candidate_source_types": [
       "compliance_page",
       "security_page"

@@ -238,6 +238,41 @@
       "vendor_id": "ifood"
     },
     {
+      "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-13384df67131.yaml",
+      "candidate_source_id": "ifood-compliance-page-13384df67131",
+      "candidate_status": "selected",
+      "candidate_url": "https://institucional.ifood.com.br/releases",
+      "canonical_candidate_url": "https://institucional.ifood.com.br/releases/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:46:10.046437Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://institucional.ifood.com.br/releases/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "Confira Arquivo de Releases - iFood",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d5d2c044bdf3fc2e5d5528952c5fd7a0e8d47243e49a1bfccea7db0a50eae6e3",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://institucional.ifood.com.br/releases/",
+      "requested_url": "https://institucional.ifood.com.br/releases",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:46:10.046437Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "ifood"
+    },
+    {
       "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-14a0daf7283b.yaml",
       "candidate_source_id": "ifood-compliance-page-14a0daf7283b",
       "candidate_status": "selected",
@@ -1641,6 +1676,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:18:23.144892Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "ifood"
+    },
+    {
+      "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-99b95278bbc7.yaml",
+      "candidate_source_id": "ifood-compliance-page-99b95278bbc7",
+      "candidate_status": "selected",
+      "candidate_url": "https://institucional.ifood.com.br/clientes/remedio-para-carrapato",
+      "canonical_candidate_url": "https://institucional.ifood.com.br/clientes/remedio-para-carrapato/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:46:10.046437Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://institucional.ifood.com.br/clientes/remedio-para-carrapato/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "Remédio para carrapato: tipos, princípios ativos e cuidados",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:bcd78d19e47c44c28e02d3003db6a3905f5ff8c20ca733abfc2790f00c5424ea",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://institucional.ifood.com.br/clientes/remedio-para-carrapato/",
+      "requested_url": "https://institucional.ifood.com.br/clientes/remedio-para-carrapato",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:46:10.046437Z",
       "source_type_candidate": "compliance_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "ifood"
@@ -3255,7 +3325,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 88,
+    "candidate_source_count": 90,
     "candidate_source_types": [
       "compliance_page",
       "security_page"

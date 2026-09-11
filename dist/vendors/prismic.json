@@ -204,6 +204,41 @@
       "vendor_id": "prismic"
     },
     {
+      "_openva_path": "data/vendors/prismic/candidate_sources/prismic-security-page-7ebdfbaab4ce.yaml",
+      "candidate_source_id": "prismic-security-page-7ebdfbaab4ce",
+      "candidate_status": "selected",
+      "candidate_url": "https://prismic.io/legal",
+      "canonical_candidate_url": "https://prismic.io/legal",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:54:52.454422Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://prismic.io/legal",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Legal",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:98e57dcfb66004ceac8d77cf9cb0393b4d12140aad90ebe60fe2ca68ac2210a4",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://prismic.io/legal",
+      "requested_url": "https://prismic.io/legal",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:54:52.454422Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "prismic"
+    },
+    {
       "_openva_path": "data/vendors/prismic/candidate_sources/prismic-security-page-8d0026e712c8.yaml",
       "candidate_source_id": "prismic-security-page-8d0026e712c8",
       "candidate_status": "selected",
@@ -373,7 +408,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 6,
+    "candidate_source_count": 7,
     "candidate_source_types": [
       "ai_terms",
       "security_page"

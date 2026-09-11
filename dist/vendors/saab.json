@@ -410,6 +410,41 @@
       "vendor_id": "saab"
     },
     {
+      "_openva_path": "data/vendors/saab/candidate_sources/saab-trust-center-15947453a4c8.yaml",
+      "candidate_source_id": "saab-trust-center-15947453a4c8",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.saab.com/products/naval",
+      "canonical_candidate_url": "https://www.saab.com/products/naval",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:21:51.134018Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.saab.com/products/naval",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "Naval | Products | Saab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:313288ff13660e91b35d0ba0da66cfe7e66714d6223da0d5d173c973ac31ae28",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.saab.com/products/naval",
+      "requested_url": "https://www.saab.com/products/naval",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:21:51.134018Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "saab"
+    },
+    {
       "_openva_path": "data/vendors/saab/candidate_sources/saab-trust-center-3b62257bd8d4.yaml",
       "candidate_source_id": "saab-trust-center-3b62257bd8d4",
       "candidate_status": "selected",
@@ -440,6 +475,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T09:17:51.399260Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "saab"
+    },
+    {
+      "_openva_path": "data/vendors/saab/candidate_sources/saab-trust-center-a1917f219f65.yaml",
+      "candidate_source_id": "saab-trust-center-a1917f219f65",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.saab.com/products/security",
+      "canonical_candidate_url": "https://www.saab.com/products/security",
+      "confidence": "likely",
+      "discovered_at": "2026-09-09T08:21:51.134018Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.saab.com/products/security",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "Security | Products | Saab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:07fe52c2cb6784a7e6537e9d7f10c6d7e38f197871357b19828ef362b817debc",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.saab.com/products/security",
+      "requested_url": "https://www.saab.com/products/security",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-09T08:21:51.134018Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "saab"
@@ -902,7 +972,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 17,
+    "candidate_source_count": 19,
     "candidate_source_types": [
       "certification_reference",
       "dpa",
