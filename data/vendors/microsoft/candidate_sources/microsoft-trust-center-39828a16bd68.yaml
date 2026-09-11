@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-trust-center-39828a16bd68
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink?LinkId=2374942&clcid=0x409&country=us&culture=en-us
+canonical_candidate_url: https://go.microsoft.com/fwlink?LinkId=2374942&clcid=0x409&country=us&culture=en-us
+confidence: likely
+discovered_at: '2026-09-11T08:16:56.182487Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/azure-sovereign-clouds/public/sovereign-control-panel
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: Sovereign Control Panel (SCP) overview | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:cff3cee309d2fee56e31e69975bf935208d53c2029c0da14e5f97f5a9ddf91d6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/azure-sovereign-clouds/public/sovereign-control-panel
+requested_url: https://go.microsoft.com/fwlink?LinkId=2374942&clcid=0x409&country=us&culture=en-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:16:56.182487Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

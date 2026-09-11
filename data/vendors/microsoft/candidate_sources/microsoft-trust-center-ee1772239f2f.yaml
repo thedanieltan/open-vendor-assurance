@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-trust-center-ee1772239f2f
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink?LinkId=2245508&clcid=0x409&country=us&culture=en-us
+canonical_candidate_url: https://go.microsoft.com/fwlink?LinkId=2245508&clcid=0x409&country=us&culture=en-us
+confidence: likely
+discovered_at: '2026-09-11T08:16:56.182487Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/confidential-computing/overview
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - privacy
+  page_title: Azure Confidential Computing Overview | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:13bad47762ff56f605b989929a785a4ef89d75e5f5650371a798bf5c0e12dd12
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/confidential-computing/overview
+requested_url: https://go.microsoft.com/fwlink?LinkId=2245508&clcid=0x409&country=us&culture=en-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:16:56.182487Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft
