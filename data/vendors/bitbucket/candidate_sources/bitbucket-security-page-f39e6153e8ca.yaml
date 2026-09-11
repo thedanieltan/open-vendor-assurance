@@ -1,0 +1,33 @@
+candidate_source_id: bitbucket-security-page-f39e6153e8ca
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/copy-your-repository-and-add-files
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/copy-your-repository-and-add-files
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/copy-your-repository-and-add-files
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Copy your repository and add files | Bitbucket Cloud | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:19d0d4f1bc9bb493075bc956b82bd503770d27d0618f0359b994ce0340503fff
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/copy-your-repository-and-add-files
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/copy-your-repository-and-add-files
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket

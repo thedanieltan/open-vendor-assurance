@@ -1,0 +1,34 @@
+candidate_source_id: bitbucket-security-page-29c8e5b3b0ac
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-repository-on-bitbucket
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-repository-on-bitbucket
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-repository-on-bitbucket
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Pull changes from your repository on Bitbucket | Bitbucket Cloud | Atlassian
+    Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f23892a11580533f1532fcc90c66b04e4d3c81c80008d56ccc1135d6a0835bc9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-repository-on-bitbucket
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/pull-changes-from-your-repository-on-bitbucket
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
