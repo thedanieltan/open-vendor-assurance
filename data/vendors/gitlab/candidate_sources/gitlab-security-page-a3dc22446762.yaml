@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-a3dc22446762
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/authors/rob-allen
+canonical_candidate_url: https://about.gitlab.com/blog/authors/rob-allen/
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/authors/rob-allen/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Rob Allen | GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3800aecf75d1f6ae463e0809cdb00854845e25d438def5d243a3361039b850d8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/authors/rob-allen/
+requested_url: https://about.gitlab.com/blog/authors/rob-allen
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

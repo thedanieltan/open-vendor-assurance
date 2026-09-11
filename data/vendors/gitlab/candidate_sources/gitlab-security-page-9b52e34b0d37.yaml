@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-9b52e34b0d37
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/remediate/dependency_scanning_auto_remediation
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/remediate/dependency_scanning_auto_remediation/
+confidence: likely
+discovered_at: '2026-09-11T08:37:52.251455Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/remediate/dependency_scanning_auto_remediation/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Dependency scanning auto-remediation | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2af52a08fb8e80b5601bf844c50447439d899e917ba7297986104783e795bb8e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/remediate/dependency_scanning_auto_remediation/
+requested_url: https://docs.gitlab.com/user/application_security/remediate/dependency_scanning_auto_remediation
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-11T08:37:52.251455Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
