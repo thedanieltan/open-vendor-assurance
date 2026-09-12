@@ -37,7 +37,12 @@ The source run must contain exactly one `openva-discovery-mesh-aggregate` artifa
 - one Discovery Mesh health report;
 - the stable vendor-breadth ledger, queue, candidates, and provider metrics when breadth state changed.
 
-The workflow fails closed on missing or ambiguous evidence, invalid health posture, missing plan-referenced candidates, duplicate candidate paths, or out-of-scope repository changes.
+The workflow fails closed on missing or ambiguous evidence, invalid health posture,
+duplicate or mismatched candidate identity, URL or paths, and out-of-scope
+repository changes. A plan action whose candidate was deliberately removed after
+the source run is omitted from the effective replay plan and recorded in the
+reconciliation artifact as `candidate_removed_after_source_run`; recovery never
+resurrects it or treats it as evidence for another candidate.
 
 ## Partitioning and replay
 

@@ -55,20 +55,26 @@ def test_generated_transactions_use_existing_operational_scope() -> None:
 def test_recovery_filters_only_exact_plan_referenced_candidates() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    assert "INDEX(.key)" in text
-    assert "candidate filter mismatch" in text
+    assert "tools.openva.discovery_mesh_intake reconcile" in text
+    assert "--output-candidates" in text
     assert "tools.openva.discovery_mesh_intake materialize" in text
 
 
 def test_recovery_reconciles_plan_actions_already_durable_in_repository() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    assert "Resident promotion candidates reused" in text
-    assert "promotion candidate missing from source report and repository" in text
-    assert "resident promotion candidate vendor mismatch" in text
-    assert "resident promotion candidate id mismatch" in text
-    assert "resident promotion candidate URL mismatch" in text
-    assert "candidate reconciliation left" in text
+    assert "--repository-root ." in text
+    assert "--output-plan" in text
+    assert "--output-report" in text
+
+
+def test_recovery_records_and_omits_candidates_removed_after_source_run() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "tools.openva.discovery_mesh_intake reconcile" in text
+    assert "discovery-mesh-effective-promotion-plan.json" in text
+    assert "discovery-mesh-intake-reconciliation.json" in text
+    assert "--output-report" in text
 
 
 def test_recovery_uses_bounded_repository_transactions_not_catalog_limits() -> None:

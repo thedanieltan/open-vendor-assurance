@@ -37,6 +37,78 @@ BREADTH_PATHS = (
 )
 
 
+def reconcile_candidates(
+    *,
+    plan: dict[str, Any],
+    source_report: dict[str, Any],
+    repository_root: Path,
+) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Build an effective replay plan without resurrecting removed candidates."""
+    specs = action_specs(plan)
+    report_rows: dict[str, dict[str, Any]] = {}
+    for vendor in source_report.get("vendors", []) or []:
+        if not isinstance(vendor, dict):
+            raise ValueError("source report vendor must be an object")
+        vendor_id = str(vendor.get("vendor_id") or "")
+        for candidate in vendor.get("candidates", []) or []:
+            if not isinstance(candidate, dict):
+                raise ValueError(f"source report candidate must be an object: {vendor_id}")
+            candidate_id = str(candidate.get("candidate_source_id") or "")
+            path = f"data/vendors/{vendor_id}/candidate_sources/{candidate_id}.yaml"
+            if path in report_rows:
+                raise ValueError(f"duplicate source report candidate: {path}")
+            report_rows[path] = {"vendor_id": vendor_id, "candidate": candidate}
+
+    rows: list[dict[str, Any]] = []
+    stale: list[dict[str, Any]] = []
+    active_actions: list[dict[str, Any]] = []
+    for path, action in specs.items():
+        row = report_rows.get(path)
+        if row is not None:
+            candidate = row["candidate"]
+        else:
+            candidate_path = repository_root / path
+            if not candidate_path.is_file():
+                stale.append(
+                    {
+                        "vendor_id": action["vendor_id"],
+                        "candidate_source_id": action["candidate_source_id"],
+                        "path": path,
+                        "candidate_url": action.get("candidate_url"),
+                        "reason_codes": ["candidate_removed_after_source_run"],
+                    }
+                )
+                continue
+            candidate = yaml.safe_load(candidate_path.read_text(encoding="utf-8"))
+            if not isinstance(candidate, dict):
+                raise ValueError(f"resident promotion candidate is not a mapping: {path}")
+            row = {"vendor_id": action["vendor_id"], "candidate": candidate}
+
+        if str(candidate.get("vendor_id") or "") != str(action["vendor_id"]):
+            raise ValueError(f"promotion candidate vendor mismatch: {path}")
+        if str(candidate.get("candidate_source_id") or "") != str(action["candidate_source_id"]):
+            raise ValueError(f"promotion candidate id mismatch: {path}")
+        if str(candidate.get("candidate_url") or "") != str(action.get("candidate_url") or ""):
+            raise ValueError(f"promotion candidate URL mismatch: {path}")
+        rows.append(row)
+        active_actions.append(action)
+
+    effective_plan = deepcopy(plan)
+    effective_plan["actions"] = active_actions
+    summary = dict(effective_plan.get("summary") or {})
+    summary["action_count"] = len(active_actions)
+    summary["selected_promotion_action_count"] = len(active_actions)
+    summary["stale_replay_action_count"] = len(stale)
+    effective_plan["summary"] = summary
+    effective_plan["reconciliation"] = {
+        "source_action_count": len(specs),
+        "active_action_count": len(active_actions),
+        "stale_action_count": len(stale),
+        "stale_actions": stale,
+    }
+    return effective_plan, rows, stale
+
+
 @dataclass(frozen=True)
 class ActionRecord:
     action: dict[str, Any]
@@ -554,6 +626,13 @@ def main(argv: list[str] | None = None) -> int:
     materialize.add_argument("--candidate-ndjson", type=Path, required=True)
     materialize.add_argument("--prepared-root", type=Path, required=True)
     materialize.add_argument("--repository-root", type=Path, required=True)
+    reconcile = subparsers.add_parser("reconcile")
+    reconcile.add_argument("--promotion-plan", type=Path, required=True)
+    reconcile.add_argument("--source-report", type=Path, required=True)
+    reconcile.add_argument("--repository-root", type=Path, required=True)
+    reconcile.add_argument("--output-plan", type=Path, required=True)
+    reconcile.add_argument("--output-candidates", type=Path, required=True)
+    reconcile.add_argument("--output-report", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "prepare":
         manifest = prepare_intake(
@@ -585,6 +664,32 @@ def main(argv: list[str] | None = None) -> int:
                 sort_keys=True,
             )
         )
+    elif args.command == "reconcile":
+        effective_plan, rows, stale = reconcile_candidates(
+            plan=load_json(args.promotion_plan),
+            source_report=load_json(args.source_report),
+            repository_root=args.repository_root,
+        )
+        args.output_plan.write_text(
+            json.dumps(effective_plan, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        with args.output_candidates.open("w", encoding="utf-8") as handle:
+            for row in rows:
+                handle.write(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n")
+        report = {
+            "schema_version": SCHEMA_VERSION,
+            "report_type": "discovery_mesh_intake_reconciliation",
+            "source_action_count": len(rows) + len(stale),
+            "active_action_count": len(rows),
+            "stale_action_count": len(stale),
+            "stale_actions": stale,
+        }
+        args.output_report.write_text(
+            json.dumps(report, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 
 
