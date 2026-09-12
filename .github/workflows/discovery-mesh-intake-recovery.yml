@@ -122,107 +122,23 @@ jobs:
           PROMOTION_PLAN: ${{ steps.evidence.outputs.promotion_plan }}
           SOURCE_REPORT: ${{ steps.evidence.outputs.source_report }}
           CANDIDATE_NDJSON: ${{ runner.temp }}/discovery-mesh-intake-candidates.ndjson
-          WANTED_INDEX: ${{ runner.temp }}/discovery-mesh-intake-wanted.json
+          EFFECTIVE_PROMOTION_PLAN: ${{ runner.temp }}/discovery-mesh-effective-promotion-plan.json
+          RECONCILIATION_REPORT: ${{ runner.temp }}/discovery-mesh-intake-reconciliation.json
         run: |
           set -euo pipefail
-          python - "$PROMOTION_PLAN" "$WANTED_INDEX" <<'PY'
-          import json
-          import sys
-          from pathlib import Path
-
-          plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-          if plan.get("report_type") != "promotion_plan":
-              raise SystemExit("invalid promotion plan")
-          wanted = []
-          for action in plan.get("actions", []) or []:
-              wanted.append({
-                  "key": f"{action.get('vendor_id', '')}|{action.get('candidate_source_id', '')}",
-              })
-          Path(sys.argv[2]).write_text(json.dumps(wanted, separators=(",", ":")), encoding="utf-8")
-          print(f"Plan actions: {len(wanted)}")
-          PY
-          jq -c --slurpfile wanted "$WANTED_INDEX" '
-            ($wanted[0] | INDEX(.key)) as $wanted_index
-            | .vendors[] as $vendor
-            | ($vendor.candidates // [])[]
-            | . as $candidate
-            | ($vendor.vendor_id + "|" + ($candidate.candidate_source_id // "")) as $key
-            | select($wanted_index[$key] != null)
-            | {vendor_id: $vendor.vendor_id, candidate: $candidate}
-          ' "$SOURCE_REPORT" > "$CANDIDATE_NDJSON"
-          python - "$PROMOTION_PLAN" "$CANDIDATE_NDJSON" <<'PY'
-          import json
-          import sys
-          from pathlib import Path
-
-          import yaml
-
-          plan_path = Path(sys.argv[1])
-          ndjson_path = Path(sys.argv[2])
-          plan = json.loads(plan_path.read_text(encoding="utf-8"))
-          actions = plan.get("actions", []) or []
-          seen: set[tuple[str, str]] = set()
-          for line_number, raw in enumerate(ndjson_path.read_text(encoding="utf-8").splitlines(), start=1):
-              if not raw.strip():
-                  continue
-              row = json.loads(raw)
-              candidate = row.get("candidate") or {}
-              key = (str(row.get("vendor_id") or ""), str(candidate.get("candidate_source_id") or ""))
-              if key in seen:
-                  raise SystemExit(f"duplicate filtered candidate row at line {line_number}: {key[0]}|{key[1]}")
-              seen.add(key)
-
-          resident_rows = []
-          action_keys: set[tuple[str, str]] = set()
-          for action in actions:
-              vendor_id = str(action.get("vendor_id") or "")
-              candidate_id = str(action.get("candidate_source_id") or "")
-              key = (vendor_id, candidate_id)
-              if not vendor_id or not candidate_id:
-                  raise SystemExit("promotion action missing vendor_id or candidate_source_id")
-              if key in action_keys:
-                  raise SystemExit(f"duplicate promotion action key: {vendor_id}|{candidate_id}")
-              action_keys.add(key)
-              if key in seen:
-                  continue
-              expected_path = Path(f"data/vendors/{vendor_id}/candidate_sources/{candidate_id}.yaml")
-              action_path = Path(str(action.get("path") or ""))
-              if action_path != expected_path:
-                  raise SystemExit(f"promotion action path mismatch for {vendor_id}|{candidate_id}: {action_path}")
-              if not expected_path.is_file():
-                  raise SystemExit(f"promotion candidate missing from source report and repository: {expected_path}")
-              candidate = yaml.safe_load(expected_path.read_text(encoding="utf-8"))
-              if not isinstance(candidate, dict):
-                  raise SystemExit(f"resident promotion candidate is not a mapping: {expected_path}")
-              if str(candidate.get("vendor_id") or "") != vendor_id:
-                  raise SystemExit(f"resident promotion candidate vendor mismatch: {expected_path}")
-              if str(candidate.get("candidate_source_id") or "") != candidate_id:
-                  raise SystemExit(f"resident promotion candidate id mismatch: {expected_path}")
-              if str(candidate.get("candidate_url") or "") != str(action.get("candidate_url") or ""):
-                  raise SystemExit(f"resident promotion candidate URL mismatch: {expected_path}")
-              resident_rows.append({"vendor_id": vendor_id, "candidate": candidate})
-              seen.add(key)
-
-          unresolved = sorted(action_keys - seen)
-          if unresolved:
-              preview = ", ".join(f"{vendor}|{candidate}" for vendor, candidate in unresolved[:10])
-              raise SystemExit(f"candidate reconciliation left {len(unresolved)} unresolved promotion actions: {preview}")
-          if resident_rows:
-              with ndjson_path.open("a", encoding="utf-8") as handle:
-                  for row in resident_rows:
-                      handle.write(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n")
-          print(f"Resident promotion candidates reused: {len(resident_rows)}")
-          print(f"Reconciled promotion candidates: {len(seen)}")
-          PY
-          EXPECTED=$(python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8")).get("actions", []) or []))' "$PROMOTION_PLAN")
-          ACTUAL=$(wc -l < "$CANDIDATE_NDJSON" | tr -d ' ')
-          [ "$ACTUAL" = "$EXPECTED" ] || { echo "candidate filter mismatch: expected $EXPECTED, got $ACTUAL" >&2; exit 1; }
+          python -m tools.openva.discovery_mesh_intake reconcile \
+            --promotion-plan "$PROMOTION_PLAN" \
+            --source-report "$SOURCE_REPORT" \
+            --repository-root . \
+            --output-plan "$EFFECTIVE_PROMOTION_PLAN" \
+            --output-candidates "$CANDIDATE_NDJSON" \
+            --output-report "$RECONCILIATION_REPORT"
       - name: Build replay-safe intake partitions
         if: steps.evidence.outputs.intake_needed == 'true'
         env:
           ARTIFACT_ROOT: ${{ runner.temp }}/openva-discovery-mesh-aggregate
           CANDIDATE_NDJSON: ${{ runner.temp }}/discovery-mesh-intake-candidates.ndjson
-          PROMOTION_PLAN: ${{ steps.evidence.outputs.promotion_plan }}
+          PROMOTION_PLAN: ${{ runner.temp }}/discovery-mesh-effective-promotion-plan.json
           PREPARED_ROOT: ${{ runner.temp }}/discovery-mesh-intake-prepared
           SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
           MAX_FILES: ${{ inputs.transaction_max_files || '2500' }}
@@ -396,5 +312,6 @@ jobs:
           path: |
             ${{ runner.temp }}/discovery-mesh-intake-prepared/manifest.json
             ${{ runner.temp }}/discovery-mesh-intake-receipt.ndjson
+            ${{ runner.temp }}/discovery-mesh-intake-reconciliation.json
           if-no-files-found: warn
           retention-days: 30

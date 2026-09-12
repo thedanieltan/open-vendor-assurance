@@ -7,6 +7,7 @@ from tools.openva.discovery_mesh_intake import (
     materialize_partition,
     partition_records,
     prepare_intake,
+    reconcile_candidates,
 )
 
 
@@ -28,6 +29,7 @@ def _action(candidate: dict) -> dict:
         "action": "promote_candidate_source_for_review",
         "vendor_id": vendor_id,
         "candidate_source_id": candidate_id,
+        "candidate_url": candidate["candidate_url"],
         "path": (
             f"data/vendors/{vendor_id}/candidate_sources/"
             f"{candidate_id}.yaml"
@@ -205,6 +207,43 @@ def test_prepare_fails_closed_when_plan_candidate_is_missing(tmp_path: Path) -> 
             promotion_plan_path=plan_path,
             output_dir=tmp_path / "prepared",
             source_run_id="10",
+        )
+
+
+def test_reconcile_omits_removed_candidate_and_records_reason(tmp_path: Path) -> None:
+    present = _candidate("alpha", 1)
+    removed = _candidate("beta", 1)
+    plan = {
+        "report_type": "promotion_plan",
+        "actions": [_action(present), _action(removed)],
+        "summary": {"action_count": 2, "selected_promotion_action_count": 2},
+    }
+    effective, rows, stale = reconcile_candidates(
+        plan=plan,
+        source_report={"vendors": [{"vendor_id": "alpha", "candidates": [present]}]},
+        repository_root=tmp_path,
+    )
+
+    assert effective["actions"] == [_action(present)]
+    assert rows == [{"vendor_id": "alpha", "candidate": present}]
+    assert stale[0]["reason_codes"] == ["candidate_removed_after_source_run"]
+    assert effective["summary"]["stale_replay_action_count"] == 1
+
+
+def test_reconcile_fails_closed_on_resident_url_mismatch(tmp_path: Path) -> None:
+    candidate = _candidate("alpha", 1)
+    action = _action(candidate)
+    path = tmp_path / action["path"]
+    path.parent.mkdir(parents=True)
+    resident = dict(candidate, candidate_url="https://alpha.example/other")
+    import yaml
+
+    path.write_text(yaml.safe_dump(resident), encoding="utf-8")
+    with pytest.raises(ValueError, match="URL mismatch"):
+        reconcile_candidates(
+            plan={"report_type": "promotion_plan", "actions": [action]},
+            source_report={"vendors": []},
+            repository_root=tmp_path,
         )
 
 
