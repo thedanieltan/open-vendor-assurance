@@ -151,7 +151,184 @@
       "vendor_id": "new-relic"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/new-relic/candidate_sources/new-relic-trust-center-0d57cdaf1e0c.yaml",
+      "candidate_source_id": "new-relic-trust-center-0d57cdaf1e0c",
+      "candidate_status": "selected",
+      "candidate_url": "https://newrelic.com/platform/ai-observability",
+      "canonical_candidate_url": "https://newrelic.com/platform/ai-observability",
+      "confidence": "likely",
+      "discovered_at": "2026-09-10T08:24:44.145698Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://newrelic.com/platform/ai-observability",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "AI Observability for Modern Applications | New Relic",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6e3177cf3aaf800418ff095e12d58c7ebb3370963b94f8947b76e9846d14ce6e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://newrelic.com/platform/ai-observability",
+      "requested_url": "https://newrelic.com/platform/ai-observability",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-10T08:24:44.145698Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "new-relic"
+    },
+    {
+      "_openva_path": "data/vendors/new-relic/candidate_sources/new-relic-trust-center-3d96b9e978bf.yaml",
+      "candidate_source_id": "new-relic-trust-center-3d96b9e978bf",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.newrelic.com/",
+      "canonical_candidate_url": "https://trust.newrelic.com/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:51.022710Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://trust.newrelic.com/",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center"
+        ],
+        "page_title": "Trust Center",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:744376fa98f2a8fef74c420af712fa459299e7833f95a640962c257d2868e989",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.newrelic.com/",
+      "requested_url": "https://trust.newrelic.com/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:51.022710Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "new-relic"
+    },
+    {
+      "_openva_path": "data/vendors/new-relic/candidate_sources/new-relic-trust-center-c6cc5bbca4a3.yaml",
+      "candidate_source_id": "new-relic-trust-center-c6cc5bbca4a3",
+      "candidate_status": "selected",
+      "candidate_url": "https://newrelic.com/termsandconditions/dataprivacyframework",
+      "canonical_candidate_url": "https://newrelic.com/termsandconditions/dataprivacyframework",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:51.022710Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://newrelic.com/termsandconditions/dataprivacyframework",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Data Privacy Framework",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:82a8636f9de98266dfad7901afa0dfb71a429cbdf9d7b6e9b0be7ec6b769c495",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://newrelic.com/termsandconditions/dataprivacyframework",
+      "requested_url": "https://newrelic.com/termsandconditions/dataprivacyframework",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:51.022710Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "new-relic"
+    },
+    {
+      "_openva_path": "data/vendors/new-relic/candidate_sources/new-relic-trust-center-d7658dad89bf.yaml",
+      "candidate_source_id": "new-relic-trust-center-d7658dad89bf",
+      "candidate_status": "selected",
+      "candidate_url": "https://newrelic.com/platform/mobile-monitoring",
+      "canonical_candidate_url": "https://newrelic.com/platform/mobile-monitoring",
+      "confidence": "likely",
+      "discovered_at": "2026-09-11T08:16:29.454284Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://newrelic.com/platform/mobile-monitoring",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "privacy"
+        ],
+        "page_title": "Mobile Monitoring | New Relic",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:efeb8a5459a8b9e8424993ad314bf005cddd529d8b08a7f45a2e9b9b9ba4edbe",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://newrelic.com/platform/mobile-monitoring",
+      "requested_url": "https://newrelic.com/platform/mobile-monitoring",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-11T08:16:29.454284Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "new-relic"
+    },
+    {
+      "_openva_path": "data/vendors/new-relic/candidate_sources/new-relic-trust-center-dca39da8105a.yaml",
+      "candidate_source_id": "new-relic-trust-center-dca39da8105a",
+      "candidate_status": "selected",
+      "candidate_url": "https://newrelic.com/platform/session-replay",
+      "canonical_candidate_url": "https://newrelic.com/platform/session-replay",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:51.022710Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://newrelic.com/platform/session-replay",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Session Replay | New Relic",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d0759999167cd67e2d5e19b98a9c7af3006728921f939b00405d45f23db4e2e2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://newrelic.com/platform/session-replay",
+      "requested_url": "https://newrelic.com/platform/session-replay",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:51.022710Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "new-relic"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/new-relic/sources/new-relic-compliance.yaml",
@@ -369,8 +546,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 5,
+    "candidate_source_types": [
+      "trust_center"
+    ],
     "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

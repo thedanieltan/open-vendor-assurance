@@ -103,7 +103,117 @@
       "vendor_id": "eset"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/eset/candidate_sources/eset-trust-center-19777b8059b5.yaml",
+      "candidate_source_id": "eset-trust-center-19777b8059b5",
+      "candidate_status": "selected",
+      "candidate_url": "https://legal.eset.com/cookie-policy/online-help-knowledgebase?lang=en-US",
+      "canonical_candidate_url": "https://legal.eset.com/cookie-policy/online-help-knowledgebase/?lang=en-US",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:16.036459Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://legal.eset.com/cookie-policy/online-help-knowledgebase/?lang=en-US",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security"
+        ],
+        "page_title": "Cookie Policy | ESET Legal Hub",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:c6e5c94b90aeb8acc6b807221dd1d815d9d964c94e93a415e7152c6c4a3072d1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://legal.eset.com/cookie-policy/online-help-knowledgebase/?lang=en-US",
+      "requested_url": "https://legal.eset.com/cookie-policy/online-help-knowledgebase?lang=en-US",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:16.036459Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "eset"
+    },
+    {
+      "_openva_path": "data/vendors/eset/candidate_sources/eset-trust-center-5bd3266b5e3f.yaml",
+      "candidate_source_id": "eset-trust-center-5bd3266b5e3f",
+      "candidate_status": "selected",
+      "candidate_url": "https://go.eset.com/supportform?lng=1033",
+      "canonical_candidate_url": "https://go.eset.com/supportform?lng=1033",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:16.036459Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.eset.com/int/support/contact/?version=&product=&lng=1033&osbuild=&platform=&username=&publicid=&guid=&submitdata=&ftype=&publicId=&utm_source=go.eset.eu&utm_medium=redirector&utm_campaign=supportform&utm_content=&utm_term=form-data",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Contact ESET Customer Support &#124; ESET",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:46e862fface2b57372016c33ad0888c1740bf9d26b4204f46bfbaa7caf3d231c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.eset.com/int/support/contact/?version=&product=&lng=1033&osbuild=&platform=&username=&publicid=&guid=&submitdata=&ftype=&publicId=&utm_source=go.eset.eu&utm_medium=redirector&utm_campaign=supportform&utm_content=&utm_term=form-data",
+      "requested_url": "https://go.eset.com/supportform?lng=1033",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:16.036459Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "eset"
+    },
+    {
+      "_openva_path": "data/vendors/eset/candidate_sources/eset-trust-center-ef129fced3e2.yaml",
+      "candidate_source_id": "eset-trust-center-ef129fced3e2",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.eset.com/",
+      "canonical_candidate_url": "https://trust.eset.com/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T09:07:16.036459Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.eset.com/",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "ESET Trust Center | Security, Compliance",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:7e060f8c3358f52f81efb2273925e3252d7a283bd289a11658c0fc28e51b1626",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.eset.com/",
+      "requested_url": "https://trust.eset.com/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T09:07:16.036459Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "eset"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/eset/sources/eset-privacy.yaml",
@@ -241,8 +351,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 3,
+    "candidate_source_types": [
+      "trust_center"
+    ],
     "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

@@ -121,7 +121,84 @@
       "vendor_id": "whereby"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/whereby/candidate_sources/whereby-compliance-page-45c5a932bdad.yaml",
+      "candidate_source_id": "whereby-compliance-page-45c5a932bdad",
+      "candidate_status": "selected",
+      "candidate_url": "https://whereby.com/sitemap.xml",
+      "canonical_candidate_url": "https://whereby.com/sitemap.xml",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:19:03.220520Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "application/xml",
+        "final_url": "https://whereby.com/sitemap.xml",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "soc",
+          "iso",
+          "trust"
+        ],
+        "page_title": null,
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6105458d46687671f886ee29a408766d0c5e50cfcf6bde148f3dc23b5f572740",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://whereby.com/sitemap.xml",
+      "requested_url": "https://whereby.com/sitemap.xml",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:19:03.220520Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "whereby"
+    },
+    {
+      "_openva_path": "data/vendors/whereby/candidate_sources/whereby-compliance-page-8624113e2944.yaml",
+      "candidate_source_id": "whereby-compliance-page-8624113e2944",
+      "candidate_status": "selected",
+      "candidate_url": "https://whereby.com/blog/whereby-certified-with-iso-27001-certification",
+      "canonical_candidate_url": "https://whereby.com/blog/whereby-certified-with-iso-27001-certification/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-08T08:19:03.220520Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8; rendered=playwright",
+        "final_url": "https://whereby.com/blog/whereby-certified-with-iso-27001-certification/",
+        "http_status": 200,
+        "matched_terms": [
+          "certification",
+          "iso",
+          "audit"
+        ],
+        "page_title": "Whereby Certified with ISO 27001 Security Certification | Whereby",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:75012597875de723c94d76b3dd513a75d5d31813b0ac78a91830183cdb01d23e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://whereby.com/blog/whereby-certified-with-iso-27001-certification/",
+      "requested_url": "https://whereby.com/blog/whereby-certified-with-iso-27001-certification",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-08T08:19:03.220520Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "whereby"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/whereby/sources/whereby-dpa.yaml",
@@ -299,8 +376,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 2,
+    "candidate_source_types": [
+      "compliance_page"
+    ],
     "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

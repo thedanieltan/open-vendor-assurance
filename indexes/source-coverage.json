@@ -1,12 +1,13 @@
 {
   "candidate_source_type_counts": {
-    "ai_terms": 5,
-    "certification_reference": 2,
-    "compliance_page": 720,
-    "dpa": 9,
-    "privacy_notice": 7,
-    "security_page": 120,
-    "trust_center": 553
+    "ai_terms": 300,
+    "certification_reference": 216,
+    "compliance_page": 8137,
+    "dpa": 594,
+    "privacy_notice": 5748,
+    "security_page": 21387,
+    "subprocessors_list": 409,
+    "trust_center": 13901
   },
   "coverage_claim_role_counts": {
     "certification_reference": 3,
@@ -394,7 +395,8 @@
     },
     {
       "candidate_source_types": [
-        "security_page"
+        "security_page",
+        "trust_center"
       ],
       "canonical_source_types": [
         "dpa",
@@ -647,7 +649,9 @@
       "vendor_id": "alegra"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -810,6 +814,7 @@
     },
     {
       "candidate_source_types": [
+        "compliance_page",
         "security_page"
       ],
       "canonical_source_types": [
@@ -852,6 +857,7 @@
     },
     {
       "candidate_source_types": [
+        "certification_reference",
         "dpa",
         "privacy_notice",
         "security_page"
@@ -1115,6 +1121,7 @@
     },
     {
       "candidate_source_types": [
+        "certification_reference",
         "trust_center"
       ],
       "canonical_source_types": [
@@ -1188,7 +1195,10 @@
       "vendor_id": "athenahealth"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -1357,7 +1367,9 @@
       "vendor_id": "aws"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -1392,7 +1404,9 @@
       "vendor_id": "bamboohr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -1449,7 +1463,11 @@
       "vendor_id": "bending-spoons"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page",
         "subprocessors_list"
@@ -1460,10 +1478,7 @@
         "subprocessors_list"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "security_page",
         "subprocessors_list"
@@ -1524,7 +1539,9 @@
       "vendor_id": "betterfly"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -1543,9 +1560,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "compliance_page",
@@ -1603,7 +1618,12 @@
       "vendor_id": "bigcommerce"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice"
@@ -1614,10 +1634,7 @@
         "privacy_notice"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "dpa",
         "privacy_notice"
@@ -1629,7 +1646,10 @@
       "vendor_id": "bigid"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -1662,7 +1682,10 @@
       "vendor_id": "bill-com"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -1708,7 +1731,10 @@
       "vendor_id": "bitbucket"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -1725,9 +1751,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "dpa",
         "privacy_notice",
@@ -1746,7 +1770,11 @@
       "vendor_id": "bitdefender"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -1757,8 +1785,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -1796,7 +1822,12 @@
       "vendor_id": "bling"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page",
         "terms_of_service"
@@ -1808,8 +1839,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -1823,7 +1852,11 @@
       "vendor_id": "bolt"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "terms_of_service"
       ],
@@ -1834,8 +1867,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -1848,7 +1879,9 @@
       "vendor_id": "bowtie"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -1888,7 +1921,12 @@
       "vendor_id": "box"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -1898,8 +1936,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -1912,7 +1948,10 @@
       "vendor_id": "brankas"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "dpa",
@@ -1947,7 +1986,9 @@
       "vendor_id": "braze"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -1962,9 +2003,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "status_page",
@@ -1983,7 +2022,9 @@
       "vendor_id": "brevo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -2017,7 +2058,10 @@
       "vendor_id": "browserstack"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa"
       ],
@@ -2027,8 +2071,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2041,7 +2083,10 @@
       "vendor_id": "bugcrowd"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -2053,7 +2098,6 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2091,7 +2135,10 @@
       "vendor_id": "bynder"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -2177,7 +2224,10 @@
       "vendor_id": "calendly"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -2344,7 +2394,12 @@
       "vendor_id": "cashfree-payments"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -2354,9 +2409,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2369,7 +2421,12 @@
       "vendor_id": "cast-ai"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -2379,9 +2436,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2487,7 +2541,10 @@
       "vendor_id": "chatwork"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice",
@@ -2502,9 +2559,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "privacy_notice",
@@ -2522,7 +2577,12 @@
       "vendor_id": "checkout-com"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page",
         "trust_center"
@@ -2534,9 +2594,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2550,7 +2607,9 @@
       "vendor_id": "cin7"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -2585,7 +2644,11 @@
       "vendor_id": "circleci"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -2596,8 +2659,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2634,7 +2695,9 @@
       "vendor_id": "classum"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -2694,7 +2757,10 @@
       "vendor_id": "clio"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -2705,7 +2771,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2718,7 +2783,9 @@
       "vendor_id": "clip"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -2758,7 +2825,9 @@
       "vendor_id": "cloudflare"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -2784,7 +2853,9 @@
       "vendor_id": "cloudsign"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -2919,7 +2990,9 @@
       "vendor_id": "colendi"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -2930,7 +3003,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -2944,7 +3016,10 @@
       "vendor_id": "collibra"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -2955,7 +3030,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -2968,7 +3042,9 @@
       "vendor_id": "comarch"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -2987,9 +3063,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "compliance_page",
@@ -3041,7 +3115,9 @@
       "vendor_id": "complyadvantage"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -3075,7 +3151,10 @@
       "vendor_id": "confluent"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "terms_of_service"
       ],
@@ -3087,7 +3166,6 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -3135,7 +3213,10 @@
       "vendor_id": "contentful"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -3146,7 +3227,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -3159,7 +3239,10 @@
       "vendor_id": "contentsquare"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -3171,7 +3254,6 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -3208,7 +3290,9 @@
       "vendor_id": "cover-genius"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -3233,7 +3317,9 @@
       "vendor_id": "creditas"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3267,7 +3353,10 @@
       "vendor_id": "culture-amp"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -3309,7 +3398,9 @@
       "vendor_id": "customer-io"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -3328,9 +3419,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "compliance_page",
@@ -3349,7 +3438,9 @@
       "vendor_id": "cyberark"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page",
         "terms_of_service"
@@ -3362,7 +3453,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -3403,7 +3493,9 @@
       "vendor_id": "dailymotion"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3422,9 +3514,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -3510,7 +3600,10 @@
       "vendor_id": "databricks"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3550,7 +3643,9 @@
       "vendor_id": "datadog"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3645,7 +3740,9 @@
       "vendor_id": "descartes"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -3685,7 +3782,10 @@
       "vendor_id": "descript"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3725,7 +3825,9 @@
       "vendor_id": "digitalocean"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3851,7 +3953,10 @@
       "vendor_id": "doctolib"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -3891,7 +3996,11 @@
       "vendor_id": "docusign"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -3902,7 +4011,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -3975,7 +4083,10 @@
       "vendor_id": "dooray"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -4042,7 +4153,12 @@
       "vendor_id": "douzone-bizon"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -4056,8 +4172,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4135,7 +4249,9 @@
       "vendor_id": "drata"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -4175,7 +4291,12 @@
       "vendor_id": "dropbox"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -4185,8 +4306,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4199,7 +4318,10 @@
       "vendor_id": "druva"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -4223,7 +4345,9 @@
       "vendor_id": "dubizzle-group"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -4238,9 +4362,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "privacy_notice",
@@ -4258,7 +4380,13 @@
       "vendor_id": "duck-creek-technologies"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference"
       ],
@@ -4268,9 +4396,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4307,7 +4432,11 @@
       "vendor_id": "easypark"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -4318,7 +4447,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -4332,7 +4460,12 @@
       "vendor_id": "easystore"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -4342,9 +4475,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4387,7 +4517,10 @@
       "vendor_id": "eis-group"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -4422,7 +4555,9 @@
       "vendor_id": "elastic"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page"
       ],
@@ -4508,7 +4643,12 @@
       "vendor_id": "employment-hero"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -4518,9 +4658,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4533,7 +4670,9 @@
       "vendor_id": "entersekt"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -4565,7 +4704,13 @@
       "vendor_id": "eset"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "government_request_policy",
         "security_page",
@@ -4579,8 +4724,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -4595,7 +4738,11 @@
       "vendor_id": "esri"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -4697,7 +4844,9 @@
       "vendor_id": "f-secure"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice",
@@ -4714,9 +4863,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "privacy_notice",
@@ -4969,7 +5116,9 @@
       "vendor_id": "flash"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -4996,7 +5145,9 @@
       "vendor_id": "flutterwave"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -5133,7 +5284,12 @@
       "vendor_id": "fortinet"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -5143,8 +5299,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -5157,7 +5311,9 @@
       "vendor_id": "fpt-software"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "terms_of_service",
         "trust_center"
@@ -5185,7 +5341,10 @@
       "vendor_id": "freee"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -5225,7 +5384,10 @@
       "vendor_id": "freshworks"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -5269,7 +5431,11 @@
       "vendor_id": "front"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -5279,8 +5445,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -5293,7 +5457,9 @@
       "vendor_id": "geovictoria"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "trust_center"
@@ -5329,7 +5495,9 @@
       "vendor_id": "getresponse"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -5364,7 +5532,10 @@
       "vendor_id": "github"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "ai_terms",
         "certification_reference",
@@ -5383,9 +5554,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "ai_terms",
         "certification_reference",
@@ -5460,7 +5629,13 @@
       "vendor_id": "global-payments"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -5470,8 +5645,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -5516,7 +5689,11 @@
       "vendor_id": "gocardless"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -5529,7 +5706,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -5713,7 +5889,10 @@
       "vendor_id": "grafana-labs"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -5778,7 +5957,10 @@
       "vendor_id": "graphcore"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "dpa",
@@ -5843,7 +6025,11 @@
       "vendor_id": "greythr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page",
         "status_page"
@@ -5855,8 +6041,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -5905,7 +6089,9 @@
       "vendor_id": "guidewire"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -5990,7 +6176,13 @@
       "vendor_id": "happeo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "trust_center"
@@ -6001,11 +6193,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "trust_center"
@@ -6079,7 +6267,13 @@
       "vendor_id": "hashmicro"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -6088,11 +6282,7 @@
         "security_page"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "security_page"
       ],
@@ -6137,7 +6327,12 @@
       "vendor_id": "help-scout"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -6147,8 +6342,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6224,7 +6417,11 @@
       "vendor_id": "hibob"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -6238,8 +6435,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6254,7 +6449,9 @@
       "vendor_id": "hitpay"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -6315,7 +6512,10 @@
       "vendor_id": "huawei-cloud-cn"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -6350,7 +6550,9 @@
       "vendor_id": "huawei-cloud-international"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -6463,7 +6665,9 @@
       "vendor_id": "hyperproof"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -6492,7 +6696,11 @@
       "vendor_id": "hyperverge"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -6532,7 +6740,13 @@
       "vendor_id": "ibm-cloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -6541,12 +6755,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "trust_center"
       ],
@@ -6557,7 +6766,11 @@
       "vendor_id": "icertis"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -6568,8 +6781,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6582,7 +6793,10 @@
       "vendor_id": "idfy"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "dpa"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -6600,7 +6814,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6617,7 +6830,10 @@
       "vendor_id": "idnow"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -6630,7 +6846,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6644,7 +6859,11 @@
       "vendor_id": "ifood"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -6656,7 +6875,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6730,7 +6948,10 @@
       "vendor_id": "insider"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -6749,9 +6970,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "compliance_page",
@@ -6770,7 +6989,10 @@
       "vendor_id": "instructure"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service",
@@ -6785,7 +7007,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6861,7 +7082,10 @@
       "vendor_id": "interswitch"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -6872,7 +7096,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -6885,7 +7108,9 @@
       "vendor_id": "ionos"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -6938,7 +7163,10 @@
       "vendor_id": "jamespot"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -6953,9 +7181,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "dpa",
         "privacy_notice",
@@ -7000,7 +7226,10 @@
       "vendor_id": "jinjer"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "security_page"
@@ -7027,7 +7256,11 @@
       "vendor_id": "jisr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page",
         "trust_center"
@@ -7040,8 +7273,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7055,7 +7286,13 @@
       "vendor_id": "jodoo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -7067,8 +7304,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7107,7 +7342,13 @@
       "vendor_id": "juspay"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -7116,12 +7357,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "trust_center"
       ],
@@ -7132,7 +7368,9 @@
       "vendor_id": "kahoot"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference"
       ],
@@ -7209,7 +7447,11 @@
       "vendor_id": "karrot"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -7222,10 +7464,7 @@
         "privacy_notice"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -7265,7 +7504,10 @@
       "vendor_id": "kavak"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -7325,7 +7567,11 @@
       "vendor_id": "keka"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page"
       ],
@@ -7335,8 +7581,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -7383,7 +7627,9 @@
       "vendor_id": "klarna"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -7418,7 +7664,12 @@
       "vendor_id": "klaviyo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -7428,9 +7679,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7472,7 +7720,9 @@
       "vendor_id": "lark"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -7504,7 +7754,11 @@
       "vendor_id": "lattice"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -7515,7 +7769,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7528,7 +7781,12 @@
       "vendor_id": "layerx"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -7538,9 +7796,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7582,7 +7837,11 @@
       "vendor_id": "leadsquared"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -7593,8 +7852,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7607,7 +7864,11 @@
       "vendor_id": "lean-technologies"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -7622,7 +7883,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7637,7 +7897,10 @@
       "vendor_id": "ledger"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -7655,7 +7918,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7672,7 +7934,11 @@
       "vendor_id": "leena-ai"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -7682,9 +7948,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7697,7 +7960,11 @@
       "vendor_id": "legalon-technologies"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -7707,8 +7974,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7751,7 +8016,10 @@
       "vendor_id": "lever"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -7762,7 +8030,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -7800,7 +8067,10 @@
       "vendor_id": "line-works"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -7868,7 +8138,13 @@
       "vendor_id": "linktree"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -7878,10 +8154,7 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
+        "security_page"
       ],
       "primary_source_type_coverage": [
         "status_page"
@@ -7928,7 +8201,10 @@
       "vendor_id": "logicgate"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -7942,7 +8218,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "security_page",
         "subprocessors_list"
       ],
@@ -7958,7 +8233,10 @@
       "vendor_id": "logo-yazilim"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8046,7 +8324,12 @@
       "vendor_id": "lucid-software"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "status_page"
@@ -8058,9 +8341,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -8166,7 +8446,10 @@
       "vendor_id": "mailerlite"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "status_page"
@@ -8179,7 +8462,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -8194,7 +8476,11 @@
       "vendor_id": "mambu"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice",
@@ -8211,9 +8497,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "privacy_notice",
@@ -8263,7 +8547,11 @@
       "vendor_id": "meditech"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -8273,9 +8561,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -8288,7 +8573,10 @@
       "vendor_id": "megaport"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -8314,7 +8602,11 @@
       "vendor_id": "megazonecloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page"
       ],
@@ -8324,9 +8616,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -8388,7 +8677,11 @@
       "vendor_id": "mercado-libre"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8428,7 +8721,10 @@
       "vendor_id": "microsoft"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -8458,7 +8754,14 @@
       "vendor_id": "microsoft-azure"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -8468,9 +8771,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -8539,7 +8839,9 @@
       "vendor_id": "mirakl"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -8572,7 +8874,9 @@
       "vendor_id": "miro"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8607,7 +8911,10 @@
       "vendor_id": "mistral-ai"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8699,7 +9006,9 @@
       "vendor_id": "mollie"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8773,7 +9082,11 @@
       "vendor_id": "monday-com"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -8786,7 +9099,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -8800,7 +9112,10 @@
       "vendor_id": "money-forward"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -8840,7 +9155,10 @@
       "vendor_id": "mongodb"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -8964,7 +9282,9 @@
       "vendor_id": "neo4j"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -9035,7 +9355,10 @@
       "vendor_id": "netcore-cloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice",
@@ -9112,7 +9435,9 @@
       "vendor_id": "netskope"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -9143,7 +9468,9 @@
       "vendor_id": "netsuite"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9178,7 +9505,12 @@
       "vendor_id": "new-relic"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -9188,8 +9520,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -9227,7 +9557,11 @@
       "vendor_id": "nhn-cloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -9237,8 +9571,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -9252,7 +9584,11 @@
       "vendor_id": "nipa-cloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -9263,7 +9599,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -9375,7 +9710,9 @@
       "vendor_id": "odoo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9439,7 +9776,9 @@
       "vendor_id": "omie"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9474,7 +9813,11 @@
       "vendor_id": "onepassword"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -9485,7 +9828,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -9498,7 +9840,9 @@
       "vendor_id": "oneshield"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -9530,7 +9874,9 @@
       "vendor_id": "onetrust"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9565,7 +9911,10 @@
       "vendor_id": "openai"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9632,7 +9981,12 @@
       "vendor_id": "orion-health"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -9643,8 +9997,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -9681,7 +10033,10 @@
       "vendor_id": "pagbank"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -9716,7 +10071,9 @@
       "vendor_id": "pagerduty"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -9783,7 +10140,9 @@
       "vendor_id": "pandadoc"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "terms_of_service"
       ],
@@ -9794,7 +10153,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -9808,7 +10166,12 @@
       "vendor_id": "paper-id"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -9818,8 +10181,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -9864,7 +10225,9 @@
       "vendor_id": "paychex"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -9876,7 +10239,6 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10038,7 +10400,9 @@
       "vendor_id": "paytabs"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page",
         "terms_of_service",
@@ -10053,7 +10417,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10127,7 +10490,12 @@
       "vendor_id": "personio"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -10137,9 +10505,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10152,7 +10517,11 @@
       "vendor_id": "picus-security"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -10163,7 +10532,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10176,7 +10544,9 @@
       "vendor_id": "pine-labs"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -10209,7 +10579,9 @@
       "vendor_id": "pinecone"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -10228,9 +10600,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "certification_reference",
         "compliance_page",
@@ -10249,7 +10619,9 @@
       "vendor_id": "ping-identity"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -10356,7 +10728,9 @@
       "vendor_id": "plaid"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -10389,7 +10763,13 @@
       "vendor_id": "planetscale"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -10398,12 +10778,7 @@
         "status_page"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "status_page"
       ],
@@ -10509,7 +10884,11 @@
       "vendor_id": "posthog"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -10531,9 +10910,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "privacy_notice",
@@ -10554,7 +10931,13 @@
       "vendor_id": "postman"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -10566,8 +10949,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10606,7 +10987,10 @@
       "vendor_id": "printful"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "trust_center"
@@ -10642,7 +11026,11 @@
       "vendor_id": "prismic"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice"
@@ -10654,7 +11042,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10668,7 +11055,9 @@
       "vendor_id": "privado-ai"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -10696,7 +11085,10 @@
       "vendor_id": "project44"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -10713,7 +11105,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10757,7 +11148,12 @@
       "vendor_id": "przelewy24"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -10768,7 +11164,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -10815,7 +11210,10 @@
       "vendor_id": "qualtrics"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -10880,7 +11278,10 @@
       "vendor_id": "quintoandar"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -10989,7 +11390,10 @@
       "vendor_id": "rd-station"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -11002,9 +11406,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "status_page",
@@ -11058,7 +11460,10 @@
       "vendor_id": "redis"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice",
@@ -11089,7 +11494,12 @@
       "vendor_id": "redox"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -11103,7 +11513,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11118,7 +11527,9 @@
       "vendor_id": "relex-solutions"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -11162,7 +11573,9 @@
       "vendor_id": "render"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -11195,7 +11608,9 @@
       "vendor_id": "retool"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -11255,7 +11670,12 @@
       "vendor_id": "riskified"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -11265,9 +11685,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11280,7 +11697,13 @@
       "vendor_id": "rocket-chat"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -11290,9 +11713,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11305,7 +11725,12 @@
       "vendor_id": "rossum"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "security_page",
@@ -11319,8 +11744,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11367,7 +11790,12 @@
       "vendor_id": "sage"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "privacy_notice"
@@ -11380,7 +11808,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11394,7 +11821,9 @@
       "vendor_id": "sakura-internet"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -11459,7 +11888,11 @@
       "vendor_id": "salla"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -11470,7 +11903,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11483,7 +11915,12 @@
       "vendor_id": "samsung-sds"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "status_page",
@@ -11498,11 +11935,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "status_page",
@@ -11516,7 +11949,10 @@
       "vendor_id": "sana-labs"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -11586,7 +12022,10 @@
       "vendor_id": "sap"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -11597,7 +12036,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11649,7 +12087,9 @@
       "vendor_id": "scaleway"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -11711,7 +12151,9 @@
       "vendor_id": "seamlesshr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service",
@@ -11724,9 +12166,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "terms_of_service",
@@ -11745,7 +12185,11 @@
       "vendor_id": "second-front-systems"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page",
         "status_page"
@@ -11758,7 +12202,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -11772,7 +12215,10 @@
       "vendor_id": "secure-code-warrior"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -11838,7 +12284,15 @@
       "vendor_id": "segment"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa"
       ],
@@ -11847,11 +12301,7 @@
         "dpa"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "dpa"
       ],
@@ -11889,7 +12339,10 @@
       "vendor_id": "sendbox"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page",
         "status_page"
@@ -12109,7 +12562,10 @@
       "vendor_id": "shoper"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12169,7 +12625,9 @@
       "vendor_id": "shopline"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
@@ -12201,7 +12659,11 @@
       "vendor_id": "shopware"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -12216,10 +12678,7 @@
         "terms_of_service"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "privacy_notice",
@@ -12233,7 +12692,12 @@
       "vendor_id": "siemens"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page"
@@ -12245,8 +12709,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12260,7 +12722,12 @@
       "vendor_id": "signaturit"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "status_page"
@@ -12272,9 +12739,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12288,7 +12752,11 @@
       "vendor_id": "signzy"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -12300,8 +12768,7 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "subprocessors_list"
+        "dpa"
       ],
       "primary_source_type_coverage": [
         "privacy_notice",
@@ -12363,7 +12830,10 @@
       "vendor_id": "skydropx"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12423,7 +12893,11 @@
       "vendor_id": "sleek"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -12437,8 +12911,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12485,7 +12957,10 @@
       "vendor_id": "smarthr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "dpa"
       ],
@@ -12495,7 +12970,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
@@ -12509,7 +12983,9 @@
       "vendor_id": "smartlook"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12526,9 +13002,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -12619,7 +13093,10 @@
       "vendor_id": "socotra"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -12630,7 +13107,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12643,7 +13119,11 @@
       "vendor_id": "solaris"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page"
       ],
@@ -12654,7 +13134,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12667,7 +13146,9 @@
       "vendor_id": "soldo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12684,9 +13165,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -12761,7 +13240,11 @@
       "vendor_id": "spendesk"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12887,7 +13370,9 @@
       "vendor_id": "squarespace"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -12903,7 +13388,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12919,7 +13403,10 @@
       "vendor_id": "staffbase"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "certification_reference"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -12953,7 +13440,11 @@
       "vendor_id": "starburst"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -12964,7 +13455,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -12977,7 +13467,11 @@
       "vendor_id": "starship-technologies"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -12988,8 +13482,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13026,7 +13518,9 @@
       "vendor_id": "storehub"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -13068,7 +13562,9 @@
       "vendor_id": "storyblok"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -13109,7 +13605,9 @@
       "vendor_id": "strapi"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13144,7 +13642,9 @@
       "vendor_id": "stripe"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -13180,7 +13680,10 @@
       "vendor_id": "sumsub"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13215,7 +13718,12 @@
       "vendor_id": "supabase"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -13225,9 +13733,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13240,7 +13745,12 @@
       "vendor_id": "superoffice"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -13250,8 +13760,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13264,7 +13772,9 @@
       "vendor_id": "surfshark"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
@@ -13302,7 +13812,10 @@
       "vendor_id": "surveymonkey"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -13312,7 +13825,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -13327,7 +13839,9 @@
       "vendor_id": "swile"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "security_page",
@@ -13342,7 +13856,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13389,7 +13902,12 @@
       "vendor_id": "synerise"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "terms_of_service"
       ],
@@ -13399,9 +13917,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13414,7 +13929,10 @@
       "vendor_id": "system-c"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -13425,7 +13943,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13489,7 +14006,13 @@
       "vendor_id": "talkspirit"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -13499,9 +14022,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13538,7 +14058,9 @@
       "vendor_id": "teamspirit"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13554,7 +14076,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13570,7 +14091,13 @@
       "vendor_id": "teamsystem"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -13579,12 +14106,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "trust_center"
       ],
@@ -13628,7 +14150,11 @@
       "vendor_id": "teamwork"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "terms_of_service"
       ],
@@ -13639,8 +14165,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13723,7 +14247,12 @@
       "vendor_id": "tencent-cloud-international"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -13738,9 +14267,7 @@
         "terms_of_service"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "dpa",
         "privacy_notice",
@@ -13754,7 +14281,9 @@
       "vendor_id": "thales"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13789,7 +14318,11 @@
       "vendor_id": "thoropass"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice"
       ],
@@ -13800,7 +14333,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13813,7 +14345,11 @@
       "vendor_id": "toss"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "terms_of_service"
@@ -13825,8 +14361,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -13866,7 +14400,10 @@
       "vendor_id": "trade-republic"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13885,9 +14422,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -13906,7 +14441,9 @@
       "vendor_id": "trend-micro"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13939,7 +14476,9 @@
       "vendor_id": "trulioo"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -13974,7 +14513,12 @@
       "vendor_id": "trustarc"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -13984,9 +14528,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14073,7 +14614,9 @@
       "vendor_id": "typeform"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -14088,9 +14631,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "privacy_notice",
@@ -14109,7 +14650,9 @@
       "vendor_id": "ukg"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page"
       ],
@@ -14121,7 +14664,6 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14134,7 +14676,12 @@
       "vendor_id": "unbabel"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "security_page",
         "status_page"
@@ -14146,8 +14693,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14161,7 +14706,12 @@
       "vendor_id": "unifonic"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -14174,10 +14724,7 @@
         "subprocessors_list"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "privacy_notice",
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "compliance_page",
         "dpa",
@@ -14223,7 +14770,11 @@
       "vendor_id": "upcloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -14233,10 +14784,7 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
-        "subprocessors_list"
+        "dpa"
       ],
       "primary_source_type_coverage": [
         "trust_center"
@@ -14248,7 +14796,9 @@
       "vendor_id": "upguard"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -14281,7 +14831,9 @@
       "vendor_id": "vanta"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -14341,7 +14893,9 @@
       "vendor_id": "veriff"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -14372,7 +14926,11 @@
       "vendor_id": "vertafore"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice"
@@ -14384,8 +14942,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14432,7 +14988,12 @@
       "vendor_id": "vng-cloud"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -14442,9 +15003,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14494,7 +15052,9 @@
       "vendor_id": "vtex"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -14555,7 +15115,10 @@
       "vendor_id": "wanted"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -14647,7 +15210,13 @@
       "vendor_id": "webflow"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "status_page",
         "terms_of_service"
@@ -14659,9 +15228,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14675,7 +15241,9 @@
       "vendor_id": "wetransfer"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -14706,7 +15274,10 @@
       "vendor_id": "whereby"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "dpa",
+        "privacy_notice"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "security_page",
@@ -14720,8 +15291,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14813,7 +15382,9 @@
       "vendor_id": "withsecure"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
@@ -14847,7 +15418,9 @@
       "vendor_id": "wix"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
@@ -14862,9 +15435,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "security_page"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "privacy_notice",
         "status_page",
@@ -14883,7 +15454,10 @@
       "vendor_id": "wiz"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -14923,7 +15497,10 @@
       "vendor_id": "workday"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -15111,7 +15688,10 @@
       "vendor_id": "xendit"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "certification_reference",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -15196,7 +15776,10 @@
       "vendor_id": "yoco"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "privacy_notice",
         "security_page"
@@ -15248,7 +15831,9 @@
       "vendor_id": "yousign"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
@@ -15281,7 +15866,10 @@
       "vendor_id": "zapier"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -15316,7 +15904,12 @@
       "vendor_id": "zendesk"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "trust_center"
       ],
@@ -15326,9 +15919,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -15341,7 +15931,13 @@
       "vendor_id": "zenhr"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "ai_terms",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page"
+      ],
       "canonical_source_types": [
         "status_page",
         "trust_center"
@@ -15353,9 +15949,6 @@
       ],
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
-        "dpa",
-        "privacy_notice",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -15369,7 +15962,9 @@
       "vendor_id": "zenvia"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -15404,7 +15999,9 @@
       "vendor_id": "zoho"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -15444,7 +16041,9 @@
       "vendor_id": "zoom"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page"
       ],
@@ -15469,7 +16068,9 @@
       "vendor_id": "zoop"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page"
+      ],
       "canonical_source_types": [
         "certification_reference",
         "compliance_page",
