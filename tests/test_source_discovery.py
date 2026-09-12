@@ -400,3 +400,46 @@ def test_candidate_source_id_normalizes_equivalent_urls():
     second = candidate_source_id("example", "privacy_notice", "https://example.test/privacy")
 
     assert first == second
+
+
+def test_candidate_record_bounds_page_title_to_schema_limit() -> None:
+    from tools.openva.source_discovery import (
+        MAX_CANDIDATE_PAGE_TITLE_LENGTH,
+        candidate_record,
+        evidence_digest,
+    )
+
+    schema = json.loads(
+        Path("schemas/openva/candidate-source.schema.json").read_text(encoding="utf-8")
+    )
+    schema_limit = schema["properties"]["evidence"]["properties"]["page_title"]["maxLength"]
+    assert MAX_CANDIDATE_PAGE_TITLE_LENGTH == schema_limit == 300
+
+    long_title = "A" * 350
+    body = (
+        f"<html><head><title>{long_title}</title></head>"
+        "<body>security trust compliance</body></html>"
+    ).encode("utf-8")
+    result = FetchResult(
+        requested_url="https://example.com/security",
+        final_url="https://example.com/security",
+        http_status=200,
+        content_type="text/html; charset=utf-8",
+        content_length=len(body),
+        etag=None,
+        last_modified=None,
+        body_sample=body,
+    )
+    record = candidate_record(
+        "example-vendor",
+        "security_page",
+        "https://example.com/security",
+        result,
+        {"status": "strong", "matched_terms": ["security", "trust"]},
+        "2026-09-10T00:00:00Z",
+    )
+
+    page_title = record["evidence"]["page_title"]
+    assert page_title == long_title[:schema_limit]
+    assert len(page_title) == schema_limit
+    assert record["evidence_digest"] == evidence_digest(record["evidence"])
