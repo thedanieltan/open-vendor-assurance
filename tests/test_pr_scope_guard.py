@@ -485,11 +485,19 @@ def test_validate_workflow_keeps_path_aware_release_gate_and_policy_exemption():
     by_name = {step.get("name"): step for step in steps if step.get("name")}
 
     assert "Run OpenVA validator" in by_name
+    assert "Enforce repository hygiene" in by_name
+    assert "Enforce repository hygiene decision" in by_name
     assert "Rebuild generated indexes" in by_name
     assert "Check generated files are committed" in by_name
     assert "Determine scope-policy operational freshness exclusion" in by_name
     assert "Run source-intelligence release gates (pr profile)" in by_name
     assert "Enforce release-gate decision" in by_name
+
+    hygiene = by_name["Enforce repository hygiene"]
+    assert hygiene["continue-on-error"] == "${{ github.event_name == 'pull_request' }}"
+    hygiene_enforcement = " ".join(by_name["Enforce repository hygiene decision"]["if"].split())
+    assert "steps.repository_hygiene.outcome == 'failure'" in hygiene_enforcement
+    assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in hygiene_enforcement
 
     for step_name in ("Run OpenVA validator", "Rebuild generated indexes", "Check generated files are committed"):
         condition = " ".join(by_name[step_name]["if"].split())
