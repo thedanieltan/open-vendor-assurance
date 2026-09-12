@@ -485,10 +485,23 @@ def test_validate_workflow_keeps_path_aware_release_gate_and_policy_exemption():
     by_name = {step.get("name"): step for step in steps if step.get("name")}
 
     assert "Run OpenVA validator" in by_name
+    assert "Enforce repository hygiene" in by_name
+    assert "Enforce repository hygiene decision" in by_name
     assert "Rebuild generated indexes" in by_name
     assert "Check generated files are committed" in by_name
     assert "Determine scope-policy operational freshness exclusion" in by_name
     assert "Run source-intelligence release gates (pr profile)" in by_name
+    assert "Enforce release-gate decision" in by_name
+
+    hygiene = by_name["Enforce repository hygiene"]
+    assert hygiene["continue-on-error"] == "${{ github.event_name == 'pull_request' }}"
+    hygiene_enforcement = " ".join(by_name["Enforce repository hygiene decision"]["if"].split())
+    assert "steps.repository_hygiene.outcome == 'failure'" in hygiene_enforcement
+    assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in hygiene_enforcement
+
+    for step_name in ("Run OpenVA validator", "Rebuild generated indexes", "Check generated files are committed"):
+        condition = " ".join(by_name[step_name]["if"].split())
+        assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in condition
 
     release_gate = by_name["Run source-intelligence release gates (pr profile)"]
     release_condition = " ".join(release_gate["if"].split())
@@ -502,6 +515,13 @@ def test_validate_workflow_keeps_path_aware_release_gate_and_policy_exemption():
     assert "set(changed) <= exclusive" in probe
     assert "skip_release_gates=true" in probe
     assert "python -m tools.openva.release_gates check --profile pr" in release_gate["run"]
+    assert release_gate["continue-on-error"] == "${{ github.event_name == 'pull_request' }}"
+
+    enforcement = by_name["Enforce release-gate decision"]["run"]
+    assert "high_priority_freshness" in enforcement
+    assert "observation_freshness" in enforcement
+    assert "data/vendors/*/candidate_sources/*.yaml" in enforcement
+    assert "WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01" in enforcement
 
 
 # --- Task B: ADR-0006 acceptance vs WP-02 implementation split ----------------

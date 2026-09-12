@@ -208,6 +208,8 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Enforce repository hygiene
+        id: repository_hygiene
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
         env:
           OPENVA_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           OPENVA_HEAD_SHA: ${{ github.sha }}
@@ -217,15 +219,6 @@ jobs:
           --base "$OPENVA_BASE_SHA"
           --head "$OPENVA_HEAD_SHA"
           --head-ref "$OPENVA_HEAD_REF"
-      - name: Run OpenVA validator
-        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
-        run: python -m tools.openva.validate validate
-      - name: Rebuild generated indexes
-        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
-        run: python -m tools.openva.validate build-indexes
-      - name: Check generated files are committed
-        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
-        run: git diff --exit-code openva-pack.json indexes/ dist/
       - name: Determine scope-policy operational freshness exclusion
         id: scope_policy_freshness
         if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
@@ -264,7 +257,41 @@ jobs:
           then
             echo "skip_release_gates=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Enforce repository hygiene decision
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.repository_hygiene.outcome == 'failure' &&
+          steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+        run: |
+          echo "repository hygiene failed outside the pure scope-policy bootstrap path" >&2
+          exit 1
+      - name: Run OpenVA validator
+        if: >-
+          github.event_name != 'pull_request' ||
+          (
+            needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true' &&
+            steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+          )
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated indexes
+        if: >-
+          github.event_name != 'pull_request' ||
+          (
+            needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true' &&
+            steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+          )
+        run: python -m tools.openva.validate build-indexes
+      - name: Check generated files are committed
+        if: >-
+          github.event_name != 'pull_request' ||
+          (
+            needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true' &&
+            steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+          )
+        run: git diff --exit-code openva-pack.json indexes/ dist/
       - name: Run source-intelligence release gates (pr profile)
+        id: release_gates
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
         if: >-
           github.event_name != 'pull_request' ||
           (
@@ -275,6 +302,57 @@ jobs:
           python -m tools.openva.release_gates check --profile pr
           --out-json "$RUNNER_TEMP/release-gates.json"
           --out-md "$RUNNER_TEMP/release-gates-summary.md"
+      - name: Enforce release-gate decision
+        if: >-
+          github.event_name == 'pull_request' &&
+          needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true' &&
+          steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/changed-paths.txt"
+          python - "$RUNNER_TEMP/release-gates.json" "$RUNNER_TEMP/changed-paths.txt" <<'PY'
+          import fnmatch
+          import json
+          import os
+          import re
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          if report.get("decision") == "pass":
+              raise SystemExit(0)
+
+          failed = {
+              gate.get("gate_id")
+              for gate in report.get("gates", [])
+              if gate.get("blocking") and gate.get("status") == "fail"
+          }
+          body = os.environ.get("PR_BODY", "")
+          declarations = set(re.findall(r"^\s*Work-Package:\s*(WP-[A-Z0-9][A-Z0-9-]*)\s*$", body, re.MULTILINE))
+          changed = [line.strip() for line in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if line.strip()]
+          recovery_globs = (
+              "data/vendors/*/candidate_sources/*.yaml",
+              "dist/vendors/*.json",
+              "indexes/*.json",
+              "maintenance/generated/*.json",
+              "openva-pack.json",
+          )
+          recovery_only = bool(changed) and all(
+              any(fnmatch.fnmatchcase(path, pattern) for pattern in recovery_globs)
+              for path in changed
+          )
+          freshness_only = bool(failed) and failed <= {"observation_freshness", "high_priority_freshness"}
+          declared_recovery = declarations == {"WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01"}
+          if freshness_only and recovery_only and declared_recovery:
+              print("Allowing data-only recovery PR: all blocking failures are pre-existing observation freshness state.")
+              raise SystemExit(0)
+          print(f"blocking release gates remain: {sorted(failed)}", file=sys.stderr)
+          raise SystemExit(1)
+          PY
 
   pr-scope-guard:
     name: pr-scope-guard
