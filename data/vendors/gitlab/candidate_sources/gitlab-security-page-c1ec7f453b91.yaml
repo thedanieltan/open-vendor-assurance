@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-c1ec7f453b91
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/authors/gitlab
+canonical_candidate_url: https://about.gitlab.com/blog/authors/gitlab/
+confidence: likely
+discovered_at: '2026-09-13T08:31:34.778024Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/authors/gitlab/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GitLab | GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5ffb5f2acf9c3f402ee29f56e1fbe9c7130efca9f1e1dfdc0ab4bf0cd8a58ced
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/authors/gitlab/
+requested_url: https://about.gitlab.com/blog/authors/gitlab
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-13T08:31:34.778024Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
