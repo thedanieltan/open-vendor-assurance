@@ -1,11 +1,11 @@
 candidate_source_id: zscaler-security-page-297ab3e7543c
 candidate_status: selected
-candidate_url: https://www.zscaler.com/company/faqs
+candidate_url: https://www.zscaler.com/learn/company-faq
 canonical_candidate_url: https://www.zscaler.com/learn/company-faq
 confidence: likely
-discovered_at: '2026-09-11T09:08:42.655875Z'
+discovered_at: '2026-09-13T08:31:20.346460Z'
 discovered_by: agent
-discovery_method: rendered_dom_locator_verification
+discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/learn/company-faq
@@ -14,19 +14,18 @@ evidence:
   - security
   - trust
   page_title: Zscaler FAQs | Answers About Our Company, Solutions, and Services
-  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:f52af8527d60303d306ec2fa06805052293310404a6c2f0608c6efc37ad6fc0d
+  verification_status: ok
+evidence_digest: sha256:02e7918d25011d5fd2e2bb37890d88ad129e11f415e691331de52885c86ed16b
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/learn/company-faq
-requested_url: https://www.zscaler.com/company/faqs
+requested_url: https://www.zscaler.com/learn/company-faq
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-11T09:08:42.655875Z'
+selection_run_id: '2026-09-13T08:31:20.346460Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
