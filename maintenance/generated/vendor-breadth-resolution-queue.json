@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:18:58Z",
+  "generated_at": "2026-09-13T11:53:12Z",
   "items": [
     {
       "candidate_vendor_id": "support",
@@ -101,15 +101,15 @@
     },
     {
       "candidate_vendor_id": "support",
-      "demand_count": 32,
+      "demand_count": 40,
       "display_name_candidate": "Automatically remove your candidates' data Eliminate manual tasks and keep your database organized by automatically removing candidates' data when they meet certain criteria.",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-13T11:53:12Z",
       "not_advice": true,
-      "observation_count": 32,
+      "observation_count": 40,
       "official_domain_candidate": "support.teamtailor.com",
-      "priority": 256,
+      "priority": 312,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -120,9 +120,37 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 32,
+      "signal_count": 40,
       "source_urls": [
         "https://www.teamtailor.com/en/all-features"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "shop",
+      "demand_count": 10,
+      "display_name_candidate": "PKI/SSL As a Service",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "shop.globalsign.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-deb2f586ba84ba8cf7c8f8c8",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.globalsign.com/de-de/produkte"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -153,34 +181,6 @@
         "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
       ],
       "state": "ready_for_source_discovery",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "shop",
-      "demand_count": 8,
-      "display_name_candidate": "PKI/SSL As a Service",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 8,
-      "official_domain_candidate": "shop.globalsign.com",
-      "priority": 88,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-deb2f586ba84ba8cf7c8f8c8",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 8,
-      "source_urls": [
-        "https://www.globalsign.com/de-de/produkte"
-      ],
-      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -263,6 +263,90 @@
       "signal_count": 5,
       "source_urls": [
         "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "trust",
+      "demand_count": 5,
+      "display_name_candidate": "Request a Copy",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 5,
+      "official_domain_candidate": "trust.bigid.com",
+      "priority": 67,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0e3a6cc5d655b62bc2b7127e",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 5,
+      "source_urls": [
+        "https://bigid.com/bigid-compliance"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "updates",
+      "demand_count": 5,
+      "display_name_candidate": "Updates",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 5,
+      "official_domain_candidate": "updates.teamtailor.com",
+      "priority": 67,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-989e18a813e22a5087bab527",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 5,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "welcome",
+      "demand_count": 5,
+      "display_name_candidate": "Discover Qonto",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 5,
+      "official_domain_candidate": "welcome.qonto.com",
+      "priority": 67,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-fed6d683d43f45ae933cc567",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 5,
+      "source_urls": [
+        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -464,6 +548,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "itsettled",
+      "demand_count": 4,
+      "display_name_candidate": "itsettled",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "itsettled.co.uk",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-8896231ee9d6102c8cef632a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://blog.pleo.io/en/what-a-new-cfo-actually-walks-into"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "jdsupra",
+      "demand_count": 4,
+      "display_name_candidate": "Todd Snyder",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-13T11:53:12Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "jdsupra.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-488c7d3a9735d850e6c4757b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "oag",
       "demand_count": 4,
       "display_name_candidate": "CCPA",
@@ -487,90 +627,6 @@
       "signal_count": 4,
       "source_urls": [
         "https://bigid.com/blog/tractor-supply-ccpa-violations"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "trust",
-      "demand_count": 4,
-      "display_name_candidate": "Request a Copy",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 4,
-      "official_domain_candidate": "trust.bigid.com",
-      "priority": 60,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-0e3a6cc5d655b62bc2b7127e",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 4,
-      "source_urls": [
-        "https://bigid.com/bigid-compliance"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "updates",
-      "demand_count": 4,
-      "display_name_candidate": "Updates",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 4,
-      "official_domain_candidate": "updates.teamtailor.com",
-      "priority": 60,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-989e18a813e22a5087bab527",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 4,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "welcome",
-      "demand_count": 4,
-      "display_name_candidate": "Discover Qonto",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 4,
-      "official_domain_candidate": "welcome.qonto.com",
-      "priority": 60,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-fed6d683d43f45ae933cc567",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 4,
-      "source_urls": [
-        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6996,21 +7052,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "itsettled",
+      "candidate_vendor_id": "portalone",
       "demand_count": 3,
-      "display_name_candidate": "itsettled",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "display_name_candidate": "PortalOne",
+      "first_seen_at": "2026-09-10T12:51:06Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-13T11:53:12Z",
       "not_advice": true,
       "observation_count": 3,
-      "official_domain_candidate": "itsettled.co.uk",
+      "official_domain_candidate": "portalone.com",
       "priority": 53,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-8896231ee9d6102c8cef632a",
+      "queue_id": "vbq-cb79bc0f1211b225e77aa277",
       "reason_codes": [
         "country_missing"
       ],
@@ -7018,27 +7074,27 @@
       "schema_version": "0.1.0",
       "signal_count": 3,
       "source_urls": [
-        "https://blog.pleo.io/en/what-a-new-cfo-actually-walks-into"
+        "https://blog.pleo.io/en/pleos-onboarding-gave-portalone-a-faster-close-and-full-spend-visibility"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "jdsupra",
+      "candidate_vendor_id": "privacy",
       "demand_count": 3,
-      "display_name_candidate": "Todd Snyder",
-      "first_seen_at": "2026-09-08T12:01:23Z",
+      "display_name_candidate": "Privacy Notice",
+      "first_seen_at": "2026-09-09T12:47:13Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-10T12:51:06Z",
+      "last_seen_at": "2026-09-13T11:53:12Z",
       "not_advice": true,
       "observation_count": 3,
-      "official_domain_candidate": "jdsupra.com",
+      "official_domain_candidate": "privacy.claude.com",
       "priority": 53,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-488c7d3a9735d850e6c4757b",
+      "queue_id": "vbq-e4b139f7a2f18379c4709fc6",
       "reason_codes": [
         "country_missing"
       ],
@@ -7046,7 +7102,7 @@
       "schema_version": "0.1.0",
       "signal_count": 3,
       "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        "https://bigid.com/sub-processors"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -7248,62 +7304,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "portalone",
-      "demand_count": 2,
-      "display_name_candidate": "PortalOne",
-      "first_seen_at": "2026-09-10T12:51:06Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "portalone.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-cb79bc0f1211b225e77aa277",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://blog.pleo.io/en/pleos-onboarding-gave-portalone-a-faster-close-and-full-spend-visibility"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "privacy",
-      "demand_count": 2,
-      "display_name_candidate": "Privacy Notice",
-      "first_seen_at": "2026-09-09T12:47:13Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "privacy.claude.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-e4b139f7a2f18379c4709fc6",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/sub-processors"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "bit",
       "demand_count": 1,
       "display_name_candidate": "Learn more how we help businesses achieve their goals and grow",
@@ -7445,15 +7445,15 @@
     },
     {
       "candidate_vendor_id": "cecilia-manduca",
-      "demand_count": 2,
+      "demand_count": 3,
       "display_name_candidate": "Cecilia Manduca",
       "first_seen_at": "2026-09-10T12:51:06Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-13T11:53:12Z",
       "not_advice": true,
-      "observation_count": 2,
+      "observation_count": 3,
       "official_domain_candidate": null,
-      "priority": 26,
+      "priority": 33,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -7464,7 +7464,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 2,
+      "signal_count": 3,
       "source_urls": [
         "https://blog.pleo.io/en/pleos-onboarding-gave-portalone-a-faster-close-and-full-spend-visibility"
       ],
