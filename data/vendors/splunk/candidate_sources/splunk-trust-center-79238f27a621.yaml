@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-79238f27a621
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/splunk-open-source.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/splunk-open-source.html
+confidence: likely
+discovered_at: '2026-09-13T08:49:44.289461Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/splunk-open-source.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: 'Splunk Open Source: What To Know | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f171e56f940fb2af10e07e4e027642f91c95bf06c3a288fb557c35acba450385
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/splunk-open-source.html
+requested_url: https://www.splunk.com/en_us/blog/learn/splunk-open-source.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-13T08:49:44.289461Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

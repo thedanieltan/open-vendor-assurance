@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-6683ad1f953e
+candidate_status: selected
+candidate_url: https://research.splunk.com/stories/vidar_stealer?query=vidar
+canonical_candidate_url: https://research.splunk.com/stories/vidar_stealer/
+confidence: likely
+discovered_at: '2026-09-13T08:49:44.289461Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://research.splunk.com/stories/vidar_stealer/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: 'Analytics Story: Vidar Stealer | Splunk Security Content'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:bc76b93b406f5c1a6e755c0dbb13a43225f9f0f458accfbc8afe4ff719c0f0ae
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://research.splunk.com/stories/vidar_stealer/
+requested_url: https://research.splunk.com/stories/vidar_stealer?query=vidar
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-13T08:49:44.289461Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
