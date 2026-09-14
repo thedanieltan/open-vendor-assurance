@@ -485,6 +485,41 @@
       "vendor_id": "railway"
     },
     {
+      "_openva_path": "data/vendors/railway/candidate_sources/railway-security-page-30c3a5f83c28.yaml",
+      "candidate_source_id": "railway-security-page-30c3a5f83c28",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.railway.com/?itemName=certifications&itemUid=a26c76c4-6568-4a97-a75b-5cc628e0a407&source=click&subscribeStatus=confirmed",
+      "canonical_candidate_url": "https://trust.railway.com/?itemName=certifications&itemUid=a26c76c4-6568-4a97-a75b-5cc628e0a407&source=click&subscribeStatus=confirmed",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:31:25.123299Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.railway.com/?itemName=certifications&itemUid=a26c76c4-6568-4a97-a75b-5cc628e0a407&source=click&subscribeStatus=confirmed",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Railway Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c682952ef0d74b020fc85fc2191b9cd55ba01848f35975710bb604914816350a",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.railway.com/?itemName=certifications&itemUid=a26c76c4-6568-4a97-a75b-5cc628e0a407&source=click&subscribeStatus=confirmed",
+      "requested_url": "https://trust.railway.com/?itemName=certifications&itemUid=a26c76c4-6568-4a97-a75b-5cc628e0a407&source=click&subscribeStatus=confirmed",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:31:25.123299Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "railway"
+    },
+    {
       "_openva_path": "data/vendors/railway/candidate_sources/railway-security-page-54e7fbceef41.yaml",
       "candidate_source_id": "railway-security-page-54e7fbceef41",
       "candidate_status": "selected",
@@ -1629,7 +1664,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 35,
+    "candidate_source_count": 36,
     "candidate_source_types": [
       "ai_terms",
       "security_page"

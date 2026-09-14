@@ -14158,6 +14158,41 @@
       "vendor_id": "surfshark"
     },
     {
+      "_openva_path": "data/vendors/surfshark/candidate_sources/surfshark-security-page-b4da8ace1b28.yaml",
+      "candidate_source_id": "surfshark-security-page-b4da8ace1b28",
+      "candidate_status": "selected",
+      "candidate_url": "https://surfshark.com/career/cb71ed9d-7ff9-4eb1-a52d-c2c2b8926b0e",
+      "canonical_candidate_url": "https://surfshark.com/career/cb71ed9d-7ff9-4eb1-a52d-c2c2b8926b0e",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:32:06.741910Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://surfshark.com/career/cb71ed9d-7ff9-4eb1-a52d-c2c2b8926b0e",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Senior .NET Software Engineer - Surfshark",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:da717ecf4941f398e8ca850b69ac4a1ba45a29efd21c31b7c5960797c67e132b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://surfshark.com/career/cb71ed9d-7ff9-4eb1-a52d-c2c2b8926b0e",
+      "requested_url": "https://surfshark.com/career/cb71ed9d-7ff9-4eb1-a52d-c2c2b8926b0e",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:32:06.741910Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "surfshark"
+    },
+    {
       "_openva_path": "data/vendors/surfshark/candidate_sources/surfshark-security-page-b5082b3d98b2.yaml",
       "candidate_source_id": "surfshark-security-page-b5082b3d98b2",
       "candidate_status": "selected",
@@ -17457,6 +17492,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:18:02.607301Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "surfshark"
+    },
+    {
+      "_openva_path": "data/vendors/surfshark/candidate_sources/surfshark-security-page-febf63d17ea8.yaml",
+      "candidate_source_id": "surfshark-security-page-febf63d17ea8",
+      "candidate_status": "selected",
+      "candidate_url": "https://surfshark.com/career/0a02f687-e6c3-4679-b71b-7219393f7aad",
+      "canonical_candidate_url": "https://surfshark.com/career/0a02f687-e6c3-4679-b71b-7219393f7aad",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:32:06.741910Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://surfshark.com/career/0a02f687-e6c3-4679-b71b-7219393f7aad",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "PR Manager - Surfshark",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:25ddc6e5ff361982d41a7c4b3eb40fc446657ddeca279598043684d336ea41d1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://surfshark.com/career/0a02f687-e6c3-4679-b71b-7219393f7aad",
+      "requested_url": "https://surfshark.com/career/0a02f687-e6c3-4679-b71b-7219393f7aad",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:32:06.741910Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "surfshark"
@@ -21091,7 +21161,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 594,
+    "candidate_source_count": 596,
     "candidate_source_types": [
       "compliance_page",
       "dpa",

@@ -3917,6 +3917,41 @@
       "vendor_id": "neon"
     },
     {
+      "_openva_path": "data/vendors/neon/candidate_sources/neon-security-page-d46cf83f644f.yaml",
+      "candidate_source_id": "neon-security-page-d46cf83f644f",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=9d9c6a4d-f335-4a92-ad43-ab4aae24bf0e&source=click",
+      "canonical_candidate_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=9d9c6a4d-f335-4a92-ad43-ab4aae24bf0e&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:31:19.976859Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=9d9c6a4d-f335-4a92-ad43-ab4aae24bf0e&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Neon Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6374f76a061a8c1a210b440da812c643708434fb3399396e7c1d44ac25ed949d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=9d9c6a4d-f335-4a92-ad43-ab4aae24bf0e&source=click",
+      "requested_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=9d9c6a4d-f335-4a92-ad43-ab4aae24bf0e&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:31:19.976859Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "neon"
+    },
+    {
       "_openva_path": "data/vendors/neon/candidate_sources/neon-security-page-d74eb8d5c467.yaml",
       "candidate_source_id": "neon-security-page-d74eb8d5c467",
       "candidate_status": "selected",
@@ -4882,7 +4917,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 8,
-    "candidate_source_count": 122,
+    "candidate_source_count": 123,
     "candidate_source_types": [
       "security_page"
     ],
