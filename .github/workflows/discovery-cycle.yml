@@ -217,6 +217,9 @@ jobs:
         if: steps.workset.outputs.candidate_count != '0'
         run: |
           set -euo pipefail
+          # CatalogQueueIngress uses this file only as an execution lock. It must
+          # never be part of the durable, path-confined candidate intake.
+          rm -f maintenance/candidates/.lock
           git add maintenance/candidates 2>/dev/null || true
           git diff --cached --name-only > "$RUNNER_TEMP/discovery-cycle-changed.txt"
           if [ ! -s "$RUNNER_TEMP/discovery-cycle-changed.txt" ]; then
