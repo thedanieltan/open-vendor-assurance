@@ -63,8 +63,9 @@ RULES = (
     PatternRule(
         "model_session_reference",
         re.compile(
-            r"(?i)\b(?:chatgpt|claude|codex|copilot|gemini|qwen)\s+"
+            r"(?i)\b(?:chatgpt|claude|codex|gemini|qwen)\s+"
             r"(?:chat|conversation|prompt|session|transcript)\b"
+            r"|\bcopilot\s+(?:conversation|prompt|session|transcript)\b"
         ),
     ),
     PatternRule(
