@@ -1120,6 +1120,41 @@
       "vendor_id": "upguard"
     },
     {
+      "_openva_path": "data/vendors/upguard/candidate_sources/upguard-security-page-318f4d6769b7.yaml",
+      "candidate_source_id": "upguard-security-page-318f4d6769b7",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.upguard.com/tools/dark-web-scan",
+      "canonical_candidate_url": "https://www.upguard.com/tools/dark-web-scan",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:14:15.325769Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html",
+        "final_url": "https://www.upguard.com/tools/dark-web-scan",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Free Dark Web Scan: See If Your Company Is Exposed | UpGuard",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:39cfb6278a0d27056f60e38f6b04164a335b4cb4a026869bc568bf46cfbe9ee8",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.upguard.com/tools/dark-web-scan",
+      "requested_url": "https://www.upguard.com/tools/dark-web-scan",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:14:15.325769Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "upguard"
+    },
+    {
       "_openva_path": "data/vendors/upguard/candidate_sources/upguard-security-page-3385325c4202.yaml",
       "candidate_source_id": "upguard-security-page-3385325c4202",
       "candidate_status": "selected",
@@ -4796,7 +4831,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 134,
+    "candidate_source_count": 135,
     "candidate_source_types": [
       "privacy_notice",
       "security_page",

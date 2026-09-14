@@ -17738,6 +17738,42 @@
       "vendor_id": "atlassian"
     },
     {
+      "_openva_path": "data/vendors/atlassian/candidate_sources/atlassian-trust-center-be7312f5d6ce.yaml",
+      "candidate_source_id": "atlassian-trust-center-be7312f5d6ce",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.atlassian.com/it/software/rovo-dev",
+      "canonical_candidate_url": "https://www.atlassian.com/it/software/rovo-dev",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:41:20.000434Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html;charset=UTF-8",
+        "final_url": "https://www.atlassian.com/it/software/rovo-dev",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "privacy"
+        ],
+        "page_title": "Rovo Dev | IA basata sugli agenti per team di software | Atlassian",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:ddae4b7638506a577f329138d89a888bfddfe894fe87b3cdbed57d990fd66178",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.atlassian.com/it/software/rovo-dev",
+      "requested_url": "https://www.atlassian.com/it/software/rovo-dev",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:41:20.000434Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "atlassian"
+    },
+    {
       "_openva_path": "data/vendors/atlassian/candidate_sources/atlassian-trust-center-bfe1ccf0e59b.yaml",
       "candidate_source_id": "atlassian-trust-center-bfe1ccf0e59b",
       "candidate_status": "selected",
@@ -24708,7 +24744,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 685,
+    "candidate_source_count": 686,
     "candidate_source_types": [
       "certification_reference",
       "trust_center"

@@ -12603,6 +12603,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-0012142ccf8d.yaml",
+      "candidate_source_id": "gitlab-security-page-0012142ccf8d",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253292",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253292",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253292",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "incident"
+        ],
+        "page_title": "Backport of &quot;Stop logging GraphQL type conflict deprecation warnings&quot; (!253292) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b26c41c94ac0198710a82eff923dabce25cfd281611cceb5c5eea4d4eaca91fd",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253292",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253292",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-003cbaad4412.yaml",
       "candidate_source_id": "gitlab-security-page-003cbaad4412",
       "candidate_status": "selected",
@@ -12810,6 +12845,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-01dd776c8d94.yaml",
+      "candidate_source_id": "gitlab-security-page-01dd776c8d94",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d9cdeb36-7f27-4904-962f-d39c6d32384a&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d9cdeb36-7f27-4904-962f-d39c6d32384a&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d9cdeb36-7f27-4904-962f-d39c6d32384a&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5c89d9bab07d2fc87b972085a560f1c0578420d81e619b3c95bd4aab7d55a203",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d9cdeb36-7f27-4904-962f-d39c6d32384a&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d9cdeb36-7f27-4904-962f-d39c6d32384a&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -14267,6 +14337,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-10af96fc2148.yaml",
+      "candidate_source_id": "gitlab-security-page-10af96fc2148",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253326",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253326",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253326",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "vulnerability"
+        ],
+        "page_title": "Bump websocket-driver from 0.8.0 to 0.8.2 (backport to 19-3-stable-ee) (!253326) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0d19cbfdc19c7e127fa56883b2a5879997295ea7dc1f31ac35accac763e7d535",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253326",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253326",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-111cc83893c3.yaml",
       "candidate_source_id": "gitlab-security-page-111cc83893c3",
       "candidate_status": "selected",
@@ -15221,6 +15326,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-1bd3f98c0565.yaml",
+      "candidate_source_id": "gitlab-security-page-1bd3f98c0565",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=45220873-6e51-4dbb-b1b1-37d66ee9ef95&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=45220873-6e51-4dbb-b1b1-37d66ee9ef95&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=45220873-6e51-4dbb-b1b1-37d66ee9ef95&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:89f2b3365d1ca977774b4a7f71b79553c379a52d69c43574a0d5a3a30cd3601a",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=45220873-6e51-4dbb-b1b1-37d66ee9ef95&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=45220873-6e51-4dbb-b1b1-37d66ee9ef95&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -16604,6 +16744,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-28ed3a48d9d6.yaml",
+      "candidate_source_id": "gitlab-security-page-28ed3a48d9d6",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability"
+        ],
+        "page_title": "Backport &#39;Stop resetting mcp_server_enabled when Duo settings change&#39; to 19-3-stable-ee (!253690) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:174c5f9f71b247c240a41758cd9d3de58f497ac5066b32b25f40dea388c6e74d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-28f7d7b4ace3.yaml",
       "candidate_source_id": "gitlab-security-page-28f7d7b4ace3",
       "candidate_status": "selected",
@@ -17097,6 +17272,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-2d45b55bc6af.yaml",
+      "candidate_source_id": "gitlab-security-page-2d45b55bc6af",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=2116be92-6557-4c2a-9b40-1a393d20e1b9&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=2116be92-6557-4c2a-9b40-1a393d20e1b9&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=2116be92-6557-4c2a-9b40-1a393d20e1b9&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:03300b232c76d91521e7a5ec933a6cfbf8e4d89ff7489e1df53b7f5b707a6135",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=2116be92-6557-4c2a-9b40-1a393d20e1b9&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=2116be92-6557-4c2a-9b40-1a393d20e1b9&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-2d90c01be605.yaml",
       "candidate_source_id": "gitlab-security-page-2d90c01be605",
       "candidate_status": "selected",
@@ -17411,6 +17621,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-09T09:00:28.380174Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-3164f64e7d8a.yaml",
+      "candidate_source_id": "gitlab-security-page-3164f64e7d8a",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability"
+        ],
+        "page_title": "&#39;Stop resetting mcp_server_enabled when Duo settings change&#39; to 19-2-stable-ee (!253691) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:1d821b7858489acf006da4124b56fddffa49c85fbb88feb983e22e3d22c732f5",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -17979,6 +18224,76 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-35d0c9dcca23.yaml",
+      "candidate_source_id": "gitlab-security-page-35d0c9dcca23",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d419832d-aad8-4b0f-a269-22ba6751e4cc&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d419832d-aad8-4b0f-a269-22ba6751e4cc&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d419832d-aad8-4b0f-a269-22ba6751e4cc&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:18b989806a6f4f990398a014888305403293848dcc4641634fccdfe7af37d105",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d419832d-aad8-4b0f-a269-22ba6751e4cc&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=d419832d-aad8-4b0f-a269-22ba6751e4cc&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-3648f18c2684.yaml",
+      "candidate_source_id": "gitlab-security-page-3648f18c2684",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=overview&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=overview&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=overview&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2efb72870496d4f96327cf79565a9268b57789691fc75199343254d063b166a1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=overview&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=overview&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-364b9541a058.yaml",
       "candidate_source_id": "gitlab-security-page-364b9541a058",
       "candidate_status": "selected",
@@ -18360,6 +18675,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-388ae1ca0ef6.yaml",
+      "candidate_source_id": "gitlab-security-page-388ae1ca0ef6",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:27e78dc66bad92b8744f4c42683a8980426095222b0ce5ec892aa6c4a8c9916c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -19494,6 +19844,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-443212b4d154.yaml",
+      "candidate_source_id": "gitlab-security-page-443212b4d154",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0c1fdf36-c946-4670-9354-8fa3e4260ab1&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0c1fdf36-c946-4670-9354-8fa3e4260ab1&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0c1fdf36-c946-4670-9354-8fa3e4260ab1&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:a9ca7e83afd2f37b9d5293bf2fc9bd0efd4cbabc1bb735fa98385906374566f7",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0c1fdf36-c946-4670-9354-8fa3e4260ab1&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0c1fdf36-c946-4670-9354-8fa3e4260ab1&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-447d3053f003.yaml",
       "candidate_source_id": "gitlab-security-page-447d3053f003",
       "candidate_status": "selected",
@@ -19525,6 +19910,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-448743f7866f.yaml",
+      "candidate_source_id": "gitlab-security-page-448743f7866f",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=722b9671-c0d5-4a19-a5f7-0ad8fd81307c&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=722b9671-c0d5-4a19-a5f7-0ad8fd81307c&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=722b9671-c0d5-4a19-a5f7-0ad8fd81307c&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:41d1315a1a3d0264dd3f4dc60e6ae74d863bf3c5991bc769df7f38a0557578af",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=722b9671-c0d5-4a19-a5f7-0ad8fd81307c&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=722b9671-c0d5-4a19-a5f7-0ad8fd81307c&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -24134,6 +24554,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-6f8c51e4800b.yaml",
+      "candidate_source_id": "gitlab-security-page-6f8c51e4800b",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=certifications&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=certifications&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=certifications&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5bc305c9c3af761f2a2110334a086979a364d4e2614b4acdc180ab8a0f393e9a",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=certifications&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=certifications&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-6fd14d69336f.yaml",
       "candidate_source_id": "gitlab-security-page-6fd14d69336f",
       "candidate_status": "selected",
@@ -25761,6 +26216,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-833b5945e32b.yaml",
+      "candidate_source_id": "gitlab-security-page-833b5945e32b",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b83d283160da9bea7c9680ae6c312431e365abceac0d6bb752b00fcd208ad95e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-83752aceaf72.yaml",
       "candidate_source_id": "gitlab-security-page-83752aceaf72",
       "candidate_status": "selected",
@@ -27212,6 +27702,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-9450bfa2ca3c.yaml",
+      "candidate_source_id": "gitlab-security-page-9450bfa2ca3c",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "vulnerability"
+        ],
+        "page_title": "Bump websocket-driver from 0.8.0 to 0.8.2 (backport to 19-1-stable-ee) (!253328) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:047fb3f4829541a5196d38b09795833eea7ca1affe6d30c47fe47ed89585de44",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -31022,6 +31547,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-b4eab930d3cc.yaml",
+      "candidate_source_id": "gitlab-security-page-b4eab930d3cc",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0938bfab4fa27ee311e47d54adabaf34a96fea4b265215953413213abec4b336",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-b6638860c0b1.yaml",
       "candidate_source_id": "gitlab-security-page-b6638860c0b1",
       "candidate_status": "selected",
@@ -31726,6 +32286,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-bc57d3afdaac.yaml",
+      "candidate_source_id": "gitlab-security-page-bc57d3afdaac",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=documents&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=documents&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=documents&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:4942ae4d4cdabec441a74281719c89f688fb4784951e9dac14e60f0e4b3c8266",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=documents&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=documents&itemUid=38b62117-19f2-4e4e-b679-9421b66c114e&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-bc8082cbdd51.yaml",
       "candidate_source_id": "gitlab-security-page-bc8082cbdd51",
       "candidate_status": "selected",
@@ -31793,6 +32388,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-10T08:22:48.651921Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-bcfb17929639.yaml",
+      "candidate_source_id": "gitlab-security-page-bcfb17929639",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=1fed9faa-4a87-427c-9a95-96b4d6bf66b7&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=1fed9faa-4a87-427c-9a95-96b4d6bf66b7&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=1fed9faa-4a87-427c-9a95-96b4d6bf66b7&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5343ff5b82d35302bf2d6e17f2137f7c5d855351829308cc7b72d6f4e5730a33",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=1fed9faa-4a87-427c-9a95-96b4d6bf66b7&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=1fed9faa-4a87-427c-9a95-96b4d6bf66b7&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -31900,6 +32530,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-bde682c01899.yaml",
+      "candidate_source_id": "gitlab-security-page-bde682c01899",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:a94ea915a08469401586cca600bb09e0d4aad2eedf77c8e28b12abc076b455f9",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -32287,6 +32952,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-13T08:31:34.778024Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-c25d1dab511e.yaml",
+      "candidate_source_id": "gitlab-security-page-c25d1dab511e",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=14594ab4-5ef0-41fb-a53c-aa408ff72971&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=14594ab4-5ef0-41fb-a53c-aa408ff72971&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=14594ab4-5ef0-41fb-a53c-aa408ff72971&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2526d8dc6c23b25e357b0edb46082181c8e386a470ff6ba0583079384d917651",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=14594ab4-5ef0-41fb-a53c-aa408ff72971&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=14594ab4-5ef0-41fb-a53c-aa408ff72971&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -36559,6 +37259,41 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-f6045f6dda85.yaml",
+      "candidate_source_id": "gitlab-security-page-f6045f6dda85",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=5273da2c-c64f-4c47-8300-3cc9d4fae77d&source=click",
+      "canonical_candidate_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=5273da2c-c64f-4c47-8300-3cc9d4fae77d&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=5273da2c-c64f-4c47-8300-3cc9d4fae77d&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "GitLab Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:49012440af2108a5c64f5ce38c9fbf9f5d5fbc423edcbea1641e10177480252e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=5273da2c-c64f-4c47-8300-3cc9d4fae77d&source=click",
+      "requested_url": "https://trust.gitlab.com/?itemName=physical_environmental&itemUid=5273da2c-c64f-4c47-8300-3cc9d4fae77d&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-f6b0a51f476f.yaml",
       "candidate_source_id": "gitlab-security-page-f6b0a51f476f",
       "candidate_status": "selected",
@@ -36945,6 +37680,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "gitlab"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/candidate_sources/gitlab-security-page-fc36964395bb.yaml",
+      "candidate_source_id": "gitlab-security-page-fc36964395bb",
+      "candidate_status": "selected",
+      "candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253327",
+      "canonical_candidate_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253327",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:58.564718Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253327",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "vulnerability"
+        ],
+        "page_title": "Bump websocket-driver from 0.8.0 to 0.8.2 (backport to 19-2-stable-ee) (!253327) · Merge requests · GitLab.org / GitLab · GitLab",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c0133ac1c2ef18c4a36d36b8ad4fe616037261a0249663e4433c6fc68bba6925",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253327",
+      "requested_url": "https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253327",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:58.564718Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "gitlab"
@@ -37591,7 +38361,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 6,
-    "candidate_source_count": 1050,
+    "candidate_source_count": 1072,
     "candidate_source_types": [
       "compliance_page",
       "security_page"

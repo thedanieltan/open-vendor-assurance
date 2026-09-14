@@ -1255,6 +1255,41 @@
       "vendor_id": "relex-solutions"
     },
     {
+      "_openva_path": "data/vendors/relex-solutions/candidate_sources/relex-solutions-compliance-page-445c8f8dfdfa.yaml",
+      "candidate_source_id": "relex-solutions-compliance-page-445c8f8dfdfa",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.relexsolutions.com/news/philippine-seven-corporation-selects-relex-to-improve-forecasting",
+      "canonical_candidate_url": "https://www.relexsolutions.com/news/philippine-seven-corporation-selects-relex-to-improve-forecasting/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:49.402100Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.relexsolutions.com/news/philippine-seven-corporation-selects-relex-to-improve-forecasting/",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "trust"
+        ],
+        "page_title": "Philippine Seven Corporation Selects RELEX to Improve Forecasting | RELEX Solutions",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e100f59f4a7f268e2ad9b1d050b9e573882b19a14639b1c2e7ecc3159c869485",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.relexsolutions.com/news/philippine-seven-corporation-selects-relex-to-improve-forecasting/",
+      "requested_url": "https://www.relexsolutions.com/news/philippine-seven-corporation-selects-relex-to-improve-forecasting",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:49.402100Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "relex-solutions"
+    },
+    {
       "_openva_path": "data/vendors/relex-solutions/candidate_sources/relex-solutions-compliance-page-453ed80196d9.yaml",
       "candidate_source_id": "relex-solutions-compliance-page-453ed80196d9",
       "candidate_status": "selected",
@@ -5176,7 +5211,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 140,
+    "candidate_source_count": 141,
     "candidate_source_types": [
       "ai_terms",
       "compliance_page",

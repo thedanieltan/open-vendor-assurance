@@ -199,6 +199,42 @@
   ],
   "candidate_sources": [
     {
+      "_openva_path": "data/vendors/cyberark/candidate_sources/cyberark-security-page-31143d6c1798.yaml",
+      "candidate_source_id": "cyberark-security-page-31143d6c1798",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=ebb9d0ce-15da-4d04-aadc-fe1cd5b827c6&query=SHOW+DATABASES&source=click",
+      "canonical_candidate_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=ebb9d0ce-15da-4d04-aadc-fe1cd5b827c6&query=SHOW+DATABASES&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:29:28.513488Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=ebb9d0ce-15da-4d04-aadc-fe1cd5b827c6&query=SHOW+DATABASES&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "availability",
+          "trust"
+        ],
+        "page_title": "CyberArk CyberArk Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:3b567d0af2fa0fe1334cd658bbc1f6e2e53b76a8f9d3809137e2880534cf668c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=ebb9d0ce-15da-4d04-aadc-fe1cd5b827c6&query=SHOW+DATABASES&source=click",
+      "requested_url": "https://trust.cyberark.com/?itemName=certifications&itemUid=ebb9d0ce-15da-4d04-aadc-fe1cd5b827c6&query=SHOW+DATABASES&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:29:28.513488Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "cyberark"
+    },
+    {
       "_openva_path": "data/vendors/cyberark/candidate_sources/cyberark-security-page-33e76598bf00.yaml",
       "candidate_source_id": "cyberark-security-page-33e76598bf00",
       "candidate_status": "selected",
@@ -594,7 +630,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 6,
-    "candidate_source_count": 4,
+    "candidate_source_count": 5,
     "candidate_source_types": [
       "security_page"
     ],

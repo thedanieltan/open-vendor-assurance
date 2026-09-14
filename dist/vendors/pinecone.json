@@ -635,6 +635,44 @@
       "vendor_id": "pinecone"
     },
     {
+      "_openva_path": "data/vendors/pinecone/candidate_sources/pinecone-trust-center-395cdde5b6a5.yaml",
+      "candidate_source_id": "pinecone-trust-center-395cdde5b6a5",
+      "candidate_status": "selected",
+      "candidate_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=certifications&itemUid=e43710df-7d7a-44f1-bf28-ff97e73c8cec&source=click",
+      "canonical_candidate_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=certifications&itemUid=e43710df-7d7a-44f1-bf28-ff97e73c8cec&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:50.413637Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=certifications&itemUid=e43710df-7d7a-44f1-bf28-ff97e73c8cec&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Pinecone Trust and Security Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:955290fd55369766b0a984218dbdb1943bf26fa7e4f14fbd421fee129d6769a3",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=certifications&itemUid=e43710df-7d7a-44f1-bf28-ff97e73c8cec&source=click",
+      "requested_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=certifications&itemUid=e43710df-7d7a-44f1-bf28-ff97e73c8cec&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:50.413637Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "pinecone"
+    },
+    {
       "_openva_path": "data/vendors/pinecone/candidate_sources/pinecone-trust-center-3cf76b3c0f8f.yaml",
       "candidate_source_id": "pinecone-trust-center-3cf76b3c0f8f",
       "candidate_status": "selected",
@@ -966,6 +1004,44 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T09:07:16.036459Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "pinecone"
+    },
+    {
+      "_openva_path": "data/vendors/pinecone/candidate_sources/pinecone-trust-center-64b473ce2e0a.yaml",
+      "candidate_source_id": "pinecone-trust-center-64b473ce2e0a",
+      "candidate_status": "selected",
+      "candidate_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=endpoint_security&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "canonical_candidate_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=endpoint_security&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:13:50.413637Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=endpoint_security&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Pinecone Trust and Security Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:ed089c35153f7240523f55334b54e08d9a11241b5a93818f04088adb3c9b8d47",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=endpoint_security&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requested_url": "https://security.pinecone.io/?SPX_KEY=stg&SPX_UI_URI=%2F&itemName=endpoint_security&itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:13:50.413637Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "pinecone"
@@ -1738,7 +1814,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 39,
+    "candidate_source_count": 41,
     "candidate_source_types": [
       "trust_center"
     ],
