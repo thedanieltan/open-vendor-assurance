@@ -1,0 +1,32 @@
+candidate_source_id: hitpay-security-page-1b13745571c3
+candidate_status: selected
+candidate_url: https://docs.hitpayapp.com/apis/guide/claude-code-plugin
+canonical_candidate_url: https://docs.hitpayapp.com/apis/guide/claude-code-plugin
+confidence: likely
+discovered_at: '2026-09-14T10:10:47.038078Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.hitpayapp.com/apis/guide/claude-code-plugin
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: HitPay Product Guide and API docs.
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:58c30195accf193261bb5a8c9b668b9cf71ded4c86787de5ad521842773ddb72
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.hitpayapp.com/apis/guide/claude-code-plugin
+requested_url: https://docs.hitpayapp.com/apis/guide/claude-code-plugin
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T10:10:47.038078Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: hitpay
