@@ -221,7 +221,7 @@ jobs:
           --head-ref "$OPENVA_HEAD_REF"
       - name: Determine scope-policy operational freshness exclusion
         id: scope_policy_freshness
-        if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
+        if: github.event_name == 'pull_request'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}

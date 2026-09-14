@@ -675,6 +675,7 @@ work_packages:
       - .github/workflows/discovery-mesh.yml
       - .github/workflows/discovery-mesh-intake-recovery.yml
       - .github/workflows/discovery-mesh-intake-recovery-request.yml
+      - .github/workflows/discovery-cycle.yml
       - .github/workflows/catalog-growth-discovery.yml
       - .github/workflows/catalog-growth-promotion-bridge.yml
       - .github/workflows/candidate-promotion-pr.yml
@@ -695,6 +696,8 @@ work_packages:
       - tools/openva/discovery_mesh_config.py
       - tools/openva/discovery_mesh_runner.py
       - tools/openva/discovery_mesh_intake.py
+      - tools/openva/discovery_cycle.py
+      - tools/openva/discovery_cycle_ingress.py
       - tools/openva/rendered_discovery_runner.py
       - tools/openva/vendor_breadth_replenishment.py
       - tools/openva/vendor_candidate_discovery.py
@@ -707,6 +710,7 @@ work_packages:
       - tools/openva/discovery_run_bundle.py
       - tools/openva/discovery_work_scheduler.py
       - tests/test_discovery_mesh*.py
+      - tests/test_discovery_cycle_workflow.py
       - tests/test_vendor_candidate*.py
       - tests/test_source_discovery.py
       - tests/test_catalog_growth*.py
