@@ -9,7 +9,9 @@ work_packages:
       - docs/operations/contracts/work-package-scope.yaml
       - docs/operations/pr-scope-guard.md
       - tools/openva/pr_scope_guard.py
+      - tools/openva/repository_hygiene.py
       - tests/test_pr_scope_guard.py
+      - tests/test_repository_hygiene.py
       - tests/test_workflow_workspace_ci.py
       - tests/test_operational_pr_scope.py
       - tests/test_sitemap_discovery_integration.py
