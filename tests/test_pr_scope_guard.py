@@ -510,6 +510,7 @@ def test_validate_workflow_keeps_path_aware_release_gate_and_policy_exemption():
     assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in release_condition
 
     probe = by_name["Determine scope-policy operational freshness exclusion"]["run"]
+    assert by_name["Determine scope-policy operational freshness exclusion"]["if"] == "github.event_name == 'pull_request'"
     assert "python -m tools.openva.pr_scope_guard --declaration-file" in probe
     assert 'found == ["WP-PR-SCOPE-POLICY-01"]' in probe
     assert "set(changed) <= exclusive" in probe
