@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-3164f64e7d8a
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691
+confidence: likely
+discovered_at: '2026-09-14T09:13:58.564718Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: '&#39;Stop resetting mcp_server_enabled when Duo settings change&#39;
+    to 19-2-stable-ee (!253691) · Merge requests · GitLab.org / GitLab · GitLab'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1d821b7858489acf006da4124b56fddffa49c85fbb88feb983e22e3d22c732f5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253691
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:13:58.564718Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

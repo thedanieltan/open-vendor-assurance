@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-9450bfa2ca3c
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328
+confidence: likely
+discovered_at: '2026-09-14T09:13:58.564718Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Bump websocket-driver from 0.8.0 to 0.8.2 (backport to 19-1-stable-ee)
+    (!253328) · Merge requests · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:047fb3f4829541a5196d38b09795833eea7ca1affe6d30c47fe47ed89585de44
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253328
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:13:58.564718Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

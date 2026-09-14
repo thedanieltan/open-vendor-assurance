@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-28ed3a48d9d6
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690
+confidence: likely
+discovered_at: '2026-09-14T09:13:58.564718Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Backport &#39;Stop resetting mcp_server_enabled when Duo settings change&#39;
+    to 19-3-stable-ee (!253690) · Merge requests · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:174c5f9f71b247c240a41758cd9d3de58f497ac5066b32b25f40dea388c6e74d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/253690
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:13:58.564718Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
