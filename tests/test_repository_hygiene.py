@@ -72,6 +72,11 @@ def test_repository_hygiene_allows_legitimate_catalog_and_agent_language():
     assert scan_text(text, location="fixture") == []
 
 
+def test_repository_hygiene_allows_public_microsoft_copilot_chat_product_titles():
+    text = "Microsoft 365 Copilot Chat Protection - Quick Start Guide"
+    assert scan_text(text, location="fixture") == []
+
+
 def test_repository_hygiene_rejects_tool_branded_working_branch_names():
     assert branch_name_violations("codex/repository-cleanup")
     assert branch_name_violations("refs/heads/claude/catalog-fix")
