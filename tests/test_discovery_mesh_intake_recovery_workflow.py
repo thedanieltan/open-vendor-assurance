@@ -53,6 +53,17 @@ def test_generated_transactions_use_existing_operational_scope() -> None:
     assert '"title": "Ops: stage discovery mesh candidates"' not in text
 
 
+def test_candidate_write_validation_precedes_bounded_generated_exports() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+    guard = text.index('raise SystemExit("out-of-scope intake paths:')
+    build = text.index("python -m tools.openva.validate build-indexes")
+    stage = text.index("git add -A -- indexes dist/vendors openva-pack.json")
+    generated_guard = text.index('raise SystemExit("out-of-scope generated intake paths:')
+    commit = text.index('git commit -m "$COMMIT_MESSAGE"')
+    assert guard < build < stage < generated_guard < commit
+    assert "intake_generated_paths(partition)" in text
+
+
 def test_recovery_filters_only_exact_plan_referenced_candidates() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 

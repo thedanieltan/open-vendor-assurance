@@ -76,6 +76,13 @@ The recovery workflow writes only:
 - noncanonical candidate-source records;
 - partition-specific reviewed promotion plans;
 - stable noncanonical vendor-breadth projections.
+- generated candidate-source indexes and manifests for the partition's vendors,
+  rebuilt exclusively by `python -m tools.openva.validate build-indexes` after
+  validating the exact candidate/plan write set.
+
+The generated-path guard permits only candidate-dependent indexes and those
+vendor manifests. Drift in unrelated generated surfaces fails closed and must be
+repaired separately; intake cannot absorb unrelated catalog or export changes.
 
 It never writes canonical vendors or sources and does not alter admission, verification, release, quorum, or automerge policy. After a source partition merges, `discovery-mesh.yml` resolves its exact plan and dispatches `candidate-promotion-pr.yml`, which remains the sole canonical source mutation authority.
 

@@ -5,11 +5,27 @@ import pytest
 
 from tools.openva.discovery_mesh_intake import (
     intake_merge_gate,
+    intake_generated_paths,
     materialize_partition,
     partition_records,
     prepare_intake,
     reconcile_candidates,
 )
+
+
+def test_generated_paths_confine_exports_to_partition_candidates():
+    paths = intake_generated_paths({"paths": [
+        "data/vendors/example/candidate_sources/example-privacy.yaml",
+        "maintenance/generated/strict-growth-example.json",
+    ]})
+    assert "indexes/candidate-sources.json" in paths
+    assert "dist/vendors/example.json" in paths
+    assert "dist/vendors/other.json" not in paths
+    assert "indexes/sources.json" not in paths
+    assert len(paths) == 6
+    assert intake_generated_paths({"paths": ["maintenance/generated/vendor-breadth-candidates.json"]}) == set()
+    assert intake_generated_paths({"paths": ["data/vendors/example/sources/privacy.yaml"]}) == set()
+    assert intake_generated_paths({"paths": ["data/vendors/../candidate_sources/x.yaml"]}) == set()
 
 
 def _merge_snapshot():
@@ -24,6 +40,26 @@ def _merge_snapshot():
             for name in ("repository-integrity", "pr-scope-guard", "weighted-review")
         ],
     }
+
+
+def test_candidate_regeneration_changes_only_declared_derived_surfaces(tmp_path, monkeypatch):
+    from tools.openva import indexes
+
+    records = {kind: [] for kind in indexes.RECORD_GLOBS}
+    records["vendor"] = [{"vendor_id": "example", "display_name": "Example"}]
+    monkeypatch.setattr(indexes, "ROOT", tmp_path)
+    monkeypatch.setattr(indexes, "records_for", lambda kind: records[kind])
+    indexes.build_indexes()
+    before = {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
+    records["candidate_source"] = [_candidate("example", 1)]
+    indexes.build_indexes()
+    after = {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
+    changed = {path for path in before.keys() | after.keys() if before.get(path) != after.get(path)}
+    allowed = intake_generated_paths({"paths": ["data/vendors/example/candidate_sources/example-privacy-0001.yaml"]})
+    assert {"indexes/candidate-sources.json", "indexes/summary.json", "dist/vendors/example.json"} <= changed
+    assert changed <= allowed
+    indexes.build_indexes()
+    assert after == {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
 
 
 def test_merge_gate_requires_verified_head_and_complete_success():

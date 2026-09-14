@@ -290,6 +290,24 @@ jobs:
                   if "/candidate_sources/" in path and not Path(path).is_file():
                       raise SystemExit(f"partition candidate missing from worktree: {path}")
           PY
+            # Validate the exact candidate/plan write set before producing any
+            # derived exports. Keep generation separate from intake authority.
+            python -m tools.openva.validate build-indexes
+            git add -A -- indexes dist/vendors openva-pack.json
+            git diff --cached --name-only > "$CHANGED"
+            python - "$PARTITION_FILE" "$CHANGED" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          from tools.openva.discovery_mesh_intake import intake_generated_paths
+
+          partition = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          changed = set(Path(sys.argv[2]).read_text(encoding="utf-8").splitlines())
+          allowed = set(partition.get("paths", [])) | intake_generated_paths(partition)
+          invalid = sorted(changed - allowed)
+          if invalid:
+              raise SystemExit("out-of-scope generated intake paths: " + ", ".join(invalid))
+          PY
             COMMIT_MESSAGE="$EXPECTED_COMMIT"
             git commit -m "$COMMIT_MESSAGE"
             git push -u origin "$BRANCH"

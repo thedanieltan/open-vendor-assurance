@@ -37,6 +37,25 @@ BREADTH_PATHS = (
 )
 
 
+def intake_generated_paths(partition: dict[str, Any]) -> set[str]:
+    """Derived surfaces affected by this partition's candidate records only."""
+    vendors = {
+        match.group("vendor_id")
+        for path in partition.get("paths", [])
+        if (match := CANDIDATE_PATH_RE.fullmatch(str(path)))
+    }
+    if not vendors:
+        return set()
+    return {
+        "indexes/candidate-sources.json",
+        "indexes/vendor-search.json",
+        "indexes/source-coverage.json",
+        "indexes/vendor-match-index.json",
+        "indexes/summary.json",
+        *(f"dist/vendors/{vendor}.json" for vendor in vendors),
+    }
+
+
 def intake_merge_gate(snapshot: dict[str, Any], expected_head: str) -> int:
     """Return 0 for verified checks, 2 while pending, and 1 for a denial.
 
