@@ -1,0 +1,33 @@
+candidate_source_id: salesforce-trust-center-86abc3080753
+candidate_status: selected
+candidate_url: https://compliance.salesforce.com/en/user/login?redirectUrl=%2Fen%2Fuser%2Flogin
+canonical_candidate_url: https://compliance.salesforce.com/en/user/login?redirectUrl=%2Fen%2Fuser%2Flogin
+confidence: likely
+discovered_at: '2026-09-14T09:13:59.136469Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://compliance.salesforce.com/en/user/login?redirectUrl=%2Fen%2Fuser%2Flogin
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Login - Salesforce Compliance Site
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d3ffd352b12c2d4152137ec0e98ab0fb3268058e87eaa485fb9162cf1fa02e29
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://compliance.salesforce.com/en/user/login?redirectUrl=%2Fen%2Fuser%2Flogin
+requested_url: https://compliance.salesforce.com/en/user/login?redirectUrl=%2Fen%2Fuser%2Flogin
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:13:59.136469Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce
