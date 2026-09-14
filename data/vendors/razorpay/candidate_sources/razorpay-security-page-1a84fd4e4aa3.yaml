@@ -1,0 +1,32 @@
+candidate_source_id: razorpay-security-page-1a84fd4e4aa3
+candidate_status: selected
+candidate_url: https://razorpay.com/flashcheckout
+canonical_candidate_url: https://razorpay.com/flashcheckout/
+confidence: likely
+discovered_at: '2026-09-14T10:10:47.038078Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://razorpay.com/flashcheckout/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Payment Gateway, Payment Links and other Payment solutions
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cf67eccee5e217f472b5b2de04ca36b8c5bbed5a5a53b4d824d01971626cd09a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://razorpay.com/flashcheckout/
+requested_url: https://razorpay.com/flashcheckout
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T10:10:47.038078Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: razorpay

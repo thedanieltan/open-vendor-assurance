@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-1c8bc9e9c8d0
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148024
+canonical_candidate_url: https://access.redhat.com/solutions/7148024
+confidence: likely
+discovered_at: '2026-09-14T09:13:58.564718Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148024
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: otel-exporter pods in the namespace &quot;openshift-azure-logging&quot;
+    are in CrashLoopBackOff in ARO - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1b1878f99f20d10343f3d0204f604758dc8271c7992c81663b2d1ffa31b3c5e2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148024
+requested_url: https://access.redhat.com/solutions/7148024
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:13:58.564718Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
