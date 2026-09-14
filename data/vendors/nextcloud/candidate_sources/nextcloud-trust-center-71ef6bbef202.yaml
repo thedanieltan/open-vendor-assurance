@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-trust-center-71ef6bbef202
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/files_versions_s3
+canonical_candidate_url: https://apps.nextcloud.com/apps/files_versions_s3
+confidence: likely
+discovered_at: '2026-09-14T09:14:36.414062Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/files_versions_s3
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: S3 Versioning - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:591a1f8e9f1ed40cbef78cb5c9d684bdd88ef2341a9f571fccc7e70e0fd4b854
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/files_versions_s3
+requested_url: https://apps.nextcloud.com/apps/files_versions_s3
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:14:36.414062Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud
