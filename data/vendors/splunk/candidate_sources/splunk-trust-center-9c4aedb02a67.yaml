@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-9c4aedb02a67
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/preconnect-resource-hints.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/preconnect-resource-hints.html
+confidence: likely
+discovered_at: '2026-09-14T09:14:36.414062Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/preconnect-resource-hints.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: What Are Preconnect Resource Hints? | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2eb854690c2064435318fb8baa18ec8db5f7d41a6162dbd5fd87df9d9221278b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/preconnect-resource-hints.html
+requested_url: https://www.splunk.com/en_us/blog/learn/preconnect-resource-hints.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-14T09:14:36.414062Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
