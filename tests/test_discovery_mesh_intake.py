@@ -4,11 +4,78 @@ from pathlib import Path
 import pytest
 
 from tools.openva.discovery_mesh_intake import (
+    intake_merge_gate,
     materialize_partition,
     partition_records,
     prepare_intake,
     reconcile_candidates,
 )
+
+
+def _merge_snapshot():
+    return {
+        "headRefOid": "a" * 40,
+        "state": "OPEN",
+        "isDraft": False,
+        "reviewDecision": "",
+        "mergeable": "MERGEABLE",
+        "statusCheckRollup": [
+            {"__typename": "CheckRun", "name": name, "status": "COMPLETED", "conclusion": "SUCCESS"}
+            for name in ("repository-integrity", "pr-scope-guard", "weighted-review")
+        ],
+    }
+
+
+def test_merge_gate_requires_verified_head_and_complete_success():
+    snapshot = _merge_snapshot()
+    assert intake_merge_gate(snapshot, "a" * 40) == 0
+    assert intake_merge_gate(snapshot, "b" * 40) == 1
+    assert intake_merge_gate(snapshot, "") == 1
+    snapshot["statusCheckRollup"] = []
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+
+
+@pytest.mark.parametrize("field,value", [
+    ("state", "CLOSED"), ("isDraft", True),
+    ("reviewDecision", "REVIEW_REQUIRED"), ("reviewDecision", "CHANGES_REQUESTED"),
+])
+def test_merge_gate_denies_unreviewed_or_closed_snapshot(field, value):
+    snapshot = _merge_snapshot()
+    snapshot[field] = value
+    assert intake_merge_gate(snapshot, "a" * 40) == 1
+
+
+@pytest.mark.parametrize("conclusion", ["FAILURE", "CANCELLED", "TIMED_OUT", "SKIPPED", "NEUTRAL", None])
+def test_merge_gate_never_accepts_unsuccessful_mandatory_check(conclusion):
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"][0]["conclusion"] = conclusion
+    assert intake_merge_gate(snapshot, "a" * 40) == 1
+
+
+def test_merge_gate_waits_for_missing_or_pending_checks():
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"].pop()
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"][0]["status"] = "IN_PROGRESS"
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+    snapshot = _merge_snapshot()
+    snapshot["mergeable"] = "UNKNOWN"
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+
+
+@pytest.mark.parametrize("extra,result", [
+    ({"__typename": "StatusContext", "state": "ERROR"}, 1),
+    ({"__typename": "StatusContext", "state": "PENDING"}, 2),
+    ({"__typename": "StatusContext", "state": "SUCCESS"}, 0),
+    ({"__typename": "Unknown"}, 1),
+    ({"__typename": "CheckRun", "name": "other", "status": "COMPLETED", "conclusion": "FAILURE"}, 1),
+    ({"__typename": "CheckRun", "name": "other", "status": "COMPLETED", "conclusion": "SKIPPED"}, 0),
+])
+def test_merge_gate_checks_every_reported_result(extra, result):
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"].append(extra)
+    assert intake_merge_gate(snapshot, "a" * 40) == result
 
 
 def _candidate(vendor_id: str, index: int, *, payload: str = "x") -> dict:

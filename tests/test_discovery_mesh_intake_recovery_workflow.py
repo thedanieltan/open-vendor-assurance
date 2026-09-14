@@ -33,7 +33,8 @@ def test_recovery_is_replay_safe_and_preserves_promotion_authority() -> None:
 
     assert 'gh pr list --state all --head "$BRANCH"' in text
     assert "workflow-owned branch exists with unexpected commit" in text
-    assert 'gh pr merge "$pr_number" --auto --squash --delete-branch' in text
+    assert 'gh pr merge "$pr_number" --match-head-commit "$expected_head" --squash --delete-branch' in text
+    assert 'gh pr merge "$pr_number" --auto' not in text
     assert text.count('wait_for_mergeable_then_automerge "$PR_NUMBER"') == 2
     assert 'wait_for_mergeable_then_automerge "$EXISTING_PR_NUMBER"' in text
     assert "candidate-promotion-pr.yml" in text
@@ -90,8 +91,11 @@ def test_recovery_waits_for_mergeable_before_enabling_automerge() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "wait_for_mergeable_then_automerge()" in text
-    assert 'gh pr view "$pr_number" --json mergeable --jq .mergeable' in text
-    assert 'if [ "$mergeable" != "UNKNOWN" ]; then' in text
+    assert 'tools.openva.discovery_mesh_intake merge-gate' in text
+    assert '--snapshot "$snapshot" --expected-head "$expected_head"' in text
+    assert 'if [ "$gate_status" -eq 0 ]; then' in text
+    assert 'if [ "$gate_status" -ne 2 ]; then' in text
+    assert 'intake checks did not become ready' in text
     assert 'EXISTING_STATE=$(jq -r \'.[0].state\' <<< "$EXISTING")' in text
 
 

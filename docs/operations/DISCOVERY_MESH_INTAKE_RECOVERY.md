@@ -61,6 +61,14 @@ Stable breadth projections are committed through a separate breadth checkpoint t
 
 Reruns first search for the exact deterministic branch and pull request. Existing pull requests are reused. A workflow-owned orphan branch is resumed only when its commit subject matches the expected source-run and partition identity; otherwise execution fails closed.
 
+Before merging, recovery pins the PR head and waits for successful
+`repository-integrity`, `pr-scope-guard`, and `weighted-review` checks. Every
+other reported check must also finish without failure; skipped optional jobs do
+not count as successful mandatory checks. Missing or pending checks defer the
+merge for a bounded wait. Failed checks, requested changes, required review,
+draft PRs, and changed heads deny it. The merge command binds the expected head
+and retains server-side protections; mergeability alone never authorizes a merge.
+
 ## Authority boundary
 
 The recovery workflow writes only:

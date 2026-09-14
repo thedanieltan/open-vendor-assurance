@@ -171,15 +171,26 @@ jobs:
           : > "$RECEIPT"
           wait_for_mergeable_then_automerge() {
             local pr_number="$1"
-            local attempt mergeable
-            for attempt in $(seq 1 12); do
-              mergeable=$(gh pr view "$pr_number" --json mergeable --jq .mergeable)
-              if [ "$mergeable" != "UNKNOWN" ]; then
-                break
+            local attempt expected_head snapshot gate_status
+            expected_head=$(gh pr view "$pr_number" --json headRefOid --jq .headRefOid) || return 1
+            snapshot="$RUNNER_TEMP/intake-merge-${pr_number}.json"
+            for attempt in $(seq 1 60); do
+              gh pr view "$pr_number" --json headRefOid,state,isDraft,reviewDecision,mergeable,statusCheckRollup > "$snapshot" || return 1
+              gate_status=0
+              python -m tools.openva.discovery_mesh_intake merge-gate \
+                --snapshot "$snapshot" --expected-head "$expected_head" || gate_status=$?
+              if [ "$gate_status" -eq 0 ]; then
+                gh pr merge "$pr_number" --match-head-commit "$expected_head" --squash --delete-branch
+                return $?
               fi
-              sleep 5
+              if [ "$gate_status" -ne 2 ]; then
+                echo "intake merge denied for PR $pr_number" >&2
+                return 1
+              fi
+              sleep 30
             done
-            gh pr merge "$pr_number" --auto --squash --delete-branch
+            echo "intake checks did not become ready for PR $pr_number" >&2
+            return 1
           }
           python - "$MANIFEST" <<'PY' > "$RUNNER_TEMP/discovery-mesh-intake-partitions.txt"
           import base64
@@ -211,7 +222,7 @@ jobs:
               EXISTING_STATE=$(jq -r '.[0].state' <<< "$EXISTING")
               if [ "$EXISTING_STATE" = "OPEN" ]; then
                 EXISTING_PR_NUMBER=$(jq -r '.[0].number' <<< "$EXISTING")
-                wait_for_mergeable_then_automerge "$EXISTING_PR_NUMBER" || true
+                wait_for_mergeable_then_automerge "$EXISTING_PR_NUMBER"
               fi
               jq -nc --arg partition "$PARTITION_ID" --arg branch "$BRANCH" --argjson pr "$(jq '.[0]' <<< "$EXISTING")" \
                 '{partition_id:$partition,branch:$branch,state:"reused",pull_request:$pr}' >> "$RECEIPT"
