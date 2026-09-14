@@ -16,6 +16,16 @@ def test_recovery_is_scoped_to_full_catalog_runs() -> None:
     assert "source_run_id" in text
 
 
+def test_recovery_checks_live_hold_before_writes_and_merge():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert 'check-hold --repository "$GITHUB_REPOSITORY"' in text
+    assert 'while IFS= read -r ENCODED; do\n            require_no_hold' in text
+    assert 'require_no_hold\n            git push -u origin "$BRANCH"' in text
+    assert 'require_no_hold || return 1\n                gh pr merge' in text
+    assert 'require_no_hold\n              PR_URL=$(gh pr create' in text
+    assert 'require_no_hold\n            PR_URL=$(gh pr create' in text
+
+
 def test_recovery_reuses_exact_aggregate_and_partitions_without_total_cap() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 

@@ -169,17 +169,23 @@ jobs:
           git config user.email "openva-discovery-mesh@users.noreply.github.com"
           MANIFEST="$PREPARED_ROOT/manifest.json"
           : > "$RECEIPT"
+          require_no_hold() {
+            python -m tools.openva.discovery_mesh_intake check-hold --repository "$GITHUB_REPOSITORY"
+          }
+          require_no_hold
           wait_for_mergeable_then_automerge() {
             local pr_number="$1"
             local attempt expected_head snapshot gate_status
             expected_head=$(gh pr view "$pr_number" --json headRefOid --jq .headRefOid) || return 1
             snapshot="$RUNNER_TEMP/intake-merge-${pr_number}.json"
             for attempt in $(seq 1 60); do
+              require_no_hold || return 1
               gh pr view "$pr_number" --json headRefOid,state,isDraft,reviewDecision,mergeable,statusCheckRollup > "$snapshot" || return 1
               gate_status=0
               python -m tools.openva.discovery_mesh_intake merge-gate \
                 --snapshot "$snapshot" --expected-head "$expected_head" || gate_status=$?
               if [ "$gate_status" -eq 0 ]; then
+                require_no_hold || return 1
                 gh pr merge "$pr_number" --match-head-commit "$expected_head" --squash --delete-branch
                 return $?
               fi
@@ -204,6 +210,7 @@ jobs:
               print(base64.b64encode(payload).decode("ascii"))
           PY
           while IFS= read -r ENCODED; do
+            require_no_hold
             PARTITION_JSON=$(printf '%s' "$ENCODED" | base64 --decode)
             PARTITION_ID=$(jq -r '.partition_id' <<< "$PARTITION_JSON")
             PARTITION_FILE="$RUNNER_TEMP/discovery-mesh-intake-partition-${PARTITION_ID}.json"
@@ -245,6 +252,7 @@ jobs:
 
           Candidate promotion remains controlled by \`candidate-promotion-pr.yml\`, the sole canonical source mutation authority.
           EOF
+              require_no_hold
               PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
               PR_NUMBER="${PR_URL##*/}"
               wait_for_mergeable_then_automerge "$PR_NUMBER"
@@ -256,6 +264,7 @@ jobs:
             git switch --detach origin/main
             git clean -fdx
             git switch -C "$BRANCH"
+            require_no_hold
             python -m tools.openva.discovery_mesh_intake materialize \
               --manifest "$MANIFEST" \
               --partition-id "$PARTITION_ID" \
@@ -310,6 +319,7 @@ jobs:
           PY
             COMMIT_MESSAGE="$EXPECTED_COMMIT"
             git commit -m "$COMMIT_MESSAGE"
+            require_no_hold
             git push -u origin "$BRANCH"
             BODY="$RUNNER_TEMP/discovery-mesh-intake-${PARTITION_ID}.md"
             cat > "$BODY" <<EOF
@@ -326,6 +336,7 @@ jobs:
 
           The transaction budget partitions repository writes only. It does not truncate catalog growth. Candidate promotion remains controlled by \`candidate-promotion-pr.yml\`, which is the sole canonical source mutation authority.
           EOF
+            require_no_hold
             PR_URL=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY")
             PR_NUMBER="${PR_URL##*/}"
             wait_for_mergeable_then_automerge "$PR_NUMBER"

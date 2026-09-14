@@ -71,6 +71,12 @@ and retains server-side protections; mergeability alone never authorizes a merge
 
 ## Authority boundary
 
+Recovery and Discovery Cycle check live open issues bearing `openva-bot-paused`
+or `openva-hold` before candidate writes and remote mutations. Recovery rechecks
+during CI waiting and immediately before merging. A matching issue, malformed
+response, timeout, or API failure stops the path without a fallback allow state.
+These checks do not remove holds or grant an acceptance-test exception.
+
 The recovery workflow writes only:
 
 - noncanonical candidate-source records;

@@ -13,6 +13,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 from collections import defaultdict
 from copy import deepcopy
 from dataclasses import dataclass
@@ -35,6 +36,24 @@ BREADTH_PATHS = (
     "maintenance/generated/vendor-breadth-candidates.json",
     "maintenance/generated/vendor-breadth-provider-metrics.json",
 )
+
+
+def require_no_emergency_hold(repository: str) -> None:
+    """Read live hold state; absence of trustworthy state never permits writes."""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
+        raise ValueError("invalid repository identity for hold check")
+    for label in ("openva-bot-paused", "openva-hold"):
+        # We only need to know whether ANY matching open issue exists. One result
+        # is sufficient regardless of the size of the repository issue backlog.
+        result = subprocess.run(
+            ["gh", "api", f"repos/{repository}/issues?state=open&labels={label}&per_page=1"],
+            stdin=subprocess.DEVNULL, capture_output=True, text=True, check=True, timeout=30,
+        )
+        issues = json.loads(result.stdout)
+        if not isinstance(issues, list):
+            raise ValueError("untrusted emergency hold response")
+        if issues:
+            raise ValueError(f"active emergency hold: {label}")
 
 
 def intake_generated_paths(partition: dict[str, Any]) -> set[str]:
@@ -670,6 +689,8 @@ def prepare_intake(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="openva-discovery-mesh-intake")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    hold = subparsers.add_parser("check-hold")
+    hold.add_argument("--repository", required=True)
     merge_gate = subparsers.add_parser("merge-gate")
     merge_gate.add_argument("--snapshot", type=Path, required=True)
     merge_gate.add_argument("--expected-head", required=True)
@@ -703,6 +724,9 @@ def main(argv: list[str] | None = None) -> int:
     reconcile.add_argument("--output-candidates", type=Path, required=True)
     reconcile.add_argument("--output-report", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.command == "check-hold":
+        require_no_emergency_hold(args.repository)
+        return 0
     if args.command == "merge-gate":
         return intake_merge_gate(load_json(args.snapshot), args.expected_head)
     if args.command == "prepare":

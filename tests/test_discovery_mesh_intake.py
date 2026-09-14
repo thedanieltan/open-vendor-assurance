@@ -1,4 +1,6 @@
 import json
+import subprocess
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -6,11 +8,44 @@ import pytest
 from tools.openva.discovery_mesh_intake import (
     intake_merge_gate,
     intake_generated_paths,
+    require_no_emergency_hold,
     materialize_partition,
     partition_records,
     prepare_intake,
     reconcile_candidates,
 )
+
+
+@pytest.mark.parametrize("responses", [["[]", "[]"]])
+def test_hold_check_reads_both_labels(responses, monkeypatch):
+    calls = []
+    def run(args, **kwargs):
+        calls.append((args, kwargs))
+        return SimpleNamespace(stdout=responses[len(calls) - 1])
+    monkeypatch.setattr(subprocess, "run", run)
+    require_no_emergency_hold("owner/repo")
+    assert len(calls) == 2
+    assert "labels=openva-bot-paused" in calls[0][0][-1]
+    assert "labels=openva-hold" in calls[1][0][-1]
+    assert all(kwargs["check"] and kwargs["timeout"] == 30 for _, kwargs in calls)
+
+
+@pytest.mark.parametrize("responses", [
+    ['[{"number":904}]'], ["[]", '[{"number":904}]'], ["{}"], ["not json"],
+])
+def test_hold_check_denies_active_or_malformed_state(responses, monkeypatch):
+    pending = iter(responses)
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout=next(pending)))
+    with pytest.raises(ValueError):
+        require_no_emergency_hold("owner/repo")
+
+
+def test_hold_check_propagates_api_failure(monkeypatch):
+    def fail(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, "gh")
+    monkeypatch.setattr(subprocess, "run", fail)
+    with pytest.raises(subprocess.CalledProcessError):
+        require_no_emergency_hold("owner/repo")
 
 
 def test_generated_paths_confine_exports_to_partition_candidates():
