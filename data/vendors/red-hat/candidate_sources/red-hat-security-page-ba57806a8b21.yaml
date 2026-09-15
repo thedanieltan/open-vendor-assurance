@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-ba57806a8b21
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148088
+canonical_candidate_url: https://access.redhat.com/solutions/7148088
+confidence: likely
+discovered_at: '2026-09-15T09:23:42.572866Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148088
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: '&#039;mdadm --detail --scan&#039; command omits the name= attribute
+    after updating mdadm package to mdadm-4.2-19.el8_10 or later - Red Hat Customer
+    Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cfc340d8e2d71eb3d1b4690445a7e2f4c20636791eb9a4656c7a8df57e7c52df
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148088
+requested_url: https://access.redhat.com/solutions/7148088
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-15T09:23:42.572866Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
