@@ -1,0 +1,31 @@
+candidate_source_id: upguard-security-page-e7ffce0af276
+candidate_status: selected
+candidate_url: https://help.upguard.com/en/infostealer-malware-detected-risk
+canonical_candidate_url: https://help.upguard.com/en/infostealer-malware-detected-risk
+confidence: likely
+discovered_at: '2026-09-15T09:11:37.586900Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://help.upguard.com/en/infostealer-malware-detected-risk
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Infostealer Malware Detected Risk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fd10175ee9af00610962933493a75fe53cb26484e5f6148305c5281de076c370
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://help.upguard.com/en/infostealer-malware-detected-risk
+requested_url: https://help.upguard.com/en/infostealer-malware-detected-risk
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-15T09:11:37.586900Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: upguard
