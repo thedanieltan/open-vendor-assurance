@@ -710,7 +710,8 @@ jobs:
           )
         )
       )
-    timeout-minutes: 30
+    # The release-gate file alone measured 37.5 minutes on the full catalog.
+    timeout-minutes: ${{ matrix.shard == 'catalog-and-release' && 60 || 30 }}
     strategy:
       fail-fast: false
       matrix:

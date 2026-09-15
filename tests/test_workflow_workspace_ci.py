@@ -117,6 +117,7 @@ def test_full_suite_plans_use_parallel_shards_on_prs_and_main() -> None:
     assert "needs.workspace-plan.outputs.full_suite == 'true'" in job["if"]
     assert job["strategy"]["fail-fast"] is False
     assert len(job["strategy"]["matrix"]["include"]) == 9
+    assert job["timeout-minutes"] == "${{ matrix.shard == 'catalog-and-release' && 60 || 30 }}"
     assert "needs.pr-change-classifier.outputs.test_changes == 'true'" in job["if"]
 
 
