@@ -1,31 +1,31 @@
-candidate_source_id: nextcloud-privacy-notice-a2773f6cf6e3
+candidate_source_id: nextcloud-trust-center-383b31a6d21e
 candidate_status: selected
-candidate_url: https://help.nextcloud.com/tag/dns
-canonical_candidate_url: https://help.nextcloud.com/tag/dns/368
+candidate_url: https://apps.nextcloud.com/apps/gestion
+canonical_candidate_url: https://apps.nextcloud.com/apps/gestion
 confidence: likely
 discovered_at: '2026-09-15T09:31:53.251129Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://help.nextcloud.com/tag/dns/368
+  final_url: https://apps.nextcloud.com/apps/gestion
   http_status: 200
   matched_terms:
+  - security
   - privacy
-  - privacy policy
-  page_title: Topics tagged dns
+  page_title: Gestion - Apps - App Store - Nextcloud
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:01ce1b62e32a78d9439f4c5400e4454b6130b78a186a3774dba2f73162e3d4d1
+  verification_status: ok
+evidence_digest: sha256:117a038164f96b2b45cf3463e2c3ce62fe56f745c8d65f3359c2a64adebb80fd
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://help.nextcloud.com/tag/dns/368
-requested_url: https://help.nextcloud.com/tag/dns
+observed_final_url: https://apps.nextcloud.com/apps/gestion
+requested_url: https://apps.nextcloud.com/apps/gestion
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-15T09:31:53.251129Z'
-source_type_candidate: privacy_notice
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud
