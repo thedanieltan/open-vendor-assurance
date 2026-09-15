@@ -1,0 +1,32 @@
+candidate_source_id: airtable-trust-center-333825223de9
+candidate_status: selected
+candidate_url: https://blog.airtable.com/
+canonical_candidate_url: https://blog.airtable.com/
+confidence: likely
+discovered_at: '2026-09-15T08:55:46.889670Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://blog.airtable.com/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Airtable Blog - For The Record
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d369d11b2891cfb4077951acf4a6c831b98f7cc37b2badd93beed0b4602621b9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://blog.airtable.com/
+requested_url: https://blog.airtable.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-15T08:55:46.889670Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: airtable
