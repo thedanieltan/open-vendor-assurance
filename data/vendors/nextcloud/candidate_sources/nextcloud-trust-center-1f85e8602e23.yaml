@@ -1,31 +1,31 @@
-candidate_source_id: nextcloud-privacy-notice-a2773f6cf6e3
+candidate_source_id: nextcloud-trust-center-1f85e8602e23
 candidate_status: selected
-candidate_url: https://help.nextcloud.com/tag/dns
-canonical_candidate_url: https://help.nextcloud.com/tag/dns/368
+candidate_url: https://apps.nextcloud.com/apps/timebox
+canonical_candidate_url: https://apps.nextcloud.com/apps/timebox
 confidence: likely
 discovered_at: '2026-09-15T09:31:53.251129Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://help.nextcloud.com/tag/dns/368
+  final_url: https://apps.nextcloud.com/apps/timebox
   http_status: 200
   matched_terms:
+  - security
   - privacy
-  - privacy policy
-  page_title: Topics tagged dns
+  page_title: TimeBox - Apps - App Store - Nextcloud
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:01ce1b62e32a78d9439f4c5400e4454b6130b78a186a3774dba2f73162e3d4d1
+  verification_status: ok
+evidence_digest: sha256:6bb1fa76ede72fc1d7a19169b15e6f474032b2616be95cec14c77f7d37094f61
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://help.nextcloud.com/tag/dns/368
-requested_url: https://help.nextcloud.com/tag/dns
+observed_final_url: https://apps.nextcloud.com/apps/timebox
+requested_url: https://apps.nextcloud.com/apps/timebox
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-15T09:31:53.251129Z'
-source_type_candidate: privacy_notice
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud
