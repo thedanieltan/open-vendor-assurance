@@ -1,6 +1,8 @@
 from pathlib import Path
 
 import yaml
+import subprocess
+import sys
 
 
 VALIDATE = Path(".github/workflows/validate.yml")
@@ -10,6 +12,32 @@ OWNERSHIP = Path(".github/validation-ownership.yaml")
 
 def load_validate() -> dict:
     return yaml.safe_load(VALIDATE.read_text(encoding="utf-8"))
+
+
+def test_regression_shards_cover_every_test_file_once(monkeypatch) -> None:
+    job = load_validate()["jobs"]["full-regression-shards"]
+    step = next(s for s in job["steps"] if s.get("name") == "Run sharded regression tests")
+    script = step["run"].split("python - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    calls = []
+    monkeypatch.setattr(subprocess, "run", lambda args, **kwargs: calls.append((args, kwargs)))
+    for shard in job["strategy"]["matrix"]["include"]:
+        monkeypatch.setenv("REGRESSION_SHARD", shard["shard"])
+        exec(compile(script, "regression-shard", "exec"), {})
+    selected = []
+    for args, kwargs in calls:
+        assert args[:4] == [sys.executable, "-m", "pytest", "-q"]
+        assert kwargs == {"check": True}
+        selected.extend(args[4:])
+    assert len(selected) == len(set(selected))
+    assert set(selected) == {p.as_posix() for p in Path("tests").rglob("test_*.py")}
+    remaining = next(s for s in job["strategy"]["matrix"]["include"] if s["shard"] == "remaining-unit")
+    assert remaining["install_mcp"] and remaining["install_match_service"]
+
+
+def test_targeted_mcp_ci_executes_oci_smoke() -> None:
+    job = load_validate()["jobs"]["mcp-integration"]
+    commands = "\n".join(s.get("run", "") for s in job["steps"])
+    assert "tests/test_openva_mcp_oci.py" in commands
 
 
 def test_workspace_required_context_is_a_delegating_aggregator() -> None:
@@ -67,7 +95,8 @@ def test_full_suite_plans_use_parallel_shards_on_prs_and_main() -> None:
     assert "github.event_name != 'pull_request'" in job["if"]
     assert "needs.workspace-plan.outputs.full_suite == 'true'" in job["if"]
     assert job["strategy"]["fail-fast"] is False
-    assert len(job["strategy"]["matrix"]["include"]) == 6
+    assert len(job["strategy"]["matrix"]["include"]) == 9
+    assert "needs.pr-change-classifier.outputs.test_changes == 'true'" in job["if"]
 
 
 def test_workspace_lane_is_registered_as_a_required_owned_context() -> None:
