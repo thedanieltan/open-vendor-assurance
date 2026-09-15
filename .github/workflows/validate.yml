@@ -660,6 +660,8 @@ jobs:
           pip install -e "integrations/mcp/openva_mcp[dev]"
       - name: Assert MCP SDK is installed
         run: python -c "import mcp.shared.memory, mcp.client.stdio, openva_mcp, jsonschema"
+      - name: Require Docker engine for OCI verification
+        run: docker info
       - name: Run MCP integration tests
         run: >-
           pytest -q
@@ -708,7 +710,7 @@ jobs:
           )
         )
       )
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:

@@ -38,6 +38,7 @@ def test_targeted_mcp_ci_executes_oci_smoke() -> None:
     job = load_validate()["jobs"]["mcp-integration"]
     commands = "\n".join(s.get("run", "") for s in job["steps"])
     assert "tests/test_openva_mcp_oci.py" in commands
+    assert "docker info" in commands
 
 
 def test_workspace_required_context_is_a_delegating_aggregator() -> None:
