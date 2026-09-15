@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import yaml
+import pytest
 import subprocess
 import sys
 
@@ -12,6 +13,25 @@ OWNERSHIP = Path(".github/validation-ownership.yaml")
 
 def load_validate() -> dict:
     return yaml.safe_load(VALIDATE.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("changed_path,expected", [
+    ("tests/test_candidate_activation.py", {"test_changes": "true"}),
+    (".github/workflows/validate.yml", {"workflow_operating_model": "true", "mcp_integration": "true"}),
+    ("tools/openva/agent_export.py", {"mcp_integration": "true"}),
+    ("README.md", {"test_changes": "false", "mcp_integration": "false"}),
+])
+def test_classifier_executes_regression_routing(changed_path, expected, tmp_path, monkeypatch) -> None:
+    step = next(s for s in load_validate()["jobs"]["pr-change-classifier"]["steps"] if s.get("id") == "classify")
+    script = step["run"].split("python - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    original_read = Path.read_text
+    monkeypatch.setattr(Path, "read_text", lambda path, *args, **kwargs:
+                        changed_path if path.name == "changed-paths.txt" else original_read(path, *args, **kwargs))
+    output = tmp_path / "github-output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    exec(compile(script, "ci-classifier", "exec"), {})
+    actual = dict(line.split("=", 1) for line in output.read_text().splitlines())
+    assert expected.items() <= actual.items()
 
 
 def test_regression_shards_cover_every_test_file_once(monkeypatch) -> None:
