@@ -802,6 +802,9 @@ jobs:
       - name: Install match service test dependencies
         if: matrix.install_match_service
         run: pip install -e "services/openva_match_service[dev]"
+      - name: Install rendered discovery test dependency
+        if: startsWith(matrix.shard, 'remaining-unit')
+        run: pip install "playwright==1.57.0"
       - name: Run sharded regression tests
         env:
           REGRESSION_SHARD: ${{ matrix.shard }}

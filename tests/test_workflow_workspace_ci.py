@@ -61,6 +61,16 @@ def test_targeted_mcp_ci_executes_oci_smoke() -> None:
     assert "docker info" in commands
 
 
+def test_remainder_shards_install_rendered_discovery_dependency() -> None:
+    job = load_validate()["jobs"]["full-regression-shards"]
+    step = next(s for s in job["steps"] if s.get("name") == "Install rendered discovery test dependency")
+    assert step["if"] == "startsWith(matrix.shard, 'remaining-unit')"
+    assert step["run"] == 'pip install "playwright==1.57.0"'
+    assert job["steps"].index(step) < next(
+        i for i, s in enumerate(job["steps"]) if s.get("name") == "Run sharded regression tests"
+    )
+
+
 def test_workspace_required_context_is_a_delegating_aggregator() -> None:
     workflow = load_validate()
     job = workflow["jobs"]["workspace-affected-tests"]
