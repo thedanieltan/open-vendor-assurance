@@ -739,6 +739,76 @@
       "vendor_id": "neon"
     },
     {
+      "_openva_path": "data/vendors/neon/candidate_sources/neon-security-page-1e85a3bc7b13.yaml",
+      "candidate_source_id": "neon-security-page-1e85a3bc7b13",
+      "candidate_status": "selected",
+      "candidate_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=click",
+      "canonical_candidate_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:56:06.299824Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Neon Trust Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:cc33d0b879aaeea1fe9c90eba4245dbd74735ed83c9d8da7cf547c4245903dc6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=click",
+      "requested_url": "https://trust.neon.com/?amp%3Bamp%3Bsource=click&amp%3BitemName=infrastructure&amp%3Bsource=click&itemName=certifications&itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:56:06.299824Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "neon"
+    },
+    {
+      "_openva_path": "data/vendors/neon/candidate_sources/neon-security-page-1f1ee8c6c0d6.yaml",
+      "candidate_source_id": "neon-security-page-1f1ee8c6c0d6",
+      "candidate_status": "selected",
+      "candidate_url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+      "canonical_candidate_url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:56:06.299824Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Inside LuBot&#x27;s database-per-tenant architecture - Neon",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:8824da6ae8406da7f7b4fe591ddce8107844b244a60518434f5054334c5a1e92",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+      "requested_url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:56:06.299824Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "neon"
+    },
+    {
       "_openva_path": "data/vendors/neon/candidate_sources/neon-security-page-25f7dcd00eeb.yaml",
       "candidate_source_id": "neon-security-page-25f7dcd00eeb",
       "candidate_status": "selected",
@@ -4917,7 +4987,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 8,
-    "candidate_source_count": 123,
+    "candidate_source_count": 125,
     "candidate_source_types": [
       "security_page"
     ],

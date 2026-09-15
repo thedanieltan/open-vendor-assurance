@@ -413,6 +413,41 @@
       "vendor_id": "ifood"
     },
     {
+      "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-226f0a2573fe.yaml",
+      "candidate_source_id": "ifood-compliance-page-226f0a2573fe",
+      "candidate_status": "selected",
+      "candidate_url": "https://institucional.ifood.com.br/restaurantes/ifood-move",
+      "canonical_candidate_url": "https://institucional.ifood.com.br/restaurantes/ifood-move/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:47.204493Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://institucional.ifood.com.br/restaurantes/ifood-move/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "iFood Move 2026: o que é, data, local e como participar",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e4b4cf0d682010191e5c7310f2dd5dd3be465e6175d224e43fe3959740e900a2",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://institucional.ifood.com.br/restaurantes/ifood-move/",
+      "requested_url": "https://institucional.ifood.com.br/restaurantes/ifood-move",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:47.204493Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "ifood"
+    },
+    {
       "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-227685b4e7a2.yaml",
       "candidate_source_id": "ifood-compliance-page-227685b4e7a2",
       "candidate_status": "selected",
@@ -2102,6 +2137,41 @@
       "vendor_id": "ifood"
     },
     {
+      "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-b6c076735712.yaml",
+      "candidate_source_id": "ifood-compliance-page-b6c076735712",
+      "candidate_status": "selected",
+      "candidate_url": "https://institucional.ifood.com.br/clientes/brinquedos-educativos",
+      "canonical_candidate_url": "https://institucional.ifood.com.br/clientes/brinquedos-educativos/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:47.204493Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://institucional.ifood.com.br/clientes/brinquedos-educativos/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "page_title": "Brinquedos educativos: guia por idade e benefícios",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:678b888757fb794fa2a2153b80fd6a72389566549609341297334e7c653c024e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://institucional.ifood.com.br/clientes/brinquedos-educativos/",
+      "requested_url": "https://institucional.ifood.com.br/clientes/brinquedos-educativos",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:47.204493Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "ifood"
+    },
+    {
       "_openva_path": "data/vendors/ifood/candidate_sources/ifood-compliance-page-b753cd9ee7d8.yaml",
       "candidate_source_id": "ifood-compliance-page-b753cd9ee7d8",
       "candidate_status": "selected",
@@ -3360,7 +3430,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 91,
+    "candidate_source_count": 93,
     "candidate_source_types": [
       "compliance_page",
       "security_page"

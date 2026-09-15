@@ -206,6 +206,42 @@
       "vendor_id": "jodoo"
     },
     {
+      "_openva_path": "data/vendors/jodoo/candidate_sources/jodoo-compliance-page-843608b4a3a2.yaml",
+      "candidate_source_id": "jodoo-compliance-page-843608b4a3a2",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.jodoo.com/zh-cn/ai",
+      "canonical_candidate_url": "https://www.jodoo.com/zh-cn/ai",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:45:30.335201Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.jodoo.com/zh-cn/ai",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "iso",
+          "audit"
+        ],
+        "page_title": "AI 应用模板与工作流示例",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:fc6e1b0156a77f1a63f3fc04862a3f68ee15f205c8e00b19e347b3f570a25232",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.jodoo.com/zh-cn/ai",
+      "requested_url": "https://www.jodoo.com/zh-cn/ai",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:45:30.335201Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "jodoo"
+    },
+    {
       "_openva_path": "data/vendors/jodoo/candidate_sources/jodoo-compliance-page-8d4c4767a11f.yaml",
       "candidate_source_id": "jodoo-compliance-page-8d4c4767a11f",
       "candidate_status": "selected",
@@ -1816,7 +1852,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 47,
+    "candidate_source_count": 48,
     "candidate_source_types": [
       "compliance_page",
       "privacy_notice",

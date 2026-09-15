@@ -1,13 +1,13 @@
 {
   "candidate_source_type_counts": {
-    "ai_terms": 309,
+    "ai_terms": 312,
     "certification_reference": 219,
-    "compliance_page": 8318,
-    "dpa": 600,
-    "privacy_notice": 5891,
-    "security_page": 21861,
-    "subprocessors_list": 409,
-    "trust_center": 14549
+    "compliance_page": 8462,
+    "dpa": 619,
+    "privacy_notice": 5931,
+    "security_page": 22693,
+    "subprocessors_list": 411,
+    "trust_center": 14793
   },
   "coverage_claim_role_counts": {
     "certification_reference": 3,
@@ -423,7 +423,9 @@
       "vendor_id": "aikido-security"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "dpa",
@@ -2645,6 +2647,7 @@
     },
     {
       "candidate_source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "trust_center"
@@ -6242,7 +6245,10 @@
       "vendor_id": "hashicorp"
     },
     {
-      "candidate_source_types": [],
+      "candidate_source_types": [
+        "security_page",
+        "trust_center"
+      ],
       "canonical_source_types": [
         "compliance_page",
         "privacy_notice"
@@ -6255,7 +6261,6 @@
       "duplicate_source_url_count": 0,
       "missing_core_source_types": [
         "dpa",
-        "security_page",
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
@@ -14776,6 +14781,8 @@
     },
     {
       "candidate_source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -14788,9 +14795,7 @@
         "trust_center"
       ],
       "duplicate_source_url_count": 0,
-      "missing_core_source_types": [
-        "dpa"
-      ],
+      "missing_core_source_types": [],
       "primary_source_type_coverage": [
         "trust_center"
       ],

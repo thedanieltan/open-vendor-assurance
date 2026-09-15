@@ -507,6 +507,41 @@
       "vendor_id": "splunk"
     },
     {
+      "_openva_path": "data/vendors/splunk/candidate_sources/splunk-ai-terms-608ab2aedb58.yaml",
+      "candidate_source_id": "splunk-ai-terms-608ab2aedb58",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.splunk.com/en_us/blog/learn/cybersecurity-podcasts.html",
+      "canonical_candidate_url": "https://www.splunk.com/en_us/blog/learn/cybersecurity-podcasts.html",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.splunk.com/en_us/blog/learn/cybersecurity-podcasts.html",
+        "http_status": 200,
+        "matched_terms": [
+          "artificial intelligence",
+          "machine learning"
+        ],
+        "page_title": "The Very Best Cybersecurity Podcasts To Listen To in 2026 | Splunk",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b1f9a29da74ff836393ed7b5a54b952812fc66dc9a9cc384b29b6e936b3d34b6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.splunk.com/en_us/blog/learn/cybersecurity-podcasts.html",
+      "requested_url": "https://www.splunk.com/en_us/blog/learn/cybersecurity-podcasts.html",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "ai_terms",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "splunk"
+    },
+    {
       "_openva_path": "data/vendors/splunk/candidate_sources/splunk-ai-terms-76771715384b.yaml",
       "candidate_source_id": "splunk-ai-terms-76771715384b",
       "candidate_status": "selected",
@@ -7396,6 +7431,41 @@
       "vendor_id": "splunk"
     },
     {
+      "_openva_path": "data/vendors/splunk/candidate_sources/splunk-trust-center-40a5d691ec4b.yaml",
+      "candidate_source_id": "splunk-trust-center-40a5d691ec4b",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.splunk.com/en_us/blog/learn/social-engineering-attacks.html",
+      "canonical_candidate_url": "https://www.splunk.com/en_us/blog/learn/social-engineering-attacks.html",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.splunk.com/en_us/blog/learn/social-engineering-attacks.html",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "What Are Social Engineering Attacks? A Detailed Explanation | Splunk",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2f987734fdfc8ee2e8f84b8c205e3e120373f3f222310813e525d72726234a7b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.splunk.com/en_us/blog/learn/social-engineering-attacks.html",
+      "requested_url": "https://www.splunk.com/en_us/blog/learn/social-engineering-attacks.html",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "splunk"
+    },
+    {
       "_openva_path": "data/vendors/splunk/candidate_sources/splunk-trust-center-40c74158f6d9.yaml",
       "candidate_source_id": "splunk-trust-center-40c74158f6d9",
       "candidate_status": "selected",
@@ -8221,10 +8291,10 @@
       "_openva_path": "data/vendors/splunk/candidate_sources/splunk-trust-center-4865801e6fc5.yaml",
       "candidate_source_id": "splunk-trust-center-4865801e6fc5",
       "candidate_status": "selected",
-      "candidate_url": "https://conf.splunk.com/global-broadcast-details-post-event.html",
+      "candidate_url": "https://conf.splunk.com/global-broadcast-replays.html",
       "canonical_candidate_url": "https://conf.splunk.com/global-broadcast-replays.html",
       "confidence": "likely",
-      "discovered_at": "2026-09-08T08:19:39.643491Z",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
       "discovered_by": "agent",
       "discovery_method": "sitemap_locator_verification",
       "evidence": {
@@ -8235,19 +8305,19 @@
           "trust",
           "security"
         ],
-        "page_title": ".conf25 Global Broadcast On Demand | Splunk | Splunk",
+        "page_title": ".conf26 Global Broadcast On Demand | Splunk",
         "semantic_status": "strong",
         "soft_404_detected": false,
-        "verification_status": "redirected"
+        "verification_status": "ok"
       },
-      "evidence_digest": "sha256:791862d746fe4bfb7b2412f2d7c64a2cf305dfca4ba070bbeb5febc90e8c1189",
+      "evidence_digest": "sha256:1dc880e1d81f785f13bd47e2998cfeface7369cba556b8ff68bb936b19ca2715",
       "not_advice": true,
       "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
       "observed_final_url": "https://conf.splunk.com/global-broadcast-replays.html",
-      "requested_url": "https://conf.splunk.com/global-broadcast-details-post-event.html",
+      "requested_url": "https://conf.splunk.com/global-broadcast-replays.html",
       "requires_review": true,
       "schema_version": "0.1.0",
-      "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "splunk"
@@ -11848,6 +11918,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "splunk"
+    },
+    {
+      "_openva_path": "data/vendors/splunk/candidate_sources/splunk-trust-center-6fc84b0c20f1.yaml",
+      "candidate_source_id": "splunk-trust-center-6fc84b0c20f1",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.splunk.com/en_us/blog/learn/password-spraying.html",
+      "canonical_candidate_url": "https://www.splunk.com/en_us/blog/learn/password-spraying.html",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.splunk.com/en_us/blog/learn/password-spraying.html",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "Password Spraying Attacks: What You Need To Know To Prevent Attacks | Splunk",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:bb604ad4ad00a84389f461c1b2d1033441dc4393d47399cead1c98f6289b9764",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.splunk.com/en_us/blog/learn/password-spraying.html",
+      "requested_url": "https://www.splunk.com/en_us/blog/learn/password-spraying.html",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "splunk"
@@ -24684,7 +24789,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 682,
+    "candidate_source_count": 685,
     "candidate_source_types": [
       "ai_terms",
       "certification_reference",

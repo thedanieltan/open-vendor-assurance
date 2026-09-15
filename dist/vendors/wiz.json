@@ -2599,6 +2599,45 @@
       "vendor_id": "wiz"
     },
     {
+      "_openva_path": "data/vendors/wiz/candidate_sources/wiz-security-page-1afbfe1b6f29.yaml",
+      "candidate_source_id": "wiz-security-page-1afbfe1b6f29",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.wiz.io/events/ai-for-security-summit",
+      "canonical_candidate_url": "https://www.wiz.io/events/ai-for-security-summit",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:58:44.188227Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.wiz.io/events/ai-for-security-summit",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "encryption",
+          "availability",
+          "vulnerability",
+          "incident",
+          "trust"
+        ],
+        "page_title": "AI for Security Summit | Wiz",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:401897b24b528870a77403604a4859b86308da74d41864ac4060e96d1d6f294a",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.wiz.io/events/ai-for-security-summit",
+      "requested_url": "https://www.wiz.io/events/ai-for-security-summit",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:58:44.188227Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "wiz"
+    },
+    {
       "_openva_path": "data/vendors/wiz/candidate_sources/wiz-security-page-1b0d318cfa2f.yaml",
       "candidate_source_id": "wiz-security-page-1b0d318cfa2f",
       "candidate_status": "selected",
@@ -21624,6 +21663,45 @@
       "vendor_id": "wiz"
     },
     {
+      "_openva_path": "data/vendors/wiz/candidate_sources/wiz-security-page-c6d9d74e2890.yaml",
+      "candidate_source_id": "wiz-security-page-c6d9d74e2890",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.wiz.io/demo?cta_page=%2Fevents%2Fai-for-security-summit&cta_placement=nav&cta_source=events",
+      "canonical_candidate_url": "https://www.wiz.io/demo?cta_page=%2Fevents%2Fai-for-security-summit&cta_placement=nav&cta_source=events",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:58:44.188227Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.wiz.io/demo?cta_page=%2Fevents%2Fai-for-security-summit&cta_placement=nav&cta_source=events",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "encryption",
+          "availability",
+          "vulnerability",
+          "incident",
+          "trust"
+        ],
+        "page_title": "Wiz Demo: Secure Your Cloud &amp; AI Applications | Wiz",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:65873b98449e6af0197cc9acfcedbabad0d1a14eb0d5ebebc9a20166172adccb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.wiz.io/demo?cta_page=%2Fevents%2Fai-for-security-summit&cta_placement=nav&cta_source=events",
+      "requested_url": "https://www.wiz.io/demo?cta_page=%2Fevents%2Fai-for-security-summit&cta_placement=nav&cta_source=events",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:58:44.188227Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "wiz"
+    },
+    {
       "_openva_path": "data/vendors/wiz/candidate_sources/wiz-security-page-c716ad5e3c26.yaml",
       "candidate_source_id": "wiz-security-page-c716ad5e3c26",
       "candidate_status": "selected",
@@ -27566,7 +27644,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 729,
+    "candidate_source_count": 731,
     "candidate_source_types": [
       "security_page"
     ],

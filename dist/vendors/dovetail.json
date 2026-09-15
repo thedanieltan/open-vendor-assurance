@@ -3931,6 +3931,41 @@
       "vendor_id": "dovetail"
     },
     {
+      "_openva_path": "data/vendors/dovetail/candidate_sources/dovetail-security-page-8808dbc612d6.yaml",
+      "candidate_source_id": "dovetail-security-page-8808dbc612d6",
+      "candidate_status": "selected",
+      "candidate_url": "https://docs.dovetail.com/?contact=",
+      "canonical_candidate_url": "https://docs.dovetail.com/?contact=",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:20:04.668328Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://docs.dovetail.com/?contact=",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Help, resources, and support - Dovetail",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:25b4fab756c8fb3e1e2d2da7f61d4a2b31811809b7934832a5ea51556d874abb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://docs.dovetail.com/?contact=",
+      "requested_url": "https://docs.dovetail.com/?contact=",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:20:04.668328Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "dovetail"
+    },
+    {
       "_openva_path": "data/vendors/dovetail/candidate_sources/dovetail-security-page-88c207451ae8.yaml",
       "candidate_source_id": "dovetail-security-page-88c207451ae8",
       "candidate_status": "selected",
@@ -6729,7 +6764,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 185,
+    "candidate_source_count": 186,
     "candidate_source_types": [
       "ai_terms",
       "compliance_page",

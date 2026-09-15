@@ -9945,6 +9945,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-compliance-page-60272b65efa0.yaml",
+      "candidate_source_id": "nextcloud-compliance-page-60272b65efa0",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/t/support-template-please-use-this-when-you-request-support/137402",
+      "canonical_candidate_url": "https://help.nextcloud.com/t/support-template-please-use-this-when-you-request-support/137402",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/t/support-template-please-use-this-when-you-request-support/137402",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "trust"
+        ],
+        "page_title": "Support template. Please use this when you request support - ℹ️ Support - Nextcloud community",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0cc592993576274883f7d682ffceb7fa00f4d76d5a6eeb136824b1889649e79c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/t/support-template-please-use-this-when-you-request-support/137402",
+      "requested_url": "https://help.nextcloud.com/t/support-template-please-use-this-when-you-request-support/137402",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-compliance-page-6042748e488f.yaml",
       "candidate_source_id": "nextcloud-compliance-page-6042748e488f",
       "candidate_status": "selected",
@@ -27539,6 +27574,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-187635d4a366.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-187635d4a366",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/tag/ncp",
+      "canonical_candidate_url": "https://help.nextcloud.com/tag/ncp/6",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/tag/ncp/6",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Topics tagged ncp",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:b261f35d0f1b83ac37c8d2ea8c9f63cb733eb82e5b0fb07401065654002c00d8",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/tag/ncp/6",
+      "requested_url": "https://help.nextcloud.com/tag/ncp",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-1b076e329060.yaml",
       "candidate_source_id": "nextcloud-privacy-notice-1b076e329060",
       "candidate_status": "selected",
@@ -29467,6 +29537,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-66f852e81591.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-66f852e81591",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/tag/letsencrypt",
+      "canonical_candidate_url": "https://help.nextcloud.com/tag/letsencrypt/50",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/tag/letsencrypt/50",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Topics tagged letsencrypt",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:9aa670b9dd1d4127ede93d72a377b199ad86115e3b3874ce87558b5a6e5946c9",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/tag/letsencrypt/50",
+      "requested_url": "https://help.nextcloud.com/tag/letsencrypt",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-6955251716cd.yaml",
       "candidate_source_id": "nextcloud-privacy-notice-6955251716cd",
       "candidate_status": "selected",
@@ -30873,10 +30978,10 @@
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-a2773f6cf6e3.yaml",
       "candidate_source_id": "nextcloud-privacy-notice-a2773f6cf6e3",
       "candidate_status": "selected",
-      "candidate_url": "https://help.nextcloud.com/tag/dns/368",
+      "candidate_url": "https://help.nextcloud.com/tag/dns",
       "canonical_candidate_url": "https://help.nextcloud.com/tag/dns/368",
       "confidence": "likely",
-      "discovered_at": "2026-09-08T08:19:39.643491Z",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
       "discovered_by": "agent",
       "discovery_method": "sitemap_locator_verification",
       "evidence": {
@@ -30890,16 +30995,16 @@
         "page_title": "Topics tagged dns",
         "semantic_status": "strong",
         "soft_404_detected": false,
-        "verification_status": "ok"
+        "verification_status": "redirected"
       },
-      "evidence_digest": "sha256:63a58d15980a0a30c2af3dac1235d9a8c017dbc195ebfa019422d2b3b12e8577",
+      "evidence_digest": "sha256:01ce1b62e32a78d9439f4c5400e4454b6130b78a186a3774dba2f73162e3d4d1",
       "not_advice": true,
       "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
       "observed_final_url": "https://help.nextcloud.com/tag/dns/368",
-      "requested_url": "https://help.nextcloud.com/tag/dns/368",
+      "requested_url": "https://help.nextcloud.com/tag/dns",
       "requires_review": true,
       "schema_version": "0.1.0",
-      "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -31005,6 +31110,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-a5dda0b0252a.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-a5dda0b0252a",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/c/support/appliances-docker-snappy-vm/33",
+      "canonical_candidate_url": "https://help.nextcloud.com/c/support/appliances-docker-snappy-vm/33",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/c/support/appliances-docker-snappy-vm/33",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "📦 Appliances (Docker, Snappy, VM, NCP, AIO) - Nextcloud community",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:a050d0ca4f8ec1a4849185925df2352236008c6af12cddcb2d1104482bee76c4",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/c/support/appliances-docker-snappy-vm/33",
+      "requested_url": "https://help.nextcloud.com/c/support/appliances-docker-snappy-vm/33",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -32558,6 +32698,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-e07b6f465d23.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-e07b6f465d23",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/tag/network",
+      "canonical_candidate_url": "https://help.nextcloud.com/tag/network/18",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/tag/network/18",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Topics tagged network",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:f73b8c9426df620b1ed6e610b4920a87c86e8d0b5632dce35c2f6aca007e8c59",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/tag/network/18",
+      "requested_url": "https://help.nextcloud.com/tag/network",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-e0e9ea117429.yaml",
       "candidate_source_id": "nextcloud-privacy-notice-e0e9ea117429",
       "candidate_status": "selected",
@@ -32768,6 +32943,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-e83c8afcfa41.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-e83c8afcfa41",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/t/telekom-filters-port-80-tls-certificate-renewal-fails/249320",
+      "canonical_candidate_url": "https://help.nextcloud.com/t/telekom-filters-port-80-tls-certificate-renewal-fails/249320",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/t/telekom-filters-port-80-tls-certificate-renewal-fails/249320",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Telekom filters port 80 - TLS certificate renewal fails - ℹ️ Support - Nextcloud community",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:acd4a2657593699da2d00e46eb6426493e227076bee5e3903f62cffeefc83814",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/t/telekom-filters-port-80-tls-certificate-renewal-fails/249320",
+      "requested_url": "https://help.nextcloud.com/t/telekom-filters-port-80-tls-certificate-renewal-fails/249320",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-e91ed9378860.yaml",
       "candidate_source_id": "nextcloud-privacy-notice-e91ed9378860",
       "candidate_status": "selected",
@@ -32798,6 +33008,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-13T08:49:44.289461Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-e9816845ffb3.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-e9816845ffb3",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/tag/caddy/309",
+      "canonical_candidate_url": "https://help.nextcloud.com/tag/caddy/309",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/tag/caddy/309",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Topics tagged caddy",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:252d223124130f4cd33b73621cccaa3329a0f28cbb6aa68df4590464b7ff4a0e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/tag/caddy/309",
+      "requested_url": "https://help.nextcloud.com/tag/caddy/309",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -33113,6 +33358,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-privacy-notice-f2145142f343.yaml",
+      "candidate_source_id": "nextcloud-privacy-notice-f2145142f343",
+      "candidate_status": "selected",
+      "candidate_url": "https://help.nextcloud.com/t/euro-office-issues-at-every-restart/249317",
+      "canonical_candidate_url": "https://help.nextcloud.com/t/euro-office-issues-at-every-restart/249317",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://help.nextcloud.com/t/euro-office-issues-at-every-restart/249317",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Euro-office issues at every restart - 📦 Appliances (Docker, Snappy, VM, NCP, AIO) - Nextcloud community",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5bb77026d4ed2dd90b93acdc474434110f6f8b9d429956f7ab418d2ac8cb58dd",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://help.nextcloud.com/t/euro-office-issues-at-every-restart/249317",
+      "requested_url": "https://help.nextcloud.com/t/euro-office-issues-at-every-restart/249317",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -36689,6 +36969,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-1f85e8602e23.yaml",
+      "candidate_source_id": "nextcloud-trust-center-1f85e8602e23",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/timebox",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/timebox",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/timebox",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "TimeBox - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6bb1fa76ede72fc1d7a19169b15e6f474032b2616be95cec14c77f7d37094f61",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/timebox",
+      "requested_url": "https://apps.nextcloud.com/apps/timebox",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-1fa37dd53e7a.yaml",
       "candidate_source_id": "nextcloud-trust-center-1fa37dd53e7a",
       "candidate_status": "selected",
@@ -37459,6 +37774,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-26657dc623bb.yaml",
+      "candidate_source_id": "nextcloud-trust-center-26657dc623bb",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/nextledger",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/nextledger",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/nextledger",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "NextLedger - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:be81043bd1cc117ba630b6310c5b40acdb831e2446d0f85620f90fbe30c5c150",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/nextledger",
+      "requested_url": "https://apps.nextcloud.com/apps/nextledger",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-26d6ff99c35f.yaml",
       "candidate_source_id": "nextcloud-trust-center-26d6ff99c35f",
       "candidate_status": "selected",
@@ -38054,6 +38404,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-2d965b056b5b.yaml",
+      "candidate_source_id": "nextcloud-trust-center-2d965b056b5b",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/fileviewer",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/fileviewer",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/fileviewer",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Universal File Viewer - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:0b5d4e6666d541948176d14bc5df1e9813ca60e58b0fdd1f3e4ade75df4b9ab7",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/fileviewer",
+      "requested_url": "https://apps.nextcloud.com/apps/fileviewer",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-2df85996ca2f.yaml",
       "candidate_source_id": "nextcloud-trust-center-2df85996ca2f",
       "candidate_status": "selected",
@@ -38119,6 +38504,76 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-2e455aba4dd8.yaml",
+      "candidate_source_id": "nextcloud-trust-center-2e455aba4dd8",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=34",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=34",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=34",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Releases - Uptime Kuma Incidents - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:7ab617b1a0a29473acb3d4dc1e9f86aad7f9b8ced4cce6f03ccd390fc6b5a752",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=34",
+      "requested_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=34",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-2e47b66e4f9f.yaml",
+      "candidate_source_id": "nextcloud-trust-center-2e47b66e4f9f",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/guests",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/guests",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/guests",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Guests - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:08ee911508e51e69fa087d1fc058fc4f5609ba37a802369979b922c05a014d72",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/guests",
+      "requested_url": "https://apps.nextcloud.com/apps/guests",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -39134,6 +39589,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-383b31a6d21e.yaml",
+      "candidate_source_id": "nextcloud-trust-center-383b31a6d21e",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/gestion",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/gestion",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/gestion",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Gestion - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:117a038164f96b2b45cf3463e2c3ce62fe56f745c8d65f3359c2a64adebb80fd",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/gestion",
+      "requested_url": "https://apps.nextcloud.com/apps/gestion",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -40359,6 +40849,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-14T09:14:36.414062Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-4310965f276a.yaml",
+      "candidate_source_id": "nextcloud-trust-center-4310965f276a",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/santacloud",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/santacloud",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/santacloud",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Santa Cloud - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c846b338a9d27c7a935daab3c970d88b10d8df0d6a295d34572023883ff9e15a",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/santacloud",
+      "requested_url": "https://apps.nextcloud.com/apps/santacloud",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -41905,6 +42430,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-58a74741c058.yaml",
+      "candidate_source_id": "nextcloud-trust-center-58a74741c058",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=32",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=32",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=32",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Releases - Uptime Kuma Incidents - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:7c2040f8a4c3dc0e17436fec6411a57c2e9eded9ddf42cd6bfcd1602f06f79c1",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=32",
+      "requested_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=32",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-58bed49d2e30.yaml",
       "candidate_source_id": "nextcloud-trust-center-58bed49d2e30",
       "candidate_status": "selected",
@@ -42355,6 +42915,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-5f7c0c031ceb.yaml",
+      "candidate_source_id": "nextcloud-trust-center-5f7c0c031ceb",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=33",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=33",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=33",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Releases - Uptime Kuma Incidents - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c75be3d3a159c4f91c2e6de7fb165d493b7b589894b0201daebca0110a98081f",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=33",
+      "requested_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=33",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -42985,6 +43580,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-683a6f4a307c.yaml",
+      "candidate_source_id": "nextcloud-trust-center-683a6f4a307c",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/files_inotify",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/files_inotify",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/files_inotify",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "INotify file watcher - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:a473d78274af4087b38061e69f19adc338df415cdef52e2ab27e2daab03d5599",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/files_inotify",
+      "requested_url": "https://apps.nextcloud.com/apps/files_inotify",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -45615,6 +46245,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-88fc46e96e10.yaml",
+      "candidate_source_id": "nextcloud-trust-center-88fc46e96e10",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/w3ds_login",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/w3ds_login",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/w3ds_login",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "W3DS Connector - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:be43c0fd4110337f75cc796e07e05d1a80db9c78f23de4576ac07f36384dc2e6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/w3ds_login",
+      "requested_url": "https://apps.nextcloud.com/apps/w3ds_login",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-8902feace88f.yaml",
       "candidate_source_id": "nextcloud-trust-center-8902feace88f",
       "candidate_status": "selected",
@@ -48065,6 +48730,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-a6a16e22fcd9.yaml",
+      "candidate_source_id": "nextcloud-trust-center-a6a16e22fcd9",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=35",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=35",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=35",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Releases - Uptime Kuma Incidents - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5848e15215325b48d3905d44e97f0428e5bac503a3f1466b964ac23faff0e6cb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=35",
+      "requested_url": "https://apps.nextcloud.com/apps/uptimekuma/releases?platform=35",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-a6c05bea1a0a.yaml",
       "candidate_source_id": "nextcloud-trust-center-a6c05bea1a0a",
       "candidate_status": "selected",
@@ -48901,6 +49601,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-aeff845d51c5.yaml",
+      "candidate_source_id": "nextcloud-trust-center-aeff845d51c5",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/files_notify_redis",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/files_notify_redis",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/files_notify_redis",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Redis Notify - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:ff337b3708c3592caea507397bd43195c9f4693dda861c7bea430a7b7bf0e99c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/files_notify_redis",
+      "requested_url": "https://apps.nextcloud.com/apps/files_notify_redis",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -52792,6 +53527,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-e49503753ce6.yaml",
+      "candidate_source_id": "nextcloud-trust-center-e49503753ce6",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/files_linkeditor",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/files_linkeditor",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/files_linkeditor",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Link editor - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d41587176f218dfb25a76bf28a714dcf9aef1828a6ffc9728604140d767370cb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/files_linkeditor",
+      "requested_url": "https://apps.nextcloud.com/apps/files_linkeditor",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-e55e4fd89cd2.yaml",
       "candidate_source_id": "nextcloud-trust-center-e55e4fd89cd2",
       "candidate_status": "selected",
@@ -53982,6 +54752,41 @@
       "vendor_id": "nextcloud"
     },
     {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-f1b950547a59.yaml",
+      "candidate_source_id": "nextcloud-trust-center-f1b950547a59",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/permissions_overwrite",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/permissions_overwrite",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/permissions_overwrite",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Permissions Overwrite - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:1dd06c12805148ad726d2071445302c816530351dde70677a104985be633d791",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/permissions_overwrite",
+      "requested_url": "https://apps.nextcloud.com/apps/permissions_overwrite",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
       "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-f1c3065e4599.yaml",
       "candidate_source_id": "nextcloud-trust-center-f1c3065e4599",
       "candidate_status": "selected",
@@ -54397,6 +55202,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:19:39.643491Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "nextcloud"
+    },
+    {
+      "_openva_path": "data/vendors/nextcloud/candidate_sources/nextcloud-trust-center-f7691057bcf5.yaml",
+      "candidate_source_id": "nextcloud-trust-center-f7691057bcf5",
+      "candidate_status": "selected",
+      "candidate_url": "https://apps.nextcloud.com/apps/uptimekuma",
+      "canonical_candidate_url": "https://apps.nextcloud.com/apps/uptimekuma",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://apps.nextcloud.com/apps/uptimekuma",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Uptime Kuma Incidents - Apps - App Store - Nextcloud",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6fdcfe4b2a6b6ee23218cbc37d952c2864d626acb528a670f53a47b22fa12254",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://apps.nextcloud.com/apps/uptimekuma",
+      "requested_url": "https://apps.nextcloud.com/apps/uptimekuma",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "nextcloud"
@@ -55054,7 +55894,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 1552,
+    "candidate_source_count": 1576,
     "candidate_source_types": [
       "compliance_page",
       "dpa",

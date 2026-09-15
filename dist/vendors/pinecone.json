@@ -1455,6 +1455,44 @@
       "vendor_id": "pinecone"
     },
     {
+      "_openva_path": "data/vendors/pinecone/candidate_sources/pinecone-trust-center-c5e3c0cb48d4.yaml",
+      "candidate_source_id": "pinecone-trust-center-c5e3c0cb48d4",
+      "candidate_status": "selected",
+      "candidate_url": "https://security.pinecone.io/?itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "canonical_candidate_url": "https://security.pinecone.io/?itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:56:30.992987Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://security.pinecone.io/?itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Pinecone Trust and Security Center | Powered by SafeBase",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:5e5fd6b8f5256d01d5851f20838ca08eb7cde64932b9efb974ef4870ca59b028",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://security.pinecone.io/?itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requested_url": "https://security.pinecone.io/?itemUid=7bfa66da-33ab-49de-8391-e329738a1ae9&source=click",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:56:30.992987Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "pinecone"
+    },
+    {
       "_openva_path": "data/vendors/pinecone/candidate_sources/pinecone-trust-center-cf46b91818f3.yaml",
       "candidate_source_id": "pinecone-trust-center-cf46b91818f3",
       "candidate_status": "selected",
@@ -1814,7 +1852,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 41,
+    "candidate_source_count": 42,
     "candidate_source_types": [
       "trust_center"
     ],
