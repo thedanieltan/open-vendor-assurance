@@ -479,6 +479,41 @@
       "vendor_id": "zoho"
     },
     {
+      "_openva_path": "data/vendors/zoho/candidate_sources/zoho-trust-center-8b630125ea3f.yaml",
+      "candidate_source_id": "zoho-trust-center-8b630125ea3f",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.zoho.com/blog/general/zoho-apps-apple-2026-updates.html",
+      "canonical_candidate_url": "https://www.zoho.com/blog/general/zoho-apps-apple-2026-updates.html",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:02:42.580314Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.zoho.com/blog/general/zoho-apps-apple-2026-updates.html",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Zoho apps on Apple&#039;s latest: Here&#039;s everything new across iOS 27, iPadOS 27, and macOS 27 Golden Gate - Zoho Blog",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b959516cda2187ffe716452d8c341ae7803cfde9fb4032ef8fe2b586f820614c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.zoho.com/blog/general/zoho-apps-apple-2026-updates.html",
+      "requested_url": "https://www.zoho.com/blog/general/zoho-apps-apple-2026-updates.html",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:02:42.580314Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "zoho"
+    },
+    {
       "_openva_path": "data/vendors/zoho/candidate_sources/zoho-trust-center-94bfb2a550d6.yaml",
       "candidate_source_id": "zoho-trust-center-94bfb2a550d6",
       "candidate_status": "selected",
@@ -1051,7 +1086,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 19,
+    "candidate_source_count": 20,
     "candidate_source_types": [
       "trust_center"
     ],
