@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T11:53:12Z",
+  "generated_at": "2026-09-15T12:56:34Z",
   "items": [
     {
       "candidate_vendor_id": "support",
@@ -157,15 +157,15 @@
     },
     {
       "candidate_vendor_id": "firebase",
-      "demand_count": 4,
+      "demand_count": 5,
       "display_name_candidate": "Firebase Cloud Messaging (FCM)",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": "US",
-      "last_seen_at": "2026-09-09T12:47:13Z",
+      "last_seen_at": "2026-09-15T12:56:34Z",
       "not_advice": true,
-      "observation_count": 4,
+      "observation_count": 5,
       "official_domain_candidate": "firebase.google.com",
-      "priority": 92,
+      "priority": 99,
       "provider_count": 2,
       "providers": [
         "openva_vibe_coder_saas_directory",
@@ -175,7 +175,7 @@
       "reason_codes": [],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 4,
+      "signal_count": 5,
       "source_urls": [
         "https://firebase.google.com",
         "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
@@ -213,15 +213,15 @@
     },
     {
       "candidate_vendor_id": "docs",
-      "demand_count": 5,
+      "demand_count": 6,
       "display_name_candidate": "Configure Office 365 (Graph API)",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-15T12:56:34Z",
       "not_advice": true,
-      "observation_count": 5,
+      "observation_count": 6,
       "official_domain_candidate": "docs.cronofy.com",
-      "priority": 67,
+      "priority": 74,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -232,7 +232,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 5,
+      "signal_count": 6,
       "source_urls": [
         "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
@@ -241,15 +241,15 @@
     },
     {
       "candidate_vendor_id": "en",
-      "demand_count": 5,
+      "demand_count": 6,
       "display_name_candidate": "FIPS 140-2",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-15T12:56:34Z",
       "not_advice": true,
-      "observation_count": 5,
+      "observation_count": 6,
       "official_domain_candidate": "en.wikipedia.org",
-      "priority": 67,
+      "priority": 74,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -260,9 +260,37 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 5,
+      "signal_count": 6,
       "source_urls": [
         "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "d1kwv30jm1b7sr",
+      "demand_count": 5,
+      "display_name_candidate": "their Security white paper.",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-15T12:56:34Z",
+      "not_advice": true,
+      "observation_count": 5,
+      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
+      "priority": 67,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-80ac92394c426c366ab5d74f",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 5,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -380,21 +408,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "d1kwv30jm1b7sr",
+      "candidate_vendor_id": "cronofy",
       "demand_count": 4,
-      "display_name_candidate": "their Security white paper.",
+      "display_name_candidate": "Cronofy",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-15T12:56:34Z",
       "not_advice": true,
       "observation_count": 4,
-      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
+      "official_domain_candidate": "cronofy.com",
       "priority": 60,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-80ac92394c426c366ab5d74f",
+      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
       "reason_codes": [
         "country_missing"
       ],
@@ -403,6 +431,90 @@
       "signal_count": 4,
       "source_urls": [
         "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "darkreading",
+      "demand_count": 4,
+      "display_name_candidate": "tenant-to-tenant attacks",
+      "first_seen_at": "2026-09-08T12:01:23Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-15T12:56:34Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "darkreading.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-4109b653b0f5aa944d1ef02d",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://bigid.com/blog/maximizing-security-in-multi-tenant-cloud-environments"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 4,
+      "display_name_candidate": "Apple Push Notification Service (APN)",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-15T12:56:34Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "developer.apple.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-4009ec89423ba523a888a3ad",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 4,
+      "display_name_candidate": "Huawei Push Service",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-09-15T12:56:34Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "developer.huawei.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -6940,49 +7052,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "cronofy",
+      "candidate_vendor_id": "cppa",
       "demand_count": 3,
-      "display_name_candidate": "Cronofy",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 3,
-      "official_domain_candidate": "cronofy.com",
-      "priority": 53,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 3,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "darkreading",
-      "demand_count": 3,
-      "display_name_candidate": "tenant-to-tenant attacks",
+      "display_name_candidate": "Honda paid $632,500",
       "first_seen_at": "2026-09-08T12:01:23Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-15T12:56:34Z",
       "not_advice": true,
       "observation_count": 3,
-      "official_domain_candidate": "darkreading.com",
+      "official_domain_candidate": "cppa.ca.gov",
       "priority": 53,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-4109b653b0f5aa944d1ef02d",
+      "queue_id": "vbq-db53060912e5fb0ee65d85aa",
       "reason_codes": [
         "country_missing"
       ],
@@ -6990,63 +7074,7 @@
       "schema_version": "0.1.0",
       "signal_count": 3,
       "source_urls": [
-        "https://bigid.com/blog/maximizing-security-in-multi-tenant-cloud-environments"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "developer",
-      "demand_count": 3,
-      "display_name_candidate": "Apple Push Notification Service (APN)",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 3,
-      "official_domain_candidate": "developer.apple.com",
-      "priority": 53,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-4009ec89423ba523a888a3ad",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 3,
-      "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "developer",
-      "demand_count": 3,
-      "display_name_candidate": "Huawei Push Service",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 3,
-      "official_domain_candidate": "developer.huawei.com",
-      "priority": 53,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 3,
-      "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+        "https://bigid.com/blog/tractor-supply-ccpa-violations"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -7243,34 +7271,6 @@
       "signal_count": 2,
       "source_urls": [
         "https://bigid.com/blog/mastering-security-frameworks-comprehensive-guide"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "cppa",
-      "demand_count": 2,
-      "display_name_candidate": "Honda paid $632,500",
-      "first_seen_at": "2026-09-08T12:01:23Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-09-09T12:47:13Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "cppa.ca.gov",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-db53060912e5fb0ee65d85aa",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://bigid.com/blog/tractor-supply-ccpa-violations"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
