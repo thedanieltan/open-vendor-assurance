@@ -1,0 +1,34 @@
+candidate_source_id: soldo-compliance-page-35301dc576c2
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-eu/integrations/accounting
+canonical_candidate_url: https://www.soldo.com/en-eu/integrations/accounting/
+confidence: likely
+discovered_at: '2026-09-16T08:49:21.707501Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-eu/integrations/accounting/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  page_title: Connect Soldo with your accounting software
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:571c651398d2849d468d6f13c8338fc266ed5e5e105bdcc03c6434daef1d72dc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-eu/integrations/accounting/
+requested_url: https://www.soldo.com/en-eu/integrations/accounting
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-16T08:49:21.707501Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo
