@@ -1,29 +1,29 @@
-candidate_source_id: jetbrains-security-page-b53debda08f2
+candidate_source_id: jetbrains-security-page-f9ce1cb3d9df
 candidate_status: selected
-candidate_url: https://jetbrains.com/company/useterms.html
-canonical_candidate_url: https://www.jetbrains.com/legal/docs/company/useterms/
+candidate_url: https://www.jetbrains.com/legal/docs/toolbox/user
+canonical_candidate_url: https://www.jetbrains.com/legal/docs/toolbox/user/
 confidence: likely
 discovered_at: '2026-09-16T09:09:27.034286Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://www.jetbrains.com/legal/docs/company/useterms/
+  final_url: https://www.jetbrains.com/legal/docs/toolbox/user/
   http_status: 200
   matched_terms:
   - security
   - availability
   - incident
-  page_title: Website Terms of Use
+  page_title: JetBrains User Agreement
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:a460db8a85fe939bd49225c6eb66e44c46d773ce2d4f25fd11d31c247fab81cc
+  verification_status: ok
+evidence_digest: sha256:9e86f6ccbe80bb0cfc75a0f290fa7a43188e9b74992903b7885364cfcbafb88a
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://www.jetbrains.com/legal/docs/company/useterms/
-requested_url: https://jetbrains.com/company/useterms.html
+observed_final_url: https://www.jetbrains.com/legal/docs/toolbox/user/
+requested_url: https://www.jetbrains.com/legal/docs/toolbox/user
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-16T09:09:27.034286Z'
