@@ -1,32 +1,34 @@
-candidate_source_id: wingify-privacy-notice-15ce7f6b895e
+candidate_source_id: wingify-certification-reference-066000c93fab
 candidate_status: selected
-candidate_url: https://help.wingify.com/
-canonical_candidate_url: https://help.wingify.com/hc/en-us
+candidate_url: https://wingify.com/llm-info
+canonical_candidate_url: https://wingify.com/llm-info/
 confidence: likely
 discovered_at: '2026-09-16T08:48:59.620959Z'
 discovered_by: agent
 discovery_method: rendered_dom_locator_verification
 evidence:
-  content_type: text/html; charset=utf-8
-  final_url: https://help.wingify.com/hc/en-us
+  content_type: text/html
+  final_url: https://wingify.com/llm-info/
   http_status: 200
   matched_terms:
-  - privacy
-  - privacy policy
-  page_title: Wingify
+  - certification
+  - soc 2
+  - iso 27001
+  - pci dss
+  page_title: Official Information About Wingify
   render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:e08017d19cc7de1f71699202d1ef1764efff697c567b75b0d769799ac4cc0532
+  verification_status: ok
+evidence_digest: sha256:0044e4d2f157f57420fa334252f96848939108a9cecd4cb4b4b14f87b57b6b43
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://help.wingify.com/hc/en-us
-requested_url: https://help.wingify.com/
+observed_final_url: https://wingify.com/llm-info/
+requested_url: https://wingify.com/llm-info
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-16T08:48:59.620959Z'
-source_type_candidate: privacy_notice
+source_type_candidate: certification_reference
 superseded_by_candidate_id: null
 vendor_id: wingify
