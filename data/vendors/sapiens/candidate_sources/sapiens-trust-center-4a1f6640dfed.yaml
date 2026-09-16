@@ -1,0 +1,32 @@
+candidate_source_id: sapiens-trust-center-4a1f6640dfed
+candidate_status: selected
+candidate_url: https://sapiens.com/us/contact-us
+canonical_candidate_url: https://sapiens.com/us/contact-us/
+confidence: likely
+discovered_at: '2026-09-16T09:07:21.312202Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://sapiens.com/us/contact-us/
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: Contact Us | Sapiens
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: true
+  verification_status: soft_not_found
+evidence_digest: sha256:daeea2f41a8dcd2e8ae5b1fc5640bcdd20ed1a384225538da23f1ac06468a1c4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sapiens.com/us/contact-us/
+requested_url: https://sapiens.com/us/contact-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-16T09:07:21.312202Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: sapiens
