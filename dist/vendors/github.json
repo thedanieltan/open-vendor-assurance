@@ -153,6 +153,41 @@
   ],
   "candidate_sources": [
     {
+      "_openva_path": "data/vendors/github/candidate_sources/github-certification-reference-427370c3357b.yaml",
+      "candidate_source_id": "github-certification-reference-427370c3357b",
+      "candidate_status": "selected",
+      "candidate_url": "https://docs.github.com/en/get-started/learning-about-github/github-glossary",
+      "canonical_candidate_url": "https://docs.github.com/en/get-started/learning-about-github/github-glossary",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:10.443026Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://docs.github.com/en/get-started/learning-about-github/github-glossary",
+        "http_status": 200,
+        "matched_terms": [
+          "certification",
+          "certificate"
+        ],
+        "page_title": "GitHub glossary - GitHub Docs",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d9afa0f29d2abe32d2b49398ab69c1f5f63c2257d30c0f01da762cb65b4db44d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://docs.github.com/en/get-started/learning-about-github/github-glossary",
+      "requested_url": "https://docs.github.com/en/get-started/learning-about-github/github-glossary",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:10.443026Z",
+      "source_type_candidate": "certification_reference",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "github"
+    },
+    {
       "_openva_path": "data/vendors/github/candidate_sources/github-trust-center-00e8f7d7cea9.yaml",
       "candidate_source_id": "github-trust-center-00e8f7d7cea9",
       "candidate_status": "selected",
@@ -364,6 +399,42 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:18:27.734220Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "github"
+    },
+    {
+      "_openva_path": "data/vendors/github/candidate_sources/github-trust-center-1818dbf9949e.yaml",
+      "candidate_source_id": "github-trust-center-1818dbf9949e",
+      "candidate_status": "selected",
+      "candidate_url": "https://github.com/github/docs/blob/main/content/site-policy/github-terms/github-marketplace-developer-agreement.md",
+      "canonical_candidate_url": "https://github.com/github/docs/blob/main/content/site-policy/github-terms/github-marketplace-developer-agreement.md",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:10.443026Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://github.com/github/docs/blob/main/content/site-policy/github-terms/github-marketplace-developer-agreement.md",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security"
+        ],
+        "page_title": "docs/content/site-policy/github-terms/github-marketplace-developer-agreement.md at main · github/docs · GitHub",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:e8939f29d78f3108191c96e2d9a0e9726f1f812aaf55aa97022d67714063c48d",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://github.com/github/docs/blob/main/content/site-policy/github-terms/github-marketplace-developer-agreement.md",
+      "requested_url": "https://github.com/github/docs/blob/main/content/site-policy/github-terms/github-marketplace-developer-agreement.md",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:10.443026Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "github"
@@ -972,6 +1043,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:18:27.734220Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "github"
+    },
+    {
+      "_openva_path": "data/vendors/github/candidate_sources/github-trust-center-49e5a12e25f1.yaml",
+      "candidate_source_id": "github-trust-center-49e5a12e25f1",
+      "candidate_status": "selected",
+      "candidate_url": "https://docs.github.com/en/get-started/learning-about-github/githubs-plans",
+      "canonical_candidate_url": "https://docs.github.com/en/get-started/learning-about-github/githubs-plans",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:10.443026Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://docs.github.com/en/get-started/learning-about-github/githubs-plans",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "compliance"
+        ],
+        "page_title": "GitHub&#x27;s plans - GitHub Docs",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:8e640c9fa69893a7f4f3d28b8d8fcdb825de6303ce3526929c55c62585cf40ea",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://docs.github.com/en/get-started/learning-about-github/githubs-plans",
+      "requested_url": "https://docs.github.com/en/get-started/learning-about-github/githubs-plans",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:10.443026Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "github"
@@ -2297,6 +2403,42 @@
       "vendor_id": "github"
     },
     {
+      "_openva_path": "data/vendors/github/candidate_sources/github-trust-center-cdf42f4d68a8.yaml",
+      "candidate_source_id": "github-trust-center-cdf42f4d68a8",
+      "candidate_status": "selected",
+      "candidate_url": "https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo",
+      "canonical_candidate_url": "https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:10.443026Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8; rendered=playwright",
+        "final_url": "https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Fork a repository - GitHub Docs",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:b44d649d7241a52d845cf8f1f41bf405a0b11ea80e6948ed5d5f5b7c221cdf98",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo",
+      "requested_url": "https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:10.443026Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "github"
+    },
+    {
       "_openva_path": "data/vendors/github/candidate_sources/github-trust-center-cdf5831035f5.yaml",
       "candidate_source_id": "github-trust-center-cdf5831035f5",
       "candidate_status": "selected",
@@ -3069,8 +3211,9 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 75,
+    "candidate_source_count": 79,
     "candidate_source_types": [
+      "certification_reference",
       "trust_center"
     ],
     "canonical_source_count": 5,

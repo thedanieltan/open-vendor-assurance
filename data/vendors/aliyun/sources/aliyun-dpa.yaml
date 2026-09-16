@@ -17,3 +17,15 @@ provenance:
   observer: human
   confidence: low
 not_advice: true
+review_state: quarantined
+quarantine:
+  reason: persistent_not_found
+  quarantined_by: quarantine-controller
+  quarantined_at: '2026-09-16T13:47:43.413594Z'
+  prior_review_state: null
+  decision_id: aliyun-dpa-quarantine
+  reversal:
+    method: revert_quarantine
+    reference: Revert the quarantine PR for aliyun-dpa; restores the prior review_state.
+      See decision aliyun-dpa-quarantine.
+    reversal_decision_id: null
