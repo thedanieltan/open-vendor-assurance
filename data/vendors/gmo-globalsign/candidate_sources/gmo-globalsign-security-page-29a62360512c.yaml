@@ -1,0 +1,32 @@
+candidate_source_id: gmo-globalsign-security-page-29a62360512c
+candidate_status: selected
+candidate_url: https://status.globalsign.com/incidents/dpps7gt9d5r3
+canonical_candidate_url: https://status.globalsign.com/incidents/dpps7gt9d5r3
+confidence: likely
+discovered_at: '2026-09-17T08:52:53.901366Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.globalsign.com/incidents/dpps7gt9d5r3
+  http_status: 200
+  matched_terms:
+  - incident
+  - trust
+  page_title: GMO GlobalSign Status - GlobalSign will change the root certificate
+    of the server certificate used by our GCC system
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a7c17e92956c85ef56f87f1b3e9671edc4d3103683be713cf31a5f3ca752c18
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.globalsign.com/incidents/dpps7gt9d5r3
+requested_url: https://status.globalsign.com/incidents/dpps7gt9d5r3
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-17T08:52:53.901366Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gmo-globalsign
