@@ -1,0 +1,32 @@
+candidate_source_id: sapiens-trust-center-72b0f90e35db
+candidate_status: selected
+candidate_url: https://sapiens.com/about/people-and-culture
+canonical_candidate_url: https://sapiens.com/about/people-and-culture/
+confidence: likely
+discovered_at: '2026-09-17T09:28:49.509217Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://sapiens.com/about/people-and-culture/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: People &amp; Culture | Sapiens
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: true
+  verification_status: soft_not_found
+evidence_digest: sha256:99b628f886bdb791557168a8173a2186399d1f049b099e9134a857b98e73126a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sapiens.com/about/people-and-culture/
+requested_url: https://sapiens.com/about/people-and-culture
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-17T09:28:49.509217Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: sapiens
