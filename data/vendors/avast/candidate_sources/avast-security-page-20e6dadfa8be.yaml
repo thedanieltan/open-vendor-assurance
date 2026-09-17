@@ -1,0 +1,32 @@
+candidate_source_id: avast-security-page-20e6dadfa8be
+candidate_status: selected
+candidate_url: https://www.avast.com/free-antivirus-download
+canonical_candidate_url: https://www.avast.com/free-antivirus-download
+confidence: likely
+discovered_at: '2026-09-17T08:52:44.334642Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.avast.com/free-antivirus-download
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Download Free Antivirus Software | Avast 2026 PC Protection
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8aa937da0899e157d109dbc4f4f32190ee947eef3b09d6eb31a392e1964c2a0f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.avast.com/free-antivirus-download
+requested_url: https://www.avast.com/free-antivirus-download
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-17T08:52:44.334642Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: avast
