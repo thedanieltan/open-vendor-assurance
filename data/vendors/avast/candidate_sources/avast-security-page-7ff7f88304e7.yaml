@@ -1,0 +1,32 @@
+candidate_source_id: avast-security-page-7ff7f88304e7
+candidate_status: selected
+candidate_url: https://www.avast.com/free-antivirus-download?inid=avastcom-privacy-policy_topnav_free-antivirus-download
+canonical_candidate_url: https://www.avast.com/free-antivirus-download?inid=avastcom-privacy-policy_topnav_free-antivirus-download
+confidence: likely
+discovered_at: '2026-09-17T08:52:44.334642Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.avast.com/free-antivirus-download?inid=avastcom-privacy-policy_topnav_free-antivirus-download
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Download Free Antivirus Software | Avast 2026 PC Protection
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fb1e0042daa797e5492f7954d545feffd1782603fbab30e515e04b43637693f8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.avast.com/free-antivirus-download?inid=avastcom-privacy-policy_topnav_free-antivirus-download
+requested_url: https://www.avast.com/free-antivirus-download?inid=avastcom-privacy-policy_topnav_free-antivirus-download
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-17T08:52:44.334642Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: avast

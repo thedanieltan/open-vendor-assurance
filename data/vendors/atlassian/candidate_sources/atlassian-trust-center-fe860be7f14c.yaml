@@ -1,14 +1,14 @@
 candidate_source_id: atlassian-trust-center-fe860be7f14c
 candidate_status: selected
-candidate_url: https://www.atlassian.com/de/licensing/server-end-of-support
-canonical_candidate_url: https://www.atlassian.com/de/licensing/server-end-of-support
+candidate_url: https://www.atlassian.com/de/licensing/fisheye-and-crucible
+canonical_candidate_url: https://www.atlassian.com/de/licensing/server-end-of-support#fisheye-cruicible-eos
 confidence: likely
-discovered_at: '2026-09-15T08:55:47.204493Z'
+discovered_at: '2026-09-17T08:52:41.338976Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html;charset=UTF-8
-  final_url: https://www.atlassian.com/de/licensing/server-end-of-support
+  final_url: https://www.atlassian.com/de/licensing/server-end-of-support#fisheye-cruicible-eos
   http_status: 200
   matched_terms:
   - trust
@@ -16,16 +16,16 @@ evidence:
   page_title: Häufige gestellte Fragen zum Ende des Server-Supports | Atlassian
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:9d07e56bb653e8c31b99ddd66e03c9329267a842c65dcae23dd1a93354657fd3
+  verification_status: redirected
+evidence_digest: sha256:5ed5ca895f50fe08fdb1f131765fccee2083335a889269d859597de26cc1b6bf
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://www.atlassian.com/de/licensing/server-end-of-support
-requested_url: https://www.atlassian.com/de/licensing/server-end-of-support
+observed_final_url: https://www.atlassian.com/de/licensing/server-end-of-support#fisheye-cruicible-eos
+requested_url: https://www.atlassian.com/de/licensing/fisheye-and-crucible
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-15T08:55:47.204493Z'
+selection_run_id: '2026-09-17T08:52:41.338976Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: atlassian
