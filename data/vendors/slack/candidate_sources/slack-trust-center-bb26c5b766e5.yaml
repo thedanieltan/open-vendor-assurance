@@ -1,29 +1,29 @@
-candidate_source_id: slack-trust-center-19e5e0382011
+candidate_source_id: slack-trust-center-bb26c5b766e5
 candidate_status: selected
-candidate_url: https://slack.com/intl/ko-kr/get
-canonical_candidate_url: https://slack.com/downloads/other
+candidate_url: https://slack.com/blog/news/slacks-fedramp-authorization
+canonical_candidate_url: https://slack.com/blog/news/slacks-fedramp-authorization
 confidence: likely
 discovered_at: '2026-09-17T08:52:38.948065Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/downloads/other
+  final_url: https://slack.com/blog/news/slacks-fedramp-authorization
   http_status: 200
   matched_terms:
   - trust
   - security
-  - privacy
-  page_title: Downloads | Slack
+  - compliance
+  page_title: Slack is FedRAMP Moderate authorized | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:3fae342e0beda8d65020b436a09f701b2f19695a42cdec09125ff9a7ecf30567
+  verification_status: ok
+evidence_digest: sha256:dcbf370754c3b5cd9390881fa78dc484bcc69c9da3c581fa737677ff45484663
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/downloads/other
-requested_url: https://slack.com/intl/ko-kr/get
+observed_final_url: https://slack.com/blog/news/slacks-fedramp-authorization
+requested_url: https://slack.com/blog/news/slacks-fedramp-authorization
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-17T08:52:38.948065Z'
