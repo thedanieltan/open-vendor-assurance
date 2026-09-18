@@ -1,32 +1,31 @@
-candidate_source_id: nextcloud-compliance-page-5e37262fe044
+candidate_source_id: nextcloud-trust-center-fa706aeb994c
 candidate_status: selected
-candidate_url: https://nextcloud.com/owncloud-migration
-canonical_candidate_url: https://nextcloud.com/owncloud-migration/
+candidate_url: https://nextcloud.com/it/owncloud-migrazione
+canonical_candidate_url: https://nextcloud.com/it/owncloud-migrazione/
 confidence: likely
 discovered_at: '2026-09-18T09:06:07.368068Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
-  final_url: https://nextcloud.com/owncloud-migration/
+  final_url: https://nextcloud.com/it/owncloud-migrazione/
   http_status: 200
   matched_terms:
-  - compliance
-  - iso
-  - trust
-  page_title: Nextcloud - Migration guide
+  - security
+  - privacy
+  page_title: Guida alla migrazione - Nextcloud
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:e8ed7bf2ea9b067253af3e3fa0d3277020515b4d569e93ff87697235198cc296
+evidence_digest: sha256:e9b7689ddd0d1c1704b086ac45713de05e60b53f1dad4f2714db74dbc912ad12
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://nextcloud.com/owncloud-migration/
-requested_url: https://nextcloud.com/owncloud-migration
+observed_final_url: https://nextcloud.com/it/owncloud-migrazione/
+requested_url: https://nextcloud.com/it/owncloud-migrazione
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-18T09:06:07.368068Z'
-source_type_candidate: compliance_page
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud
