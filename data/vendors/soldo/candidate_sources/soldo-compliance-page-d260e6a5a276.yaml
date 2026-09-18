@@ -1,0 +1,34 @@
+candidate_source_id: soldo-compliance-page-d260e6a5a276
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-gb/integrations/erp
+canonical_candidate_url: https://www.soldo.com/en-gb/integrations/erp/
+confidence: likely
+discovered_at: '2026-09-18T08:28:46.102896Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-gb/integrations/erp/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  page_title: ERP integrations for smarter spend control
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:56a690803a420c8195000eb3927593de92494cccc7c39e306ef1baba971e37d2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-gb/integrations/erp/
+requested_url: https://www.soldo.com/en-gb/integrations/erp
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-18T08:28:46.102896Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo
