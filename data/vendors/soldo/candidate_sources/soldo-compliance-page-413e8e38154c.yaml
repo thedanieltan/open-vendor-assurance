@@ -1,0 +1,34 @@
+candidate_source_id: soldo-compliance-page-413e8e38154c
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-gb/integrations/build-your-own
+canonical_candidate_url: https://www.soldo.com/en-gb/integrations/build-your-own/
+confidence: likely
+discovered_at: '2026-09-18T08:28:46.102896Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-gb/integrations/build-your-own/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  page_title: Custom integrations with the Soldo API
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a18cb6747c66cf22ad5bf98dd8afff807a06748fa18ba4e1c3fc70424f1357f8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-gb/integrations/build-your-own/
+requested_url: https://www.soldo.com/en-gb/integrations/build-your-own
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-18T08:28:46.102896Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo

@@ -1,28 +1,29 @@
-candidate_source_id: slack-trust-center-dcb51619fd10
+candidate_source_id: slack-trust-center-785c1e83169f
 candidate_status: selected
-candidate_url: https://slack.com/intl/de-de/trust/privacy/privacy-policy
-canonical_candidate_url: https://slack.com/intl/de-de/trust/privacy/privacy-policy
+candidate_url: https://slack.com/intl/zh-cn/trust/data-requests?from=privacy-at-slack
+canonical_candidate_url: https://slack.com/intl/zh-cn/trust/data-requests?from=privacy-at-slack
 confidence: likely
 discovered_at: '2026-09-18T08:28:07.659943Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/intl/de-de/trust/privacy/privacy-policy
+  final_url: https://slack.com/intl/zh-cn/trust/data-requests?from=privacy-at-slack
   http_status: 200
   matched_terms:
+  - trust
   - compliance
   - privacy
-  page_title: Datenschutzrichtlinie | Rechtliches | Slack
+  page_title: 数据请求概述 | 法律 | Slack
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:bb924957f85fb7540f8b125a712ea9bc848d7407aacd38a686bdc06b52033765
+evidence_digest: sha256:9ce6ad64425cfa813b5b1b4264e4218c0d4846f22646f0a99958357f1448909a
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/intl/de-de/trust/privacy/privacy-policy
-requested_url: https://slack.com/intl/de-de/trust/privacy/privacy-policy
+observed_final_url: https://slack.com/intl/zh-cn/trust/data-requests?from=privacy-at-slack
+requested_url: https://slack.com/intl/zh-cn/trust/data-requests?from=privacy-at-slack
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-18T08:28:07.659943Z'
