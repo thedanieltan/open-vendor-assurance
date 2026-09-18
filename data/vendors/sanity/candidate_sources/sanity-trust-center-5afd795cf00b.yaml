@@ -1,0 +1,31 @@
+candidate_source_id: sanity-trust-center-5afd795cf00b
+candidate_status: selected
+candidate_url: https://www.sanity.io/feed/rss
+canonical_candidate_url: https://www.sanity.io/feed/rss
+confidence: likely
+discovered_at: '2026-09-18T09:06:07.368068Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/rss+xml; charset=utf-8
+  final_url: https://www.sanity.io/feed/rss
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Sanity.io
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7d19dc04ec7f52a157ef7a5ba61819d22cc9b1f60476260308e29379d99afc30
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.sanity.io/feed/rss
+requested_url: https://www.sanity.io/feed/rss
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-18T09:06:07.368068Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: sanity
