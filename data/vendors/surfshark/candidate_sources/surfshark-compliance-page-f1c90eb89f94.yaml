@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-f1c90eb89f94
+candidate_status: selected
+candidate_url: https://surfshark.com/fr/blog/cyberharcelement
+canonical_candidate_url: https://surfshark.com/fr/blog/cyberharcelement
+confidence: likely
+discovered_at: '2026-09-18T08:45:29.044402Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://surfshark.com/fr/blog/cyberharcelement
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: 'Cyberharcèlement : définition, loi et comment se protéger en ligne'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3ef290500e9e625b6ed10aa51ba0b5409ee33151aba47c25405580ec72da51e2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/fr/blog/cyberharcelement
+requested_url: https://surfshark.com/fr/blog/cyberharcelement
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-18T08:45:29.044402Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark
