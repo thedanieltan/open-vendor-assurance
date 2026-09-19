@@ -1,0 +1,34 @@
+candidate_source_id: soldo-compliance-page-d29aa62ba098
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-gb/product/expense-review
+canonical_candidate_url: https://www.soldo.com/en-gb/product/expense-review/
+confidence: likely
+discovered_at: '2026-09-19T08:16:27.963917Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-gb/product/expense-review/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  page_title: Automated Expense Review &amp; Approvals | Soldo
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:eaa9b394f22fc9a7014294fb07525a7598563d5854918fcd70e42987a1bd64b2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-gb/product/expense-review/
+requested_url: https://www.soldo.com/en-gb/product/expense-review
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-19T08:16:27.963917Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo

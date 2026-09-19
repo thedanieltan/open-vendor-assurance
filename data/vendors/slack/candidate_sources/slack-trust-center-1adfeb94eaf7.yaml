@@ -1,9 +1,9 @@
 candidate_source_id: slack-trust-center-1adfeb94eaf7
 candidate_status: selected
-candidate_url: https://slack.com/intl/ko-kr/trust/compliance/gdpr
+candidate_url: https://slack.com/intl/ko-kr/gdpr
 canonical_candidate_url: https://slack.com/intl/ko-kr/trust/compliance/gdpr
 confidence: likely
-discovered_at: '2026-09-11T08:16:30.400326Z'
+discovered_at: '2026-09-19T09:08:46.998294Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -11,21 +11,22 @@ evidence:
   final_url: https://slack.com/intl/ko-kr/trust/compliance/gdpr
   http_status: 200
   matched_terms:
+  - trust
   - compliance
   - privacy
   page_title: Slack의 GDPR에 대한 노력 | 법적 고지 사항 | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:3dd07f8e38dcba61d6dcf044302f011badce35a69f0bd29a56f73505a96a9ab2
+  verification_status: redirected
+evidence_digest: sha256:97580b454bb3d4b81918914645ac46f06fabcf8d4ee7ba974c0e145075d7071c
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://slack.com/intl/ko-kr/trust/compliance/gdpr
-requested_url: https://slack.com/intl/ko-kr/trust/compliance/gdpr
+requested_url: https://slack.com/intl/ko-kr/gdpr
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-11T08:16:30.400326Z'
+selection_run_id: '2026-09-19T09:08:46.998294Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: slack

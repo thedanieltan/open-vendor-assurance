@@ -1,30 +1,28 @@
-candidate_source_id: slack-trust-center-8ef493855e2e
+candidate_source_id: slack-trust-center-615e39e9151b
 candidate_status: selected
-candidate_url: https://slack.com/intl/en-in/policies
-canonical_candidate_url: https://slack.com/intl/en-in/legal
+candidate_url: https://slack.com/intl/en-in/get-started?id=information-technology
+canonical_candidate_url: https://slack.com/intl/en-in/get-started?id=information-technology
 confidence: likely
 discovered_at: '2026-09-19T09:08:46.998294Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/intl/en-in/legal
+  final_url: https://slack.com/intl/en-in/get-started?id=information-technology
   http_status: 200
   matched_terms:
-  - trust
   - security
-  - compliance
   - privacy
-  page_title: Legal | Slack
+  page_title: Log in | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:b08f73aa6d8a104a35873be7ab07b569e23f8fdb041941f14513d83c626c7e4d
+  verification_status: ok
+evidence_digest: sha256:397a8bddf7b5d7f9940306a02c2a39a05e8dda04b7de976cec6991ebf13a06eb
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/intl/en-in/legal
-requested_url: https://slack.com/intl/en-in/policies
+observed_final_url: https://slack.com/intl/en-in/get-started?id=information-technology
+requested_url: https://slack.com/intl/en-in/get-started?id=information-technology
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-19T09:08:46.998294Z'
