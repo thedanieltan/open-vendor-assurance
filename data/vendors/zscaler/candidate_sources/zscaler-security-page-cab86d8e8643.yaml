@@ -1,11 +1,11 @@
 candidate_source_id: zscaler-security-page-cab86d8e8643
 candidate_status: selected
-candidate_url: https://www.zscaler.com/products-and-solutions/zero-trust-cloud
+candidate_url: https://www.zscaler.com/products/zscaler-cloud-protection
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/zero-trust-cloud
 confidence: likely
-discovered_at: '2026-09-16T09:07:21.312202Z'
+discovered_at: '2026-09-19T08:54:02.361464Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/zero-trust-cloud
@@ -14,18 +14,19 @@ evidence:
   - security
   - trust
   page_title: Zero Trust Cloud Workload Protection
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:b1dab3d9268d4e752b40c016b0f0f2eb2a9d400e5a699b445ffa91e2b7646f96
+  verification_status: redirected
+evidence_digest: sha256:6e3850b8960358e9a47642215ce72505693d8123a013eab1fc06397e98956169
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/zero-trust-cloud
-requested_url: https://www.zscaler.com/products-and-solutions/zero-trust-cloud
+requested_url: https://www.zscaler.com/products/zscaler-cloud-protection
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-16T09:07:21.312202Z'
+selection_run_id: '2026-09-19T08:54:02.361464Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
