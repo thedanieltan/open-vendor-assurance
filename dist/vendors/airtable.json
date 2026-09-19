@@ -151,7 +151,80 @@
       "vendor_id": "airtable"
     }
   ],
-  "candidate_sources": [],
+  "candidate_sources": [
+    {
+      "_openva_path": "data/vendors/airtable/candidate_sources/airtable-trust-center-333825223de9.yaml",
+      "candidate_source_id": "airtable-trust-center-333825223de9",
+      "candidate_status": "selected",
+      "candidate_url": "https://blog.airtable.com/",
+      "canonical_candidate_url": "https://blog.airtable.com/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:46.889670Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://blog.airtable.com/",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Airtable Blog - For The Record",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:d369d11b2891cfb4077951acf4a6c831b98f7cc37b2badd93beed0b4602621b9",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://blog.airtable.com/",
+      "requested_url": "https://blog.airtable.com/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:46.889670Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "airtable"
+    },
+    {
+      "_openva_path": "data/vendors/airtable/candidate_sources/airtable-trust-center-73d8161f1a3f.yaml",
+      "candidate_source_id": "airtable-trust-center-73d8161f1a3f",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.airtable.com/privacy-choices",
+      "canonical_candidate_url": "https://www.airtable.com/company/privacy-choices",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:46.889670Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.airtable.com/company/privacy-choices",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "privacy"
+        ],
+        "page_title": "Your Privacy Choices | Airtable",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "redirected"
+      },
+      "evidence_digest": "sha256:a60b6cf52689a3e2e57bc92140e6c7a26a5d2f2ccc9fe4b8a5c2071430cab64b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.airtable.com/company/privacy-choices",
+      "requested_url": "https://www.airtable.com/privacy-choices",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:46.889670Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "airtable"
+    }
+  ],
   "canonical_sources": [
     {
       "_openva_path": "data/vendors/airtable/sources/airtable-compliance.yaml",
@@ -407,8 +480,10 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 0,
-    "candidate_source_types": [],
+    "candidate_source_count": 2,
+    "candidate_source_types": [
+      "trust_center"
+    ],
     "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,

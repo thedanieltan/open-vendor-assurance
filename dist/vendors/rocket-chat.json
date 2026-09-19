@@ -12948,10 +12948,10 @@
       "_openva_path": "data/vendors/rocket-chat/candidate_sources/rocket-chat-privacy-notice-cf50b276ef29.yaml",
       "candidate_source_id": "rocket-chat-privacy-notice-cf50b276ef29",
       "candidate_status": "selected",
-      "candidate_url": "https://docs.rocket.chat/legal/privacy",
+      "candidate_url": "https://docs.rocket.chat/docs/privacy-policy",
       "canonical_candidate_url": "https://docs.rocket.chat/docs/privacy-policy",
       "confidence": "likely",
-      "discovered_at": "2026-09-08T08:18:11.979189Z",
+      "discovered_at": "2026-09-13T09:16:54.243386Z",
       "discovered_by": "agent",
       "discovery_method": "sitemap_locator_verification",
       "evidence": {
@@ -12965,16 +12965,16 @@
         "page_title": "Rocket.Chat Privacy Policy Overview",
         "semantic_status": "strong",
         "soft_404_detected": false,
-        "verification_status": "redirected"
+        "verification_status": "ok"
       },
-      "evidence_digest": "sha256:85ad5df517ad7d02fd26eb4fbfe6bdc61c8ee89d03d5db1f1e188103dc63d019",
+      "evidence_digest": "sha256:ed23e39e05f56faf7f32708df2acd836a455899c2feadea8d0344b5227d4e6a6",
       "not_advice": true,
       "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
       "observed_final_url": "https://docs.rocket.chat/docs/privacy-policy",
-      "requested_url": "https://docs.rocket.chat/legal/privacy",
+      "requested_url": "https://docs.rocket.chat/docs/privacy-policy",
       "requires_review": true,
       "schema_version": "0.1.0",
-      "selection_run_id": "2026-09-08T08:18:11.979189Z",
+      "selection_run_id": "2026-09-13T09:16:54.243386Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "rocket-chat"
@@ -17975,6 +17975,76 @@
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "rocket-chat"
+    },
+    {
+      "_openva_path": "data/vendors/rocket-chat/candidate_sources/rocket-chat-trust-center-69696f415b0b.yaml",
+      "candidate_source_id": "rocket-chat-trust-center-69696f415b0b",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.rocket.chat/request-guided-evaluation",
+      "canonical_candidate_url": "https://www.rocket.chat/request-guided-evaluation",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T09:16:54.243386Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.rocket.chat/request-guided-evaluation",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Get Started With Rocket.Chat on AWS Free Trial",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6d4ac983d41cda7e574c8a5013bdafc79c4b83ffc5f497b51b8cf73712b6b5d6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.rocket.chat/request-guided-evaluation",
+      "requested_url": "https://www.rocket.chat/request-guided-evaluation",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T09:16:54.243386Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "rocket-chat"
+    },
+    {
+      "_openva_path": "data/vendors/rocket-chat/candidate_sources/rocket-chat-trust-center-bfc48eac4747.yaml",
+      "candidate_source_id": "rocket-chat-trust-center-bfc48eac4747",
+      "candidate_status": "selected",
+      "candidate_url": "https://de.rocket.chat/request-guided-evaluation",
+      "canonical_candidate_url": "https://de.rocket.chat/request-guided-evaluation",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T09:16:54.243386Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://de.rocket.chat/request-guided-evaluation",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Starten Sie mit Rocket.Chat auf AWS – kostenlose Testversion",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:53fdc9f8c063dc93d456325a382a24b000ae8f9c44e8e9ae57ebc45b8a26b960",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://de.rocket.chat/request-guided-evaluation",
+      "requested_url": "https://de.rocket.chat/request-guided-evaluation",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T09:16:54.243386Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "rocket-chat"
     }
   ],
   "canonical_sources": [
@@ -18034,12 +18104,13 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 506,
+    "candidate_source_count": 508,
     "candidate_source_types": [
       "compliance_page",
       "dpa",
       "privacy_notice",
-      "security_page"
+      "security_page",
+      "trust_center"
     ],
     "canonical_source_count": 1,
     "entity_mention_count": 0,
