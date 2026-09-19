@@ -64,6 +64,7 @@ def test_network_source_discovery_occurs_once_then_enters_unified_ingress() -> N
 
 def test_cycle_writes_only_noncanonical_candidate_staging() -> None:
     body = text()
+    assert "rm -f maintenance/candidates/.lock" in body
     assert "git add maintenance/candidates" in body
     assert "maintenance/candidates/*.json" in body
     assert "git add data" not in body
