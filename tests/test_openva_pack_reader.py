@@ -1,4 +1,5 @@
 import sys
+import json
 from pathlib import Path
 
 import pytest
@@ -30,7 +31,14 @@ def test_pack_reader_loads_current_pack_with_adapter_annotations():
 def test_pack_reader_exposes_candidate_and_unavailable_indexes():
     pack = OpenVAPack.load(".")
 
-    assert pack.candidate_sources() == []
+    candidates = pack.candidate_sources()
+    raw = json.loads(Path("indexes/candidate-sources.json").read_text(encoding="utf-8"))
+    assert len(candidates) == raw["count"]
+    assert {row["candidate_source_id"] for row in candidates} == {
+        row["candidate_source_id"] for row in raw["items"]
+    }
+    assert all(row["record_class"] == "candidate" and row["canonical"] is False for row in candidates)
+    assert all(row["catalog_tier"] == "discovery" for row in candidates)
     unavailable = pack.unavailable_sources()
     assert unavailable
     assert unavailable[0]["record_class"] == "unavailable"
