@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-5aeae0c2708d
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/logs-vs-metrics.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/logs-vs-metrics.html
+confidence: likely
+discovered_at: '2026-09-19T09:01:28.758092Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/logs-vs-metrics.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: 'Logs vs Metrics: Pros, Cons &#x26; When to Use Which | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:04891d9a0d4868c721b4a713685975d9dc57285c3a0c3c42f0087d692ea36541
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/logs-vs-metrics.html
+requested_url: https://www.splunk.com/en_us/blog/learn/logs-vs-metrics.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-19T09:01:28.758092Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
