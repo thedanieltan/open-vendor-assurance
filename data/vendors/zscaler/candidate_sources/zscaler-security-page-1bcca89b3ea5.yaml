@@ -1,9 +1,9 @@
 candidate_source_id: zscaler-security-page-1bcca89b3ea5
 candidate_status: selected
-candidate_url: https://www.zscaler.com/de/products-and-solutions/ot-security
+candidate_url: https://www.zscaler.com/de/products-and-solutions/privileged-remote-access
 canonical_candidate_url: https://www.zscaler.com/de/products-and-solutions/privileged-remote-access
 confidence: likely
-discovered_at: '2026-09-08T08:18:47.566016Z'
+discovered_at: '2026-09-19T08:54:02.361464Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -12,21 +12,20 @@ evidence:
   http_status: 200
   matched_terms:
   - security
-  - vulnerability
   - trust
   page_title: Privileged Access Management | Zscaler
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:eef12a4fb87c65b24111ef0203c1120a3c069bc1775c7d99293ef080e3081357
+  verification_status: ok
+evidence_digest: sha256:d990900daec9376cd2e382bd7233e14aada05f475dc4994cb372d23e85fcd7b8
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/de/products-and-solutions/privileged-remote-access
-requested_url: https://www.zscaler.com/de/products-and-solutions/ot-security
+requested_url: https://www.zscaler.com/de/products-and-solutions/privileged-remote-access
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-08T08:18:47.566016Z'
+selection_run_id: '2026-09-19T08:54:02.361464Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler

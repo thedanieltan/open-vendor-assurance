@@ -1,11 +1,11 @@
 candidate_source_id: zscaler-security-page-0cf7a6be05be
 candidate_status: selected
-candidate_url: https://www.zscaler.com/products-and-solutions/zscaler-b2b
+candidate_url: https://www.zscaler.com/products/zscaler-b2b-service
 canonical_candidate_url: https://www.zscaler.com/products-and-solutions/zscaler-b2b
 confidence: likely
-discovered_at: '2026-09-13T08:31:20.346460Z'
+discovered_at: '2026-09-19T08:54:02.361464Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://www.zscaler.com/products-and-solutions/zscaler-b2b
@@ -14,18 +14,19 @@ evidence:
   - security
   - trust
   page_title: Fast, Secure B2B Customer Experiences | Zscaler B2B
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:c8231e297079f28d8089421243c1e624ab537abfaaff3c654d8b0619138ac9de
+  verification_status: redirected
+evidence_digest: sha256:a3feb742a9a2170a9802d718b3bbd651efd3133c02247d704c86774b64fc4371
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.zscaler.com/products-and-solutions/zscaler-b2b
-requested_url: https://www.zscaler.com/products-and-solutions/zscaler-b2b
+requested_url: https://www.zscaler.com/products/zscaler-b2b-service
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-13T08:31:20.346460Z'
+selection_run_id: '2026-09-19T08:54:02.361464Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: zscaler
