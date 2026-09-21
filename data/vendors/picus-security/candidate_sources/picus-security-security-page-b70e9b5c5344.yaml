@@ -1,0 +1,32 @@
+candidate_source_id: picus-security-security-page-b70e9b5c5344
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/how-click2shell-exploits-wordpress-theme-installation-for-rce
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/how-click2shell-exploits-wordpress-theme-installation-for-rce
+confidence: likely
+discovered_at: '2026-09-21T09:16:48.058676Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/how-click2shell-exploits-wordpress-theme-installation-for-rce
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: How Click2Shell Exploits WordPress Theme Installation for RCE
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9d9a47a2996d08b8b20de87002db2ef054a26e61ccae5a7ef5a1cfcefcc59e56
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/how-click2shell-exploits-wordpress-theme-installation-for-rce
+requested_url: https://www.picussecurity.com/resource/blog/how-click2shell-exploits-wordpress-theme-installation-for-rce
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-21T09:16:48.058676Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
