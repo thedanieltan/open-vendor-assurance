@@ -1,0 +1,32 @@
+candidate_source_id: browserstack-compliance-page-c0f93daa786b
+candidate_status: selected
+candidate_url: https://www.browserstack.com/accessibility-testing/features/central-reporting-dashboard?ref=manual-testing&scroll_to=export-report-as-CSV
+canonical_candidate_url: https://www.browserstack.com/accessibility-testing/features/central-reporting-dashboard?ref=manual-testing&scroll_to=export-report-as-CSV
+confidence: likely
+discovered_at: '2026-09-21T09:16:34.853842Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.browserstack.com/accessibility-testing/features/central-reporting-dashboard?ref=manual-testing&scroll_to=export-report-as-CSV
+  http_status: 200
+  matched_terms:
+  - compliance
+  - audit
+  page_title: Central Reporting Dashboard - Accessibility Testing Features | BrowserStack
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2a321a4cef96f3f890eb91bd0b74e06c2e912a0490f3238914f9daffd23a762a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.browserstack.com/accessibility-testing/features/central-reporting-dashboard?ref=manual-testing&scroll_to=export-report-as-CSV
+requested_url: https://www.browserstack.com/accessibility-testing/features/central-reporting-dashboard?ref=manual-testing&scroll_to=export-report-as-CSV
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-21T09:16:34.853842Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: browserstack
