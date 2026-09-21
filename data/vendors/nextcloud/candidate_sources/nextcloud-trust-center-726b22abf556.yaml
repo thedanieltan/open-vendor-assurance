@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-trust-center-726b22abf556
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/files_excludedirs
+canonical_candidate_url: https://apps.nextcloud.com/apps/files_excludedirs
+confidence: likely
+discovered_at: '2026-09-21T09:43:20.558043Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/files_excludedirs
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Exclude directories - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4e2032be599dd2725c627715e84758f146d8f7f47840b3444bf2e8a873b2ef48
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/files_excludedirs
+requested_url: https://apps.nextcloud.com/apps/files_excludedirs
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-21T09:43:20.558043Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud
