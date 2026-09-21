@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-17b4232830cb
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/153113
+canonical_candidate_url: https://access.redhat.com/solutions/153113
+confidence: likely
+discovered_at: '2026-09-21T09:16:30.198560Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/153113
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'System panic with BUG: soft lockup with RIP: nvidia:_nv014198rm+0xc1/0xcf
+    - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:dea5cf9c601ce5230350f23dfc4a8fbb3911eda4bea2141ba3e9d5fccb255575
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/153113
+requested_url: https://access.redhat.com/solutions/153113
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-21T09:16:30.198560Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
