@@ -1,29 +1,28 @@
-candidate_source_id: slack-trust-center-3fe4d3f4edbe
+candidate_source_id: slack-trust-center-e3e1aa50534f
 candidate_status: selected
-candidate_url: https://slack.com/intl/ja-jp/security
-canonical_candidate_url: https://slack.com/intl/ja-jp/trust/security
+candidate_url: https://slack.com/intl/zh-tw/marketplace/A0H1BKQE5-okta
+canonical_candidate_url: https://slack.com/intl/zh-tw/marketplace/A0H1BKQE5-okta
 confidence: likely
 discovered_at: '2026-09-21T09:37:29.544659Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/intl/ja-jp/trust/security
+  final_url: https://slack.com/intl/zh-tw/marketplace/A0H1BKQE5-okta
   http_status: 200
   matched_terms:
-  - trust
   - security
-  - privacy
-  page_title: 'Slack のセキュリティ : エンタープライズグレードの暗号化 | Slack'
+  - compliance
+  page_title: Okta (legacy) &amp; Slack Integration | Slack Marketplace
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:ec4f88441e6fa0dc8056a29a5a015579985006595742c6e65c4fc90a4c2d9c0e
+  verification_status: ok
+evidence_digest: sha256:50b4d7ab31bec0e015e21666762ebf14d7c7f00adb90dc1d31c1708992073b9c
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/intl/ja-jp/trust/security
-requested_url: https://slack.com/intl/ja-jp/security
+observed_final_url: https://slack.com/intl/zh-tw/marketplace/A0H1BKQE5-okta
+requested_url: https://slack.com/intl/zh-tw/marketplace/A0H1BKQE5-okta
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-21T09:37:29.544659Z'
