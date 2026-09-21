@@ -1,0 +1,31 @@
+candidate_source_id: icertis-security-page-8c8f24dee237
+candidate_status: selected
+candidate_url: https://trustcenter.icertis.com/?itemName=incident_response&itemUid=4172d827-b055-4117-a2dc-7b0746d7afd0&source=click
+canonical_candidate_url: https://trustcenter.icertis.com/?itemName=incident_response&itemUid=4172d827-b055-4117-a2dc-7b0746d7afd0&source=click
+confidence: likely
+discovered_at: '2026-09-21T09:16:29.461377Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://trustcenter.icertis.com/?itemName=incident_response&itemUid=4172d827-b055-4117-a2dc-7b0746d7afd0&source=click
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Icertis Trust Center | Powered by SafeBase
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:835cc8f3f9fb31def0f65506feaf441e6ef85c3efe5fe8b4a5f21eed2a3f30ff
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trustcenter.icertis.com/?itemName=incident_response&itemUid=4172d827-b055-4117-a2dc-7b0746d7afd0&source=click
+requested_url: https://trustcenter.icertis.com/?itemName=incident_response&itemUid=4172d827-b055-4117-a2dc-7b0746d7afd0&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-21T09:16:29.461377Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: icertis
