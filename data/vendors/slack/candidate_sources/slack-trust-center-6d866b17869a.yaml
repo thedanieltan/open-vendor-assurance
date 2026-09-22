@@ -1,9 +1,9 @@
 candidate_source_id: slack-trust-center-6d866b17869a
 candidate_status: selected
-candidate_url: https://slack.com/intl/fr-fr/trust/compliance/gdpr
+candidate_url: https://slack.com/intl/fr-fr/gdpr
 canonical_candidate_url: https://slack.com/intl/fr-fr/trust/compliance/gdpr
 confidence: likely
-discovered_at: '2026-09-20T08:48:37.068242Z'
+discovered_at: '2026-09-22T08:47:39.479053Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -11,22 +11,21 @@ evidence:
   final_url: https://slack.com/intl/fr-fr/trust/compliance/gdpr
   http_status: 200
   matched_terms:
-  - trust
   - compliance
   - privacy
   page_title: Engagement RGPD de Slack | Aspects juridiques | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:ee75bec821e04570879e5f5814af9e04b3211afca9e1609809734b0eb1b76e93
+  verification_status: redirected
+evidence_digest: sha256:915b802b9df359cf071a0201c762f00bd1ebef153258c1a1cf88896c4eb2c7ef
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://slack.com/intl/fr-fr/trust/compliance/gdpr
-requested_url: https://slack.com/intl/fr-fr/trust/compliance/gdpr
+requested_url: https://slack.com/intl/fr-fr/gdpr
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-20T08:48:37.068242Z'
+selection_run_id: '2026-09-22T08:47:39.479053Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: slack
