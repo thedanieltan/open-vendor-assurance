@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-8fe2ebfd7262
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/606036
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/606036
+confidence: likely
+discovered_at: '2026-09-22T09:02:54.663343Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/606036
+  http_status: 200
+  matched_terms:
+  - availability
+  - vulnerability
+  page_title: Feedback issue for malicious package detection beta (#606036) · Issues
+    · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c5c5e0904b63b4db0cfbe8600f2f036c2cb0035e17fe41772f717a32dcfe8191
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/606036
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/606036
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-22T09:02:54.663343Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
