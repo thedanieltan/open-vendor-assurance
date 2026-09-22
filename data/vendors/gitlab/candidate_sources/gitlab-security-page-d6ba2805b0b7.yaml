@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-d6ba2805b0b7
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/611727
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/611727
+confidence: likely
+discovered_at: '2026-09-22T09:02:54.663343Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/611727
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Add ListVulnerabilities and GetVulnerability tools to MCP Server (#611727)
+    · Issues · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f7bad4d7b386ca698b436a6c0bd1929af30e1084d7b9a342101b19c818a5c468
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/611727
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/work_items/611727
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-22T09:02:54.663343Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

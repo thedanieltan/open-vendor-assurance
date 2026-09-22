@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-41049b962076
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/application_security/configuration/security_configuration_profiles
+canonical_candidate_url: https://docs.gitlab.com/user/application_security/configuration/security_configuration_profiles/
+confidence: likely
+discovered_at: '2026-09-22T09:02:54.663343Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/user/application_security/configuration/security_configuration_profiles/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: Managing security configuration profiles | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:579c9899ac500a077144acb83f7e29a1c61bb5a8908ac4f55c119671d5dc1324
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/application_security/configuration/security_configuration_profiles/
+requested_url: https://docs.gitlab.com/user/application_security/configuration/security_configuration_profiles
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-22T09:02:54.663343Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
