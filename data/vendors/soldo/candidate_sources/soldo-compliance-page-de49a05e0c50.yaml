@@ -1,0 +1,34 @@
+candidate_source_id: soldo-compliance-page-de49a05e0c50
+candidate_status: selected
+candidate_url: https://www.soldo.com/en-eu/solutions/enterprise
+canonical_candidate_url: https://www.soldo.com/en-eu/solutions/enterprise/
+confidence: likely
+discovered_at: '2026-09-23T09:32:09.221130Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.soldo.com/en-eu/solutions/enterprise/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  page_title: Enterprise Spend Management | Control &amp; Visibility with Soldo
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4964eba8a5da23c44c28b5e45941265d6e51d9212f0777b4c10d11ba12eb5a38
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.soldo.com/en-eu/solutions/enterprise/
+requested_url: https://www.soldo.com/en-eu/solutions/enterprise
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-23T09:32:09.221130Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: soldo
