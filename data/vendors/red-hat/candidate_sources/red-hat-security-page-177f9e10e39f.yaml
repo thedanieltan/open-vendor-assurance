@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-177f9e10e39f
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7138202
+canonical_candidate_url: https://access.redhat.com/solutions/7138202
+confidence: likely
+discovered_at: '2026-09-23T09:22:03.528560Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7138202
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Provisioning a RHEL 7 and RHEL 8 client system stuck at &quot;Booting
+    Kickstart default PXEGrub2&quot; on Red Hat Satellite Capsule 6.18 - Red Hat Customer
+    Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6c49200d2f4b8ae4052b3d77d1a320437249bf9a3f5dade252faa1fdd81fdcaa
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7138202
+requested_url: https://access.redhat.com/solutions/7138202
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-23T09:22:03.528560Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
