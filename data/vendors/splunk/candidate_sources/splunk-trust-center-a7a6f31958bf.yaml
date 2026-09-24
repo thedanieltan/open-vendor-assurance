@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-a7a6f31958bf
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/service-level-management.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/service-level-management.html
+confidence: likely
+discovered_at: '2026-09-24T08:43:16.848966Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/service-level-management.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Service Level Management &#x26; Monitoring | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:227f06103ee16e3ed57e33ac14a1ff2720ca8120cc3e1d3e0dfc43939a00c108
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/service-level-management.html
+requested_url: https://www.splunk.com/en_us/blog/learn/service-level-management.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T08:43:16.848966Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
