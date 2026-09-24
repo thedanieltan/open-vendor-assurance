@@ -1,0 +1,32 @@
+candidate_source_id: docker-trust-center-c54944ac30ee
+candidate_status: selected
+candidate_url: https://www.docker.com/products/build-cloud
+canonical_candidate_url: https://www.docker.com/
+confidence: likely
+discovered_at: '2026-09-24T08:44:00.871440Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.docker.com/
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: 'Docker: Accelerated Container Application Development'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: homepage_or_generic_redirect
+evidence_digest: sha256:ed03cbe42d7367335363fbbe2338fb721a1a627a7a8b708e0c1b88a4635914db
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.docker.com/
+requested_url: https://www.docker.com/products/build-cloud
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T08:44:00.871440Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: docker
