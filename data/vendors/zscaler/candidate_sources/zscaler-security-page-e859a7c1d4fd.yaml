@@ -1,0 +1,32 @@
+candidate_source_id: zscaler-security-page-e859a7c1d4fd
+candidate_status: selected
+candidate_url: https://www.zscaler.com/br/security/vulnerability-disclosure-program
+canonical_candidate_url: https://www.zscaler.com/br/security/vulnerability-disclosure-program
+confidence: likely
+discovered_at: '2026-09-24T09:11:13.611709Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zscaler.com/br/security/vulnerability-disclosure-program
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Vulnerability Disclosure Program | Zscaler
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b3a54d6e6b7916ee0700b14e0b824cba0fbf7425ef79f69c780d9a85bde76fdb
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zscaler.com/br/security/vulnerability-disclosure-program
+requested_url: https://www.zscaler.com/br/security/vulnerability-disclosure-program
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T09:11:13.611709Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: zscaler
