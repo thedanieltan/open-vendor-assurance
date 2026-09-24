@@ -1,0 +1,31 @@
+candidate_source_id: fly-io-security-page-78f2cebf203f
+candidate_status: selected
+candidate_url: https://docs.fly.io/flyctl/cmd/fly_auth_whoami
+canonical_candidate_url: https://docs.fly.io/flyctl/cmd/fly_auth_whoami
+confidence: likely
+discovered_at: '2026-09-24T09:26:27.005125Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.fly.io/flyctl/cmd/fly_auth_whoami
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: fly auth whoami - Fly.io
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b347f1d4dfdb065d88d331c0ebd8026509ee2e730c86a18dc9f0aed011e48e5e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.fly.io/flyctl/cmd/fly_auth_whoami
+requested_url: https://docs.fly.io/flyctl/cmd/fly_auth_whoami
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T09:26:27.005125Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: fly-io
