@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-32642dd57c48
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/spear-phishing.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/spear-phishing.html
+confidence: likely
+discovered_at: '2026-09-24T08:43:16.848966Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/spear-phishing.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Spear Phishing &#x26; How To Prevent It | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8ce4504986d5059e42eb015cc7859a49333096d1f14668dff5f71ca96dd504b9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/spear-phishing.html
+requested_url: https://www.splunk.com/en_us/blog/learn/spear-phishing.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T08:43:16.848966Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
