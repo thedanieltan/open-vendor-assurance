@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-b4d617e15837
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/understand-atlassian-mcp-server
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/understand-atlassian-mcp-server
+confidence: likely
+discovered_at: '2026-09-24T08:43:16.848966Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/understand-atlassian-mcp-server
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - trust
+  page_title: Understand Atlassian MCP server | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6bcf1c91ffd21b8d6197c02ea652a6a9b84825c77b526ef700f38e24fe33d519
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/understand-atlassian-mcp-server
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/understand-atlassian-mcp-server
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T08:43:16.848966Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
