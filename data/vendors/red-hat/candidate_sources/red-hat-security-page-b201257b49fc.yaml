@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-b201257b49fc
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7145941
+canonical_candidate_url: https://access.redhat.com/solutions/7145941
+confidence: likely
+discovered_at: '2026-09-24T09:22:50.332101Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7145941
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'ACMMetricsCollectorForwardRemoteWriteError alert with &quot;HTTP 409:
+    duplicate sample for timestamp&quot; for Metric node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m
+    - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5a0a0adbc324d5146b2705d48288e44e15866431a24f4e64fe0346e1c904f879
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7145941
+requested_url: https://access.redhat.com/solutions/7145941
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T09:22:50.332101Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

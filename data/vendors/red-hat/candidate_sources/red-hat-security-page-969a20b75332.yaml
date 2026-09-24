@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-969a20b75332
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7143735
+canonical_candidate_url: https://access.redhat.com/solutions/7143735
+confidence: likely
+discovered_at: '2026-09-24T09:22:50.332101Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7143735
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: SELinux denies adcli getattr access on different filesystems post patching.
+    - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f9a96fbdb728be83f937abf0cd56ae1e50381dba51c7397bc72e77a0eb2bf983
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7143735
+requested_url: https://access.redhat.com/solutions/7143735
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-24T09:22:50.332101Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
