@@ -1,0 +1,32 @@
+candidate_source_id: darktrace-security-page-a73bda116eda
+candidate_status: selected
+candidate_url: https://www.darktrace.com/ja/products/hybrid-network
+canonical_candidate_url: https://www.darktrace.com/ja/products/hybrid-network
+confidence: likely
+discovered_at: '2026-09-25T09:42:09.022213Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.darktrace.com/ja/products/hybrid-network
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Network Security Management | AI Network Security Protection
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c07bd2069e72d9eadf60b420bd11250a4ea4f22556e97d4b11e32e5a05f2a9ef
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.darktrace.com/ja/products/hybrid-network
+requested_url: https://www.darktrace.com/ja/products/hybrid-network
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-25T09:42:09.022213Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: darktrace
