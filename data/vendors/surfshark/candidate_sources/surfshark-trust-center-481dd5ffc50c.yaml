@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-trust-center-481dd5ffc50c
+candidate_status: selected
+candidate_url: https://surfshark.com/de/what-is-my-ip
+canonical_candidate_url: https://surfshark.com/de/what-is-my-ip
+confidence: likely
+discovered_at: '2026-09-25T09:32:05.976975Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://surfshark.com/de/what-is-my-ip
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  page_title: Was ist meine IP-Adresse? Sieh dir deine öffentliche IP an
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2eab291514d98f2bc4aadbd57bd4831ffd8942899323271a164eac8e94854ce3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/de/what-is-my-ip
+requested_url: https://surfshark.com/de/what-is-my-ip
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-25T09:32:05.976975Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: surfshark
