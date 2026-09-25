@@ -1,0 +1,32 @@
+candidate_source_id: meistertask-trust-center-8e8cc28fb380
+candidate_status: selected
+candidate_url: https://www.meistertask.com/pages/pt/security
+canonical_candidate_url: https://www.meistertask.com/pages/pt/security
+confidence: likely
+discovered_at: '2026-09-25T09:04:02.277167Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.meistertask.com/pages/pt/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  page_title: 'Trust Center: Segurança em Nível Corporativo | MeisterTask'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:58e33b05b7e8f7861e761943aaa54b9a402593e0fd99756f1a49d3059ebec926
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.meistertask.com/pages/pt/security
+requested_url: https://www.meistertask.com/pages/pt/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-25T09:04:02.277167Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: meistertask
