@@ -1317,6 +1317,41 @@
       "vendor_id": "kddi"
     },
     {
+      "_openva_path": "data/vendors/kddi/candidate_sources/kddi-compliance-page-a99ba934469b.yaml",
+      "candidate_source_id": "kddi-compliance-page-a99ba934469b",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.kddi.com/english/vision/managementplan2026-2028",
+      "canonical_candidate_url": "https://www.kddi.com/english/vision/managementplan2026-2028/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T09:09:02.478102Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.kddi.com/english/vision/managementplan2026-2028/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "trust"
+        ],
+        "page_title": "Mid-term Management Strategy (2026-2028) | Vision &amp; Strategies | KDDI CORPORATION",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c34d6fc1d396b72f5be17e455da2143df77d682470669f249c3c6f6f5896ffd6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.kddi.com/english/vision/managementplan2026-2028/",
+      "requested_url": "https://www.kddi.com/english/vision/managementplan2026-2028",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T09:09:02.478102Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "kddi"
+    },
+    {
       "_openva_path": "data/vendors/kddi/candidate_sources/kddi-compliance-page-ab1ba43c2ac3.yaml",
       "candidate_source_id": "kddi-compliance-page-ab1ba43c2ac3",
       "candidate_status": "selected",
@@ -2683,7 +2718,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 71,
+    "candidate_source_count": 72,
     "candidate_source_types": [
       "compliance_page",
       "trust_center"

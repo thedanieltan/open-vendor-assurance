@@ -299,6 +299,41 @@
       "vendor_id": "starburst"
     },
     {
+      "_openva_path": "data/vendors/starburst/candidate_sources/starburst-ai-terms-8469c46f7da0.yaml",
+      "candidate_source_id": "starburst-ai-terms-8469c46f7da0",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.starburst.io/blog/what-is-query-pushdown",
+      "canonical_candidate_url": "https://www.starburst.io/blog/what-is-query-pushdown/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:14.692434Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.starburst.io/blog/what-is-query-pushdown/",
+        "http_status": 200,
+        "matched_terms": [
+          "artificial intelligence",
+          "customer data"
+        ],
+        "page_title": "What is Query Pushdown? | Starburst",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:a955418a9e320e8c629ad57cd8e9ed9b429e7033777b2f960c5b67c43d12f70c",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.starburst.io/blog/what-is-query-pushdown/",
+      "requested_url": "https://www.starburst.io/blog/what-is-query-pushdown",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:14.692434Z",
+      "source_type_candidate": "ai_terms",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "starburst"
+    },
+    {
       "_openva_path": "data/vendors/starburst/candidate_sources/starburst-ai-terms-d9dd3c87f096.yaml",
       "candidate_source_id": "starburst-ai-terms-d9dd3c87f096",
       "candidate_status": "selected",
@@ -712,7 +747,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 12,
+    "candidate_source_count": 13,
     "candidate_source_types": [
       "ai_terms",
       "certification_reference"
