@@ -72,6 +72,11 @@ try:
 except ImportError:  # pragma: no cover - non-POSIX fallback
     fcntl = None
 
+try:
+    import msvcrt  # Windows byte-range locking
+except ImportError:  # pragma: no cover - POSIX
+    msvcrt = None
+
 from tools.openva import candidate_record
 from tools.openva.indexes import ROOT
 from tools.openva.safe_verify import build_safe_verify_fetcher
@@ -515,17 +520,38 @@ class _FileLock:
 
     def __enter__(self) -> "_FileLock":
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        self._handle = self._path.open("a+")
-        if fcntl is not None:
-            fcntl.flock(self._handle.fileno(), fcntl.LOCK_EX)
+        self._handle = self._path.open("a+b")
+        try:
+            if fcntl is not None:
+                fcntl.flock(self._handle.fileno(), fcntl.LOCK_EX)
+            elif msvcrt is not None:
+                # Lock the same first byte in every process/thread. Failure to
+                # acquire the bounded OS lock denies the transaction.
+                self._handle.seek(0, os.SEEK_END)
+                if self._handle.tell() == 0:
+                    self._handle.write(b"\0")
+                    self._handle.flush()
+                self._handle.seek(0)
+                msvcrt.locking(self._handle.fileno(), msvcrt.LK_LOCK, 1)
+            else:
+                raise RuntimeError("candidate ingress requires filesystem locking")
+        except BaseException:
+            self._handle.close()
+            self._handle = None
+            raise
         return self
 
     def __exit__(self, *exc: Any) -> None:
         if self._handle is not None:
-            if fcntl is not None:
-                fcntl.flock(self._handle.fileno(), fcntl.LOCK_UN)
-            self._handle.close()
-            self._handle = None
+            try:
+                if fcntl is not None:
+                    fcntl.flock(self._handle.fileno(), fcntl.LOCK_UN)
+                elif msvcrt is not None:
+                    self._handle.seek(0)
+                    msvcrt.locking(self._handle.fileno(), msvcrt.LK_UNLCK, 1)
+            finally:
+                self._handle.close()
+                self._handle = None
 
 
 class CatalogQueueIngress:
@@ -1731,9 +1757,9 @@ def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 def _rel(path: Path, root: Path) -> str:
     try:
-        return str(path.relative_to(root))
+        return path.relative_to(root).as_posix()
     except ValueError:
-        return os.path.relpath(str(path), str(root))
+        return Path(os.path.relpath(str(path), str(root))).as_posix()
 
 
 def _is_committed(path: Path, root: Path) -> bool:
