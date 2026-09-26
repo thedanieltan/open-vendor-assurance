@@ -61,13 +61,34 @@ Stable breadth projections are committed through a separate breadth checkpoint t
 
 Reruns first search for the exact deterministic branch and pull request. Existing pull requests are reused. A workflow-owned orphan branch is resumed only when its commit subject matches the expected source-run and partition identity; otherwise execution fails closed.
 
+Before merging, recovery pins the PR head and waits for successful
+`repository-integrity`, `pr-scope-guard`, and `weighted-review` checks. Every
+other reported check must also finish without failure; skipped optional jobs do
+not count as successful mandatory checks. Missing or pending checks defer the
+merge for a bounded wait. Failed checks, requested changes, required review,
+draft PRs, and changed heads deny it. The merge command binds the expected head
+and retains server-side protections; mergeability alone never authorizes a merge.
+
 ## Authority boundary
+
+Recovery and Discovery Cycle check live open issues bearing `openva-bot-paused`
+or `openva-hold` before candidate writes and remote mutations. Recovery rechecks
+during CI waiting and immediately before merging. A matching issue, malformed
+response, timeout, or API failure stops the path without a fallback allow state.
+These checks do not remove holds or grant an acceptance-test exception.
 
 The recovery workflow writes only:
 
 - noncanonical candidate-source records;
 - partition-specific reviewed promotion plans;
 - stable noncanonical vendor-breadth projections.
+- generated candidate-source indexes and manifests for the partition's vendors,
+  rebuilt exclusively by `python -m tools.openva.validate build-indexes` after
+  validating the exact candidate/plan write set.
+
+The generated-path guard permits only candidate-dependent indexes and those
+vendor manifests. Drift in unrelated generated surfaces fails closed and must be
+repaired separately; intake cannot absorb unrelated catalog or export changes.
 
 It never writes canonical vendors or sources and does not alter admission, verification, release, quorum, or automerge policy. After a source partition merges, `discovery-mesh.yml` resolves its exact plan and dispatches `candidate-promotion-pr.yml`, which remains the sole canonical source mutation authority.
 
