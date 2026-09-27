@@ -1,0 +1,32 @@
+candidate_source_id: loom-security-page-0b3ceecd766b
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/investigate-and-act-on-findings
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/investigate-and-act-on-findings
+confidence: likely
+discovered_at: '2026-09-27T09:30:19.611632Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/investigate-and-act-on-findings
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  page_title: Investigate and act on findings | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c8e9785f84f3555e3970a2a565e91677ec42175ce20aa5225df00ed59e50a484
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/investigate-and-act-on-findings
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/investigate-and-act-on-findings
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:30:19.611632Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
