@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-d93dab5447ba
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148521
+canonical_candidate_url: https://access.redhat.com/solutions/7148521
+confidence: likely
+discovered_at: '2026-09-27T09:55:20.532377Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148521
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: The /var/tmp fills up rapidly because systemd-tmpfiles fails to clean
+    /var/tmp/insights-archives when Lightspeed On-Premise is enabled on Red Hat Satellite
+    - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a0ed92b9111ce22ccbc08a74db0b7bd91a2c8b87e14570c9a7e5863ec65574cf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148521
+requested_url: https://access.redhat.com/solutions/7148521
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:55:20.532377Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

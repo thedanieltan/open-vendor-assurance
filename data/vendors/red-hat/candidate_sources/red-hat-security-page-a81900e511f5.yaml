@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-a81900e511f5
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7037027
+canonical_candidate_url: https://access.redhat.com/solutions/7037027
+confidence: likely
+discovered_at: '2026-09-27T09:55:20.532377Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7037027
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'multipathd: mpathX option &#039;features &quot;1 queue_if_no_path&quot;&#039;
+    is deprecated, please use &#039;no_path_retry queue&#039; instead - Red Hat Customer
+    Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4d09b4396cc957f06c8d0b81a329525970e38dc016e1947e5faef9e6dea3077d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7037027
+requested_url: https://access.redhat.com/solutions/7037027
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:55:20.532377Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
