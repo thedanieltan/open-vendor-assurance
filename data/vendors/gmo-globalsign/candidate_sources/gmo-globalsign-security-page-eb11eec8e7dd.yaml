@@ -1,0 +1,32 @@
+candidate_source_id: gmo-globalsign-security-page-eb11eec8e7dd
+candidate_status: selected
+candidate_url: https://compliance.globalsign.com/?itemUid=2e9d9cb7-536c-4c32-b790-a1e996855777&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+canonical_candidate_url: https://compliance.globalsign.com/?itemUid=2e9d9cb7-536c-4c32-b790-a1e996855777&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+confidence: likely
+discovered_at: '2026-09-27T09:48:38.469526Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://compliance.globalsign.com/?itemUid=2e9d9cb7-536c-4c32-b790-a1e996855777&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: GlobalSign Trust Center | Powered by SafeBase
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:924336d581ffa341ddfa5276d641e8c1995ee4e6753afd99bb67f967b08a716d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://compliance.globalsign.com/?itemUid=2e9d9cb7-536c-4c32-b790-a1e996855777&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+requested_url: https://compliance.globalsign.com/?itemUid=2e9d9cb7-536c-4c32-b790-a1e996855777&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:48:38.469526Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gmo-globalsign
