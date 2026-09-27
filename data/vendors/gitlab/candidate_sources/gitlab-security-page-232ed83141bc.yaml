@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-232ed83141bc
+candidate_status: selected
+candidate_url: https://trust.gitlab.com/?itemName=data_security&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&itemuid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click
+canonical_candidate_url: https://trust.gitlab.com/?itemName=data_security&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&itemuid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click
+confidence: likely
+discovered_at: '2026-09-27T09:55:20.532377Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://trust.gitlab.com/?itemName=data_security&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&itemuid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: GitLab Trust Center | Powered by SafeBase
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4bf216ff6f4601c8335d9ef975412bbf0a86bf8b2773bf71044a2b09fac8db08
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trust.gitlab.com/?itemName=data_security&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&itemuid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click
+requested_url: https://trust.gitlab.com/?itemName=data_security&itemUid=53e1508c-665e-45a8-9ce0-03fdf9ae1efb&itemuid=0a28ddf2-a4a5-4fad-8e51-f0fb7a5f7551&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:55:20.532377Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
