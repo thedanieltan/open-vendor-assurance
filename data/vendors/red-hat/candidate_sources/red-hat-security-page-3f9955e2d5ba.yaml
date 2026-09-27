@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-3f9955e2d5ba
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148524
+canonical_candidate_url: https://access.redhat.com/solutions/7148524
+confidence: likely
+discovered_at: '2026-09-27T09:55:20.532377Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148524
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: RHCOS node with LACP (802.3ad) bond does not obtain a DHCP lease and
+    switch reports the port-channel member as suspended - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:66f3fda3fbeec0cc9508152759101a372ebaed8429261c16d411ad2f37f1c5f4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148524
+requested_url: https://access.redhat.com/solutions/7148524
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-27T09:55:20.532377Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
