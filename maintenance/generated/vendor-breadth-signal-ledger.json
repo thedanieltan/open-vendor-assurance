@@ -2909,6 +2909,37 @@
       "signal_count": 1
     },
     {
+      "countries": [],
+      "demand_count": 1,
+      "display_name": "multiple dimensions",
+      "domain": "e-conomic.dk",
+      "entity_key": "domain:e-conomic.dk",
+      "first_seen_at": "2026-09-28T13:15:43Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "observations": [
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-19-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-db5b62b19d981b0bdfacf54f",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-mar-26"
+        }
+      ],
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "signal_count": 1
+    },
+    {
       "countries": [
         "US"
       ],
@@ -3239,14 +3270,14 @@
       "countries": [
         "US"
       ],
-      "demand_count": 6,
+      "demand_count": 7,
       "display_name": "Firebase Cloud Messaging (FCM)",
       "domain": "firebase.google.com",
       "entity_key": "domain:firebase.google.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 6,
+      "observation_count": 7,
       "observations": [
         {
           "country_observed": "US",
@@ -3284,6 +3315,19 @@
           "provider_record_id": "aggregate-24-0",
           "relationship_context": null,
           "signal_id": "vbsig-4a004dce0bc31901b2920ab8",
+          "source_kind": "relationship_graph",
+          "source_url": "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-21-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-6e0f97f4a2785219bad88b4b",
           "source_kind": "relationship_graph",
           "source_url": "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
         },
@@ -3332,7 +3376,7 @@
         "openva_vibe_coder_saas_directory",
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 6
+      "signal_count": 7
     },
     {
       "countries": [
@@ -3730,14 +3774,14 @@
     },
     {
       "countries": [],
-      "demand_count": 4,
+      "demand_count": 5,
       "display_name": "GDPR",
       "domain": "gdpr.eu",
       "entity_key": "domain:gdpr.eu",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 4,
+      "observation_count": 5,
       "observations": [
         {
           "country_observed": null,
@@ -3749,6 +3793,19 @@
           "provider_record_id": "aggregate-21-0",
           "relationship_context": null,
           "signal_id": "vbsig-356d3536bae258c709d796ec",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-22-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-5c5d169670702a93913aad30",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
         },
@@ -3796,7 +3853,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 4
+      "signal_count": 5
     },
     {
       "countries": [
@@ -4064,14 +4121,14 @@
     },
     {
       "countries": [],
-      "demand_count": 4,
+      "demand_count": 5,
       "display_name": "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0430 \u0441\u0435\u0440\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0432 \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u0430 \u0443\u0440\u043e\u0432\u043d\u044f \u0437\u0430\u0449\u0438\u0449\u0451\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 (SSL Server Test)",
       "domain": "globalsign.ssllabs.com",
       "entity_key": "domain:globalsign.ssllabs.com",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-11T13:18:58Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 4,
+      "observation_count": 5,
       "observations": [
         {
           "country_observed": null,
@@ -4083,6 +4140,19 @@
           "provider_record_id": "aggregate-21-0",
           "relationship_context": null,
           "signal_id": "vbsig-3a535d18017cbcef2eb6fbee",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/ru-ru/resources/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-23-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-66ea99b65c46bf744ba877be",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/ru-ru/resources/topic/83"
         },
@@ -4130,7 +4200,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 4
+      "signal_count": 5
     },
     {
       "countries": [],
@@ -4495,6 +4565,76 @@
       "signal_count": 1
     },
     {
+      "countries": [],
+      "demand_count": 4,
+      "display_name": "Upgrade your integration today.",
+      "domain": "help.pleo.io",
+      "entity_key": "domain:help.pleo.io",
+      "first_seen_at": "2026-09-28T13:15:43Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "observations": [
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-26-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-1c0228b2b127b24bc880ebf2",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-jan-26"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-27-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-712f73ba7fa929a35424e08c",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-jan-26"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-28-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-b7bdfe8f6d0f1e8dafe11af1",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-jan-26"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-29-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-ca9b84b498d2a8b3af811297",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-jan-26"
+        }
+      ],
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "signal_count": 4
+    },
+    {
       "countries": [
         "US"
       ],
@@ -4628,14 +4768,14 @@
     },
     {
       "countries": [],
-      "demand_count": 5,
+      "demand_count": 6,
       "display_name": "Healthline\u2019s $1.55 million settlement",
       "domain": "hklaw.com",
       "entity_key": "domain:hklaw.com",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 5,
+      "observation_count": 6,
       "observations": [
         {
           "country_observed": null,
@@ -4660,6 +4800,19 @@
           "provider_record_id": "aggregate-26-0",
           "relationship_context": null,
           "signal_id": "vbsig-1fd5d0905bef40b31974965e",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-30-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-7211bcd43a4917f2f5d55a37",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
         },
@@ -4707,18 +4860,18 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 5
+      "signal_count": 6
     },
     {
       "countries": [],
-      "demand_count": 69,
+      "demand_count": 80,
       "display_name": "Brief Privacy Suite Product Brief Learn how BigID helps identify privacy risk, coordinate remediation, fulfill data rights requests, and stay compliant. Download the Brief \u2192",
       "domain": "home.bigid.com",
       "entity_key": "domain:home.bigid.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 68,
+      "observation_count": 79,
       "observations": [
         {
           "country_observed": null,
@@ -4784,6 +4937,19 @@
           "signal_id": "vbsig-13cae4c4f7913b2bdd7057b0",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-34-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-157cfa90925051172c599754",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
         },
         {
           "country_observed": null,
@@ -5178,6 +5344,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-38-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-703dd88efce5071cb56949a2",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-08T12:01:23Z",
           "observation_count": 1,
           "observed_at": "2026-09-08T12:01:23Z",
@@ -5269,6 +5448,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-39-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-88ea40611469a2be9bcd7fdb",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/5-steps-for-effective-data-security-governance"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-11T13:18:58Z",
           "observation_count": 1,
           "observed_at": "2026-09-11T13:18:58Z",
@@ -5304,6 +5496,45 @@
           "signal_id": "vbsig-9046f15d1856048ee8b84e7c",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/5-steps-for-effective-data-security-governance"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-36-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-94c062ca268d6a9c8d791e42",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/dspm-for-product-security-guide"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-35-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-96a58a2e89b68be6d4da371a",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/data-security-platform-architecture-access-controls"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-31-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-9fdcf9ff45e9252669784618",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/rfp-center"
         },
         {
           "country_observed": null,
@@ -5412,6 +5643,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-41-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-c306595679098c6a3e77a579",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/a-ciso-guide-to-secure-cloud-architecture"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-09T12:47:13Z",
           "observation_count": 1,
           "observed_at": "2026-09-09T12:47:13Z",
@@ -5477,6 +5721,32 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-32-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-d27b19fc4dcceb97cdb3b1d7",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/headless-bigid"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-37-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-d34d6ac7527277e7e8cfd6ad",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/bigid-forrester-wave-leader-sensitive-data-discovery-classification-2026"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-26T13:04:14Z",
           "observation_count": 1,
           "observed_at": "2026-09-26T13:04:14Z",
@@ -5484,6 +5754,19 @@
           "provider_record_id": "aggregate-32-0",
           "relationship_context": null,
           "signal_id": "vbsig-dce8eb4d9430325639f36a3b",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/bigid-forrester-wave-leader-sensitive-data-discovery-classification-2026"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-33-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-dd39a59837de03c90a3bf5e6",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/bigid-forrester-wave-leader-sensitive-data-discovery-classification-2026"
         },
@@ -5603,13 +5886,26 @@
           "signal_id": "vbsig-f6a7be805caea250056bdddf",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/bigid-forrester-wave-leader-sensitive-data-discovery-classification-2026"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-40-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-f8cd7d710f02b87a1999ae40",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/5-steps-for-effective-data-security-governance"
         }
       ],
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 68
+      "signal_count": 79
     },
     {
       "countries": [
@@ -6079,14 +6375,14 @@
     },
     {
       "countries": [],
-      "demand_count": 5,
+      "demand_count": 6,
       "display_name": "Todd Snyder",
       "domain": "jdsupra.com",
       "entity_key": "domain:jdsupra.com",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-17T12:41:54Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 5,
+      "observation_count": 6,
       "observations": [
         {
           "country_observed": null,
@@ -6098,6 +6394,19 @@
           "provider_record_id": "aggregate-36-0",
           "relationship_context": null,
           "signal_id": "vbsig-1a94a02422be5e3ac1da33a1",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-42-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-3f2eb9b47f602f28b7b9504c",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
         },
@@ -6158,7 +6467,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 5
+      "signal_count": 6
     },
     {
       "countries": [
@@ -6789,14 +7098,45 @@
     },
     {
       "countries": [],
-      "demand_count": 59,
+      "demand_count": 1,
+      "display_name": "Business Central AppSource",
+      "domain": "marketplace.microsoft.com",
+      "entity_key": "domain:marketplace.microsoft.com",
+      "first_seen_at": "2026-09-28T13:15:43Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "observations": [
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-43-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-571b20ec476f27851eac7b10",
+          "source_kind": "relationship_graph",
+          "source_url": "https://blog.pleo.io/en/new-in-pleo-jan-26"
+        }
+      ],
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "signal_count": 1
+    },
+    {
+      "countries": [],
+      "demand_count": 68,
       "display_name": "Fallbeispiel Wie ein Systemintegrator die digitale Sicherheit f\u00fcr alle niederl\u00e4ndischen Notare optimierte Jetzt lesen",
       "domain": "media.globalsign.com",
       "entity_key": "domain:media.globalsign.com",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 56,
+      "observation_count": 65,
       "observations": [
         {
           "country_observed": null,
@@ -6808,6 +7148,19 @@
           "provider_record_id": "aggregate-47-0",
           "relationship_context": null,
           "signal_id": "vbsig-0aaceca4ad426a968828e50d",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/ru-ru/resources"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-47-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-0c5bfb6ed08dfe6c5b3cdcfc",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/ru-ru/resources"
         },
@@ -6873,6 +7226,19 @@
           "provider_record_id": "aggregate-44-0",
           "relationship_context": null,
           "signal_id": "vbsig-29b6b37bf231c4da4465cdb9",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-44-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-2aaa306c8fefeb1901072e21",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
         },
@@ -6966,6 +7332,19 @@
           "signal_id": "vbsig-48c2a03f3e30f044adc409ba",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/ru-ru/resources"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-45-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-49e038c73d295d20ba69571d",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
         },
         {
           "country_observed": null,
@@ -7178,6 +7557,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-46-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-8de21f881363011e79dd27e9",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/ru-ru/resources"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-11T13:18:58Z",
           "observation_count": 1,
           "observed_at": "2026-09-11T13:18:58Z",
@@ -7250,6 +7642,19 @@
           "provider_record_id": "aggregate-45-0",
           "relationship_context": null,
           "signal_id": "vbsig-ac1e4d16fea2e9a85920b3e6",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-51-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-b27849c7c3d4819df2cf01a1",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
         },
@@ -7503,6 +7908,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-49-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-f4eef9a2cb617793cdb43f6c",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-09T12:47:13Z",
           "observation_count": 1,
           "observed_at": "2026-09-09T12:47:13Z",
@@ -7510,6 +7928,45 @@
           "provider_record_id": "aggregate-48-0",
           "relationship_context": null,
           "signal_id": "vbsig-f86940dda376be8be0199f5c",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/ru-ru/resources"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-50-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-fb3f6d53b5ea83a1aecece2c",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-48-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-fd7ca3d5c067611a54135810",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/ressourcen/topic/83"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-52-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-fde1a3c83d31600f7b8f7558",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/ru-ru/resources"
         },
@@ -7531,7 +7988,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 56
+      "signal_count": 65
     },
     {
       "countries": [
@@ -7964,14 +8421,14 @@
     },
     {
       "countries": [],
-      "demand_count": 6,
+      "demand_count": 7,
       "display_name": "CCPA",
       "domain": "oag.ca.gov",
       "entity_key": "domain:oag.ca.gov",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 6,
+      "observation_count": 7,
       "observations": [
         {
           "country_observed": null,
@@ -8050,13 +8507,26 @@
           "signal_id": "vbsig-b42d1ce07088ef535e15732b",
           "source_kind": "relationship_graph",
           "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-53-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-e61248244a66afdd45a9efe2",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/blog/tractor-supply-ccpa-violations"
         }
       ],
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 6
+      "signal_count": 7
     },
     {
       "countries": [
@@ -8744,15 +9214,28 @@
     },
     {
       "countries": [],
-      "demand_count": 5,
+      "demand_count": 6,
       "display_name": "Privacy Notice",
       "domain": "privacy.claude.com",
       "entity_key": "domain:privacy.claude.com",
       "first_seen_at": "2026-09-09T12:47:13Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 5,
+      "observation_count": 6,
       "observations": [
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-54-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-227573c1f34c8c4fb32c0e4a",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/sub-processors"
+        },
         {
           "country_observed": null,
           "demand_count": 1,
@@ -8823,7 +9306,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 5
+      "signal_count": 6
     },
     {
       "countries": [
@@ -9619,14 +10102,14 @@
     },
     {
       "countries": [],
-      "demand_count": 14,
+      "demand_count": 16,
       "display_name": "PKI/SSL As a Service",
       "domain": "shop.globalsign.com",
       "entity_key": "domain:shop.globalsign.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 14,
+      "observation_count": 16,
       "observations": [
         {
           "country_observed": null,
@@ -9677,6 +10160,19 @@
           "provider_record_id": "aggregate-32-0",
           "relationship_context": null,
           "signal_id": "vbsig-4fea5c0cb23d97456ecc176a",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/produkte"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-56-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-5713b5bc48d5ede6725423f4",
           "source_kind": "relationship_graph",
           "source_url": "https://www.globalsign.com/de-de/produkte"
         },
@@ -9774,6 +10270,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-55-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-e41d10f06c81bd322f3e995f",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.globalsign.com/de-de/produkte"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-17T12:41:54Z",
           "observation_count": 1,
           "observed_at": "2026-09-17T12:41:54Z",
@@ -9815,7 +10324,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 14
+      "signal_count": 16
     },
     {
       "countries": [
@@ -10367,14 +10876,14 @@
     },
     {
       "countries": [],
-      "demand_count": 56,
+      "demand_count": 64,
       "display_name": "Automatically remove your candidates' data Eliminate manual tasks and keep your database organized by automatically removing candidates' data when they meet certain criteria.",
       "domain": "support.teamtailor.com",
       "entity_key": "domain:support.teamtailor.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 56,
+      "observation_count": 64,
       "observations": [
         {
           "country_observed": null,
@@ -10574,6 +11083,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-62-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-471e07472360b87562a36c0a",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-26T13:04:14Z",
           "observation_count": 1,
           "observed_at": "2026-09-26T13:04:14Z",
@@ -10685,6 +11207,19 @@
           "provider_record_id": "aggregate-39-0",
           "relationship_context": null,
           "signal_id": "vbsig-7f53402d5619377cc20bb360",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-59-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-80fddfe5c1cce867b2819bf9",
           "source_kind": "relationship_graph",
           "source_url": "https://www.teamtailor.com/en/all-features"
         },
@@ -10821,6 +11356,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-60-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-9cf1e7a1761523f8559a6307",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-13T11:53:12Z",
           "observation_count": 1,
           "observed_at": "2026-09-13T11:53:12Z",
@@ -10841,6 +11389,19 @@
           "provider_record_id": "aggregate-50-0",
           "relationship_context": null,
           "signal_id": "vbsig-a463cb0ef5050aa7458b501b",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-58-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-a89458bfd0286593470219e9",
           "source_kind": "relationship_graph",
           "source_url": "https://www.teamtailor.com/en/all-features"
         },
@@ -10880,6 +11441,19 @@
           "provider_record_id": "aggregate-57-0",
           "relationship_context": null,
           "signal_id": "vbsig-b012a4a44a7242bccc181288",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-63-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-b185005a46c584ee8d7c7160",
           "source_kind": "relationship_graph",
           "source_url": "https://www.teamtailor.com/en/all-features"
         },
@@ -10938,6 +11512,32 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-61-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-c164072cb02156fc853001cb",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-64-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-c7b92e4f0eb2601aaf0d5d5c",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-09T12:47:13Z",
           "observation_count": 1,
           "observed_at": "2026-09-09T12:47:13Z",
@@ -10945,6 +11545,19 @@
           "provider_record_id": "aggregate-56-0",
           "relationship_context": null,
           "signal_id": "vbsig-c982401e90576009b01c05f1",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.teamtailor.com/en/all-features"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-65-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-d1553a92884bb8a6e6571dcf",
           "source_kind": "relationship_graph",
           "source_url": "https://www.teamtailor.com/en/all-features"
         },
@@ -11109,7 +11722,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 56
+      "signal_count": 64
     },
     {
       "countries": [
@@ -11641,14 +12254,14 @@
     },
     {
       "countries": [],
-      "demand_count": 7,
+      "demand_count": 8,
       "display_name": "Request a Copy",
       "domain": "trust.bigid.com",
       "entity_key": "domain:trust.bigid.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 7,
+      "observation_count": 8,
       "observations": [
         {
           "country_observed": null,
@@ -11731,6 +12344,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-66-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-d05d76809b6ad1920e91a759",
+          "source_kind": "relationship_graph",
+          "source_url": "https://bigid.com/bigid-compliance"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-17T12:41:54Z",
           "observation_count": 1,
           "observed_at": "2026-09-17T12:41:54Z",
@@ -11746,7 +12372,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 7
+      "signal_count": 8
     },
     {
       "countries": [
@@ -11948,14 +12574,14 @@
     },
     {
       "countries": [],
-      "demand_count": 7,
+      "demand_count": 8,
       "display_name": "Updates",
       "domain": "updates.teamtailor.com",
       "entity_key": "domain:updates.teamtailor.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 7,
+      "observation_count": 8,
       "observations": [
         {
           "country_observed": null,
@@ -11967,6 +12593,19 @@
           "provider_record_id": "aggregate-60-0",
           "relationship_context": null,
           "signal_id": "vbsig-1930edc4356fc62390ed277a",
+          "source_kind": "relationship_graph",
+          "source_url": "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-67-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-80eab500e811070f148a475d",
           "source_kind": "relationship_graph",
           "source_url": "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
         },
@@ -12053,7 +12692,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 7
+      "signal_count": 8
     },
     {
       "countries": [
@@ -12453,14 +13092,14 @@
     },
     {
       "countries": [],
-      "demand_count": 7,
+      "demand_count": 8,
       "display_name": "Discover Qonto",
       "domain": "welcome.qonto.com",
       "entity_key": "domain:welcome.qonto.com",
       "first_seen_at": "2026-07-21T10:47:04Z",
-      "last_seen_at": "2026-09-26T13:04:14Z",
+      "last_seen_at": "2026-09-28T13:15:43Z",
       "not_advice": true,
-      "observation_count": 7,
+      "observation_count": 8,
       "observations": [
         {
           "country_observed": null,
@@ -12485,6 +13124,19 @@
           "provider_record_id": "aggregate-60-0",
           "relationship_context": null,
           "signal_id": "vbsig-23068d208b6a1b0a97fb16c8",
+          "source_kind": "relationship_graph",
+          "source_url": "https://qonto.com/en/blog/business-management/banking/kyc-verification"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-09-28T13:15:43Z",
+          "observation_count": 1,
+          "observed_at": "2026-09-28T13:15:43Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-68-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-37315421dc917643b5158cd6",
           "source_kind": "relationship_graph",
           "source_url": "https://qonto.com/en/blog/business-management/banking/kyc-verification"
         },
@@ -12558,7 +13210,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 7
+      "signal_count": 8
     },
     {
       "countries": [
@@ -13199,7 +13851,7 @@
       "signal_count": 1
     }
   ],
-  "generated_at": "2026-09-26T13:04:14Z",
+  "generated_at": "2026-09-28T13:15:43Z",
   "policy_version": "vendor-breadth-mesh.v1",
   "posture": {
     "append_safe": true,
@@ -13213,9 +13865,9 @@
   "schema_version": "0.1.0",
   "summary": {
     "catalog_vendor_count_cap": null,
-    "entity_count": 284,
-    "observation_count": 585,
+    "entity_count": 287,
+    "observation_count": 631,
     "provider_count": 2,
-    "signal_count": 585
+    "signal_count": 631
   }
 }
