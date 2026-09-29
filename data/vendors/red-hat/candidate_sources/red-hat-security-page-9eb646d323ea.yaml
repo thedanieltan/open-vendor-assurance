@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-9eb646d323ea
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148436
+canonical_candidate_url: https://access.redhat.com/solutions/7148436
+confidence: likely
+discovered_at: '2026-09-29T10:06:06.227496Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148436
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: '&quot;passwd -S&quot; reports &quot;unknown crypt variant&quot; for
+    bcrypt hashes in /etc/shadow - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a6375688bd54e4afda85a1a93238c8f5d2cfd0cf7ad795198972b9c2fee2d8a4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148436
+requested_url: https://access.redhat.com/solutions/7148436
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-29T10:06:06.227496Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

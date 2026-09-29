@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-801eafbecee9
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148439
+canonical_candidate_url: https://access.redhat.com/solutions/7148439
+confidence: likely
+discovered_at: '2026-09-29T10:06:06.227496Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148439
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: satellite-maintain health check shows &quot;System is self registered&quot;
+    warning - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:55c0ac8eedc0491c506690f3e2c4984ded46ecb1b6c4779c6f7ea54eb99b5c17
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148439
+requested_url: https://access.redhat.com/solutions/7148439
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-29T10:06:06.227496Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
