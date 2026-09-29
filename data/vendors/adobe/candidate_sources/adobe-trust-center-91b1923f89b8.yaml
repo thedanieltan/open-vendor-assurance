@@ -1,0 +1,32 @@
+candidate_source_id: adobe-trust-center-91b1923f89b8
+candidate_status: selected
+candidate_url: https://www.adobe.com/trust/security/bulletins-and-advisories.html?tab=security-3
+canonical_candidate_url: https://www.adobe.com/trust/security/bulletins-and-advisories.html?tab=security-3
+confidence: likely
+discovered_at: '2026-09-29T10:06:13.906981Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.adobe.com/trust/security/bulletins-and-advisories.html?tab=security-3
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  page_title: 'Adobe Trust Center: Security bulletins and advisories'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d24fad5cb82a6f4705126d61e29dc5a29392eb19c747961413d2139e7597a2ab
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.adobe.com/trust/security/bulletins-and-advisories.html?tab=security-3
+requested_url: https://www.adobe.com/trust/security/bulletins-and-advisories.html?tab=security-3
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-29T10:06:13.906981Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: adobe
