@@ -1,0 +1,32 @@
+candidate_source_id: wingify-dpa-8352a61a2d0a
+candidate_status: selected
+candidate_url: https://app.wingify.com/
+canonical_candidate_url: https://app.wingify.com/
+confidence: likely
+discovered_at: '2026-09-29T10:06:15.408655Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://app.wingify.com/
+  http_status: 200
+  matched_terms:
+  - dpa
+  - controller
+  page_title: Wingify - Application
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7042626abe4706ed762a7d64d276c870ee1b8d2b004298bdc916b58c3b6bd6e1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://app.wingify.com/
+requested_url: https://app.wingify.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-29T10:06:15.408655Z'
+source_type_candidate: dpa
+superseded_by_candidate_id: null
+vendor_id: wingify
