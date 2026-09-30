@@ -1,0 +1,35 @@
+candidate_source_id: loom-security-page-82d31fffcaf6
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/configure-saml-encrypted-assertions-for-microsoft-entra
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/configure-saml-encrypted-assertions-for-microsoft-entra
+confidence: likely
+discovered_at: '2026-09-30T10:22:05.109054Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/configure-saml-encrypted-assertions-for-microsoft-entra
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - incident
+  - trust
+  page_title: Configure SAML Encrypted Assertions for Microsoft Entra | Atlassian
+    Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f99d88541995b89c4aadb7c1885da53bd753d7d2dbcb1a6f9c4442a4c2ffcf9b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/configure-saml-encrypted-assertions-for-microsoft-entra
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/configure-saml-encrypted-assertions-for-microsoft-entra
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T10:22:05.109054Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
