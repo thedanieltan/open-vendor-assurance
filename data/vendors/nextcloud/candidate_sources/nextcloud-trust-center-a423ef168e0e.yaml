@@ -1,31 +1,31 @@
-candidate_source_id: nextcloud-privacy-notice-e07b6f465d23
+candidate_source_id: nextcloud-trust-center-a423ef168e0e
 candidate_status: selected
-candidate_url: https://help.nextcloud.com/tag/network/18
-canonical_candidate_url: https://help.nextcloud.com/tag/network/18
+candidate_url: https://apps.nextcloud.com/apps/cups_print
+canonical_candidate_url: https://apps.nextcloud.com/apps/cups_print
 confidence: likely
 discovered_at: '2026-09-30T10:22:05.109054Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://help.nextcloud.com/tag/network/18
+  final_url: https://apps.nextcloud.com/apps/cups_print
   http_status: 200
   matched_terms:
+  - security
   - privacy
-  - privacy policy
-  page_title: Topics tagged network
+  page_title: CUPS Print - Apps - App Store - Nextcloud
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:57e4df44dbdccb2eead49ccdd81968d0464da8bff4abf02c0251a0c8bbfd50c1
+evidence_digest: sha256:4ed42ad1fd49ca81dfa6e8756340d84ae186114b3fda9d36103d8f543333ca6d
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://help.nextcloud.com/tag/network/18
-requested_url: https://help.nextcloud.com/tag/network/18
+observed_final_url: https://apps.nextcloud.com/apps/cups_print
+requested_url: https://apps.nextcloud.com/apps/cups_print
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-30T10:22:05.109054Z'
-source_type_candidate: privacy_notice
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud

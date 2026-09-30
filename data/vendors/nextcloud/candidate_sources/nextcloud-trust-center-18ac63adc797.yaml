@@ -1,31 +1,31 @@
-candidate_source_id: nextcloud-privacy-notice-e07b6f465d23
+candidate_source_id: nextcloud-trust-center-18ac63adc797
 candidate_status: selected
-candidate_url: https://help.nextcloud.com/tag/network/18
-canonical_candidate_url: https://help.nextcloud.com/tag/network/18
+candidate_url: https://apps.nextcloud.com/apps/editbase
+canonical_candidate_url: https://apps.nextcloud.com/apps/editbase
 confidence: likely
 discovered_at: '2026-09-30T10:22:05.109054Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://help.nextcloud.com/tag/network/18
+  final_url: https://apps.nextcloud.com/apps/editbase
   http_status: 200
   matched_terms:
+  - security
   - privacy
-  - privacy policy
-  page_title: Topics tagged network
+  page_title: EditBase - Apps - App Store - Nextcloud
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:57e4df44dbdccb2eead49ccdd81968d0464da8bff4abf02c0251a0c8bbfd50c1
+evidence_digest: sha256:ffbf73da67fd252da34e722c20886bececc717d4a91631a32d64e8de75fa86f5
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://help.nextcloud.com/tag/network/18
-requested_url: https://help.nextcloud.com/tag/network/18
+observed_final_url: https://apps.nextcloud.com/apps/editbase
+requested_url: https://apps.nextcloud.com/apps/editbase
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-30T10:22:05.109054Z'
-source_type_candidate: privacy_notice
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud

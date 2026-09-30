@@ -1,29 +1,29 @@
-candidate_source_id: nextcloud-compliance-page-5e37262fe044
+candidate_source_id: nextcloud-compliance-page-9d8715759308
 candidate_status: selected
-candidate_url: https://nextcloud.com/migration
-canonical_candidate_url: https://nextcloud.com/owncloud-migration/
+candidate_url: https://nextcloud.com/it/secure-deployments
+canonical_candidate_url: https://nextcloud.com/it/secure-deployments/
 confidence: likely
 discovered_at: '2026-09-30T10:22:05.109054Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
-  final_url: https://nextcloud.com/owncloud-migration/
+  final_url: https://nextcloud.com/it/secure-deployments/
   http_status: 200
   matched_terms:
-  - compliance
   - iso
+  - audit
   - trust
-  page_title: Nextcloud - Migration guide
+  page_title: End-to-end encrypted, on-prem tools for secure collaboration - Nextcloud
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:0af44d30ca54e02acd41c03ab3039256a037c035752304d2dc1d1b0b846f0b83
+  verification_status: ok
+evidence_digest: sha256:aabe6bbb59043fb078013236ce55a5be1636f4a8a5e8b91be280fc2d21df1b65
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://nextcloud.com/owncloud-migration/
-requested_url: https://nextcloud.com/migration
+observed_final_url: https://nextcloud.com/it/secure-deployments/
+requested_url: https://nextcloud.com/it/secure-deployments
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-09-30T10:22:05.109054Z'
