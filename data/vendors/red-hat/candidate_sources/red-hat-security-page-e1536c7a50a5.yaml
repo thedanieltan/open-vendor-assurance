@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-e1536c7a50a5
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148680
+canonical_candidate_url: https://access.redhat.com/solutions/7148680
+confidence: likely
+discovered_at: '2026-09-30T09:58:48.291855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148680
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: BIND views in named.conf matching incorrect clients or ignoring subsequent
+    views due to view ordering - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e763f725acfbc93ebb827bc68d683d0c77c155dad82af149c4504d9d387d5ff4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148680
+requested_url: https://access.redhat.com/solutions/7148680
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:48.291855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
