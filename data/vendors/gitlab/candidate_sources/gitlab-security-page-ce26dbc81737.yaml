@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-ce26dbc81737
+candidate_status: selected
+candidate_url: https://status.gitlab.com/pages/5b36dc6502d06804c08349f7/rss
+canonical_candidate_url: https://status.gitlab.com/pages/5b36dc6502d06804c08349f7/rss
+confidence: likely
+discovered_at: '2026-09-30T09:58:48.291855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/rss+xml; charset=utf-8
+  final_url: https://status.gitlab.com/pages/5b36dc6502d06804c08349f7/rss
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  page_title: <![CDATA[GitLab System Status]]>
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3c80ded3b6961fa783db003024c529c2ee723cd08b77abacd73be0f0450f024a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.gitlab.com/pages/5b36dc6502d06804c08349f7/rss
+requested_url: https://status.gitlab.com/pages/5b36dc6502d06804c08349f7/rss
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:48.291855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

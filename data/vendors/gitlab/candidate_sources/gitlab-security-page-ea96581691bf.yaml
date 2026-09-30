@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-ea96581691bf
+candidate_status: selected
+candidate_url: https://status.gitlab.com/pages/incident/5b36dc6502d06804c08349f7/6abc00572dc48705ab3d9b62
+canonical_candidate_url: https://status.gitlab.com/pages/incident/5b36dc6502d06804c08349f7/6abc00572dc48705ab3d9b62
+confidence: likely
+discovered_at: '2026-09-30T09:58:48.291855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.gitlab.com/pages/incident/5b36dc6502d06804c08349f7/6abc00572dc48705ab3d9b62
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: GitLab System Status
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8328f319fd661eaa366f334952a53d859aadcd7aa3724fcc6f978e73c693e83e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.gitlab.com/pages/incident/5b36dc6502d06804c08349f7/6abc00572dc48705ab3d9b62
+requested_url: https://status.gitlab.com/pages/incident/5b36dc6502d06804c08349f7/6abc00572dc48705ab3d9b62
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:48.291855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
