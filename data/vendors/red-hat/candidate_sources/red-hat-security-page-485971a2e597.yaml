@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-485971a2e597
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7146316
+canonical_candidate_url: https://access.redhat.com/solutions/7146316
+confidence: likely
+discovered_at: '2026-09-30T09:58:48.291855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7146316
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Kernel panic in zap_vma_ptes due to NULL pointer dereference called
+    from third-party xpmem driver - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:12e2b44ef192cfe59c07039ca9b543b9f8fcd815f37f62387ceea4bfda7b8e20
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7146316
+requested_url: https://access.redhat.com/solutions/7146316
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:48.291855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
