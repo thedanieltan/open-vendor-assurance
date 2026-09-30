@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-6edb22c99f6e
+candidate_status: selected
+candidate_url: https://support.surfshark.com/hc/change_language/fr?return_to=%2Fhc%2Ffr
+canonical_candidate_url: https://support.surfshark.com/hc/fr
+confidence: likely
+discovered_at: '2026-09-30T09:58:40.946719Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.surfshark.com/hc/fr
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Service client Surfshark
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:6fe8c637a30ba2e098a1deb378a5116318c4fd0b3d2a62d4ac720a033b58a82c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.surfshark.com/hc/fr
+requested_url: https://support.surfshark.com/hc/change_language/fr?return_to=%2Fhc%2Ffr
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:40.946719Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark
