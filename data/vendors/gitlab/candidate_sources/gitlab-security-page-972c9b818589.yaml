@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-972c9b818589
+candidate_status: selected
+candidate_url: https://status.gitlab.com/pages/history/5b36dc6502d06804c08349f7
+canonical_candidate_url: https://status.gitlab.com/pages/history/5b36dc6502d06804c08349f7
+confidence: likely
+discovered_at: '2026-09-30T09:58:48.291855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.gitlab.com/pages/history/5b36dc6502d06804c08349f7
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: GitLab System Status
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:75ae1a27ea081dd2ff0d694ecbcf0d1914c7b44790863e23b34826bcef8c5b7d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.gitlab.com/pages/history/5b36dc6502d06804c08349f7
+requested_url: https://status.gitlab.com/pages/history/5b36dc6502d06804c08349f7
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-09-30T09:58:48.291855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
