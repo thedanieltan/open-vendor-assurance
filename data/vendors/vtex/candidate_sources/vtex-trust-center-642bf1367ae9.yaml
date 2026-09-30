@@ -1,13 +1,13 @@
 candidate_source_id: vtex-trust-center-642bf1367ae9
 candidate_status: selected
-candidate_url: https://www.vtex.com/pt-br/trust/aviso-de-privacidade-externo-geral
+candidate_url: https://vtex.com/pt-br/trust/general-external-privacy-notice
 canonical_candidate_url: https://www.vtex.com/pt-br/trust/aviso-de-privacidade-externo-geral
 confidence: likely
-discovered_at: '2026-09-16T09:41:38.218269Z'
+discovered_at: '2026-09-30T09:58:44.001725Z'
 discovered_by: agent
-discovery_method: rendered_dom_locator_verification
+discovery_method: sitemap_locator_verification
 evidence:
-  content_type: text/html; charset=utf-8; rendered=playwright
+  content_type: text/html; charset=utf-8
   final_url: https://www.vtex.com/pt-br/trust/aviso-de-privacidade-externo-geral
   http_status: 200
   matched_terms:
@@ -16,19 +16,18 @@ evidence:
   - compliance
   - privacy
   page_title: VTEX Central de Confiança - Segurança, Privacidade e Conformidade
-  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:8062a48eb28790337323668e6fd4ee9f98c4b08f5c8a7360e9b8282ec0bd0f55
+  verification_status: redirected
+evidence_digest: sha256:3a977e0a2145a34108249b8d3d6fc1ba77135f1b4fc3bb31ae9d45d6abcd48d3
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.vtex.com/pt-br/trust/aviso-de-privacidade-externo-geral
-requested_url: https://www.vtex.com/pt-br/trust/aviso-de-privacidade-externo-geral
+requested_url: https://vtex.com/pt-br/trust/general-external-privacy-notice
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-16T09:41:38.218269Z'
+selection_run_id: '2026-09-30T09:58:44.001725Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: vtex
