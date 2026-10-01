@@ -1,29 +1,30 @@
-candidate_source_id: adobe-trust-center-abff3f950798
+candidate_source_id: adobe-trust-center-8d864851df0c
 candidate_status: selected
-candidate_url: https://helpx.adobe.com/security.html
-canonical_candidate_url: https://helpx.adobe.com/security.html
+candidate_url: https://helpx.adobe.com/security/key.html
+canonical_candidate_url: https://helpx.adobe.com/security/key.html
 confidence: likely
 discovered_at: '2026-10-01T10:25:56.692106Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
-  final_url: https://helpx.adobe.com/security.html
+  final_url: https://helpx.adobe.com/security/key.html
   http_status: 200
   matched_terms:
   - trust
   - trust center
   - security
-  page_title: Adobe Product Security Incident Response Team (PSIRT)
+  - privacy
+  page_title: Adobe PSIRT PGP Key
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:5d9474f9b6bf2bdb8d793117659fe2fc746479f27f16c6de7a3bffc3805a2569
+evidence_digest: sha256:5b300dd5f23e69c583978a56f7830d618917a196cb38f86a2a3308271e3cb404
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://helpx.adobe.com/security.html
-requested_url: https://helpx.adobe.com/security.html
+observed_final_url: https://helpx.adobe.com/security/key.html
+requested_url: https://helpx.adobe.com/security/key.html
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-01T10:25:56.692106Z'
