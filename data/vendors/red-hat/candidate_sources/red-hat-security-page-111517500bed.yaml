@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-111517500bed
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/200673
+canonical_candidate_url: https://access.redhat.com/solutions/200673
+confidence: likely
+discovered_at: '2026-10-01T11:08:35.893835Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/200673
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: How to provide required FQDN to ipa-client when system hostname has
+    to be a short hostname - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f2033839d9a2c709eddc36e52c63d5fea7681622e9e268a1d4e4cd6a24761694
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/200673
+requested_url: https://access.redhat.com/solutions/200673
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-01T11:08:35.893835Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
