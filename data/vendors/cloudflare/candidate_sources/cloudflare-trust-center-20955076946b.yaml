@@ -1,0 +1,32 @@
+candidate_source_id: cloudflare-trust-center-20955076946b
+candidate_status: selected
+candidate_url: https://www.cloudflare.com/application-services/products/load-balancing
+canonical_candidate_url: https://www.cloudflare.com/products/load-balancing/
+confidence: likely
+discovered_at: '2026-10-01T10:25:38.836217Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.cloudflare.com/products/load-balancing/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Cloudflare Load Balancing - Multi-Cloud Traffic Management
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:d8db3995669ac3bd23989c1ccee11f3fbb65dd81985a25f63c81386a506c22d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.cloudflare.com/products/load-balancing/
+requested_url: https://www.cloudflare.com/application-services/products/load-balancing
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-01T10:25:38.836217Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: cloudflare

@@ -1,0 +1,32 @@
+candidate_source_id: cloudflare-trust-center-fb5ca58a7a53
+candidate_status: selected
+candidate_url: https://www.cloudflare.com/resource-hub?resourcetype=Solution+%26+Product+Guides
+canonical_candidate_url: https://www.cloudflare.com/resource-hub/?resourcetype=Solution+%26+Product+Guides
+confidence: likely
+discovered_at: '2026-10-01T10:25:38.836217Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.cloudflare.com/resource-hub/?resourcetype=Solution+%26+Product+Guides
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Resources | Cloudflare
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:8e0a6c228453ad54c5a0ffe8b664e8e1ce9590c21d272a35e3c3c8a60feb0467
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.cloudflare.com/resource-hub/?resourcetype=Solution+%26+Product+Guides
+requested_url: https://www.cloudflare.com/resource-hub?resourcetype=Solution+%26+Product+Guides
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-01T10:25:38.836217Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: cloudflare

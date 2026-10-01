@@ -1,0 +1,32 @@
+candidate_source_id: cloudflare-trust-center-950986880d09
+candidate_status: selected
+candidate_url: https://www.cloudflare.com/developer-platform/products/cloudflare-realtime
+canonical_candidate_url: https://www.cloudflare.com/products/realtime/
+confidence: likely
+discovered_at: '2026-10-01T10:25:38.836217Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.cloudflare.com/products/realtime/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Cloudflare RealtimeKit - Voice, Video &amp; Multimodal Apps
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:71f0213702236bbcb591c8aefd657b04da748204d9d5789e165ed850d58377ee
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.cloudflare.com/products/realtime/
+requested_url: https://www.cloudflare.com/developer-platform/products/cloudflare-realtime
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-01T10:25:38.836217Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: cloudflare
