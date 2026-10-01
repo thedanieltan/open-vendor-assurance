@@ -1,0 +1,32 @@
+candidate_source_id: netlify-security-page-7ae1b82a4543
+candidate_status: selected
+candidate_url: https://www.netlify.com/changelog/2026-09-30-tanstack-start-security-vulnerability
+canonical_candidate_url: https://www.netlify.com/changelog/2026-09-30-tanstack-start-security-vulnerability/
+confidence: likely
+discovered_at: '2026-10-01T10:25:43.522592Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.netlify.com/changelog/2026-09-30-tanstack-start-security-vulnerability/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'TanStack Start XSS vulnerability: what Netlify users need to know'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6e405d078c38b4343f8a22f614f5d33ae5a3a58ccd6a2d67cf646fa93a9f4758
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.netlify.com/changelog/2026-09-30-tanstack-start-security-vulnerability/
+requested_url: https://www.netlify.com/changelog/2026-09-30-tanstack-start-security-vulnerability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-01T10:25:43.522592Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: netlify
