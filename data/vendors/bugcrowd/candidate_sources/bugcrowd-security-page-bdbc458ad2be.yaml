@@ -1,0 +1,32 @@
+candidate_source_id: bugcrowd-security-page-bdbc458ad2be
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/blog?t__post_tag=1854
+canonical_candidate_url: https://www.bugcrowd.com/blog/?t__post_tag=1854
+confidence: likely
+discovered_at: '2026-10-02T10:38:27.523167Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/blog/?t__post_tag=1854
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Blog | Bugcrowd
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:956e11e47280f67a96759368dd3192fb04b1700da84a1e1a8b9ef822352256ce
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/blog/?t__post_tag=1854
+requested_url: https://www.bugcrowd.com/blog?t__post_tag=1854
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-02T10:38:27.523167Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
