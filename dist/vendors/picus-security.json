@@ -910,6 +910,43 @@
       "vendor_id": "picus-security"
     },
     {
+      "_openva_path": "data/vendors/picus-security/candidate_sources/picus-security-security-page-451f47635bd5.yaml",
+      "candidate_source_id": "picus-security-security-page-451f47635bd5",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.picussecurity.com/resource/report/gartner-voice-of-the-customer-aev-2026",
+      "canonical_candidate_url": "https://www.picussecurity.com/resource/report/gartner-voice-of-the-customer-aev-2026",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:33:20.576726Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.picussecurity.com/resource/report/gartner-voice-of-the-customer-aev-2026",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "vulnerability",
+          "trust"
+        ],
+        "page_title": "A 2026 Gartner® Peer Insights™ Customers’ Choice for&nbsp; Adversarial Exposure Validation",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:26dc77fe0d46172a48db2d49f8e09db6a4fb3ee57aaf4d3f40bc2a7db757b2e6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.picussecurity.com/resource/report/gartner-voice-of-the-customer-aev-2026",
+      "requested_url": "https://www.picussecurity.com/resource/report/gartner-voice-of-the-customer-aev-2026",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:33:20.576726Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "picus-security"
+    },
+    {
       "_openva_path": "data/vendors/picus-security/candidate_sources/picus-security-security-page-4591358f2458.yaml",
       "candidate_source_id": "picus-security-security-page-4591358f2458",
       "candidate_status": "selected",
@@ -2321,7 +2358,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 61,
+    "candidate_source_count": 62,
     "candidate_source_types": [
       "compliance_page",
       "dpa",
