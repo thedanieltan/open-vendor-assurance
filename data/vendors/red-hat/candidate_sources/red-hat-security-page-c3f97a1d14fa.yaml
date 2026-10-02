@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-c3f97a1d14fa
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148842
+canonical_candidate_url: https://access.redhat.com/solutions/7148842
+confidence: likely
+discovered_at: '2026-10-02T10:55:28.839506Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148842
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Quay mirror metrics push fails with HTTP Error 403 Forbidden after upgrade
+    to 3.18 in a proxied environment - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:dee1b55b7d9cd9d99fc22e1bce83d8102d7e1e90fe82af864b9cf45d4367cf99
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148842
+requested_url: https://access.redhat.com/solutions/7148842
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-02T10:55:28.839506Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
