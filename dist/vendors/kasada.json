@@ -3388,6 +3388,41 @@
       "vendor_id": "kasada"
     },
     {
+      "_openva_path": "data/vendors/kasada/candidate_sources/kasada-trust-center-19f6d3c57286.yaml",
+      "candidate_source_id": "kasada-trust-center-19f6d3c57286",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.kasada.io/roundtables",
+      "canonical_candidate_url": "https://www.kasada.io/roundtables",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:26:50.154943Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.kasada.io/roundtables",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "compliance"
+        ],
+        "page_title": "Roundtables | Kasada",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:23ebfe7136ac70000afd1e7321b9bbf8595143e151389deca699ef22af060092",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.kasada.io/roundtables",
+      "requested_url": "https://www.kasada.io/roundtables",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:26:50.154943Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "kasada"
+    },
+    {
       "_openva_path": "data/vendors/kasada/candidate_sources/kasada-trust-center-1d681102da3b.yaml",
       "candidate_source_id": "kasada-trust-center-1d681102da3b",
       "candidate_status": "selected",
@@ -4015,7 +4050,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 107,
+    "candidate_source_count": 108,
     "candidate_source_types": [
       "security_page",
       "subprocessors_list",
