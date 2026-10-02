@@ -1,0 +1,32 @@
+candidate_source_id: bitbucket-security-page-708ccd8ec4a1
+candidate_status: selected
+candidate_url: https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications
+canonical_candidate_url: https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications
+confidence: likely
+discovered_at: '2026-10-02T10:55:28.839506Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Audit activities in Jira | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0025ff962e7df3888c93fc15f42ef28763561d872080f2e405da4e496560f7b9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications
+requested_url: https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-02T10:55:28.839506Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
