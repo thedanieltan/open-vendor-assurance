@@ -1,14 +1,152 @@
 import json
+import subprocess
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
 
 from tools.openva.discovery_mesh_intake import (
+    intake_merge_gate,
+    intake_generated_paths,
+    require_no_emergency_hold,
     materialize_partition,
     partition_records,
     prepare_intake,
     reconcile_candidates,
 )
+
+
+@pytest.mark.parametrize("responses", [["[]", "[]"]])
+def test_hold_check_reads_both_labels(responses, monkeypatch):
+    calls = []
+    def run(args, **kwargs):
+        calls.append((args, kwargs))
+        return SimpleNamespace(stdout=responses[len(calls) - 1])
+    monkeypatch.setattr(subprocess, "run", run)
+    require_no_emergency_hold("owner/repo")
+    assert len(calls) == 2
+    assert "labels=openva-bot-paused" in calls[0][0][-1]
+    assert "labels=openva-hold" in calls[1][0][-1]
+    assert all(kwargs["check"] and kwargs["timeout"] == 30 for _, kwargs in calls)
+
+
+@pytest.mark.parametrize("responses", [
+    ['[{"number":904}]'], ["[]", '[{"number":904}]'], ["{}"], ["not json"],
+])
+def test_hold_check_denies_active_or_malformed_state(responses, monkeypatch):
+    pending = iter(responses)
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout=next(pending)))
+    with pytest.raises(ValueError):
+        require_no_emergency_hold("owner/repo")
+
+
+def test_hold_check_propagates_api_failure(monkeypatch):
+    def fail(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, "gh")
+    monkeypatch.setattr(subprocess, "run", fail)
+    with pytest.raises(subprocess.CalledProcessError):
+        require_no_emergency_hold("owner/repo")
+
+
+def test_generated_paths_confine_exports_to_partition_candidates():
+    paths = intake_generated_paths({"paths": [
+        "data/vendors/example/candidate_sources/example-privacy.yaml",
+        "maintenance/generated/strict-growth-example.json",
+    ]})
+    assert "indexes/candidate-sources.json" in paths
+    assert "dist/vendors/example.json" in paths
+    assert "dist/vendors/other.json" not in paths
+    assert "indexes/sources.json" not in paths
+    assert len(paths) == 6
+    assert intake_generated_paths({"paths": ["maintenance/generated/vendor-breadth-candidates.json"]}) == set()
+    assert intake_generated_paths({"paths": ["data/vendors/example/sources/privacy.yaml"]}) == set()
+    assert intake_generated_paths({"paths": ["data/vendors/../candidate_sources/x.yaml"]}) == set()
+
+
+def _merge_snapshot():
+    return {
+        "headRefOid": "a" * 40,
+        "state": "OPEN",
+        "isDraft": False,
+        "reviewDecision": "",
+        "mergeable": "MERGEABLE",
+        "statusCheckRollup": [
+            {"__typename": "CheckRun", "name": name, "status": "COMPLETED", "conclusion": "SUCCESS"}
+            for name in ("repository-integrity", "pr-scope-guard", "weighted-review")
+        ],
+    }
+
+
+def test_candidate_regeneration_changes_only_declared_derived_surfaces(tmp_path, monkeypatch):
+    from tools.openva import indexes
+
+    records = {kind: [] for kind in indexes.RECORD_GLOBS}
+    records["vendor"] = [{"vendor_id": "example", "display_name": "Example"}]
+    monkeypatch.setattr(indexes, "ROOT", tmp_path)
+    monkeypatch.setattr(indexes, "records_for", lambda kind: records[kind])
+    indexes.build_indexes()
+    before = {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
+    records["candidate_source"] = [_candidate("example", 1)]
+    indexes.build_indexes()
+    after = {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
+    changed = {path for path in before.keys() | after.keys() if before.get(path) != after.get(path)}
+    allowed = intake_generated_paths({"paths": ["data/vendors/example/candidate_sources/example-privacy-0001.yaml"]})
+    assert {"indexes/candidate-sources.json", "indexes/summary.json", "dist/vendors/example.json"} <= changed
+    assert changed <= allowed
+    indexes.build_indexes()
+    assert after == {path.relative_to(tmp_path).as_posix(): path.read_bytes() for path in tmp_path.rglob("*.json")}
+
+
+def test_merge_gate_requires_verified_head_and_complete_success():
+    snapshot = _merge_snapshot()
+    assert intake_merge_gate(snapshot, "a" * 40) == 0
+    assert intake_merge_gate(snapshot, "b" * 40) == 1
+    assert intake_merge_gate(snapshot, "") == 1
+    snapshot["statusCheckRollup"] = []
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+
+
+@pytest.mark.parametrize("field,value", [
+    ("state", "CLOSED"), ("isDraft", True),
+    ("reviewDecision", "REVIEW_REQUIRED"), ("reviewDecision", "CHANGES_REQUESTED"),
+])
+def test_merge_gate_denies_unreviewed_or_closed_snapshot(field, value):
+    snapshot = _merge_snapshot()
+    snapshot[field] = value
+    assert intake_merge_gate(snapshot, "a" * 40) == 1
+
+
+@pytest.mark.parametrize("conclusion", ["FAILURE", "CANCELLED", "TIMED_OUT", "SKIPPED", "NEUTRAL", None])
+def test_merge_gate_never_accepts_unsuccessful_mandatory_check(conclusion):
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"][0]["conclusion"] = conclusion
+    assert intake_merge_gate(snapshot, "a" * 40) == 1
+
+
+def test_merge_gate_waits_for_missing_or_pending_checks():
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"].pop()
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"][0]["status"] = "IN_PROGRESS"
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+    snapshot = _merge_snapshot()
+    snapshot["mergeable"] = "UNKNOWN"
+    assert intake_merge_gate(snapshot, "a" * 40) == 2
+
+
+@pytest.mark.parametrize("extra,result", [
+    ({"__typename": "StatusContext", "state": "ERROR"}, 1),
+    ({"__typename": "StatusContext", "state": "PENDING"}, 2),
+    ({"__typename": "StatusContext", "state": "SUCCESS"}, 0),
+    ({"__typename": "Unknown"}, 1),
+    ({"__typename": "CheckRun", "name": "other", "status": "COMPLETED", "conclusion": "FAILURE"}, 1),
+    ({"__typename": "CheckRun", "name": "other", "status": "COMPLETED", "conclusion": "SKIPPED"}, 0),
+])
+def test_merge_gate_checks_every_reported_result(extra, result):
+    snapshot = _merge_snapshot()
+    snapshot["statusCheckRollup"].append(extra)
+    assert intake_merge_gate(snapshot, "a" * 40) == result
 
 
 def _candidate(vendor_id: str, index: int, *, payload: str = "x") -> dict:
