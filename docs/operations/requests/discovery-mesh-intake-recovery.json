@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "request_type": "discovery_mesh_intake_recovery",
-  "request_id": "recover-run-34020859579-run-bound-selector-1",
+  "request_id": "recover-run-34020859579-resident-reconciliation-2",
   "source_run_id": 34020859579,
   "expected_workflow": "discovery-mesh",
   "expected_event": "schedule",
@@ -12,6 +12,6 @@
   "catalog_vendor_count_cap": null,
   "total_action_count_cap": null,
   "requested_on": "2026-09-08",
-  "reason": "Replays exact Discovery Mesh run 34020859579 after PR #848 repaired recovery plan selection to bind the promotion plan to the source run ID. The source run completed all discovery shards and published the aggregate artifact, but the run itself concluded failure before downstream intake. Recovery remains fail-closed on run identity, workflow, event, conclusion, head SHA, aggregate health, non-advisory posture, and exact plan-referenced candidate accounting. Repository transaction budgets partition writes only; catalog breadth and total actions remain uncapped.",
+  "reason": "Replays exact Discovery Mesh run 34020859579 after PR #850 repaired replay reconciliation for promotion actions whose noncanonical candidates are already durable in the repository and restored file-based validation for large partition metadata. Recovery run 34202956155 live-accepted the run-bound plan selector from PR #848, then exposed the 47092-plan-action versus 45676-current-report-candidate mismatch; the remaining 1416 candidates are already durable from prior intake. Recovery remains fail-closed on source identity, aggregate health, exact candidate identity and URL reconciliation, partition scope, and canonical mutation authority. Repository transaction budgets partition writes only; catalog breadth and total actions remain uncapped.",
   "non_advisory": true
 }
