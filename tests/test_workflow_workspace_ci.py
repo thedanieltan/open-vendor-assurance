@@ -1,6 +1,9 @@
 from pathlib import Path
 
 import yaml
+import pytest
+import subprocess
+import sys
 
 
 VALIDATE = Path(".github/workflows/validate.yml")
@@ -10,6 +13,62 @@ OWNERSHIP = Path(".github/validation-ownership.yaml")
 
 def load_validate() -> dict:
     return yaml.safe_load(VALIDATE.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("changed_path,expected", [
+    ("tests/test_candidate_activation.py", {"test_changes": "true"}),
+    (".github/workflows/validate.yml", {"workflow_operating_model": "true", "mcp_integration": "true"}),
+    ("tools/openva/agent_export.py", {"mcp_integration": "true"}),
+    ("README.md", {"test_changes": "false", "mcp_integration": "false"}),
+])
+def test_classifier_executes_regression_routing(changed_path, expected, tmp_path, monkeypatch) -> None:
+    step = next(s for s in load_validate()["jobs"]["pr-change-classifier"]["steps"] if s.get("id") == "classify")
+    script = step["run"].split("python - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    original_read = Path.read_text
+    monkeypatch.setattr(Path, "read_text", lambda path, *args, **kwargs:
+                        changed_path if path.name == "changed-paths.txt" else original_read(path, *args, **kwargs))
+    output = tmp_path / "github-output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    exec(compile(script, "ci-classifier", "exec"), {})
+    actual = dict(line.split("=", 1) for line in output.read_text().splitlines())
+    assert expected.items() <= actual.items()
+
+
+def test_regression_shards_cover_every_test_file_once(monkeypatch) -> None:
+    job = load_validate()["jobs"]["full-regression-shards"]
+    step = next(s for s in job["steps"] if s.get("name") == "Run sharded regression tests")
+    script = step["run"].split("python - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    calls = []
+    monkeypatch.setattr(subprocess, "run", lambda args, **kwargs: calls.append((args, kwargs)))
+    for shard in job["strategy"]["matrix"]["include"]:
+        monkeypatch.setenv("REGRESSION_SHARD", shard["shard"])
+        exec(compile(script, "regression-shard", "exec"), {})
+    selected = []
+    for args, kwargs in calls:
+        assert args[:4] == [sys.executable, "-m", "pytest", "-q"]
+        assert kwargs == {"check": True}
+        selected.extend(args[4:])
+    assert len(selected) == len(set(selected))
+    assert set(selected) == {p.as_posix() for p in Path("tests").rglob("test_*.py")}
+    remaining = next(s for s in job["strategy"]["matrix"]["include"] if s["shard"] == "remaining-unit")
+    assert remaining["install_mcp"] and remaining["install_match_service"]
+
+
+def test_targeted_mcp_ci_executes_oci_smoke() -> None:
+    job = load_validate()["jobs"]["mcp-integration"]
+    commands = "\n".join(s.get("run", "") for s in job["steps"])
+    assert "tests/test_openva_mcp_oci.py" in commands
+    assert "docker info" in commands
+
+
+def test_remainder_shards_install_rendered_discovery_dependency() -> None:
+    job = load_validate()["jobs"]["full-regression-shards"]
+    step = next(s for s in job["steps"] if s.get("name") == "Install rendered discovery test dependency")
+    assert step["if"] == "startsWith(matrix.shard, 'remaining-unit')"
+    assert step["run"] == 'pip install "playwright==1.57.0"'
+    assert job["steps"].index(step) < next(
+        i for i, s in enumerate(job["steps"]) if s.get("name") == "Run sharded regression tests"
+    )
 
 
 def test_workspace_required_context_is_a_delegating_aggregator() -> None:
@@ -67,7 +126,9 @@ def test_full_suite_plans_use_parallel_shards_on_prs_and_main() -> None:
     assert "github.event_name != 'pull_request'" in job["if"]
     assert "needs.workspace-plan.outputs.full_suite == 'true'" in job["if"]
     assert job["strategy"]["fail-fast"] is False
-    assert len(job["strategy"]["matrix"]["include"]) == 6
+    assert len(job["strategy"]["matrix"]["include"]) == 9
+    assert job["timeout-minutes"] == "${{ matrix.shard == 'catalog-and-release' && 60 || 30 }}"
+    assert "needs.pr-change-classifier.outputs.test_changes == 'true'" in job["if"]
 
 
 def test_workspace_lane_is_registered_as_a_required_owned_context() -> None:
