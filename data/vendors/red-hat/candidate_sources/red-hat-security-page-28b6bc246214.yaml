@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-28b6bc246214
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148837
+canonical_candidate_url: https://access.redhat.com/solutions/7148837
+confidence: likely
+discovered_at: '2026-10-04T10:04:57.891770Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148837
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'OpenShift 4.20 installation through MCE Assisted Service fails with
+    &#039;crun: systemd failed to install eBPF device filter&#039; - Red Hat Customer
+    Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:05a6a92de1e66f7c938aab4371f786ef0fa92932b9fc789574d300b61e4d1f80
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148837
+requested_url: https://access.redhat.com/solutions/7148837
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-04T10:04:57.891770Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

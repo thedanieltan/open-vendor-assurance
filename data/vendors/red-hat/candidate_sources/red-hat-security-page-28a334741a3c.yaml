@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-28a334741a3c
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148866
+canonical_candidate_url: https://access.redhat.com/solutions/7148866
+confidence: likely
+discovered_at: '2026-10-04T10:04:57.891770Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148866
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'RHACM/Hypershift on OpenShift 4: EgressIP on managed (spoke) cluster
+    is lost during a restart of workers on Management (hub) cluster unexpectedly.
+    - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5e1e5c22384beedc6e7f1a9aff49344edbb470e484f59de5598ff9b6230746b5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148866
+requested_url: https://access.redhat.com/solutions/7148866
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-04T10:04:57.891770Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
