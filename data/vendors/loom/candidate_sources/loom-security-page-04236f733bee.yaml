@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-04236f733bee
+candidate_status: selected
+candidate_url: https://www.atlassian.com/legal/cloud-terms-of-service
+canonical_candidate_url: https://www.atlassian.com/legal/atlassian-customer-agreement
+confidence: likely
+discovered_at: '2026-10-04T10:46:17.084273Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=UTF-8
+  final_url: https://www.atlassian.com/legal/atlassian-customer-agreement
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Atlassian Customer Agreement | Atlassian
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:96632ee83f98b90cf56f5c793bb73c352a201b863578cf3a4e9583f718862ece
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.atlassian.com/legal/atlassian-customer-agreement
+requested_url: https://www.atlassian.com/legal/cloud-terms-of-service
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-04T10:46:17.084273Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
