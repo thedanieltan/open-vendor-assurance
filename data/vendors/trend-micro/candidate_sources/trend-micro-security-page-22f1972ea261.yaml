@@ -1,28 +1,29 @@
-candidate_source_id: trend-micro-security-page-ba05c66790a2
+candidate_source_id: trend-micro-security-page-22f1972ea261
 candidate_status: selected
-candidate_url: https://www.trendmicro.com/en_id/contact.html
-canonical_candidate_url: https://www.trendmicro.com/en_us/contact.html
+candidate_url: https://shop.trendmicro.com/en_dk
+canonical_candidate_url: https://shop.trendmicro.com/en_dk
 confidence: likely
 discovered_at: '2026-10-06T11:27:26.336994Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
-  content_type: text/html;charset=utf-8
-  final_url: https://www.trendmicro.com/en_us/contact.html
+  content_type: text/html
+  final_url: https://dk.shop.trendmicro.com/en_dk/
   http_status: 200
   matched_terms:
   - security
+  - encryption
   - trust
-  page_title: Contact Locations Worldwide | Trend Micro (US)
+  page_title: Official Trend Micro Denmark Online Shop | Antivirus Software
   semantic_status: strong
   soft_404_detected: false
   verification_status: redirected
-evidence_digest: sha256:6f44527fa0b9124d1240c8fe144094fb711ab1e5f2af7048d0026e09cb35fe84
+evidence_digest: sha256:707ff36885eaaf2051fcb5059706176ef42080fce827bce6501ae7cd0522d81e
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://www.trendmicro.com/en_us/contact.html
-requested_url: https://www.trendmicro.com/en_id/contact.html
+observed_final_url: https://dk.shop.trendmicro.com/en_dk/
+requested_url: https://shop.trendmicro.com/en_dk
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-06T11:27:26.336994Z'
