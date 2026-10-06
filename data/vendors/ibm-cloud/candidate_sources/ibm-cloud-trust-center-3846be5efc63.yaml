@@ -1,29 +1,28 @@
-candidate_source_id: ibm-cloud-trust-center-eb1a5068a352
+candidate_source_id: ibm-cloud-trust-center-3846be5efc63
 candidate_status: selected
-candidate_url: https://www.ibm.com/homepage
-canonical_candidate_url: https://www.ibm.com/us-en
+candidate_url: https://www.ibm.com/products/qradar
+canonical_candidate_url: https://www.ibm.com/products/qradar
 confidence: likely
 discovered_at: '2026-10-06T11:08:09.784714Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html;charset=utf-8
-  final_url: https://www.ibm.com/us-en
+  final_url: https://www.ibm.com/products/qradar
   http_status: 200
   matched_terms:
-  - trust
   - security
   - compliance
-  page_title: IBM
+  page_title: IBM QRadar
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:ff27264cb1caf5c35b37793d36683ae4e95913d153736de3bfb8ba8b03d9c66a
+  verification_status: ok
+evidence_digest: sha256:19d869478ecb3daa9667e63533c551178e986bd1e02ef1da17ae7547d506c906
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://www.ibm.com/us-en
-requested_url: https://www.ibm.com/homepage
+observed_final_url: https://www.ibm.com/products/qradar
+requested_url: https://www.ibm.com/products/qradar
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-06T11:08:09.784714Z'

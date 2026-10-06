@@ -1,0 +1,33 @@
+candidate_source_id: hibob-trust-center-625546dd7330
+candidate_status: selected
+candidate_url: https://www.hibob.com/privacy/privacy-policy
+canonical_candidate_url: https://www.hibob.com/privacy/privacy-policy/
+confidence: likely
+discovered_at: '2026-10-06T11:28:20.489853Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.hibob.com/privacy/privacy-policy/
+  http_status: 200
+  matched_terms:
+  - trust
+  - compliance
+  - privacy
+  page_title: Privacy Policy | HiBob
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:03c072c8ede62f8489ea8cbbc788cde06d6c1900eb38e968396232e857f478dc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.hibob.com/privacy/privacy-policy/
+requested_url: https://www.hibob.com/privacy/privacy-policy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-06T11:28:20.489853Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: hibob
