@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-9da280af899f
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7140607
+canonical_candidate_url: https://access.redhat.com/solutions/7140607
+confidence: likely
+discovered_at: '2026-10-07T10:32:53.881290Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7140607
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: AWS creates incorrect Security Group rules for OVN-K with ports 6441-6442
+    - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:31ae63befc826acdca3ce3a982142c6c8d653955de69167d5de116af85ae8403
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7140607
+requested_url: https://access.redhat.com/solutions/7140607
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:53.881290Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

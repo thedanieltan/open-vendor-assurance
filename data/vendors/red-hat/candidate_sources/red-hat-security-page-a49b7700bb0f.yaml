@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-a49b7700bb0f
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7141759
+canonical_candidate_url: https://access.redhat.com/solutions/7141759
+confidence: likely
+discovered_at: '2026-10-07T10:32:53.881290Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7141759
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: Third party security scanners flag internal RHOCP services for using
+    self-signed certificates - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8f1e927e3cdadf12fa6bff296b0c67a7c3905cb2a50378378151b046c810e541
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7141759
+requested_url: https://access.redhat.com/solutions/7141759
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:53.881290Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

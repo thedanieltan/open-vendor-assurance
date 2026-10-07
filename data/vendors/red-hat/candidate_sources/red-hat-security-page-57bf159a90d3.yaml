@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-57bf159a90d3
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7141056
+canonical_candidate_url: https://access.redhat.com/solutions/7141056
+confidence: likely
+discovered_at: '2026-10-07T10:32:53.881290Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7141056
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: NetworkPolicies are not automatically recreated after migrating to OSSM
+    3 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a2db1ac8fe6fc223bb77a346d898872205bafe8ff0e00fa68650f78694ed47d6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7141056
+requested_url: https://access.redhat.com/solutions/7141056
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:53.881290Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
