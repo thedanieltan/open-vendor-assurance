@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-8f400644316e
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/man-in-the-middle-attacks.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/man-in-the-middle-attacks.html
+confidence: likely
+discovered_at: '2026-10-07T10:32:34.999690Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/man-in-the-middle-attacks.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: What Is a MITM Attack? Man in the Middle Attacks, Explained | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:97164052e7763695d42562cafa71998fda194d51476faa18313066044d337f24
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/man-in-the-middle-attacks.html
+requested_url: https://www.splunk.com/en_us/blog/learn/man-in-the-middle-attacks.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:34.999690Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
