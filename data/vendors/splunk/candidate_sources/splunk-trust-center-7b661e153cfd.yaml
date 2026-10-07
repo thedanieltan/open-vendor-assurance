@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-7b661e153cfd
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/blacklist-whitelist-inclusivity.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/blacklist-whitelist-inclusivity.html
+confidence: likely
+discovered_at: '2026-10-07T10:32:34.999690Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/blacklist-whitelist-inclusivity.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: 'Blacklist &#x26; Whitelist: Terms To Avoid | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a094fbcf9853e858c15af2aa4e32c57394f5e2f9e378d6d53b03f84a975db738
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/blacklist-whitelist-inclusivity.html
+requested_url: https://www.splunk.com/en_us/blog/learn/blacklist-whitelist-inclusivity.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:34.999690Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
