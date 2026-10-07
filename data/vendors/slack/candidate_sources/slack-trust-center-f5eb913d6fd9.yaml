@@ -1,31 +1,29 @@
-candidate_source_id: slack-trust-center-c51f369c1f9c
+candidate_source_id: slack-trust-center-f5eb913d6fd9
 candidate_status: selected
-candidate_url: https://slack.com/intl/en-gb/gdpr
-canonical_candidate_url: https://slack.com/intl/en-gb/trust/compliance/gdpr
+candidate_url: https://slack.com/events/tags/security
+canonical_candidate_url: https://slack.com/events/search/security
 confidence: likely
 discovered_at: '2026-10-07T10:32:44.509258Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
-  final_url: https://slack.com/intl/en-gb/trust/compliance/gdpr
+  final_url: https://slack.com/events/search/security
   http_status: 200
   matched_terms:
   - trust
-  - trust centre
   - security
-  - compliance
   - privacy
-  page_title: Slack’s GDPR commitment | Legal | Slack
+  page_title: Slack 행사 | Slack
   semantic_status: strong
   soft_404_detected: false
   verification_status: redirected
-evidence_digest: sha256:43f35008d588862d947be760e598f600d90f34dc6d7672189e613e8e7409c1c5
+evidence_digest: sha256:4c19243babd68d4b59a554193e309a2997719737891a17e8dce6f515d3d04890
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://slack.com/intl/en-gb/trust/compliance/gdpr
-requested_url: https://slack.com/intl/en-gb/gdpr
+observed_final_url: https://slack.com/events/search/security
+requested_url: https://slack.com/events/tags/security
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-07T10:32:44.509258Z'
