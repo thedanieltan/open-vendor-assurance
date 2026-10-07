@@ -1,0 +1,31 @@
+candidate_source_id: red-hat-security-page-1d50b8a13aae
+candidate_status: selected
+candidate_url: https://developers.redhat.com/e-books
+canonical_candidate_url: https://developers.redhat.com/e-books
+confidence: likely
+discovered_at: '2026-10-07T10:32:53.881290Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://developers.redhat.com/e-books
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Red Hat Developer e-books | Red Hat Developer
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a5330f0acc590db8c67dd73b7749115754a17a41e0b8e06242b419b9521a3380
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://developers.redhat.com/e-books
+requested_url: https://developers.redhat.com/e-books
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-07T10:32:53.881290Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
