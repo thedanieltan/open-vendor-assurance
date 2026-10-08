@@ -1,0 +1,35 @@
+candidate_source_id: aws-trust-center-f894f0a9345e
+candidate_status: selected
+candidate_url: https://aws.amazon.com/legal/cookies
+canonical_candidate_url: https://aws.amazon.com/legal/cookies/
+confidence: likely
+discovered_at: '2026-10-08T10:53:52.745934Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://aws.amazon.com/legal/cookies/
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: Cookie Notice
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c3af26e1b11f6a6d2746ee2a3dbd753fc4818ef440d4ebbaa1b02a49c6462920
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://aws.amazon.com/legal/cookies/
+requested_url: https://aws.amazon.com/legal/cookies
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-08T10:53:52.745934Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: aws

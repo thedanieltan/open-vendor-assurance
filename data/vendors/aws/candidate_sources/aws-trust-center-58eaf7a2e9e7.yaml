@@ -1,0 +1,33 @@
+candidate_source_id: aws-trust-center-58eaf7a2e9e7
+candidate_status: selected
+candidate_url: https://aws.amazon.com/trust-center?nc2=h_dsc_aa_trc
+canonical_candidate_url: https://aws.amazon.com/trust-center/?nc2=h_dsc_aa_trc
+confidence: likely
+discovered_at: '2026-10-08T10:53:52.745934Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://aws.amazon.com/trust-center/?nc2=h_dsc_aa_trc
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  page_title: Customer Trust &amp; Security - AWS Trust Center
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:b29457d341c0586c2ee0342d58e1a6f781310937b85fc8084948c143806dcbdd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://aws.amazon.com/trust-center/?nc2=h_dsc_aa_trc
+requested_url: https://aws.amazon.com/trust-center?nc2=h_dsc_aa_trc
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-08T10:53:52.745934Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: aws
