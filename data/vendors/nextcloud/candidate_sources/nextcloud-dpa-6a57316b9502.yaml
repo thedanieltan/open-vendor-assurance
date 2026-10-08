@@ -1,29 +1,30 @@
-candidate_source_id: nextcloud-dpa-57ab5ab56de9
+candidate_source_id: nextcloud-dpa-6a57316b9502
 candidate_status: selected
-candidate_url: https://nextcloud.com/es/privacy
-canonical_candidate_url: https://nextcloud.com/es/privacy/
+candidate_url: https://nextcloud.com/nl/compliance?filter=Security
+canonical_candidate_url: https://nextcloud.com/nl/compliance/?filter=Security
 confidence: likely
 discovered_at: '2026-10-08T11:21:35.074639Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
-  final_url: https://nextcloud.com/es/privacy/
+  final_url: https://nextcloud.com/nl/compliance/?filter=Security
   http_status: 200
   matched_terms:
   - data processing
+  - dpa
   - processor
   - controller
-  page_title: Privacy - Nextcloud
+  page_title: Nextcloud compliance
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:14416e6b94d17ad3e633a14a5e2cf1f64993330df22c95aa83b28a03dee8920f
+  verification_status: redirected
+evidence_digest: sha256:a6f3677585ea2a39f385a141636448b1dc1d81b458686b240d9e6e274656c8c1
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://nextcloud.com/es/privacy/
-requested_url: https://nextcloud.com/es/privacy
+observed_final_url: https://nextcloud.com/nl/compliance/?filter=Security
+requested_url: https://nextcloud.com/nl/compliance?filter=Security
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-08T11:21:35.074639Z'

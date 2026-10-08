@@ -1,32 +1,31 @@
-candidate_source_id: nextcloud-dpa-57ab5ab56de9
+candidate_source_id: nextcloud-trust-center-70f345b5db20
 candidate_status: selected
-candidate_url: https://nextcloud.com/es/privacy
-canonical_candidate_url: https://nextcloud.com/es/privacy/
+candidate_url: https://nextcloud.com/summit
+canonical_candidate_url: https://nextcloud.com/summit/
 confidence: likely
 discovered_at: '2026-10-08T11:21:35.074639Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
-  final_url: https://nextcloud.com/es/privacy/
+  final_url: https://nextcloud.com/summit/
   http_status: 200
   matched_terms:
-  - data processing
-  - processor
-  - controller
-  page_title: Privacy - Nextcloud
+  - security
+  - compliance
+  page_title: Nextcloud Summit 2026 - The digital sovereignty revolution starts here
   semantic_status: strong
   soft_404_detected: false
   verification_status: ok
-evidence_digest: sha256:14416e6b94d17ad3e633a14a5e2cf1f64993330df22c95aa83b28a03dee8920f
+evidence_digest: sha256:7dff5ac21b1d85e4947fc5d8302758ccb87f310b411b448e0b1e2793d68b8d03
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
-observed_final_url: https://nextcloud.com/es/privacy/
-requested_url: https://nextcloud.com/es/privacy
+observed_final_url: https://nextcloud.com/summit/
+requested_url: https://nextcloud.com/summit
 requires_review: true
 schema_version: 0.1.0
 selection_run_id: '2026-10-08T11:21:35.074639Z'
-source_type_candidate: dpa
+source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: nextcloud
