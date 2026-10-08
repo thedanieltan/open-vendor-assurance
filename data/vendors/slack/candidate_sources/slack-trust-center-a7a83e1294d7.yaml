@@ -1,9 +1,9 @@
 candidate_source_id: slack-trust-center-a7a83e1294d7
 candidate_status: selected
-candidate_url: https://slack.com/legal
+candidate_url: https://slack.com/policies
 canonical_candidate_url: https://slack.com/legal
 confidence: likely
-discovered_at: '2026-09-26T09:34:35.795915Z'
+discovered_at: '2026-10-08T11:17:55.362640Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -13,20 +13,21 @@ evidence:
   matched_terms:
   - trust
   - security
+  - compliance
   - privacy
   page_title: Legal | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:cc1f68545d5b385a09011daa61612048b42acfbfe08b731d40aa2dcbd816952f
+  verification_status: redirected
+evidence_digest: sha256:a8d5329c7d90abeafa6e4ea7d36b30ec381bcf56c6ed31d83d53e7467158fa20
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://slack.com/legal
-requested_url: https://slack.com/legal
+requested_url: https://slack.com/policies
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-26T09:34:35.795915Z'
+selection_run_id: '2026-10-08T11:17:55.362640Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: slack
