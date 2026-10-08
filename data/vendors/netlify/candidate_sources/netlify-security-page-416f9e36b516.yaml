@@ -1,0 +1,32 @@
+candidate_source_id: netlify-security-page-416f9e36b516
+candidate_status: selected
+candidate_url: https://www.netlify.com/changelog/tag/functions/feed.xml
+canonical_candidate_url: https://www.netlify.com/changelog/tag/functions/feed.xml
+confidence: likely
+discovered_at: '2026-10-08T11:07:58.867222Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/xml
+  final_url: https://www.netlify.com/changelog/tag/functions/feed.xml
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: Netlify Changelog - Functions
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b7ba8b022704ca6449a3c8cd385b76995d3101d4dff94e643f29dfb0fc2f81fc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.netlify.com/changelog/tag/functions/feed.xml
+requested_url: https://www.netlify.com/changelog/tag/functions/feed.xml
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-08T11:07:58.867222Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: netlify
