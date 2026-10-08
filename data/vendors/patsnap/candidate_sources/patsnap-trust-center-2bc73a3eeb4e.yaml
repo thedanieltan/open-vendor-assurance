@@ -1,0 +1,32 @@
+candidate_source_id: patsnap-trust-center-2bc73a3eeb4e
+candidate_status: selected
+candidate_url: https://www.patsnap.com/tag/article
+canonical_candidate_url: https://www.patsnap.com/tag/article/
+confidence: likely
+discovered_at: '2026-10-08T11:17:55.362640Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.patsnap.com/tag/article/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Archives for Blog Posts, Articles, Links | Patsnap
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c2c1b7ccb6b1a43ed38f8ade55388b8e2d72e192bd1ed44d23f455ae6d6846df
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.patsnap.com/tag/article/
+requested_url: https://www.patsnap.com/tag/article
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-08T11:17:55.362640Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: patsnap
