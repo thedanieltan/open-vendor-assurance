@@ -43,6 +43,14 @@ def test_live_resolver_endpoint_is_declared_exactly_once():
         assert "openva-live-resolver.danieltanyl91.workers.dev" not in other_src.read_text(encoding="utf-8")
 
 
+def test_harness_loads_shared_matcher_before_app_like_the_page():
+    page = (SITE_SRC / "index.html").read_text(encoding="utf-8")
+    assert page.index('src="openva-matcher-core.js') < page.index('src="app.js')
+    core = (SITE_SRC / "openva-matcher-core.js").read_text(encoding="utf-8")
+    assert _instrumented_source().startswith(core + "\n")
+    assert _layered_source().startswith(core + "\n")
+
+
 def test_opt_in_toggle_defaults_off_with_disclosure():
     index_html = (SITE_SRC / "index.html").read_text(encoding="utf-8")
     match = re.search(
@@ -84,6 +92,7 @@ def test_required_output_fields_are_present_in_row_builders():
 
 
 def _instrumented_source() -> str:
+    core = (SITE_SRC / "openva-matcher-core.js").read_text(encoding="utf-8")
     source = (SITE_SRC / "app.js").read_text(encoding="utf-8")
     export_block = """
 globalThis.__openvaLiveResolverTest = {
@@ -98,7 +107,7 @@ globalThis.__openvaLiveResolverTest = {
   setCatalogData: (data) => { catalogData = data; },
 };
 """
-    return source + "\n" + export_block
+    return core + "\n" + source + "\n" + export_block
 
 
 def test_catalog_match_skips_the_live_worker(tmp_path: Path):
@@ -416,16 +425,17 @@ assert.ok(!selected.includes("certification_reference"));
 
 
 def _layered_source() -> str:
-    # Build order the compiled site actually uses (site/build.py): app.js loads first,
+    # Build order the compiled site actually uses: matcher core, app.js, then
     # ui-fixes.js replaces the resolver controls and installs its own click handler,
     # resolver-source-availability.js (build-injected) re-overrides browserResultPackRow
     # last. A test against app.js alone cannot catch a wiring gap in the later layers --
     # that gap is exactly what shipped in PR #750 and went undetected until live
     # verification, so this test loads all three together, matching production.
+    core_js = (SITE_SRC / "openva-matcher-core.js").read_text(encoding="utf-8")
     app_js = (SITE_SRC / "app.js").read_text(encoding="utf-8")
     ui_fixes_js = (SITE_SRC / "ui-fixes.js").read_text(encoding="utf-8")
     resolver_availability_js = (SITE_SRC / "resolver-source-availability.js").read_text(encoding="utf-8")
-    return "\n".join([app_js, ui_fixes_js, resolver_availability_js])
+    return "\n".join([core_js, app_js, ui_fixes_js, resolver_availability_js])
 
 
 _LAYERED_HARNESS_PREAMBLE = r'''
