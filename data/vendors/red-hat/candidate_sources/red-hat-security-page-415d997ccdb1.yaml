@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-415d997ccdb1
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148551
+canonical_candidate_url: https://access.redhat.com/solutions/7148551
+confidence: likely
+discovered_at: '2026-10-10T10:50:15.934977Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148551
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: RT task starved by repeated RT push and stopper retries on RHEL9-based
+    kernel-rt, even with the CVE-2026-45919 fix - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a4c6fa507552863db517d62280c1b892fbb643989f22d7982d200eec9690db4b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148551
+requested_url: https://access.redhat.com/solutions/7148551
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-10T10:50:15.934977Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
