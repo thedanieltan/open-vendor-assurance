@@ -2585,6 +2585,41 @@
       "vendor_id": "sendbird"
     },
     {
+      "_openva_path": "data/vendors/sendbird/candidate_sources/sendbird-privacy-notice-83599e6dde24.yaml",
+      "candidate_source_id": "sendbird-privacy-notice-83599e6dde24",
+      "candidate_status": "selected",
+      "candidate_url": "https://status-seoul.sendbird.com/incidents/twtg2g5463dh",
+      "canonical_candidate_url": "https://status-seoul.sendbird.com/incidents/twtg2g5463dh",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:56.512094Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://status-seoul.sendbird.com/incidents/twtg2g5463dh",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Sendbird Seoul Status - Elevated API Errors",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:3792ce027f0459f412f70674e580265e34876cfdf27f88af51a4979d6d37453f",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://status-seoul.sendbird.com/incidents/twtg2g5463dh",
+      "requested_url": "https://status-seoul.sendbird.com/incidents/twtg2g5463dh",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:56.512094Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sendbird"
+    },
+    {
       "_openva_path": "data/vendors/sendbird/candidate_sources/sendbird-privacy-notice-84a1e9e0d537.yaml",
       "candidate_source_id": "sendbird-privacy-notice-84a1e9e0d537",
       "candidate_status": "selected",
@@ -2685,6 +2720,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T09:15:39.355021Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "sendbird"
+    },
+    {
+      "_openva_path": "data/vendors/sendbird/candidate_sources/sendbird-privacy-notice-87552f9c67a0.yaml",
+      "candidate_source_id": "sendbird-privacy-notice-87552f9c67a0",
+      "candidate_status": "selected",
+      "candidate_url": "https://status-seoul.sendbird.com/incidents/wn86q9dfhs4z",
+      "canonical_candidate_url": "https://status-seoul.sendbird.com/incidents/wn86q9dfhs4z",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:17:53.815432Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://status-seoul.sendbird.com/incidents/wn86q9dfhs4z",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy policy"
+        ],
+        "page_title": "Sendbird Seoul Status - Increased Error Rates (Sendbird Desk)",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:91b503888524228f96a735723c979c099457388558937dd4aab8e830617f1df3",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://status-seoul.sendbird.com/incidents/wn86q9dfhs4z",
+      "requested_url": "https://status-seoul.sendbird.com/incidents/wn86q9dfhs4z",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:17:53.815432Z",
       "source_type_candidate": "privacy_notice",
       "superseded_by_candidate_id": null,
       "vendor_id": "sendbird"
@@ -9265,7 +9335,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
-    "candidate_source_count": 260,
+    "candidate_source_count": 262,
     "candidate_source_types": [
       "ai_terms",
       "certification_reference",

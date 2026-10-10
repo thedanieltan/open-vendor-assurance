@@ -1912,6 +1912,19 @@
         "observer": "human",
         "publisher": "vendor"
       },
+      "quarantine": {
+        "decision_id": "aliyun-dpa-quarantine",
+        "prior_review_state": null,
+        "quarantined_at": "2026-09-16T13:47:43.413594Z",
+        "quarantined_by": "quarantine-controller",
+        "reason": "persistent_not_found",
+        "reversal": {
+          "method": "revert_quarantine",
+          "reference": "Revert the quarantine PR for aliyun-dpa; restores the prior review_state. See decision aliyun-dpa-quarantine.",
+          "reversal_decision_id": null
+        }
+      },
+      "review_state": "quarantined",
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
