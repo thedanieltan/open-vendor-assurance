@@ -28,6 +28,7 @@ jobs:
       mcp_integration: ${{ steps.classify.outputs.mcp_integration }}
       google_sheets_integration: ${{ steps.classify.outputs.google_sheets_integration }}
       workspace_affected: ${{ steps.classify.outputs.workspace_affected }}
+      test_changes: ${{ steps.classify.outputs.test_changes }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -133,7 +134,9 @@ jobs:
               or exact("tests/test_adapter_contract.py")
           )
           mcp_integration = (
-              starts("integrations/mcp/")
+              workflow_paths
+              or exact("tools/openva/agent_export.py")
+              or starts("integrations/mcp/")
               or starts("adapters/python/openva_pack_reader/")
               or starts("adapters/python/openva_vendor_inventory_matcher/")
               or any(path.startswith("tests/test_openva_mcp") for path in paths)
@@ -173,6 +176,7 @@ jobs:
           )
 
           outputs = {
+              "test_changes": starts("tests/"),
               "repository_integrity_heavy": repository_integrity_heavy,
               "workflow_operating_model": workflow_operating_model,
               "catalog_growth": catalog_growth,
@@ -656,6 +660,8 @@ jobs:
           pip install -e "integrations/mcp/openva_mcp[dev]"
       - name: Assert MCP SDK is installed
         run: python -c "import mcp.shared.memory, mcp.client.stdio, openva_mcp, jsonschema"
+      - name: Require Docker engine for OCI verification
+        run: docker info
       - name: Run MCP integration tests
         run: >-
           pytest -q
@@ -666,6 +672,7 @@ jobs:
           tests/test_openva_mcp_enrich.py
           tests/test_openva_mcp_streamable_http.py
           tests/test_openva_mcp_authority_boundaries.py
+          tests/test_openva_mcp_oci.py
           tests/test_matching_conformance.py
           tests/test_release_coherence.py
           tests/test_agent_bundle_verification.py
@@ -694,12 +701,17 @@ jobs:
       (
         github.event_name != 'pull_request' ||
         (
+          needs.pr-change-classifier.outputs.workflow_operating_model == 'true' ||
+          needs.pr-change-classifier.outputs.test_changes == 'true' ||
+          (
           needs.pr-change-classifier.outputs.workspace_affected == 'true' &&
           needs.workspace-plan.result == 'success' &&
           needs.workspace-plan.outputs.full_suite == 'true'
+          )
         )
       )
-    timeout-minutes: 15
+    # The release-gate file alone measured 37.5 minutes on the full catalog.
+    timeout-minutes: ${{ matrix.shard == 'catalog-and-release' && 60 || 30 }}
     strategy:
       fail-fast: false
       matrix:
@@ -752,8 +764,8 @@ jobs:
               tests/test_hosted_job_lifecycle.py
               tests/test_supply_chain_policy.py
           - shard: remaining-unit
-            install_mcp: false
-            install_match_service: false
+            install_mcp: true
+            install_match_service: true
             pytest_args: >-
               tests/test_agent_export.py
               tests/test_resolver_result_pack.py
@@ -764,6 +776,15 @@ jobs:
               tests/test_source_verification.py
               tests/test_web_bot_auth.py
               tests/test_google_sheets_integration.py
+          - shard: remaining-unit-1
+            install_mcp: true
+            install_match_service: true
+          - shard: remaining-unit-2
+            install_mcp: true
+            install_match_service: true
+          - shard: remaining-unit-3
+            install_mcp: true
+            install_match_service: true
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -781,5 +802,38 @@ jobs:
       - name: Install match service test dependencies
         if: matrix.install_match_service
         run: pip install -e "services/openva_match_service[dev]"
+      - name: Install rendered discovery test dependency
+        if: startsWith(matrix.shard, 'remaining-unit')
+        run: pip install "playwright==1.57.0"
       - name: Run sharded regression tests
-        run: pytest -q ${{ matrix.pytest_args }}
+        env:
+          REGRESSION_SHARD: ${{ matrix.shard }}
+        run: |
+          python - <<'PY'
+          import glob
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+          import yaml
+
+          workflow = yaml.safe_load(Path('.github/workflows/validate.yml').read_text())
+          shards = workflow['jobs']['full-regression-shards']['strategy']['matrix']['include']
+          inventory = {p.as_posix() for p in Path('tests').rglob('test_*.py')}
+          assigned = set()
+          selections = {}
+          for shard in shards:
+              if shard['shard'].startswith('remaining-unit'):
+                  continue
+              matched = {Path(p).as_posix() for pattern in shard['pytest_args'].split() for p in glob.glob(pattern)}
+              selections[shard['shard']] = sorted(matched - assigned)
+              assigned.update(matched)
+          remainder = sorted(inventory - assigned)
+          remainder_shards = [s['shard'] for s in shards if s['shard'].startswith('remaining-unit')]
+          for index, name in enumerate(remainder_shards):
+              selections[name] = remainder[index::len(remainder_shards)]
+          selected = selections[os.environ['REGRESSION_SHARD']]
+          if not selected:
+              raise SystemExit('Regression shard selected no tests')
+          subprocess.run([sys.executable, '-m', 'pytest', '-q', *selected], check=True)
+          PY
