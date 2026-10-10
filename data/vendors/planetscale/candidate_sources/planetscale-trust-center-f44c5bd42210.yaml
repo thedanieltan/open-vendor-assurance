@@ -1,0 +1,32 @@
+candidate_source_id: planetscale-trust-center-f44c5bd42210
+candidate_status: selected
+candidate_url: https://planetscale.com/changelog/brownouts
+canonical_candidate_url: https://planetscale.com/changelog/brownouts
+confidence: likely
+discovered_at: '2026-10-10T10:06:51.530156Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://planetscale.com/changelog/brownouts
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - privacy
+  page_title: 'Brownout notice: legacy connection strings — PlanetScale'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:15f272895fed8a356c04cf0280198c5c8f9ebd131509a1dcc8719a6ca5698fe5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://planetscale.com/changelog/brownouts
+requested_url: https://planetscale.com/changelog/brownouts
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-10T10:06:51.530156Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: planetscale
