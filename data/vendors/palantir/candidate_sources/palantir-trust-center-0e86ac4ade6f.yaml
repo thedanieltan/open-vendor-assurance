@@ -1,0 +1,33 @@
+candidate_source_id: palantir-trust-center-0e86ac4ade6f
+candidate_status: selected
+candidate_url: https://www.palantir.com/docs/foundry/upgrade-assistant/impacted-resources
+canonical_candidate_url: https://www.palantir.com/docs/foundry/upgrade-assistant/impacted-resources
+confidence: likely
+discovered_at: '2026-10-11T10:17:26.676993Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://www.palantir.com/docs/foundry/upgrade-assistant/impacted-resources
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - privacy
+  page_title: Upgrade Assistant • Identify impacted resources • Palantir
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7f106da775bc0ed68dae176e47ae2e71ec9a4ae00ae28c173d2a53e52beb219a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.palantir.com/docs/foundry/upgrade-assistant/impacted-resources
+requested_url: https://www.palantir.com/docs/foundry/upgrade-assistant/impacted-resources
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:26.676993Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: palantir
