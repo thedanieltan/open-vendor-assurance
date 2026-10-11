@@ -1,0 +1,31 @@
+candidate_source_id: secureframe-trust-center-76e7d1732ef6
+candidate_status: selected
+candidate_url: https://status.secureframe.com/history.rss
+canonical_candidate_url: https://status.secureframe.com/history.rss
+confidence: likely
+discovered_at: '2026-10-11T10:17:07.756973Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/rss+xml; charset=utf-8
+  final_url: https://status.secureframe.com/history.rss
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  page_title: Secureframe Status - Incident History
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d6e092011cd3d33722f5da90821d38ab2093e99ae532de1fcd20de2c4d442f73
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.secureframe.com/history.rss
+requested_url: https://status.secureframe.com/history.rss
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:07.756973Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: secureframe
