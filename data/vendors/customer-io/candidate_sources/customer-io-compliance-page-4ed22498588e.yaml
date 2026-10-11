@@ -1,0 +1,31 @@
+candidate_source_id: customer-io-compliance-page-4ed22498588e
+candidate_status: selected
+candidate_url: https://docs.customer.io/accounts/security
+canonical_candidate_url: https://docs.customer.io/accounts/security/login-session/
+confidence: likely
+discovered_at: '2026-10-11T10:17:36.258737Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://docs.customer.io/accounts/security/login-session/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - audit
+  page_title: Session cookies and expiration - Customer.io Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:71762dd09b571d0ff473a515f7165f31a410153a7daf0509376b0ff9425beb9d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.customer.io/accounts/security/login-session/
+requested_url: https://docs.customer.io/accounts/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:36.258737Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: customer-io
