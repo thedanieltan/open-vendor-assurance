@@ -1,0 +1,32 @@
+candidate_source_id: chainalysis-subprocessors-list-cc49c77c56d8
+candidate_status: selected
+candidate_url: https://www.chainalysis.com/chainalysis-certification-programs
+canonical_candidate_url: https://www.chainalysis.com/chainalysis-certification-programs/
+confidence: likely
+discovered_at: '2026-10-11T10:17:38.112699Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.chainalysis.com/chainalysis-certification-programs/
+  http_status: 200
+  matched_terms:
+  - sub-processors
+  - sub-processor
+  page_title: Chainalysis Certification Programs - Chainalysis
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4c90f6b3daf9f5013d377ee1bc08c501444568d2e16717e8ddafd9d96741d805
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.chainalysis.com/chainalysis-certification-programs/
+requested_url: https://www.chainalysis.com/chainalysis-certification-programs
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:38.112699Z'
+source_type_candidate: subprocessors_list
+superseded_by_candidate_id: null
+vendor_id: chainalysis
