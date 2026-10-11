@@ -1,0 +1,31 @@
+candidate_source_id: elastic-trust-center-d0528cde99e8
+candidate_status: selected
+candidate_url: https://www.elastic.co/uptime-monitoring
+canonical_candidate_url: https://www.elastic.co/observability/synthetic-monitoring
+confidence: likely
+discovered_at: '2026-10-11T10:17:16.481569Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.elastic.co/observability/synthetic-monitoring
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Synthetic Monitoring with Elastic Observability | Elastic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:066d26d02e8cbfdc8d1c8cba9ee96c61bb342874ba87c7e14f9106e84ae3c832
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.elastic.co/observability/synthetic-monitoring
+requested_url: https://www.elastic.co/uptime-monitoring
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:16.481569Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: elastic
