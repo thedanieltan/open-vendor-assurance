@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-4b64705ce76b
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/products/on-call.html
+canonical_candidate_url: https://www.splunk.com/en_us/products/on-call.html
+confidence: likely
+discovered_at: '2026-10-11T10:17:23.506169Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.splunk.com/en_us/products/on-call.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: Splunk On-Call | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d0fc98c6b823ca58a7997733713eed7fddba17b451326d85a01af12f70fa1dfe
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/products/on-call.html
+requested_url: https://www.splunk.com/en_us/products/on-call.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:23.506169Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
