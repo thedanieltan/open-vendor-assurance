@@ -1,0 +1,33 @@
+candidate_source_id: wrike-compliance-page-029d03eae3f4
+candidate_status: selected
+candidate_url: https://developers.wrike.com/
+canonical_candidate_url: https://developers.wrike.com/docs/introduction
+confidence: likely
+discovered_at: '2026-10-11T10:17:22.534321Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://developers.wrike.com/docs/introduction
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  - trust
+  page_title: Build with Wrike
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:193eb8af784957b5fff3287b8054cb86b4ccb2fbb089caa376e6d53217905fed
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://developers.wrike.com/docs/introduction
+requested_url: https://developers.wrike.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:22.534321Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: wrike
