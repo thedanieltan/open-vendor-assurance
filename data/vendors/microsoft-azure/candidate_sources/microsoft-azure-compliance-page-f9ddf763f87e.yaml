@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-azure-compliance-page-f9ddf763f87e
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/azure/governance/policy/samples/irs-1075-sept2016
+canonical_candidate_url: https://learn.microsoft.com/en-us/azure/governance/policy/samples/irs-1075-sept2016
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/governance/policy/samples/irs-1075-sept2016
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  - audit
+  page_title: Regulatory Compliance details for IRS 1075 September 2016 - Azure Policy
+    | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3eb2b12068179a883dec7d878f460f867bf79b852034dc259810a0c448cfd42a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/governance/policy/samples/irs-1075-sept2016
+requested_url: https://learn.microsoft.com/en-us/azure/governance/policy/samples/irs-1075-sept2016
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

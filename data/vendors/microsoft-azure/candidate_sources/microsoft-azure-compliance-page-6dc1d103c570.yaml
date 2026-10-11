@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-azure-compliance-page-6dc1d103c570
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-pci-3ds
+canonical_candidate_url: https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-pci-3ds
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-pci-3ds
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  - audit
+  - trust
+  page_title: PCI 3DS - Azure Compliance | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3995a0e9d411d4ca6bf4bd2bd3f379efe9bf51f5e79f9268dd2511bcd363f6db
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-pci-3ds
+requested_url: https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-pci-3ds
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

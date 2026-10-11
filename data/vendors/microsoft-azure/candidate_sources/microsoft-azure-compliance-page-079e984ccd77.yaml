@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-compliance-page-079e984ccd77
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview
+canonical_candidate_url: https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver17
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver17
+  http_status: 200
+  matched_terms:
+  - soc
+  - audit
+  - trust
+  page_title: Ledger Overview - SQL Server | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:fcf62c891f3e434d4350865457fa8b5eb12636ec343b4737b9f017dd05f0546d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver17
+requested_url: https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

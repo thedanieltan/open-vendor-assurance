@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-compliance-page-b5a5559ad8fd
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink?LinkId=2378705&clcid=0x409&country=us&culture=en-us
+canonical_candidate_url: https://go.microsoft.com/fwlink?LinkId=2378705&clcid=0x409&country=us&culture=en-us
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://ignite.microsoft.com/en-US/home?wt.mc_ID=msignite26_ciarmar_corp_np_oo_EECommercialBN_0053
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Your home for Microsoft Ignite
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:f4b91a2052f647043b08e33fd6a0f0696d6677c21f6b5d9c45fa6e01413b766c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://ignite.microsoft.com/en-US/home?wt.mc_ID=msignite26_ciarmar_corp_np_oo_EECommercialBN_0053
+requested_url: https://go.microsoft.com/fwlink?LinkId=2378705&clcid=0x409&country=us&culture=en-us
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

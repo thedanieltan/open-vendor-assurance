@@ -1,0 +1,34 @@
+candidate_source_id: microsoft-azure-dpa-56102d627610
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/microsoft-365/compliance/gdpr-dpia-azure
+canonical_candidate_url: https://learn.microsoft.com/en-us/compliance/regulatory/gdpr-dpia-azure
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/compliance/regulatory/gdpr-dpia-azure
+  http_status: 200
+  matched_terms:
+  - data processing
+  - data processing agreement
+  - dpa
+  - processor
+  - controller
+  page_title: DPIA Azure for the GDPR - Microsoft GDPR | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:c3673e28a40c7985b2efd07fdcf94f5ac0ae67d495a8fafb2459573185eea6f2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/compliance/regulatory/gdpr-dpia-azure
+requested_url: https://learn.microsoft.com/en-us/microsoft-365/compliance/gdpr-dpia-azure
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: dpa
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

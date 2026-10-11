@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-compliance-page-f81a94d10502
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink?clcid=0x409&linkid=2244001
+canonical_candidate_url: https://go.microsoft.com/fwlink?clcid=0x409&linkid=2244001
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/service-health/alerts-activity-log-service-notifications-portal
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Create Service Health alerts for Azure service notifications - Azure
+    Service Health | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:a19e1baf1ba9e0d8624a032268d689f7911cd5a46364a490c7c4e586255804f4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/service-health/alerts-activity-log-service-notifications-portal
+requested_url: https://go.microsoft.com/fwlink?clcid=0x409&linkid=2244001
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

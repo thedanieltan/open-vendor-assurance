@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-compliance-page-a7730e4cc2b8
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-private-access
+canonical_candidate_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-private-access
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-private-access
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - trust
+  page_title: Microsoft Entra Private Access | Microsoft Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f036fb481c93c0ba4226389a1c4066533ce4753b8acce9838e7a1092876b9326
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-private-access
+requested_url: https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-private-access
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

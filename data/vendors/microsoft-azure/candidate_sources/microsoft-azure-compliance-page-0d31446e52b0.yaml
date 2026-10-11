@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-compliance-page-0d31446e52b0
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+canonical_candidate_url: https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  page_title: Microsoft Defender for Cloud Overview - Microsoft Defender for Cloud
+    | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:638dcbfff55cc5b09c0883af5e2dc44e56d40ff6caf2c587212ee8cb0a99be0e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+requested_url: https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

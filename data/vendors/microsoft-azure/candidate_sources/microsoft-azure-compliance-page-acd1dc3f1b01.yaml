@@ -1,0 +1,33 @@
+candidate_source_id: microsoft-azure-compliance-page-acd1dc3f1b01
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/azure/frontdoor/front-door-diagnostics
+canonical_candidate_url: https://learn.microsoft.com/en-us/azure/frontdoor/monitor-front-door
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/azure/frontdoor/monitor-front-door
+  http_status: 200
+  matched_terms:
+  - certification
+  - soc
+  - iso
+  - audit
+  page_title: Monitor Azure Front Door | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:0488c3957c0f1e285ab34210ff979db548e7f446c6017f5ce5aedc2dcab44f77
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/azure/frontdoor/monitor-front-door
+requested_url: https://learn.microsoft.com/en-us/azure/frontdoor/front-door-diagnostics
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
