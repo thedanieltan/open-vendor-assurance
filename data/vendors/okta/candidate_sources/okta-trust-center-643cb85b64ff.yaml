@@ -1,0 +1,31 @@
+candidate_source_id: okta-trust-center-643cb85b64ff
+candidate_status: selected
+candidate_url: https://trust.okta.com/security-advisories.xml
+canonical_candidate_url: https://trust.okta.com/security-advisories.xml
+confidence: likely
+discovered_at: '2026-10-11T10:39:08.966809Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: application/xml
+  final_url: https://trust.okta.com/security-advisories.xml
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: <![CDATA[Okta Trust]]>
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e3dbb661a2b541123e5175bd1a49fc5db53014acb653c03afc957bdeef59e636
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trust.okta.com/security-advisories.xml
+requested_url: https://trust.okta.com/security-advisories.xml
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:39:08.966809Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: okta
