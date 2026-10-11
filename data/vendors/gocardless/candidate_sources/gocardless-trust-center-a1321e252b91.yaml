@@ -1,0 +1,32 @@
+candidate_source_id: gocardless-trust-center-a1321e252b91
+candidate_status: selected
+candidate_url: https://hub.gocardless.com/s?language=en_GB
+canonical_candidate_url: https://hub.gocardless.com/s?language=en_GB
+confidence: likely
+discovered_at: '2026-10-11T11:10:01.632916Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.gocardless.com/hc/en-gb
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Support Centre
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:e4ec8653bd2662e6f44a0b7113b3985b1068eeeac116176e84c05b9d8b215488
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.gocardless.com/hc/en-gb
+requested_url: https://hub.gocardless.com/s?language=en_GB
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T11:10:01.632916Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: gocardless

@@ -1,0 +1,31 @@
+candidate_source_id: grafana-labs-dpa-50ef0064268e
+candidate_status: selected
+candidate_url: https://grafana.com/legal/security-compliance
+canonical_candidate_url: https://grafana.com/legal/security-compliance/
+confidence: likely
+discovered_at: '2026-10-11T10:17:16.481569Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://grafana.com/legal/security-compliance/
+  http_status: 200
+  matched_terms:
+  - dpa
+  - processor
+  page_title: null
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ac7b79ab6a790b64543a275f32ae57766f06f7e7c38ce1857ce88c20565f69d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://grafana.com/legal/security-compliance/
+requested_url: https://grafana.com/legal/security-compliance
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:16.481569Z'
+source_type_candidate: dpa
+superseded_by_candidate_id: null
+vendor_id: grafana-labs

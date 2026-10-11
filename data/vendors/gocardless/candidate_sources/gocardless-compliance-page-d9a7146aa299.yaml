@@ -1,0 +1,35 @@
+candidate_source_id: gocardless-compliance-page-d9a7146aa299
+candidate_status: selected
+candidate_url: https://gocardless.com/privacy/en-gdpr
+canonical_candidate_url: https://gocardless.com/privacy/en-gdpr
+confidence: likely
+discovered_at: '2026-10-11T11:10:01.632916Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gocardless.com/privacy/en-gdpr
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - iso
+  - audit
+  - trust
+  page_title: GDPR | GoCardless
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ab5ce42dc3812e3a2b9e5d3789f63dcea3eab594eccf3e99c0b61d4b43190b0a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gocardless.com/privacy/en-gdpr
+requested_url: https://gocardless.com/privacy/en-gdpr
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T11:10:01.632916Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gocardless

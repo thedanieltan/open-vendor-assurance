@@ -1,0 +1,33 @@
+candidate_source_id: google-workspace-trust-center-2ba4a861e40a
+candidate_status: selected
+candidate_url: https://support.google.com/googlehome?hl=en_US&p=privpol_homedata
+canonical_candidate_url: https://support.google.com/googlehome/answer/7072285?hl=en&visit_id=639273125854668073-3147457481&p=privpol_homedata&rd=1
+confidence: likely
+discovered_at: '2026-10-11T10:17:27.134087Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://support.google.com/googlehome/answer/7072285?hl=en&visit_id=639273125854668073-3147457481&p=privpol_homedata&rd=1
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Data security and privacy on devices that work with Assistant - Google
+    Home and Nest Help
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:c995dd06d080a81f335e341cf11b7638b6702bfa119305c0b8c0ca34586d390c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.google.com/googlehome/answer/7072285?hl=en&visit_id=639273125854668073-3147457481&p=privpol_homedata&rd=1
+requested_url: https://support.google.com/googlehome?hl=en_US&p=privpol_homedata
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:27.134087Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: google-workspace
