@@ -1,0 +1,33 @@
+candidate_source_id: wix-trust-center-9638150aa555
+candidate_status: selected
+candidate_url: https://www.wix.com/manage/privacy-security-hub/faq
+canonical_candidate_url: https://www.wix.com/manage/privacy-security-hub/faq
+confidence: likely
+discovered_at: '2026-10-11T10:17:24.976705Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.wix.com/manage/privacy-security-hub/faq
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: Privacy &amp; Security | Site Compliance | Wix.com
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b56b1d787ece99b259b71b4852809a5194c526ffc4e11ca8f6172684358003d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wix.com/manage/privacy-security-hub/faq
+requested_url: https://www.wix.com/manage/privacy-security-hub/faq
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:24.976705Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: wix
