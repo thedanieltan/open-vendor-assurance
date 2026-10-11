@@ -1,0 +1,32 @@
+candidate_source_id: wix-compliance-page-035bf73f7ed0
+candidate_status: selected
+candidate_url: https://support.wix.com/en/article/managing-your-sites-consent-log
+canonical_candidate_url: https://support.wix.com/en/article/managing-your-sites-consent-log
+confidence: likely
+discovered_at: '2026-10-11T10:17:24.976705Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://support.wix.com/en/article/managing-your-sites-consent-log
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  page_title: Managing Your Site&#x27;s Consent Log | Help Center | Wix.com
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4bc85745fbed4a436f2f17bc2ff9bf210ada94ed3d56a66c838175510d0d12ea
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.wix.com/en/article/managing-your-sites-consent-log
+requested_url: https://support.wix.com/en/article/managing-your-sites-consent-log
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:24.976705Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: wix
