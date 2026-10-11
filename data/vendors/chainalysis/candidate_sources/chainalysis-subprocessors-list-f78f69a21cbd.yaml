@@ -1,0 +1,32 @@
+candidate_source_id: chainalysis-subprocessors-list-f78f69a21cbd
+candidate_status: selected
+candidate_url: https://www.chainalysis.com/reports
+canonical_candidate_url: https://www.chainalysis.com/reports/
+confidence: likely
+discovered_at: '2026-10-11T10:17:38.112699Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.chainalysis.com/reports/
+  http_status: 200
+  matched_terms:
+  - sub-processors
+  - sub-processor
+  page_title: Research Reports Archive - Chainalysis
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b92ab4ab08519f7e04871d41dc176edc770ee9595e9a6362abeeb2c557d33215
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.chainalysis.com/reports/
+requested_url: https://www.chainalysis.com/reports
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:38.112699Z'
+source_type_candidate: subprocessors_list
+superseded_by_candidate_id: null
+vendor_id: chainalysis
