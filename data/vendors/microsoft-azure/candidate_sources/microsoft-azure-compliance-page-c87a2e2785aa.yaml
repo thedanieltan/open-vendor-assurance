@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-compliance-page-c87a2e2785aa
+candidate_status: selected
+candidate_url: https://learn.microsoft.com/en-us/defender
+canonical_candidate_url: https://learn.microsoft.com/en-us/defender/
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/defender/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - trust
+  page_title: Microsoft Defender products and services - Microsoft Defender | Microsoft
+    Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b253e3aaa554e12a887cfd2a0e2ba8e6aeb5ebdd4efac94730f4f9363ae379a6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/defender/
+requested_url: https://learn.microsoft.com/en-us/defender
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
