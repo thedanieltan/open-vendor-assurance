@@ -1,0 +1,33 @@
+candidate_source_id: razorpay-compliance-page-fdc56f1deb6f
+candidate_status: selected
+candidate_url: https://razorpay.com/x/tds-online-payment
+canonical_candidate_url: https://razorpay.com/x/tds-online-payment/
+confidence: likely
+discovered_at: '2026-10-11T10:41:34.744938Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://razorpay.com/x/tds-online-payment/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  - trust
+  page_title: Instant TDS Payments for Businesses with RazorpayX
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0478b82cbb8a044917e1533632859bf426a382538e1868c6a4e087a003c561bd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://razorpay.com/x/tds-online-payment/
+requested_url: https://razorpay.com/x/tds-online-payment
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:41:34.744938Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: razorpay

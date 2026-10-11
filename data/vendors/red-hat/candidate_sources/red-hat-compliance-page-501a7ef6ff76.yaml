@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-compliance-page-501a7ef6ff76
+candidate_status: selected
+candidate_url: https://www.redhat.com/wapps/ugc/protected/personalInfo.html
+canonical_candidate_url: https://www.redhat.com/wapps/ugc/protected/personalInfo.html
+confidence: likely
+discovered_at: '2026-10-11T10:17:45.455620Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc-oidc&redirect_uri=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fsso%2Flogin&state=ce218b4b-cf28-45e8-bf5d-8664c3c55d48&login=true&scope=openid
+  http_status: 200
+  matched_terms:
+  - certification
+  - soc
+  - trust
+  page_title: Log In | Red Hat IDP
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:37ccf850b038985fa07268a40cd0b41addcf8d6e4ad2d5e7c061f1a40cdae1c3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc-oidc&redirect_uri=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fsso%2Flogin&state=ce218b4b-cf28-45e8-bf5d-8664c3c55d48&login=true&scope=openid
+requested_url: https://www.redhat.com/wapps/ugc/protected/personalInfo.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:45.455620Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
