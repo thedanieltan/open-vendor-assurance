@@ -1,0 +1,32 @@
+candidate_source_id: razorpay-compliance-page-0a7bd134e5be
+candidate_status: selected
+candidate_url: https://razorpay.com/customer-stories
+canonical_candidate_url: https://razorpay.com/customer-stories/
+confidence: likely
+discovered_at: '2026-10-11T10:41:34.744938Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://razorpay.com/customer-stories/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  page_title: Customer Stories | See what our customers say about us
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6965c885f4ae7c85381139cde292421a3cba04b8cbe1c0b35c187d5966f09a0a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://razorpay.com/customer-stories/
+requested_url: https://razorpay.com/customer-stories
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:41:34.744938Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: razorpay

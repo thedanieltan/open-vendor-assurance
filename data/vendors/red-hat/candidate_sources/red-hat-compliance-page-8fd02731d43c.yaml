@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-compliance-page-8fd02731d43c
+candidate_status: selected
+candidate_url: https://developers.redhat.com/products/rhel/download
+canonical_candidate_url: https://developers.redhat.com/products/rhel/download
+confidence: likely
+discovered_at: '2026-10-11T10:17:45.455620Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://developers.redhat.com/products/rhel/download
+  http_status: 200
+  matched_terms:
+  - certification
+  - iso
+  - trust
+  page_title: Download Red Hat Enterprise Linux (RHEL) | Red Hat Developer
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f51e7b6ac71c27e11b591af6b682a6cfdd7a0a39920787c87d317ddfa767eba4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://developers.redhat.com/products/rhel/download
+requested_url: https://developers.redhat.com/products/rhel/download
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:45.455620Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
