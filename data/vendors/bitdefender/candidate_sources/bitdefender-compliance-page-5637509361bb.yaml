@@ -1,0 +1,31 @@
+candidate_source_id: bitdefender-compliance-page-5637509361bb
+candidate_status: selected
+candidate_url: https://www.bitdefender.com/nuxt/api/en-us/rss/businessinsights/ransomware
+canonical_candidate_url: https://www.bitdefender.com/nuxt/api/en-us/rss/businessinsights/ransomware
+confidence: likely
+discovered_at: '2026-10-11T10:59:48.204338Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/xml; charset=utf-8
+  final_url: https://www.bitdefender.com/nuxt/api/en-us/rss/businessinsights/ransomware
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Business Insights Cybersecurity Blog by Bitdefender
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4d74f4d6c217b0dde0af0d3a433fcdc5e2bf42415b4fa92e8e240358379d24b4
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bitdefender.com/nuxt/api/en-us/rss/businessinsights/ransomware
+requested_url: https://www.bitdefender.com/nuxt/api/en-us/rss/businessinsights/ransomware
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:59:48.204338Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: bitdefender
