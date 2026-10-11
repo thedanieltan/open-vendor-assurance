@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-01f0ab16d853
+candidate_status: selected
+candidate_url: https://www.splunk.com/de_de/download.html
+canonical_candidate_url: https://www.splunk.com/de_de/download.html
+confidence: likely
+discovered_at: '2026-10-11T10:17:23.506169Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://www.splunk.com/de_de/download.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: Kostenlose Testversionen &amp; Downloads | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:98b3fc877f3e4e0fd3b47bd7c147c7288adf25e372e06650298583109fd28252
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/de_de/download.html
+requested_url: https://www.splunk.com/de_de/download.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:23.506169Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

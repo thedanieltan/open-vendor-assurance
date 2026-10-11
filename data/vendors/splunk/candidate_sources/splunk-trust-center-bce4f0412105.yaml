@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-bce4f0412105
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/security/cisa-s-known-exploited-vulnerabilities-catalog-and-splunk.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/security/cisa-s-known-exploited-vulnerabilities-catalog-and-splunk.html
+confidence: likely
+discovered_at: '2026-10-11T10:17:23.506169Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/security/cisa-s-known-exploited-vulnerabilities-catalog-and-splunk.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: CISA’s Known Exploited Vulnerabilities Catalog and Splunk | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3644be5dcc2227fc4a9a7cdbca4c525666d49f6027450fb83f07d53656748020
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/security/cisa-s-known-exploited-vulnerabilities-catalog-and-splunk.html
+requested_url: https://www.splunk.com/en_us/blog/security/cisa-s-known-exploited-vulnerabilities-catalog-and-splunk.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:23.506169Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk

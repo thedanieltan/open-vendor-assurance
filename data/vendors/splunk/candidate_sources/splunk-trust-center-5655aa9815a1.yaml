@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-5655aa9815a1
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/endpoint-detection.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/endpoint-detection.html
+confidence: likely
+discovered_at: '2026-10-11T10:17:23.506169Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/endpoint-detection.html
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: 'Endpoints and Endpoint Detection: Importance &#x26; Risk Mapping |
+    Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1165d3af1f54cae83b8105bcf8929a19e066c6b91701a6d59e492c92c6c722ef
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/endpoint-detection.html
+requested_url: https://www.splunk.com/en_us/blog/learn/endpoint-detection.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:23.506169Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
