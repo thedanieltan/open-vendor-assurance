@@ -1,0 +1,32 @@
+candidate_source_id: worldpay-dpa-7492b684cbb9
+candidate_status: selected
+candidate_url: https://status.worldpay.com/incidents/ds06p33h7wrx
+canonical_candidate_url: https://status.worldpay.com/incidents/ds06p33h7wrx
+confidence: likely
+discovered_at: '2026-10-11T11:16:54.229268Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.worldpay.com/incidents/ds06p33h7wrx
+  http_status: 200
+  matched_terms:
+  - dpa
+  - processor
+  page_title: Worldpay Platform Status Page Status - INC0669022 - A third-party issue
+    is causing an increase in transaction authorization failures on the Visa network
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c52bf6586670779ee0ecdc0b5f082a8cbe311d6af520b9ea26fcde295e38f686
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.worldpay.com/incidents/ds06p33h7wrx
+requested_url: https://status.worldpay.com/incidents/ds06p33h7wrx
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T11:16:54.229268Z'
+source_type_candidate: dpa
+superseded_by_candidate_id: null
+vendor_id: worldpay

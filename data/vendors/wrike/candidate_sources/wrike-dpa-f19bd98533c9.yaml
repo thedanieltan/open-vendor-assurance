@@ -1,0 +1,33 @@
+candidate_source_id: wrike-dpa-f19bd98533c9
+candidate_status: selected
+candidate_url: https://www.wrike.com/legal/trust-center
+canonical_candidate_url: https://www.wrike.com/legal/trust-center/
+confidence: likely
+discovered_at: '2026-10-11T10:17:22.534321Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wrike.com/legal/trust-center/
+  http_status: 200
+  matched_terms:
+  - data processing
+  - data processing addendum
+  page_title: Wrike Data Processing Addendum and the EU &amp; UK Standard Contractual
+    Clauses
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f21ecfaab7de90bda96dd4a9e2a18e10ddcf5c0daadbdb52fd5703a86a74cf92
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wrike.com/legal/trust-center/
+requested_url: https://www.wrike.com/legal/trust-center
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:22.534321Z'
+source_type_candidate: dpa
+superseded_by_candidate_id: null
+vendor_id: wrike
