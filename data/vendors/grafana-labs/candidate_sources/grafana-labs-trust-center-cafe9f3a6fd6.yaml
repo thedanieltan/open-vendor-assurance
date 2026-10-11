@@ -1,0 +1,33 @@
+candidate_source_id: grafana-labs-trust-center-cafe9f3a6fd6
+candidate_status: selected
+candidate_url: https://grafana.com/legal/cookie-policy
+canonical_candidate_url: https://grafana.com/legal/cookie-policy/
+confidence: likely
+discovered_at: '2026-10-11T10:17:16.481569Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://grafana.com/legal/cookie-policy/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: null
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:70b81a8fe7301ad47a9b80c5ef2d62e67f7590fbf896038f5b5156458032c536
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://grafana.com/legal/cookie-policy/
+requested_url: https://grafana.com/legal/cookie-policy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:16.481569Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: grafana-labs

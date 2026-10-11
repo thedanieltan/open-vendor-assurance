@@ -1,0 +1,31 @@
+candidate_source_id: gorgias-trust-center-e78e6c62e705
+candidate_status: selected
+candidate_url: https://www.gorgias.com/legal/vulnerability-disclosure-policy
+canonical_candidate_url: https://www.gorgias.com/legal/vulnerability-disclosure-policy
+confidence: likely
+discovered_at: '2026-10-11T10:17:26.763424Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.gorgias.com/legal/vulnerability-disclosure-policy
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Vulnerability Disclosure Policy | Gorgias Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8c2d2be7e9730f5ca632288e0b31a6254aba277a02924dcfea84f10430e3cd14
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.gorgias.com/legal/vulnerability-disclosure-policy
+requested_url: https://www.gorgias.com/legal/vulnerability-disclosure-policy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:26.763424Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: gorgias

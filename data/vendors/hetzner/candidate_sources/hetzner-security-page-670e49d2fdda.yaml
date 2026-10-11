@@ -1,0 +1,32 @@
+candidate_source_id: hetzner-security-page-670e49d2fdda
+candidate_status: selected
+candidate_url: https://www.hetzner.com/storage/object-storage
+canonical_candidate_url: https://www.hetzner.com/storage/object-storage/
+confidence: likely
+discovered_at: '2026-10-11T10:17:26.763424Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.hetzner.com/storage/object-storage/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  page_title: 'S3 storage solution: Object Storage by Hetzner'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b64539b63d687607776e8519260c21e958184144baa96f38f74e358d54862832
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.hetzner.com/storage/object-storage/
+requested_url: https://www.hetzner.com/storage/object-storage
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-11T10:17:26.763424Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: hetzner
