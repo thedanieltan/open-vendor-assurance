@@ -1,0 +1,32 @@
+candidate_source_id: microsoft-azure-trust-center-332d000a6aee
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/download/details.aspx?id=105394
+canonical_candidate_url: https://www.microsoft.com/en-us/download/details.aspx?id=105394
+confidence: likely
+discovered_at: '2026-10-12T12:01:26.205194Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/download/details.aspx?id=105394
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Download WinAppSDKx64Installer-230725.0.75337127 from Official Microsoft
+    Download Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:762eab03626acbd99685bfb01a6f2e8903eece84cbc1e78ad0a3e6bf92654c3a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/download/details.aspx?id=105394
+requested_url: https://www.microsoft.com/en-us/download/details.aspx?id=105394
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-12T12:01:26.205194Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure

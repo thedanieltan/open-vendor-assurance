@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-trust-center-e873509db785
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/download/details.aspx?id=103324
+canonical_candidate_url: https://www.microsoft.com/en-us/download/details.aspx?id=103324
+confidence: likely
+discovered_at: '2026-10-12T12:01:26.205194Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/download/details.aspx?id=103324
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Download Update Health Tools from Official Microsoft Download Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:42514f1c8fc26d9c3ff6fa405fc0dd61a2fc4b1361514f513bb100a14092790b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/download/details.aspx?id=103324
+requested_url: https://www.microsoft.com/en-us/download/details.aspx?id=103324
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-12T12:01:26.205194Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
