@@ -1,0 +1,34 @@
+candidate_source_id: microsoft-azure-compliance-page-71a198848d45
+candidate_status: selected
+candidate_url: https://techcommunity.microsoft.com/blog/microsoft-security-baselines/security-review-for-microsoft-edge-version-152/4550956
+canonical_candidate_url: https://techcommunity.microsoft.com/blog/microsoft-security-baselines/security-review-for-microsoft-edge-version-152/4550956
+confidence: likely
+discovered_at: '2026-10-12T12:01:26.205194Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://techcommunity.microsoft.com/blog/microsoft-security-baselines/security-review-for-microsoft-edge-version-152/4550956
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  - iso
+  - audit
+  page_title: Security Review for Microsoft Edge version 152 | Microsoft Community
+    Hub
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9315071f0b984aa59ff7e7a73f50d8171db52dc723db83f0d1dc54d877d4fe71
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://techcommunity.microsoft.com/blog/microsoft-security-baselines/security-review-for-microsoft-edge-version-152/4550956
+requested_url: https://techcommunity.microsoft.com/blog/microsoft-security-baselines/security-review-for-microsoft-edge-version-152/4550956
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-12T12:01:26.205194Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
