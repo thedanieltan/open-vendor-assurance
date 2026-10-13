@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-trust-center-99c41dadcfab
+candidate_status: selected
+candidate_url: https://adoption.microsoft.com/microsoft-365
+canonical_candidate_url: https://adoption.microsoft.com/en-us/microsoft-365/
+confidence: likely
+discovered_at: '2026-10-13T11:48:40.723132Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://adoption.microsoft.com/en-us/microsoft-365/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Microsoft 365 &#8211; Microsoft Adoption
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:ceace9e43bc96ee89fc7674b9ea94ccbc7877ce2787367a9e5da06d6d5e1b902
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://adoption.microsoft.com/en-us/microsoft-365/
+requested_url: https://adoption.microsoft.com/microsoft-365
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-13T11:48:40.723132Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
