@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-8d7f6e9556ce
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released
+canonical_candidate_url: https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/
+confidence: likely
+discovered_at: '2026-10-13T10:59:10.448206Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'GitLab Critical Patch Release: 19.4.2, 19.3.5, 19.2.8 | GitLab Docs'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f9e0d29d1ff0c0b4e5b0f52f85b27372308583354145d53dac849de2bee3a823
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/
+requested_url: https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-13T10:59:10.448206Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
