@@ -1,0 +1,31 @@
+candidate_source_id: picus-security-compliance-page-fe574952bf37
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/mitre-attck-t1059-command-and-scripting-interpreter
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/t1059-command-and-scripting-interpreter
+confidence: likely
+discovered_at: '2026-10-13T10:59:08.247005Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/t1059-command-and-scripting-interpreter
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: T1059 Command and Scripting Interpreter Technique Explained
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:64433b2edad57cfd7320918cd98c0b6d3810aa888048a93e1d881ede5a235816
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/t1059-command-and-scripting-interpreter
+requested_url: https://www.picussecurity.com/resource/blog/mitre-attck-t1059-command-and-scripting-interpreter
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-13T10:59:08.247005Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
