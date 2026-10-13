@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-5333acb551cb
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/red-report-2021-top-ten-attack-techniques
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/red-report-2021-top-ten-attack-techniques
+confidence: likely
+discovered_at: '2026-10-13T10:59:08.247005Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/red-report-2021-top-ten-attack-techniques
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: The Red Report 2021
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:91f4cc0246b9098f50a54d810eb6b2e68c14dc5f30cb12e38254b21eb467ce7c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/red-report-2021-top-ten-attack-techniques
+requested_url: https://www.picussecurity.com/resource/blog/red-report-2021-top-ten-attack-techniques
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-13T10:59:08.247005Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
