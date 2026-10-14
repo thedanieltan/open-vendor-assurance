@@ -1,0 +1,32 @@
+candidate_source_id: new-relic-trust-center-796ec2854802
+candidate_status: selected
+candidate_url: https://newrelic.com/blog/security
+canonical_candidate_url: https://newrelic.com/blog/security
+confidence: likely
+discovered_at: '2026-10-14T09:51:05.682445Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://newrelic.com/blog/security
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  page_title: Security Blog Content | New Relic
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:651d90abcbc5b93e9a020e014c525fdace0c42e355f6b1e2df567cc72c36ddf0
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://newrelic.com/blog/security
+requested_url: https://newrelic.com/blog/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-14T09:51:05.682445Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: new-relic
