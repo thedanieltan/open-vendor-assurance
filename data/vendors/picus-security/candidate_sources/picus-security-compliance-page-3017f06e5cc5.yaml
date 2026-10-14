@@ -1,0 +1,32 @@
+candidate_source_id: picus-security-compliance-page-3017f06e5cc5
+candidate_status: selected
+candidate_url: https://academy.picussecurity.com/home
+canonical_candidate_url: https://academy.picussecurity.com/home
+confidence: likely
+discovered_at: '2026-10-14T09:42:48.663880Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=UTF-8
+  final_url: https://academy.picussecurity.com/home
+  http_status: 200
+  matched_terms:
+  - certification
+  - soc
+  page_title: Purple Academy by Picus - Courses for Red, Blue, and Purple Teamers
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2a149d5fb434426d3b499c29b2779c8c735f4ee6cb57d8c90fbf6f00b1f4f33a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://academy.picussecurity.com/home
+requested_url: https://academy.picussecurity.com/home
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-14T09:42:48.663880Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
