@@ -1,6 +1,6 @@
 {
   "discovery_context": "vendor_breadth_signal_mesh",
-  "generated_at": "2026-10-13T15:07:38Z",
+  "generated_at": "2026-10-14T13:38:46Z",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -14,7 +14,7 @@
   "summary": {
     "candidate_vendor_count": 207,
     "catalog_vendor_count_cap": null,
-    "identity_resolution_queue_count": 357,
+    "identity_resolution_queue_count": 359,
     "known_vendor_count": 35
   },
   "vendor_candidates": [
@@ -22,25 +22,53 @@
       "candidate_vendor_id": "firebase",
       "cohort_id": "provider-replenishment",
       "coverage_lane": "signal_mesh",
-      "demand_count": 10,
+      "demand_count": 11,
       "display_name_candidate": "Firebase Cloud Messaging (FCM)",
       "headquarters_country_candidate": "US",
       "independent_provider_count": 2,
       "non_advisory": true,
-      "observation_count": 10,
+      "observation_count": 11,
       "official_domain_candidate": "firebase.google.com",
-      "priority": 134,
+      "priority": 141,
       "providers": [
         "openva_vibe_coder_saas_directory",
         "subprocessor_relationship_graph"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 10,
+      "signal_count": 11,
       "source_index_url": "https://firebase.google.com",
       "source_urls": [
         "https://firebase.google.com",
         "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+      ],
+      "vendor_category_candidates": [],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "honeycomb",
+      "cohort_id": "provider-replenishment",
+      "coverage_lane": "signal_mesh",
+      "demand_count": 7,
+      "display_name_candidate": "Subprocessors",
+      "headquarters_country_candidate": "US",
+      "independent_provider_count": 2,
+      "non_advisory": true,
+      "observation_count": 7,
+      "official_domain_candidate": "honeycomb.io",
+      "priority": 113,
+      "providers": [
+        "openva_vibe_coder_saas_directory",
+        "subprocessor_relationship_graph"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 7,
+      "source_index_url": "https://honeycomb.io",
+      "source_urls": [
+        "https://front.com/legal/list-of-subprocessors-2021-09-17",
+        "https://front.com/legal/list-of-subprocessors-2022-10-03",
+        "https://honeycomb.io"
       ],
       "vendor_category_candidates": [],
       "writes_canonical_vendors": false
@@ -73,16 +101,16 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "honeycomb",
+      "candidate_vendor_id": "workato",
       "cohort_id": "provider-replenishment",
       "coverage_lane": "signal_mesh",
       "demand_count": 5,
-      "display_name_candidate": "Subprocessors",
+      "display_name_candidate": "Workato",
       "headquarters_country_candidate": "US",
       "independent_provider_count": 2,
       "non_advisory": true,
       "observation_count": 5,
-      "official_domain_candidate": "honeycomb.io",
+      "official_domain_candidate": "workato.com",
       "priority": 99,
       "providers": [
         "openva_vibe_coder_saas_directory",
@@ -91,34 +119,6 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "signal_count": 5,
-      "source_index_url": "https://honeycomb.io",
-      "source_urls": [
-        "https://front.com/legal/list-of-subprocessors-2021-09-17",
-        "https://front.com/legal/list-of-subprocessors-2022-10-03",
-        "https://honeycomb.io"
-      ],
-      "vendor_category_candidates": [],
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "workato",
-      "cohort_id": "provider-replenishment",
-      "coverage_lane": "signal_mesh",
-      "demand_count": 4,
-      "display_name_candidate": "Workato",
-      "headquarters_country_candidate": "US",
-      "independent_provider_count": 2,
-      "non_advisory": true,
-      "observation_count": 4,
-      "official_domain_candidate": "workato.com",
-      "priority": 92,
-      "providers": [
-        "openva_vibe_coder_saas_directory",
-        "subprocessor_relationship_graph"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 4,
       "source_index_url": "https://workato.com",
       "source_urls": [
         "https://workato.com",
