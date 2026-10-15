@@ -1,0 +1,32 @@
+candidate_source_id: splunk-trust-center-889559a7a25e
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/static-code-analysis.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/static-code-analysis.html
+confidence: likely
+discovered_at: '2026-10-15T09:10:30.038010Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/static-code-analysis.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: 'Static Code Analysis: The Complete Guide to Getting Started with SCA
+    | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:98ab775d8f570da7ad81fc0b8a62e03e92c6a46246d72f592cfdf476d4cb391c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/static-code-analysis.html
+requested_url: https://www.splunk.com/en_us/blog/learn/static-code-analysis.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-15T09:10:30.038010Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
