@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-018893c3538f
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/browser-based-ides.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/browser-based-ides.html
+confidence: likely
+discovered_at: '2026-10-15T09:10:30.038010Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/browser-based-ides.html
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: 'Browser-Based IDEs: The Complete Guide | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:5841ce6bf2747d4d659553caf5618911e946f60432b3cd5ce22511ec77bd63c0
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/browser-based-ides.html
+requested_url: https://www.splunk.com/en_us/blog/learn/browser-based-ides.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-15T09:10:30.038010Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
