@@ -1,0 +1,31 @@
+candidate_source_id: loom-security-page-dbfddcfe0bc8
+candidate_status: selected
+candidate_url: https://www.atlassian.com/de/software/guard/guard-premium
+canonical_candidate_url: https://www.atlassian.com/de/software/guard/guard-premium
+confidence: likely
+discovered_at: '2026-10-15T09:10:30.038010Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html;charset=UTF-8
+  final_url: https://www.atlassian.com/de/software/guard/guard-premium
+  http_status: 200
+  matched_terms:
+  - incident
+  - trust
+  page_title: Atlassian Guard Premium | Bedrohungen im Ansatz stoppen | Atlassian
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f9eadee812cac204640258bcb6de1de60590b279335244c84f3698a7678a2d19
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.atlassian.com/de/software/guard/guard-premium
+requested_url: https://www.atlassian.com/de/software/guard/guard-premium
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-15T09:10:30.038010Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
