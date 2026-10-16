@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-afa87407a0c0
+candidate_status: selected
+candidate_url: https://about.gitlab.com/de-de/blog/mcp-server-ga
+canonical_candidate_url: https://about.gitlab.com/de-de/blog/mcp-server-ga/
+confidence: likely
+discovered_at: '2026-10-16T08:58:54.425295Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/de-de/blog/mcp-server-ga/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'GitLab MCP-Server: KI-Agenten an GitLab-Workflows anbinden'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f28abd44b06a4b7214d68aae04f48b1368b2f534cafbbcad367fb6e7bbd41115
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/de-de/blog/mcp-server-ga/
+requested_url: https://about.gitlab.com/de-de/blog/mcp-server-ga
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-16T08:58:54.425295Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
