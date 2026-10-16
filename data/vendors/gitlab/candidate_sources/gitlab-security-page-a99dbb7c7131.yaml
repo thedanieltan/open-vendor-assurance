@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-a99dbb7c7131
+candidate_status: selected
+candidate_url: https://gitlab.com/groups/gitlab-org/-/work_items/20198
+canonical_candidate_url: https://gitlab.com/groups/gitlab-org/-/work_items/20198
+confidence: likely
+discovered_at: '2026-10-16T08:58:54.425295Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/groups/gitlab-org/-/work_items/20198
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Advanced Secret Detection Configuration Profile (#20198) · Epics · GitLab.org
+    · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f7f09e3d4e2b7821ceaec0fdfd21c2f941d083534bf45aa8a1e766cc1bb8d06d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/groups/gitlab-org/-/work_items/20198
+requested_url: https://gitlab.com/groups/gitlab-org/-/work_items/20198
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-16T08:58:54.425295Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-c01517568670
+candidate_status: selected
+candidate_url: https://about.gitlab.com/blog/recommend-reviewers-flow
+canonical_candidate_url: https://about.gitlab.com/blog/recommend-reviewers-flow/
+confidence: likely
+discovered_at: '2026-10-16T08:58:54.425295Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/blog/recommend-reviewers-flow/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Get every merge request in front of the right reviewer, faster
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9d0a9930d7e28c9731c239d273f98db0fd16a214874787ac562159eacc25a2af
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/blog/recommend-reviewers-flow/
+requested_url: https://about.gitlab.com/blog/recommend-reviewers-flow
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-16T08:58:54.425295Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
