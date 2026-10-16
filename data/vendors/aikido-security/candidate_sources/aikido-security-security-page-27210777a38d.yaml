@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-27210777a38d
+candidate_status: selected
+candidate_url: https://status.aikido.dev/incident/1069479
+canonical_candidate_url: https://status.aikido.dev/maintenance/1069479
+confidence: likely
+discovered_at: '2026-10-16T08:28:26.712414Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.aikido.dev/maintenance/1069479
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Systems maintenance | Aikido Security
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:40ada03b38b0c91229cef1cff45e761b3c934a58e89fbbcfb45dc2e09b04831c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.aikido.dev/maintenance/1069479
+requested_url: https://status.aikido.dev/incident/1069479
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-16T08:28:26.712414Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security
