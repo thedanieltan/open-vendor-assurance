@@ -1,0 +1,33 @@
+candidate_source_id: sapiens-trust-center-9d97cc778f0c
+candidate_status: selected
+candidate_url: https://sapiens.com/decision
+canonical_candidate_url: https://sapiens.com/decision-management/
+confidence: likely
+discovered_at: '2026-10-17T08:01:28.098446Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://sapiens.com/decision-management/
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  - privacy
+  page_title: AI Decision Engine Management &amp; Automation Software | Sapiens
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: true
+  verification_status: soft_not_found
+evidence_digest: sha256:d18edc9b4caec46447fbe3c443c691292e4787b1137d8482ea706006c0296b2d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://sapiens.com/decision-management/
+requested_url: https://sapiens.com/decision
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-17T08:01:28.098446Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: sapiens
