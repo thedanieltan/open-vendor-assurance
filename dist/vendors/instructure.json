@@ -937,6 +937,41 @@
       "vendor_id": "instructure"
     },
     {
+      "_openva_path": "data/vendors/instructure/candidate_sources/instructure-security-page-48fa7c588e96.yaml",
+      "candidate_source_id": "instructure-security-page-48fa7c588e96",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.instructure.com/resources/infographic/four-k-12-education-trends-watch-2026-2027",
+      "canonical_candidate_url": "https://www.instructure.com/resources/infographic/four-k-12-education-trends-watch-2026-2027",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:31:34.778024Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.instructure.com/resources/infographic/four-k-12-education-trends-watch-2026-2027",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Four K–12 Education Trends to Watch in 2026–2027 | Instructure",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6708f6e47a42e3dc13c2b2f96e4fac69866f8f84af03d32df982a52fee29e758",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.instructure.com/resources/infographic/four-k-12-education-trends-watch-2026-2027",
+      "requested_url": "https://www.instructure.com/resources/infographic/four-k-12-education-trends-watch-2026-2027",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:31:34.778024Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "instructure"
+    },
+    {
       "_openva_path": "data/vendors/instructure/candidate_sources/instructure-security-page-49935a6a9d93.yaml",
       "candidate_source_id": "instructure-security-page-49935a6a9d93",
       "candidate_status": "selected",
@@ -1616,6 +1651,43 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T08:42:58.454636Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/candidate_sources/instructure-security-page-8b2693022d86.yaml",
+      "candidate_source_id": "instructure-security-page-8b2693022d86",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.instructure.com/resources/blog/canvas-lms-v-competition-why-higher-ed-chooses-canvas",
+      "canonical_candidate_url": "https://www.instructure.com/resources/blog/canvas-lms-v-competition-why-higher-ed-chooses-canvas",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:23:42.572866Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.instructure.com/resources/blog/canvas-lms-v-competition-why-higher-ed-chooses-canvas",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "encryption",
+          "availability",
+          "trust"
+        ],
+        "page_title": "Canvas LMS v. the Competition: Why Higher-Ed Chooses Canvas",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:2e2bf1591b08a1a2fa5e1ac4984fd185b2b9428da5028f71c8e72b01fdc65721",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.instructure.com/resources/blog/canvas-lms-v-competition-why-higher-ed-chooses-canvas",
+      "requested_url": "https://www.instructure.com/resources/blog/canvas-lms-v-competition-why-higher-ed-chooses-canvas",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:23:42.572866Z",
       "source_type_candidate": "security_page",
       "superseded_by_candidate_id": null,
       "vendor_id": "instructure"
@@ -2927,7 +2999,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 6,
-    "candidate_source_count": 70,
+    "candidate_source_count": 72,
     "candidate_source_types": [
       "ai_terms",
       "security_page"
