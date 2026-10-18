@@ -1,0 +1,32 @@
+candidate_source_id: wiz-security-page-3b71e3346832
+candidate_status: selected
+candidate_url: https://www.wiz.io/vulnerability-database/cve/cve-2026-107406
+canonical_candidate_url: https://www.wiz.io/vulnerability-database/cve/cve-2026-107406
+confidence: likely
+discovered_at: '2026-10-18T09:08:14.310374Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/vulnerability-database/cve/cve-2026-107406
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  page_title: CVE-2026-107406 Impact, Exploitability, and Mitigation Steps | Wiz
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8a46cd21b6cd1c65a3920b89fe5935bf5226d244cb28d3a5fba08f61ad8b9371
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/vulnerability-database/cve/cve-2026-107406
+requested_url: https://www.wiz.io/vulnerability-database/cve/cve-2026-107406
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-18T09:08:14.310374Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz
