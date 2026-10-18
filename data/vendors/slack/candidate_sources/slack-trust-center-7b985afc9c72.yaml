@@ -1,0 +1,33 @@
+candidate_source_id: slack-trust-center-7b985afc9c72
+candidate_status: selected
+candidate_url: https://slack.com/intl/en-gb/contact-sales?id=engineering
+canonical_candidate_url: https://slack.com/intl/en-gb/contact-sales?id=engineering
+confidence: likely
+discovered_at: '2026-10-18T08:18:36.979153Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://slack.com/intl/en-gb/contact-sales?id=engineering
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Contact sales | Slack
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:99fa7560e2bcdd95ec7ff37a6b017a30c940d370c7eab291c9ae1bb39bed0f79
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://slack.com/intl/en-gb/contact-sales?id=engineering
+requested_url: https://slack.com/intl/en-gb/contact-sales?id=engineering
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-18T08:18:36.979153Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: slack
