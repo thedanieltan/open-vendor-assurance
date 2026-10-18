@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-e9762a359601
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/incident-command-system-ics.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/incident-command-system-ics.html
+confidence: likely
+discovered_at: '2026-10-18T08:18:33.175078Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/incident-command-system-ics.html
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: 'Incident Command Systems: How To Establish an ICS | Splunk'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c7b8a44ab1f3c8b18746ab9f7415dcfd108aa1b1e12fc13cf90dec8efd7bfc29
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/incident-command-system-ics.html
+requested_url: https://www.splunk.com/en_us/blog/learn/incident-command-system-ics.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-18T08:18:33.175078Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
