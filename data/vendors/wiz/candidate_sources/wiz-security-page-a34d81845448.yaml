@@ -1,0 +1,32 @@
+candidate_source_id: wiz-security-page-a34d81845448
+candidate_status: selected
+candidate_url: https://status.wiz.io/incidents/ly2g67w9l0c1
+canonical_candidate_url: https://status.wiz.io/incidents/ly2g67w9l0c1
+confidence: likely
+discovered_at: '2026-10-18T09:08:14.310374Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.wiz.io/incidents/ly2g67w9l0c1
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Wiz Status - We are investigating an issue affecting the security graph
+    and dependent features in prod-US38.
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6e48d7a880c9aa3a22e024ef3a7a3adf45f382f403c173b90a8173269375effc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.wiz.io/incidents/ly2g67w9l0c1
+requested_url: https://status.wiz.io/incidents/ly2g67w9l0c1
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-18T09:08:14.310374Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz
