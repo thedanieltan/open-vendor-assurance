@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-86e5b71ce2bd
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7086515
+canonical_candidate_url: https://access.redhat.com/solutions/7086515
+confidence: likely
+discovered_at: '2026-10-19T09:16:16.678939Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7086515
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Red Hat Satellite 6 Web UI shows error &#039;ERF12-5356 [ProxyAPI::ProxyException]:
+    Unable to get PuppetCA certificates ([RestClient::NotAcceptable])&#039; for Capsule.
+    - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:736927c4eeb14f71fb0bb6e27fd28f29fcab271bff41fda9bd8c12e53a4b6913
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7086515
+requested_url: https://access.redhat.com/solutions/7086515
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-19T09:16:16.678939Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

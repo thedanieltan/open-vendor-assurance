@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-3f91a0505322
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7138633
+canonical_candidate_url: https://access.redhat.com/solutions/7138633
+confidence: likely
+discovered_at: '2026-10-19T09:16:16.678939Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7138633
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: API request returning large response fails due to OutOfMemory error
+    when routed through an HTTP proxy - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8f3228abfc159126e470e1cde5ddd68305518139c58a3a83c9ec1371c078eeca
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7138633
+requested_url: https://access.redhat.com/solutions/7138633
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-19T09:16:16.678939Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
