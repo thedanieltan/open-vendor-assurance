@@ -1,0 +1,33 @@
+candidate_source_id: klaviyo-trust-center-7dd5225b13c9
+candidate_status: selected
+candidate_url: https://www.klaviyo.com/gdpr
+canonical_candidate_url: https://www.klaviyo.com/gdpr
+confidence: likely
+discovered_at: '2026-10-20T08:51:06.201326Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://www.klaviyo.com/gdpr
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  page_title: 'Klaviyo and GDPR: What You Need to Know - Klaviyo'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ea8e7560b5879d9eeb20b06aae7fb89d7c98e7e429a565a9e56967176090a7f8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.klaviyo.com/gdpr
+requested_url: https://www.klaviyo.com/gdpr
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T08:51:06.201326Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: klaviyo
