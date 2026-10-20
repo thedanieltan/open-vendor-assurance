@@ -1,6 +1,6 @@
 {
   "discovery_context": "vendor_breadth_signal_mesh",
-  "generated_at": "2026-10-19T13:38:17Z",
+  "generated_at": "2026-10-20T12:49:41Z",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -74,6 +74,33 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "workato",
+      "cohort_id": "provider-replenishment",
+      "coverage_lane": "signal_mesh",
+      "demand_count": 7,
+      "display_name_candidate": "Workato",
+      "headquarters_country_candidate": "US",
+      "independent_provider_count": 2,
+      "non_advisory": true,
+      "observation_count": 7,
+      "official_domain_candidate": "workato.com",
+      "priority": 113,
+      "providers": [
+        "openva_vibe_coder_saas_directory",
+        "subprocessor_relationship_graph"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 7,
+      "source_index_url": "https://workato.com",
+      "source_urls": [
+        "https://workato.com",
+        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
+      ],
+      "vendor_category_candidates": [],
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "ably",
       "cohort_id": "provider-replenishment",
       "coverage_lane": "signal_mesh",
@@ -96,33 +123,6 @@
       "source_urls": [
         "https://ably.com",
         "https://front.com/legal/list-of-subprocessors"
-      ],
-      "vendor_category_candidates": [],
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "workato",
-      "cohort_id": "provider-replenishment",
-      "coverage_lane": "signal_mesh",
-      "demand_count": 6,
-      "display_name_candidate": "Workato",
-      "headquarters_country_candidate": "US",
-      "independent_provider_count": 2,
-      "non_advisory": true,
-      "observation_count": 6,
-      "official_domain_candidate": "workato.com",
-      "priority": 106,
-      "providers": [
-        "openva_vibe_coder_saas_directory",
-        "subprocessor_relationship_graph"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 6,
-      "source_index_url": "https://workato.com",
-      "source_urls": [
-        "https://workato.com",
-        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
       ],
       "vendor_category_candidates": [],
       "writes_canonical_vendors": false
