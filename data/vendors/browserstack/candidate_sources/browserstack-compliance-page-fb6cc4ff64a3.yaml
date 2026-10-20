@@ -1,0 +1,35 @@
+candidate_source_id: browserstack-compliance-page-fb6cc4ff64a3
+candidate_status: selected
+candidate_url: https://www.browserstack.com/policy/security
+canonical_candidate_url: https://www.browserstack.com/policy/security
+confidence: likely
+discovered_at: '2026-10-20T09:11:58.597812Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.browserstack.com/policy/security
+  http_status: 200
+  matched_terms:
+  - compliance
+  - certification
+  - soc
+  - audit
+  - trust
+  page_title: BrowserStack security, privacy and compliance
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8faf02a849ada4d24575ba7d197f81c94eccaa4856101cbb4f5b4bf124e81165
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.browserstack.com/policy/security
+requested_url: https://www.browserstack.com/policy/security
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T09:11:58.597812Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: browserstack
