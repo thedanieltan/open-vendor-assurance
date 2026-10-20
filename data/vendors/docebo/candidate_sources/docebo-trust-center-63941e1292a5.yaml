@@ -1,0 +1,32 @@
+candidate_source_id: docebo-trust-center-63941e1292a5
+candidate_status: selected
+candidate_url: https://www.docebo.com/demo?button_cta=navigation
+canonical_candidate_url: https://www.docebo.com/demo/
+confidence: likely
+discovered_at: '2026-10-20T09:11:58.597812Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.docebo.com/demo/
+  http_status: 200
+  matched_terms:
+  - trust
+  - compliance
+  page_title: Book an LMS Demo | Docebo
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:d36a5adea1ae1f4ad89ed9b0932f62c0e94953bc93fdf1d3bf7be435fd2f7192
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.docebo.com/demo/
+requested_url: https://www.docebo.com/demo?button_cta=navigation
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T09:11:58.597812Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: docebo
