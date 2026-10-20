@@ -1,0 +1,33 @@
+candidate_source_id: lucid-software-compliance-page-ba80b03acad0
+candidate_status: selected
+candidate_url: https://lucid.co/de/privacy
+canonical_candidate_url: https://lucid.co/de/privacy
+confidence: likely
+discovered_at: '2026-10-20T08:51:12.000826Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://lucid.co/de/privacy
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  - trust
+  page_title: Lucid Software Inc. Privacy Policy (German) | Lucid
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d748d2f7f49f09a184a7f5b6c936720e4ddd9876a28d75c0f3fdca638ea985ff
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://lucid.co/de/privacy
+requested_url: https://lucid.co/de/privacy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T08:51:12.000826Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: lucid-software
