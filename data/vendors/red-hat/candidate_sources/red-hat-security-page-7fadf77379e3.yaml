@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-7fadf77379e3
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149280
+canonical_candidate_url: https://access.redhat.com/solutions/7149280
+confidence: likely
+discovered_at: '2026-10-20T08:51:12.000826Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149280
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: ConcurrentModificationException is thrown when shutdown starts during
+    /health request processing - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:aca5322a1cd2fec891a7db1d0e5ea0db666cb01108a9a31482636bf721168d1d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149280
+requested_url: https://access.redhat.com/solutions/7149280
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T08:51:12.000826Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
