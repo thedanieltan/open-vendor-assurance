@@ -1,0 +1,32 @@
+candidate_source_id: square-trust-center-2adfc4004808
+candidate_status: selected
+candidate_url: https://squareup.com/help/ca/en/article/5571-recognize-and-report-phishing-scams
+canonical_candidate_url: https://squareup.com/help/ca/en/article/5571-recognize-and-report-phishing-scams
+confidence: likely
+discovered_at: '2026-10-20T09:30:03.232403Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://squareup.com/help/ca/en/article/5571-recognize-and-report-phishing-scams
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Recognize and Report Phishing Scams | Square Support Centre - Canada
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7d69408d7133aac2608b4dc277c2de8d9247374c91bed9216cc772b1dddd0dd5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://squareup.com/help/ca/en/article/5571-recognize-and-report-phishing-scams
+requested_url: https://squareup.com/help/ca/en/article/5571-recognize-and-report-phishing-scams
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-20T09:30:03.232403Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: square
