@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-801af2eff973
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149304
+canonical_candidate_url: https://access.redhat.com/solutions/7149304
+confidence: likely
+discovered_at: '2026-10-21T09:34:10.591267Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149304
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'RHAII vLLM container logs PermissionError: [Errno 13] Permission denied:
+    &#039;/opt/app-root/src/.cupy&#039; at startup - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:890f78d90f7edabcbce4bf6aa1b5f2af896bc6f5faf942d89e8c746e29802c8d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149304
+requested_url: https://access.redhat.com/solutions/7149304
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-21T09:34:10.591267Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
