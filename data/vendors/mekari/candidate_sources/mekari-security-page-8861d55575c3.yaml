@@ -1,0 +1,32 @@
+candidate_source_id: mekari-security-page-8861d55575c3
+candidate_status: selected
+candidate_url: https://officeless.mekari.com/
+canonical_candidate_url: https://officeless.mekari.com/
+confidence: likely
+discovered_at: '2026-10-21T09:34:10.591267Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://officeless.mekari.com/
+  http_status: 200
+  matched_terms:
+  - incident
+  - trust
+  page_title: 'Mekari Officeless: ERP Extension &amp; Enterprise Custom Apps'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:572916cf3cbc736c83d5c4326a4abebabe0312ed911f521ca431d8e05a735e32
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://officeless.mekari.com/
+requested_url: https://officeless.mekari.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-21T09:34:10.591267Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: mekari
