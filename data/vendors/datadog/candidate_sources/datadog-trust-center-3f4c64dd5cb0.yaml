@@ -1,0 +1,34 @@
+candidate_source_id: datadog-trust-center-3f4c64dd5cb0
+candidate_status: selected
+candidate_url: https://trust.datadoghq.com/?itemName=data_security&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&requestAccess=true&source=click
+canonical_candidate_url: https://trust.datadoghq.com/?itemName=data_security&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&requestAccess=true&source=click
+confidence: likely
+discovered_at: '2026-10-21T09:33:49.871446Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://trust.datadoghq.com/?itemName=data_security&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&requestAccess=true&source=click
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  - privacy
+  page_title: Datadog Trust Center | Powered by SafeBase
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:45d33b596a13409b0f6f826eaccbc1200d093a230405fc83b3fc6d54b6872054
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trust.datadoghq.com/?itemName=data_security&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&requestAccess=true&source=click
+requested_url: https://trust.datadoghq.com/?itemName=data_security&itemUid=4064ac33-7b48-407b-aed7-ce02971d1ec1&requestAccess=true&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-21T09:33:49.871446Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: datadog
