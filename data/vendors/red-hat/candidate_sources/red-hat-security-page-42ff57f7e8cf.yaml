@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-42ff57f7e8cf
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149193
+canonical_candidate_url: https://access.redhat.com/solutions/7149193
+confidence: likely
+discovered_at: '2026-10-21T09:34:10.591267Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149193
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Satellite 6 inventory sync fails in Ansible Automation Platform with
+    &quot;TypeError: the JSON object must be str, bytes or bytearray, not list&quot;
+    in redhat.satellite foreman plugin - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f8b96f0fc3dd0f4732af081b8bb849945e3d709a3b88dacd14a15b4dc204cbb3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149193
+requested_url: https://access.redhat.com/solutions/7149193
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-21T09:34:10.591267Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
