@@ -1,0 +1,31 @@
+candidate_source_id: hetzner-security-page-b7f289ac6c93
+candidate_status: selected
+candidate_url: https://status.hetzner.com/incident/f4144d55-38c3-48d1-8664-7a3429355cd7/calendar.ics
+canonical_candidate_url: https://status.hetzner.com/incident/f4144d55-38c3-48d1-8664-7a3429355cd7/calendar.ics
+confidence: likely
+discovered_at: '2026-10-22T09:07:46.592941Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/calendar; charset=utf-8
+  final_url: https://status.hetzner.com/incident/f4144d55-38c3-48d1-8664-7a3429355cd7/calendar.ics
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: null
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d427baf25565429e88dc45074e364cd2f673d53dbbf76b16ea2e232779729430
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.hetzner.com/incident/f4144d55-38c3-48d1-8664-7a3429355cd7/calendar.ics
+requested_url: https://status.hetzner.com/incident/f4144d55-38c3-48d1-8664-7a3429355cd7/calendar.ics
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T09:07:46.592941Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: hetzner
