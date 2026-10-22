@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T12:52:28Z",
+  "generated_at": "2026-10-22T12:47:38Z",
   "items": [
     {
       "candidate_vendor_id": "media",
@@ -336,6 +336,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "catalog",
+      "demand_count": 21,
+      "display_name_candidate": "NetApp",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 21,
+      "official_domain_candidate": "catalog.redhat.com",
+      "priority": 179,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e6847403e0566ab3717a03bd",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 21,
+      "source_urls": [
+        "https://connect.redhat.com/en/products/red-hat-openshift/openshift-virtualization"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "firebase",
       "demand_count": 15,
       "display_name_candidate": "Firebase Cloud Messaging (FCM)",
@@ -390,34 +418,6 @@
         "https://honeycomb.io"
       ],
       "state": "ready_for_source_discovery",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "catalog",
-      "demand_count": 18,
-      "display_name_candidate": "NetApp",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 18,
-      "official_domain_candidate": "catalog.redhat.com",
-      "priority": 158,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-e6847403e0566ab3717a03bd",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 18,
-      "source_urls": [
-        "https://connect.redhat.com/en/products/red-hat-openshift/openshift-virtualization"
-      ],
-      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -533,6 +533,65 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "iap",
+      "demand_count": 17,
+      "display_name_candidate": "Fortrolighedspolitik for IAP",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 14,
+      "official_domain_candidate": "iap.odoo.com",
+      "priority": 145,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-1686ec5ee4efad18a5d2ce1b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 14,
+      "source_urls": [
+        "https://www.odoo.com/da_DK/privacy",
+        "https://www.odoo.com/lt_LT/privacy",
+        "https://www.odoo.com/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "learn",
+      "demand_count": 16,
+      "display_name_candidate": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/code-of-conduct",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 16,
+      "official_domain_candidate": "learn.microsoft.com",
+      "priority": 144,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-d659701ba9c28d4e25816ef9",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 16,
+      "source_urls": [
+        "https://front.com/legal/supplemental-terms",
+        "https://marketing.help.dotdigital.com/en/articles/9335252-dotdigital-and-ai-frequently-asked-questions"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "libcloud",
       "demand_count": 16,
       "display_name_candidate": "Libcloud 0.14.0 was released",
@@ -561,75 +620,16 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "iap",
-      "demand_count": 16,
-      "display_name_candidate": "Fortrolighedspolitik for IAP",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 13,
-      "official_domain_candidate": "iap.odoo.com",
-      "priority": 138,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-1686ec5ee4efad18a5d2ce1b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 13,
-      "source_urls": [
-        "https://www.odoo.com/da_DK/privacy",
-        "https://www.odoo.com/lt_LT/privacy",
-        "https://www.odoo.com/privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "learn",
-      "demand_count": 15,
-      "display_name_candidate": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/code-of-conduct",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 15,
-      "official_domain_candidate": "learn.microsoft.com",
-      "priority": 137,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-d659701ba9c28d4e25816ef9",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 15,
-      "source_urls": [
-        "https://front.com/legal/supplemental-terms",
-        "https://marketing.help.dotdigital.com/en/articles/9335252-dotdigital-and-ai-frequently-asked-questions"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "d1kwv30jm1b7sr",
-      "demand_count": 14,
+      "demand_count": 15,
       "display_name_candidate": "their Security white paper.",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-22T12:47:38Z",
       "not_advice": true,
-      "observation_count": 14,
+      "observation_count": 15,
       "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
-      "priority": 130,
+      "priority": 137,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -640,9 +640,93 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 14,
+      "signal_count": 15,
       "source_urls": [
         "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "community",
+      "demand_count": 14,
+      "display_name_candidate": "View the Certification",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 14,
+      "official_domain_candidate": "community.guidewire.com",
+      "priority": 130,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e106dc886b09fc699a3cd40e",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 14,
+      "source_urls": [
+        "https://www.guidewire.com/resources/help-and-support/trust-and-security"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 14,
+      "display_name_candidate": "Apple Push Notification Service (APN)",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 14,
+      "official_domain_candidate": "developer.apple.com",
+      "priority": 130,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-4009ec89423ba523a888a3ad",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 14,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "developer",
+      "demand_count": 14,
+      "display_name_candidate": "Huawei Push Service",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 14,
+      "official_domain_candidate": "developer.huawei.com",
+      "priority": 130,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 14,
+      "source_urls": [
+        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -676,57 +760,29 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "developer",
-      "demand_count": 13,
-      "display_name_candidate": "Apple Push Notification Service (APN)",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "candidate_vendor_id": "python",
+      "demand_count": 14,
+      "display_name_candidate": "langchain-neo4j (vendor supported package)",
+      "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-22T12:47:38Z",
       "not_advice": true,
-      "observation_count": 13,
-      "official_domain_candidate": "developer.apple.com",
-      "priority": 123,
+      "observation_count": 14,
+      "official_domain_candidate": "python.langchain.com",
+      "priority": 130,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-4009ec89423ba523a888a3ad",
+      "queue_id": "vbq-c474a0d7f2a3a4af9fa5f337",
       "reason_codes": [
         "country_missing"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 13,
+      "signal_count": 14,
       "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "developer",
-      "demand_count": 13,
-      "display_name_candidate": "Huawei Push Service",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 13,
-      "official_domain_candidate": "developer.huawei.com",
-      "priority": 123,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-77432d93e8fb0886cb0b713a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 13,
-      "source_urls": [
-        "https://sendbird.com/blog/push-notifications-vs-sms-notifications"
+        "https://neo4j.com/developer/genai-ecosystem"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -816,21 +872,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "community",
+      "candidate_vendor_id": "cronofy",
       "demand_count": 12,
-      "display_name_candidate": "View the Certification",
-      "first_seen_at": "2026-10-11T14:00:01Z",
+      "display_name_candidate": "Cronofy",
+      "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-20T12:49:41Z",
+      "last_seen_at": "2026-10-22T12:47:38Z",
       "not_advice": true,
       "observation_count": 12,
-      "official_domain_candidate": "community.guidewire.com",
+      "official_domain_candidate": "cronofy.com",
       "priority": 116,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-e106dc886b09fc699a3cd40e",
+      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
       "reason_codes": [
         "country_missing"
       ],
@@ -838,35 +894,7 @@
       "schema_version": "0.1.0",
       "signal_count": 12,
       "source_urls": [
-        "https://www.guidewire.com/resources/help-and-support/trust-and-security"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "python",
-      "demand_count": 12,
-      "display_name_candidate": "langchain-neo4j (vendor supported package)",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 12,
-      "official_domain_candidate": "python.langchain.com",
-      "priority": 116,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-c474a0d7f2a3a4af9fa5f337",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 12,
-      "source_urls": [
-        "https://neo4j.com/developer/genai-ecosystem"
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -900,29 +928,30 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "cronofy",
-      "demand_count": 11,
-      "display_name_candidate": "Cronofy",
-      "first_seen_at": "2026-07-21T10:47:04Z",
+      "candidate_vendor_id": "commission",
+      "demand_count": 13,
+      "display_name_candidate": "EU Standard Contractual Clauses",
+      "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-22T12:47:38Z",
       "not_advice": true,
-      "observation_count": 11,
-      "official_domain_candidate": "cronofy.com",
-      "priority": 109,
+      "observation_count": 7,
+      "official_domain_candidate": "commission.europa.eu",
+      "priority": 111,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-a9df1d79b8b9af9ed72b56a9",
+      "queue_id": "vbq-b4f7a5d283ae749e0c3ebb09",
       "reason_codes": [
         "country_missing"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 11,
+      "signal_count": 7,
       "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+        "https://doodle.com/en/privacy-policy",
+        "https://www.odoo.com/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -953,35 +982,6 @@
         "https://front.com/legal/list-of-subprocessors"
       ],
       "state": "ready_for_source_discovery",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "commission",
-      "demand_count": 12,
-      "display_name_candidate": "EU Standard Contractual Clauses",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-20T12:49:41Z",
-      "not_advice": true,
-      "observation_count": 6,
-      "official_domain_candidate": "commission.europa.eu",
-      "priority": 104,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-b4f7a5d283ae749e0c3ebb09",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 6,
-      "source_urls": [
-        "https://doodle.com/en/privacy-policy",
-        "https://www.odoo.com/privacy"
-      ],
-      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -1569,6 +1569,62 @@
       "signal_count": 3,
       "source_urls": [
         "https://marketing.help.dotdigital.com/en/articles/8199411-third-party-data-processors"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "community",
+      "demand_count": 7,
+      "display_name_candidate": "AI Nutrition Fact labels",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 7,
+      "official_domain_candidate": "community.canvaslms.com",
+      "priority": 81,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-678dbc1e5a92acc77a8490b5",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 7,
+      "source_urls": [
+        "https://www.instructure.com/policies/artificial-intelligence-privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "current",
+      "demand_count": 7,
+      "display_name_candidate": "Register now",
+      "first_seen_at": "2026-10-14T13:38:46Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 7,
+      "official_domain_candidate": "current.confluent.io",
+      "priority": 81,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-be97a524fba7f47b1bac0306",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 7,
+      "source_urls": [
+        "https://www.confluent.io/industry-solutions/telco"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -2218,21 +2274,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "community",
+      "candidate_vendor_id": "changelog",
       "demand_count": 6,
-      "display_name_candidate": "AI Nutrition Fact labels",
+      "display_name_candidate": "Changelog",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-20T12:49:41Z",
+      "last_seen_at": "2026-10-22T12:47:38Z",
       "not_advice": true,
       "observation_count": 6,
-      "official_domain_candidate": "community.canvaslms.com",
+      "official_domain_candidate": "changelog.exoscale.com",
       "priority": 74,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-678dbc1e5a92acc77a8490b5",
+      "queue_id": "vbq-b71dedaa73cc2cf787b06437",
       "reason_codes": [
         "country_missing"
       ],
@@ -2240,35 +2296,7 @@
       "schema_version": "0.1.0",
       "signal_count": 6,
       "source_urls": [
-        "https://www.instructure.com/policies/artificial-intelligence-privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "current",
-      "demand_count": 6,
-      "display_name_candidate": "Register now",
-      "first_seen_at": "2026-10-14T13:38:46Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 6,
-      "official_domain_candidate": "current.confluent.io",
-      "priority": 74,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-be97a524fba7f47b1bac0306",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 6,
-      "source_urls": [
-        "https://www.confluent.io/industry-solutions/telco"
+        "https://www.exoscale.com/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -2467,34 +2495,6 @@
         "https://www.instructure.com/policies/modern-slavery-act"
       ],
       "state": "needs_domain",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "changelog",
-      "demand_count": 5,
-      "display_name_candidate": "Changelog",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-20T12:49:41Z",
-      "not_advice": true,
-      "observation_count": 5,
-      "official_domain_candidate": "changelog.exoscale.com",
-      "priority": 67,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-b71dedaa73cc2cf787b06437",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 5,
-      "source_urls": [
-        "https://www.exoscale.com/privacy"
-      ],
-      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -9176,6 +9176,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "businessresources",
+      "demand_count": 3,
+      "display_name_candidate": "Learn how to navigate success claims from different security vendors",
+      "first_seen_at": "2026-10-22T12:47:38Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 3,
+      "official_domain_candidate": "businessresources.bitdefender.com",
+      "priority": 53,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0f3e70e61d4c0a100989c264",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 3,
+      "source_urls": [
+        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cppa",
       "demand_count": 3,
       "display_name_candidate": "Honda paid $632,500",
@@ -9255,6 +9283,34 @@
       "signal_count": 2,
       "source_urls": [
         "https://prismic.io/legal/cookie-policy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "attackevals",
+      "demand_count": 2,
+      "display_name_candidate": "Screenshot from MITRE ATT&CK",
+      "first_seen_at": "2026-10-22T12:47:38Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-22T12:47:38Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "attackevals.mitre.org",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0ba65316ce0eb4afdb7c844d",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -9690,11 +9746,11 @@
   "schema_version": "0.1.0",
   "summary": {
     "catalog_vendor_count_cap": null,
-    "queue_count": 359,
+    "queue_count": 361,
     "ready_for_source_discovery_count": 207,
     "state_counts": {
       "already_catalogued": 35,
-      "needs_country": 107,
+      "needs_country": 109,
       "needs_domain": 10,
       "ready_for_source_discovery": 207
     }
