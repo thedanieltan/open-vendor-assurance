@@ -1,0 +1,32 @@
+candidate_source_id: darktrace-security-page-99453ab915d3
+candidate_status: selected
+candidate_url: https://www.darktrace.com/es/solutions/aws
+canonical_candidate_url: https://www.darktrace.com/es/solutions/aws
+confidence: likely
+discovered_at: '2026-10-22T08:53:49.502484Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.darktrace.com/es/solutions/aws
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: AWS Data Loss Prevention, Security Compliance, &amp; Protection
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ad2790941c7dd903769a2d11c9c56e97485d095517d525f8a38a2c240049d314
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.darktrace.com/es/solutions/aws
+requested_url: https://www.darktrace.com/es/solutions/aws
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:49.502484Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: darktrace
