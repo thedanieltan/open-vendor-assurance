@@ -1,0 +1,32 @@
+candidate_source_id: circleci-trust-center-156460138ff8
+candidate_status: selected
+candidate_url: https://discuss.circleci.com/t/circleci-openssl-cve-2022-3602-cve-2022-3786/45971
+canonical_candidate_url: https://discuss.circleci.com/t/circleci-openssl-cve-2022-3602-cve-2022-3786/45971
+confidence: likely
+discovered_at: '2026-10-22T09:38:49.510879Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://discuss.circleci.com/t/circleci-openssl-cve-2022-3602-cve-2022-3786/45971
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: CircleCI イメージと OpenSSL の脆弱性情報 (CVE-2022-3602、CVE-2022-3786) - Community
+    - CircleCI Discuss
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c9475a11e7d8986327cfa70b4ae63cd875142f51761b3ab800159d25cbdc7819
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://discuss.circleci.com/t/circleci-openssl-cve-2022-3602-cve-2022-3786/45971
+requested_url: https://discuss.circleci.com/t/circleci-openssl-cve-2022-3602-cve-2022-3786/45971
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T09:38:49.510879Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: circleci
