@@ -1,0 +1,32 @@
+candidate_source_id: telstra-health-compliance-page-535e0d73f01c
+candidate_status: selected
+candidate_url: https://customer.help.telstrahealth.com/helpcenter/telstrahealth/user/login?destination=
+canonical_candidate_url: https://customer.help.telstrahealth.com/helpcenter/telstrahealth/user/login?destination=
+confidence: likely
+discovered_at: '2026-10-22T09:35:21.948388Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://customer.help.telstrahealth.com/helpcenter/telstrahealth/user/login?destination=
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Jira Service Management
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a46c5c35b9a28516cc1b30298e0e904513d6e28fac5d1a9be0b0a8e6a5c9d5f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://customer.help.telstrahealth.com/helpcenter/telstrahealth/user/login?destination=
+requested_url: https://customer.help.telstrahealth.com/helpcenter/telstrahealth/user/login?destination=
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T09:35:21.948388Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: telstra-health
