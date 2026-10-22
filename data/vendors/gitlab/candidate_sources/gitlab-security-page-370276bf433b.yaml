@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-370276bf433b
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262347
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262347
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262347
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Backport of &#39;Set GITLAB_BIN_DIR for Duo CLI and bump workflow image
+    to v0.0.23&#39; into 19.5 (!262347) · Merge requests · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:110ab2f627f6179a7aff383f2d2ce6769e5df3b20b789c65f9dca923b3d14345
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262347
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262347
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
