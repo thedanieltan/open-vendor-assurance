@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-e39f2ebc518d
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/php2shell-the-two-critical-php-rce-flaws-cve-2026-109618-cve-2026-109619-explained
+canonical_candidate_url: https://www.picussecurity.com/resource/php2shell-the-two-critical-php-rce-flaws-cve-2026-109618-cve-2026-109619-explained
+confidence: likely
+discovered_at: '2026-10-22T09:41:47.112157Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/php2shell-the-two-critical-php-rce-flaws-cve-2026-109618-cve-2026-109619-explained
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: 'PHP2Shell: Critical PHP RCE Flaws (CVE-2026-109618 &amp; CVE-2026-109619)&nbsp;Explained'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8f4857c55b02e7f08e4c745b250332ca7a295a19c35ff11f0f6c0ac2c0d186ed
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/php2shell-the-two-critical-php-rce-flaws-cve-2026-109618-cve-2026-109619-explained
+requested_url: https://www.picussecurity.com/resource/php2shell-the-two-critical-php-rce-flaws-cve-2026-109618-cve-2026-109619-explained
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T09:41:47.112157Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
