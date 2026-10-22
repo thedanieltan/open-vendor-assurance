@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-fcaa9b3b8478
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7109016
+canonical_candidate_url: https://access.redhat.com/solutions/7109016
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7109016
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Red Hat Quay large container image uploads fail with InvalidBucketState
+    in OpenShift Data Foundation (ODF) 4.17 on Google Cloud Platform (GCP) - Red Hat
+    Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0f87437d0fa84c2ced11f762624338e11af4b0b98c998cd98fb1ed0781842f0b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7109016
+requested_url: https://access.redhat.com/solutions/7109016
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

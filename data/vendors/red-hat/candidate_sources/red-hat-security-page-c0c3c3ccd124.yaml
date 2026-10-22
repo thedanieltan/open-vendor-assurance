@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-c0c3c3ccd124
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149044
+canonical_candidate_url: https://access.redhat.com/solutions/7149044
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149044
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Cluster upgrade stuck because DNS operator cannot upgrade while managementState
+    is Unmanaged - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f361bcf066812b8b7f759002c65f5bbfdfb890cb0259e1f6b41f7fd14e584813
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149044
+requested_url: https://access.redhat.com/solutions/7149044
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

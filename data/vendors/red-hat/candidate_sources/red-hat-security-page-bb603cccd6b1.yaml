@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-bb603cccd6b1
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-013
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-013
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-013
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: RHSB-2026-013 Request handling memory corruption - php (CVE-2026-109618,
+    CVE-2026-109619) - &quot;php2shell&quot; | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d43fe7090c7b10a902075f73f349ca228b2fbb1e54a437917833f6354433c099
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-013
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-013
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

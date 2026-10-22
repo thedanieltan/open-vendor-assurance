@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-f30f896c16e5
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149320
+canonical_candidate_url: https://access.redhat.com/solutions/7149320
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149320
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Containerized AAP fails after SELinux relabeling on custom rootless
+    storage path - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:97ef6ef0f206fd203eb877d19d4bf2c3fd027750102d12e27f73d95ed9bc3bef
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149320
+requested_url: https://access.redhat.com/solutions/7149320
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
