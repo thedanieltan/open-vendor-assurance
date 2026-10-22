@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-bf114cbf9f01
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262228
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262228
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262228
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Backport of &#39;Strip the trusted flag from client-supplied MCP tools
+    in Workhorse&#39; to 19.4 (!262228) · Merge requests · GitLab.org / GitLab · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b58f3353953c92506a70d8dc8b4c3990d3eec778fc2dd3ede6e7ad067a1d286c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262228
+requested_url: https://gitlab.com/gitlab-org/gitlab/-/merge_requests/262228
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

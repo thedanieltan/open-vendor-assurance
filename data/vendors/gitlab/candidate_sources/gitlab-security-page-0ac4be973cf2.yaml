@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-0ac4be973cf2
+candidate_status: selected
+candidate_url: https://gitlab.com/gitlab-org/gitaly/-/merge_requests/9371
+canonical_candidate_url: https://gitlab.com/gitlab-org/gitaly/-/merge_requests/9371
+confidence: likely
+discovered_at: '2026-10-22T08:53:56.077908Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://gitlab.com/gitlab-org/gitaly/-/merge_requests/9371
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: Backport of &quot;Expose opt-in tagger dates in ListRefs&quot; to 19.3
+    (!9371) · Merge requests · GitLab.org / Gitaly · GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e59c16819184dede70c381854617302550eb41b576fb7061c9c3562996ce8b49
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://gitlab.com/gitlab-org/gitaly/-/merge_requests/9371
+requested_url: https://gitlab.com/gitlab-org/gitaly/-/merge_requests/9371
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-22T08:53:56.077908Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
