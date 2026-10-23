@@ -1,0 +1,32 @@
+candidate_source_id: zoho-trust-center-1edf6fd1ff0e
+candidate_status: selected
+candidate_url: https://www.zoho.com/blog/general/php-vulnerabilities-update.html
+canonical_candidate_url: https://www.zoho.com/blog/general/php-vulnerabilities-update.html
+confidence: likely
+discovered_at: '2026-10-23T09:29:33.058029Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.zoho.com/blog/general/php-vulnerabilities-update.html
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Update on PHP vulnerabilities CVE-2026-109618 and CVE-2026-109619 -
+    Zoho Blog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:99ed805d69410f1a9c8194cbb2c2f0a131f96db847c7326e4ebff558e05e02d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.zoho.com/blog/general/php-vulnerabilities-update.html
+requested_url: https://www.zoho.com/blog/general/php-vulnerabilities-update.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:29:33.058029Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: zoho
