@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-775319b587d2
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/security/guide-detect-sinister-sql-attacks.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/security/guide-detect-sinister-sql-attacks.html
+confidence: likely
+discovered_at: '2026-10-23T08:49:05.563937Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/security/guide-detect-sinister-sql-attacks.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Sinister SQL Queries and How to Catch Them | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:fa746287667a81f7c1302ee0610f9b55512ad8efdc76b5a06927aac5d59357db
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/security/guide-detect-sinister-sql-attacks.html
+requested_url: https://www.splunk.com/en_us/blog/security/guide-detect-sinister-sql-attacks.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T08:49:05.563937Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
