@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-0f6a6b74be23
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149377
+canonical_candidate_url: https://access.redhat.com/solutions/7149377
+confidence: likely
+discovered_at: '2026-10-23T09:32:55.684452Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149377
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Are Red Hat AMQ Broker, AMQ Streams, and Red Hat build of Apache Camel
+    affected by the PHP2Shell vulnerabilities (CVE-2026-109618, CVE-2026-109619) -
+    Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a1b975697c16b841662cb11b5365feb200340a4971ffe3b62d7a7a8b255c97a8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149377
+requested_url: https://access.redhat.com/solutions/7149377
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:32:55.684452Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
