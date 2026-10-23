@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-1cbdc52b25da
+candidate_status: selected
+candidate_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/zero-day-fan-out
+canonical_candidate_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/zero-day-fan-out/
+confidence: likely
+discovered_at: '2026-10-23T09:32:55.684452Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/zero-day-fan-out/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  page_title: Zero-day fan-out · GitLab Well Architected
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4f68e5a0496272370c5451ac148034e5a3eb74784477c0cb00c782c495ccb9d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/zero-day-fan-out/
+requested_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/zero-day-fan-out
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:32:55.684452Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
