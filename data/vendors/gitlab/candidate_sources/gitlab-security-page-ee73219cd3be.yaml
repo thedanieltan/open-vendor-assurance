@@ -1,0 +1,35 @@
+candidate_source_id: gitlab-security-page-ee73219cd3be
+candidate_status: selected
+candidate_url: https://about.gitlab.com/resources/well-architected/best-practices/principles/design-for-developer-flow
+canonical_candidate_url: https://about.gitlab.com/resources/well-architected/best-practices/principles/design-for-developer-flow/
+confidence: likely
+discovered_at: '2026-10-23T09:32:55.684452Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/resources/well-architected/best-practices/principles/design-for-developer-flow/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - incident
+  - trust
+  page_title: Fewer delays and less friction for developers | Improvement and results
+    · GitLab Well Architected
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a32796362d3b27f07d8cd46ef5d85d9a7ac11bd9fee9f7397e4b727b28db27f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/resources/well-architected/best-practices/principles/design-for-developer-flow/
+requested_url: https://about.gitlab.com/resources/well-architected/best-practices/principles/design-for-developer-flow
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:32:55.684452Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-compliance-page-2ea58c08b666
+candidate_status: selected
+candidate_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/flow-evaluation-and-rollback
+canonical_candidate_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/flow-evaluation-and-rollback/
+confidence: likely
+discovered_at: '2026-10-23T09:32:55.684452Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/flow-evaluation-and-rollback/
+  http_status: 200
+  matched_terms:
+  - compliance
+  - iso
+  - trust
+  page_title: Flow evaluation and rollback · GitLab Well Architected
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:08647bae6661d6c9abf5639f1f2244ae0671a457fa8a405c124d963b067be9c2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/flow-evaluation-and-rollback/
+requested_url: https://about.gitlab.com/resources/well-architected/cookbook/flows/flow-evaluation-and-rollback
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:32:55.684452Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

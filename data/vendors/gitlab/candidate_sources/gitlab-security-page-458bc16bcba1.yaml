@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-458bc16bcba1
+candidate_status: selected
+candidate_url: https://about.gitlab.com/resources/well-architected/cookbook
+canonical_candidate_url: https://about.gitlab.com/resources/well-architected/cookbook/
+confidence: likely
+discovered_at: '2026-10-23T09:32:55.684452Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/resources/well-architected/cookbook/
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - incident
+  page_title: Agentic AI Cookbook · GitLab Well Architected
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:de46e7d53cb56538fa5f64546a0a4e212eb320e573f655a84b53616559f41555
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/resources/well-architected/cookbook/
+requested_url: https://about.gitlab.com/resources/well-architected/cookbook
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-23T09:32:55.684452Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
