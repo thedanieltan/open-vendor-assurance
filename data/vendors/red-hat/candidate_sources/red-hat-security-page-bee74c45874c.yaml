@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-bee74c45874c
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7101343
+canonical_candidate_url: https://access.redhat.com/solutions/7101343
+confidence: likely
+discovered_at: '2026-10-24T09:00:39.075294Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7101343
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Repository Synchronization on Red Hat Satellite is failing with &quot;Error:
+    NoMethodError - undefined method `repository_href&#039; for nil:NilClass&quot;
+    - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:bff278d4eaa53799486fec15a559f66d27f0afd7ea1cbe46e8e0a70b7a535b13
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7101343
+requested_url: https://access.redhat.com/solutions/7101343
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-24T09:00:39.075294Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

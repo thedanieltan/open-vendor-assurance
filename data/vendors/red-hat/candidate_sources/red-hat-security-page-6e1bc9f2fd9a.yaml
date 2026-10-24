@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-6e1bc9f2fd9a
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149394
+canonical_candidate_url: https://access.redhat.com/solutions/7149394
+confidence: likely
+discovered_at: '2026-10-24T09:00:39.075294Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149394
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Ceph Storage in HEALTH_ERR after OpenShift Data Foundation (ODF) v4.21+
+    Upgrade - CephCluster/StorageCluster &quot;phase: Error, CephClusterHealthNotOK,
+    failed the ceph version check&quot; - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:35a22fa7a3fa452e912087acac9958bf33e8880ea1bd9e01b9105d93c44e3282
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149394
+requested_url: https://access.redhat.com/solutions/7149394
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-24T09:00:39.075294Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
