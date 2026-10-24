@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T12:52:46Z",
+  "generated_at": "2026-10-24T12:37:40Z",
   "items": [
     {
       "candidate_vendor_id": "media",
@@ -130,15 +130,15 @@
     },
     {
       "candidate_vendor_id": "pan",
-      "demand_count": 86,
+      "demand_count": 101,
       "display_name_candidate": "Become an MSP Partner",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
       "observation_count": 17,
       "official_domain_candidate": "pan.bitdefender.com",
-      "priority": 496,
+      "priority": 571,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -160,15 +160,15 @@
     },
     {
       "candidate_vendor_id": "payment-services",
-      "demand_count": 42,
+      "demand_count": 45,
       "display_name_candidate": "Confiden\u021bialitate",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
-      "observation_count": 42,
+      "observation_count": 45,
       "official_domain_candidate": "payment-services.ingenico.com",
-      "priority": 326,
+      "priority": 347,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -179,7 +179,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 42,
+      "signal_count": 45,
       "source_urls": [
         "https://www.odoo.com/da_DK/privacy",
         "https://www.odoo.com/lt_LT/privacy",
@@ -192,15 +192,15 @@
     },
     {
       "candidate_vendor_id": "shop",
-      "demand_count": 38,
+      "demand_count": 40,
       "display_name_candidate": "PKI/SSL As a Service",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
-      "observation_count": 38,
+      "observation_count": 40,
       "official_domain_candidate": "shop.globalsign.com",
-      "priority": 298,
+      "priority": 312,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -211,7 +211,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 38,
+      "signal_count": 40,
       "source_urls": [
         "https://www.globalsign.com/de-de/produkte"
       ],
@@ -220,15 +220,15 @@
     },
     {
       "candidate_vendor_id": "support",
-      "demand_count": 36,
+      "demand_count": 40,
       "display_name_candidate": "What we're doing as a data processor to help customers comply with GDPR",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
-      "observation_count": 36,
+      "observation_count": 40,
       "official_domain_candidate": "support.dotdigital.com",
-      "priority": 284,
+      "priority": 312,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -239,10 +239,40 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 36,
+      "signal_count": 40,
       "source_urls": [
         "https://marketing.help.dotdigital.com/en/articles/8199411-third-party-data-processors",
         "https://marketing.help.dotdigital.com/en/articles/8199473-privacy-faq"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "policies",
+      "demand_count": 39,
+      "display_name_candidate": "https://policies.google.com/privacy?hl=en",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 33,
+      "official_domain_candidate": "policies.google.com",
+      "priority": 293,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-18b7b753bf94c9acdcee30be",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 33,
+      "source_urls": [
+        "https://alloy.app/legal/privacy",
+        "https://www.odoo.com/da_DK/privacy",
+        "https://www.odoo.com/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -273,36 +303,6 @@
         "https://www.odoo.com/da_DK/privacy",
         "https://www.odoo.com/privacy",
         "https://www.odoo.com/ro_RO/privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "policies",
-      "demand_count": 36,
-      "display_name_candidate": "https://policies.google.com/privacy?hl=en",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 30,
-      "official_domain_candidate": "policies.google.com",
-      "priority": 272,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-18b7b753bf94c9acdcee30be",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 30,
-      "source_urls": [
-        "https://alloy.app/legal/privacy",
-        "https://www.odoo.com/da_DK/privacy",
-        "https://www.odoo.com/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -364,6 +364,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "libcloud",
+      "demand_count": 20,
+      "display_name_candidate": "Libcloud 0.14.0 was released",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 20,
+      "official_domain_candidate": "libcloud.apache.org",
+      "priority": 172,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e712b73a35892e1b567acaca",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 20,
+      "source_urls": [
+        "https://www.exoscale.com/blog/licloud-guest-post"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "portal",
+      "demand_count": 20,
+      "display_name_candidate": "Register",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 20,
+      "official_domain_candidate": "portal.exoscale.com",
+      "priority": 172,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-506915d8694edbcc994971cc",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 20,
+      "source_urls": [
+        "https://www.exoscale.com/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "firebase",
       "demand_count": 15,
       "display_name_candidate": "Firebase Cloud Messaging (FCM)",
@@ -421,21 +477,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "libcloud",
+      "candidate_vendor_id": "learn",
       "demand_count": 18,
-      "display_name_candidate": "Libcloud 0.14.0 was released",
+      "display_name_candidate": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/code-of-conduct",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
       "observation_count": 18,
-      "official_domain_candidate": "libcloud.apache.org",
+      "official_domain_candidate": "learn.microsoft.com",
       "priority": 158,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-e712b73a35892e1b567acaca",
+      "queue_id": "vbq-d659701ba9c28d4e25816ef9",
       "reason_codes": [
         "country_missing"
       ],
@@ -443,27 +499,28 @@
       "schema_version": "0.1.0",
       "signal_count": 18,
       "source_urls": [
-        "https://www.exoscale.com/blog/licloud-guest-post"
+        "https://front.com/legal/supplemental-terms",
+        "https://marketing.help.dotdigital.com/en/articles/9335252-dotdigital-and-ai-frequently-asked-questions"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "portal",
+      "candidate_vendor_id": "updates",
       "demand_count": 18,
-      "display_name_candidate": "Register",
-      "first_seen_at": "2026-10-11T14:00:01Z",
+      "display_name_candidate": "Updates",
+      "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-24T12:37:40Z",
       "not_advice": true,
       "observation_count": 18,
-      "official_domain_candidate": "portal.exoscale.com",
+      "official_domain_candidate": "updates.teamtailor.com",
       "priority": 158,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-506915d8694edbcc994971cc",
+      "queue_id": "vbq-989e18a813e22a5087bab527",
       "reason_codes": [
         "country_missing"
       ],
@@ -471,7 +528,35 @@
       "schema_version": "0.1.0",
       "signal_count": 18,
       "source_urls": [
-        "https://www.exoscale.com/privacy"
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "welcome",
+      "demand_count": 18,
+      "display_name_candidate": "Discover Qonto",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 18,
+      "official_domain_candidate": "welcome.qonto.com",
+      "priority": 158,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-fed6d683d43f45ae933cc567",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 18,
+      "source_urls": [
+        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -500,91 +585,6 @@
       "signal_count": 10,
       "source_urls": [
         "https://www.bitdefender.com/en-us/oem/gateway-protection"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "learn",
-      "demand_count": 17,
-      "display_name_candidate": "https://learn.microsoft.com/en-us/legal/cognitive-services/openai/code-of-conduct",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
-      "not_advice": true,
-      "observation_count": 17,
-      "official_domain_candidate": "learn.microsoft.com",
-      "priority": 151,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-d659701ba9c28d4e25816ef9",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 17,
-      "source_urls": [
-        "https://front.com/legal/supplemental-terms",
-        "https://marketing.help.dotdigital.com/en/articles/9335252-dotdigital-and-ai-frequently-asked-questions"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "updates",
-      "demand_count": 17,
-      "display_name_candidate": "Updates",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 17,
-      "official_domain_candidate": "updates.teamtailor.com",
-      "priority": 151,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-989e18a813e22a5087bab527",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 17,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "welcome",
-      "demand_count": 17,
-      "display_name_candidate": "Discover Qonto",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 17,
-      "official_domain_candidate": "welcome.qonto.com",
-      "priority": 151,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-fed6d683d43f45ae933cc567",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 17,
-      "source_urls": [
-        "https://qonto.com/en/blog/business-management/banking/kyc-verification"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -788,6 +788,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "workato",
+      "demand_count": 9,
+      "display_name_candidate": "Workato",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": "US",
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 9,
+      "official_domain_candidate": "workato.com",
+      "priority": 127,
+      "provider_count": 2,
+      "providers": [
+        "openva_vibe_coder_saas_directory",
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e2851c17be6cbfc0e4893a0a",
+      "reason_codes": [],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 9,
+      "source_urls": [
+        "https://workato.com",
+        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
+      ],
+      "state": "ready_for_source_discovery",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cronofy",
       "demand_count": 13,
       "display_name_candidate": "Cronofy",
@@ -869,34 +897,6 @@
         "https://www.globalsign.com/ru-ru/resources/topic/83"
       ],
       "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "workato",
-      "demand_count": 8,
-      "display_name_candidate": "Workato",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": "US",
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 8,
-      "official_domain_candidate": "workato.com",
-      "priority": 120,
-      "provider_count": 2,
-      "providers": [
-        "openva_vibe_coder_saas_directory",
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-e2851c17be6cbfc0e4893a0a",
-      "reason_codes": [],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 8,
-      "source_urls": [
-        "https://workato.com",
-        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
-      ],
-      "state": "ready_for_source_discovery",
       "writes_canonical_vendors": false
     },
     {
@@ -1041,6 +1041,202 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "legal",
+      "demand_count": 10,
+      "display_name_candidate": "Hubspot",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "legal.hubspot.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-5b1cb87515b2f297d217b0a4",
+      "reason_codes": [
+        "catalog_identity_collision"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
+      ],
+      "state": "already_catalogued",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "live-starburst",
+      "demand_count": 10,
+      "display_name_candidate": "Supplier Code of Conduct",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "live-starburst.pantheonsite.io",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-ad641fc06c8d2154cb416f95",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.starburst.io/privacy-policy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "quicktapsurvey",
+      "demand_count": 10,
+      "display_name_candidate": "QuickTapSurvey",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "quicktapsurvey.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-9ec4df056a0d2a4ad5afe4af",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "readmargins",
+      "demand_count": 10,
+      "display_name_candidate": "Can Duruk (good guy) who writes at Read Margins wrote about this part of the auditing process.",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "readmargins.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0ac52216040b81b4d7acbb46",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://blog.railway.com/p/the-f-in-soc2-stands-for-functional"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "security",
+      "demand_count": 10,
+      "display_name_candidate": "Customer Trust Center",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "security.cultureamp.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-94af78f0ebf885c2c8ecd45a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.cultureamp.com/company/legal/data-processing-addendum"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sopro",
+      "demand_count": 10,
+      "display_name_candidate": "http://sopro.io",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "sopro.io",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-c55c4522da59f354dbf4be53",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.starburst.io/privacy-policy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "support",
+      "demand_count": 10,
+      "display_name_candidate": "Google Analytics Data Safeguarding",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "support.google.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-d71d0edf3060222474b0892a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://alloy.app/legal/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "omni",
       "demand_count": 12,
       "display_name_candidate": "omni.co",
@@ -1069,62 +1265,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "legal",
-      "demand_count": 9,
-      "display_name_candidate": "Hubspot",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "legal.hubspot.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-5b1cb87515b2f297d217b0a4",
-      "reason_codes": [
-        "catalog_identity_collision"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
-      ],
-      "state": "already_catalogued",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "live-starburst",
-      "demand_count": 9,
-      "display_name_candidate": "Supplier Code of Conduct",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "live-starburst.pantheonsite.io",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-ad641fc06c8d2154cb416f95",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.starburst.io/privacy-policy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "marketplace",
       "demand_count": 9,
       "display_name_candidate": "Browse All Partners",
@@ -1148,146 +1288,6 @@
       "signal_count": 9,
       "source_urls": [
         "https://www.guidewire.com/resources/help-and-support/trust-and-security"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "quicktapsurvey",
-      "demand_count": 9,
-      "display_name_candidate": "QuickTapSurvey",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "quicktapsurvey.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-9ec4df056a0d2a4ad5afe4af",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "readmargins",
-      "demand_count": 9,
-      "display_name_candidate": "Can Duruk (good guy) who writes at Read Margins wrote about this part of the auditing process.",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "readmargins.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-0ac52216040b81b4d7acbb46",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://blog.railway.com/p/the-f-in-soc2-stands-for-functional"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "security",
-      "demand_count": 9,
-      "display_name_candidate": "Customer Trust Center",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "security.cultureamp.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-94af78f0ebf885c2c8ecd45a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.cultureamp.com/company/legal/data-processing-addendum"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "sopro",
-      "demand_count": 9,
-      "display_name_candidate": "http://sopro.io",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "sopro.io",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-c55c4522da59f354dbf4be53",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.starburst.io/privacy-policy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "support",
-      "demand_count": 9,
-      "display_name_candidate": "Google Analytics Data Safeguarding",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "support.google.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-d71d0edf3060222474b0892a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://alloy.app/legal/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1601,6 +1601,174 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "tools",
+      "demand_count": 8,
+      "display_name_candidate": "https://tools.google.com/dlpage/gaoptout",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "tools.google.com",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-82c40c6e20455e2ac7c6048d",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://alloy.app/legal/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "trino",
+      "demand_count": 8,
+      "display_name_candidate": "Trino Community Broadcast",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "trino.io",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-32320310f733b3f0fff8a077",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://docs.starburst.io/security/starburst-galaxy.html"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "trust-center",
+      "demand_count": 8,
+      "display_name_candidate": "Trust Center.",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "trust-center.jetbrains.com",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-8090c9446c789533231d8a2b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://www.jetbrains.com/legal/docs/privacy/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "ventures",
+      "demand_count": 8,
+      "display_name_candidate": "TX Ventures",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "ventures.tx.group",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e4d840f3e97b4c8ac7b53d04",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://help.doodle.com/en/articles/10559210-ferpa-and-coppa-privacy-notice-privacy-notice-for-children"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "workspan",
+      "demand_count": 8,
+      "display_name_candidate": "WorkSpan",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "workspan.com",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-7818d4085b488621ec4d8465",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "youronlinechoices",
+      "demand_count": 8,
+      "display_name_candidate": "http://www.youronlinechoices.com/",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "youronlinechoices.com",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-ab1c643cfd21b1461b28cfca",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://www.starburst.io/privacy-policy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cdic",
       "demand_count": 9,
       "display_name_candidate": "cdic.ca/depositors/whats-covered/fintechs/",
@@ -1683,6 +1851,34 @@
         "https://marketing.help.dotdigital.com/en/articles/8199411-third-party-data-processors"
       ],
       "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "linkedin",
+      "demand_count": 10,
+      "display_name_candidate": "LinkedIn",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": null,
+      "priority": 82,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-fd308e23fc5baf998dbe22e7",
+      "reason_codes": [
+        "official_domain_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.instructure.com/policies/modern-slavery-act"
+      ],
+      "state": "needs_domain",
       "writes_canonical_vendors": false
     },
     {
@@ -1994,174 +2190,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "tools",
-      "demand_count": 7,
-      "display_name_candidate": "https://tools.google.com/dlpage/gaoptout",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "tools.google.com",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-82c40c6e20455e2ac7c6048d",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://alloy.app/legal/privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "trino",
-      "demand_count": 7,
-      "display_name_candidate": "Trino Community Broadcast",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "trino.io",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-32320310f733b3f0fff8a077",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://docs.starburst.io/security/starburst-galaxy.html"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "trust-center",
-      "demand_count": 7,
-      "display_name_candidate": "Trust Center.",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "trust-center.jetbrains.com",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-8090c9446c789533231d8a2b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://www.jetbrains.com/legal/docs/privacy/privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "ventures",
-      "demand_count": 7,
-      "display_name_candidate": "TX Ventures",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "ventures.tx.group",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-e4d840f3e97b4c8ac7b53d04",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://help.doodle.com/en/articles/10559210-ferpa-and-coppa-privacy-notice-privacy-notice-for-children"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "workspan",
-      "demand_count": 7,
-      "display_name_candidate": "WorkSpan",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "workspan.com",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-7818d4085b488621ec4d8465",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://www.jetbrains.com/legal/docs/privacy/third-parties"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "youronlinechoices",
-      "demand_count": 7,
-      "display_name_candidate": "http://www.youronlinechoices.com/",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "youronlinechoices.com",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-ab1c643cfd21b1461b28cfca",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://www.starburst.io/privacy-policy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "auth",
       "demand_count": 8,
       "display_name_candidate": "MDR Portal",
@@ -2187,34 +2215,6 @@
         "https://www.bitdefender.com/en-us/oem/gateway-protection"
       ],
       "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "linkedin",
-      "demand_count": 9,
-      "display_name_candidate": "LinkedIn",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": null,
-      "priority": 75,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-fd308e23fc5baf998dbe22e7",
-      "reason_codes": [
-        "official_domain_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.instructure.com/policies/modern-slavery-act"
-      ],
-      "state": "needs_domain",
       "writes_canonical_vendors": false
     },
     {
@@ -2526,6 +2526,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "twitter",
+      "demand_count": 8,
+      "display_name_candidate": "Twitter",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": null,
+      "priority": 68,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-1b8b4f988c321608ac94458f",
+      "reason_codes": [
+        "official_domain_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://www.instructure.com/policies/modern-slavery-act"
+      ],
+      "state": "needs_domain",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "youtube",
+      "demand_count": 8,
+      "display_name_candidate": "Youtube",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-24T12:37:40Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": null,
+      "priority": 68,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-53bc5c21d4c96ac49a07209d",
+      "reason_codes": [
+        "official_domain_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://www.instructure.com/policies/modern-slavery-act"
+      ],
+      "state": "needs_domain",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "darkreading",
       "demand_count": 5,
       "display_name_candidate": "tenant-to-tenant attacks",
@@ -2737,62 +2793,6 @@
         "subprocessor_relationship_graph"
       ],
       "queue_id": "vbq-cb2029531fe4a5b8952d2fe9",
-      "reason_codes": [
-        "official_domain_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://www.instructure.com/policies/modern-slavery-act"
-      ],
-      "state": "needs_domain",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "twitter",
-      "demand_count": 7,
-      "display_name_candidate": "Twitter",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": null,
-      "priority": 61,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-1b8b4f988c321608ac94458f",
-      "reason_codes": [
-        "official_domain_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://www.instructure.com/policies/modern-slavery-act"
-      ],
-      "state": "needs_domain",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "youtube",
-      "demand_count": 7,
-      "display_name_candidate": "Youtube",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": null,
-      "priority": 61,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-53bc5c21d4c96ac49a07209d",
       "reason_codes": [
         "official_domain_missing"
       ],
