@@ -261,6 +261,41 @@
       "vendor_id": "pagerduty"
     },
     {
+      "_openva_path": "data/vendors/pagerduty/candidate_sources/pagerduty-trust-center-03e145242bf5.yaml",
+      "candidate_source_id": "pagerduty-trust-center-03e145242bf5",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.pagerduty.com/de/contact-us",
+      "canonical_candidate_url": "https://www.pagerduty.com/de/contact-us/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:26:50.154943Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.pagerduty.com/de/contact-us/",
+        "http_status": 200,
+        "matched_terms": [
+          "compliance",
+          "privacy"
+        ],
+        "page_title": "Kontakt | PagerDuty",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:76a3fb78646367e2929ab6911f367332b109d629986825015294c533bdbb8bf6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.pagerduty.com/de/contact-us/",
+      "requested_url": "https://www.pagerduty.com/de/contact-us",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:26:50.154943Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "pagerduty"
+    },
+    {
       "_openva_path": "data/vendors/pagerduty/candidate_sources/pagerduty-trust-center-0423b6928ff4.yaml",
       "candidate_source_id": "pagerduty-trust-center-0423b6928ff4",
       "candidate_status": "selected",
@@ -5745,6 +5780,42 @@
       "vendor_id": "pagerduty"
     },
     {
+      "_openva_path": "data/vendors/pagerduty/candidate_sources/pagerduty-trust-center-b790435ff7a0.yaml",
+      "candidate_source_id": "pagerduty-trust-center-b790435ff7a0",
+      "candidate_status": "selected",
+      "candidate_url": "https://investor.pagerduty.com/overview/default.aspx",
+      "canonical_candidate_url": "https://investor.pagerduty.com/overview/default.aspx",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:52:18.411385Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://investor.pagerduty.com/overview/default.aspx",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security",
+          "privacy"
+        ],
+        "page_title": "PagerDuty, Inc. - Investor Relations",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:f2cfc0d4097daea542beee266d428a40abb51abe2a8a168e85f4c42c62bfe797",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://investor.pagerduty.com/overview/default.aspx",
+      "requested_url": "https://investor.pagerduty.com/overview/default.aspx",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:52:18.411385Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "pagerduty"
+    },
+    {
       "_openva_path": "data/vendors/pagerduty/candidate_sources/pagerduty-trust-center-b8b451a0c804.yaml",
       "candidate_source_id": "pagerduty-trust-center-b8b451a0c804",
       "candidate_status": "selected",
@@ -8117,7 +8188,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 214,
+    "candidate_source_count": 216,
     "candidate_source_types": [
       "certification_reference",
       "trust_center"

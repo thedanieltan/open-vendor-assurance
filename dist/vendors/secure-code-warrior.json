@@ -5872,6 +5872,41 @@
       "vendor_id": "secure-code-warrior"
     },
     {
+      "_openva_path": "data/vendors/secure-code-warrior/candidate_sources/secure-code-warrior-trust-center-7ded18539773.yaml",
+      "candidate_source_id": "secure-code-warrior-trust-center-7ded18539773",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.securecodewarrior.com/ko",
+      "canonical_candidate_url": "https://www.securecodewarrior.com/ko",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T08:55:58.940160Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.securecodewarrior.com/ko",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security"
+        ],
+        "page_title": "AI 소프트웨어 거버넌스 및 시큐어 코딩 교육 | Secure Code Warrior",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:de1855ec0f822e0d32256e41cf00fdf6c50b9ae9da3c45ea87389df475fb5261",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.securecodewarrior.com/ko",
+      "requested_url": "https://www.securecodewarrior.com/ko",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T08:55:58.940160Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "secure-code-warrior"
+    },
+    {
       "_openva_path": "data/vendors/secure-code-warrior/candidate_sources/secure-code-warrior-trust-center-9f5e8721fe27.yaml",
       "candidate_source_id": "secure-code-warrior-trust-center-9f5e8721fe27",
       "candidate_status": "selected",
@@ -6109,7 +6144,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 165,
+    "candidate_source_count": 166,
     "candidate_source_types": [
       "compliance_page",
       "privacy_notice",

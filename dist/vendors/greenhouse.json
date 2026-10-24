@@ -1987,6 +1987,41 @@
       "vendor_id": "greenhouse"
     },
     {
+      "_openva_path": "data/vendors/greenhouse/candidate_sources/greenhouse-compliance-page-9f31b9811d5d.yaml",
+      "candidate_source_id": "greenhouse-compliance-page-9f31b9811d5d",
+      "candidate_status": "selected",
+      "candidate_url": "https://integrations.greenhouse.com/",
+      "canonical_candidate_url": "https://integrations.greenhouse.com/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:14:46.607466Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://integrations.greenhouse.com/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "trust"
+        ],
+        "page_title": "Greenhouse Partner Directory",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:49116657bef39135049240b43c7609844fc600b130da501b9d0b2a2ce089428e",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://integrations.greenhouse.com/",
+      "requested_url": "https://integrations.greenhouse.com/",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:14:46.607466Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "greenhouse"
+    },
+    {
       "_openva_path": "data/vendors/greenhouse/candidate_sources/greenhouse-compliance-page-a291211c751a.yaml",
       "candidate_source_id": "greenhouse-compliance-page-a291211c751a",
       "candidate_status": "selected",
@@ -5583,7 +5618,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 5,
-    "candidate_source_count": 146,
+    "candidate_source_count": 147,
     "candidate_source_types": [
       "compliance_page",
       "trust_center"

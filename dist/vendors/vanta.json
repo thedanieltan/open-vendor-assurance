@@ -1356,6 +1356,43 @@
       "vendor_id": "vanta"
     },
     {
+      "_openva_path": "data/vendors/vanta/candidate_sources/vanta-trust-center-1dfd0549bb99.yaml",
+      "candidate_source_id": "vanta-trust-center-1dfd0549bb99",
+      "candidate_status": "selected",
+      "candidate_url": "https://community.vanta.com/members/a6d2242b-4ffe-4a2c-b132-a45ac91faa82",
+      "canonical_candidate_url": "https://community.vanta.com/members/a6d2242b-4ffe-4a2c-b132-a45ac91faa82",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:14:15.325769Z",
+      "discovered_by": "agent",
+      "discovery_method": "rendered_dom_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://community.vanta.com/members/a6d2242b-4ffe-4a2c-b132-a45ac91faa82",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security",
+          "compliance"
+        ],
+        "page_title": "Kareem M. | Vanta Community",
+        "render_transport": "playwright_intercepted_safe_fetch",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:f0bb5421cc17a1276596f9a7685d1b029d658bd1ed5ab8ff56753174b91effa5",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://community.vanta.com/members/a6d2242b-4ffe-4a2c-b132-a45ac91faa82",
+      "requested_url": "https://community.vanta.com/members/a6d2242b-4ffe-4a2c-b132-a45ac91faa82",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:14:15.325769Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "vanta"
+    },
+    {
       "_openva_path": "data/vendors/vanta/candidate_sources/vanta-trust-center-1e89539045ec.yaml",
       "candidate_source_id": "vanta-trust-center-1e89539045ec",
       "candidate_status": "selected",
@@ -7936,6 +7973,42 @@
       "vendor_id": "vanta"
     },
     {
+      "_openva_path": "data/vendors/vanta/candidate_sources/vanta-trust-center-b3d27c304cd5.yaml",
+      "candidate_source_id": "vanta-trust-center-b3d27c304cd5",
+      "candidate_status": "selected",
+      "candidate_url": "https://community.vanta.com/members/a384abe0-e85b-429c-a1ca-3afa40d09c53",
+      "canonical_candidate_url": "https://community.vanta.com/members/a384abe0-e85b-429c-a1ca-3afa40d09c53",
+      "confidence": "likely",
+      "discovered_at": "2026-09-14T09:14:15.325769Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://community.vanta.com/members/a384abe0-e85b-429c-a1ca-3afa40d09c53",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "security",
+          "compliance"
+        ],
+        "page_title": null,
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:3ac7f0f3a01a95a4f80df12eedd2f4136f40519c89224db338a945c0831162ed",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://community.vanta.com/members/a384abe0-e85b-429c-a1ca-3afa40d09c53",
+      "requested_url": "https://community.vanta.com/members/a384abe0-e85b-429c-a1ca-3afa40d09c53",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-14T09:14:15.325769Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "vanta"
+    },
+    {
       "_openva_path": "data/vendors/vanta/candidate_sources/vanta-trust-center-b3f6270dddc5.yaml",
       "candidate_source_id": "vanta-trust-center-b3f6270dddc5",
       "candidate_status": "selected",
@@ -11118,7 +11191,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 4,
-    "candidate_source_count": 289,
+    "candidate_source_count": 291,
     "candidate_source_types": [
       "trust_center"
     ],
