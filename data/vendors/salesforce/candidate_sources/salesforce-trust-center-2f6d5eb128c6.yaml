@@ -1,0 +1,33 @@
+candidate_source_id: salesforce-trust-center-2f6d5eb128c6
+candidate_status: selected
+candidate_url: https://www.salesforce.com/blog/what-you-need-to-know-about-the-critical-php-vulnerabilities-php2shell
+canonical_candidate_url: https://www.salesforce.com/blog/what-you-need-to-know-about-the-critical-php-vulnerabilities-php2shell/?bc=HL
+confidence: likely
+discovered_at: '2026-10-24T09:10:40.513290Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.salesforce.com/blog/what-you-need-to-know-about-the-critical-php-vulnerabilities-php2shell/?bc=HL
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  page_title: What You Need to Know About the Critical PHP Vulnerabilities (PHP2Shell)
+    - Salesforce
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:d3835eb0c7b59742c3366e31c909cb75d8824d9557d4c77440c4b2326ac9a0ee
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.salesforce.com/blog/what-you-need-to-know-about-the-critical-php-vulnerabilities-php2shell/?bc=HL
+requested_url: https://www.salesforce.com/blog/what-you-need-to-know-about-the-critical-php-vulnerabilities-php2shell
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-24T09:10:40.513290Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: salesforce
