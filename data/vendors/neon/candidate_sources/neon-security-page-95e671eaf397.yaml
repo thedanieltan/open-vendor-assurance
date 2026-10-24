@@ -1,0 +1,33 @@
+candidate_source_id: neon-security-page-95e671eaf397
+candidate_status: selected
+candidate_url: https://docs.databricks.com/aws/en/security/privacy/pci
+canonical_candidate_url: https://docs.databricks.com/aws/en/security/privacy/pci
+confidence: likely
+discovered_at: '2026-10-24T08:43:18.499792Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.databricks.com/aws/en/security/privacy/pci
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - vulnerability
+  page_title: PCI DSS v4.0 | Databricks on AWS
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:caa7e6e5c4669abeef6d8da8f45ea0f22156e3d218d4ca298e68783f1c3a04de
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.databricks.com/aws/en/security/privacy/pci
+requested_url: https://docs.databricks.com/aws/en/security/privacy/pci
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-24T08:43:18.499792Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon
