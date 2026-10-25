@@ -1,0 +1,32 @@
+candidate_source_id: bugcrowd-security-page-04ce9854f162
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/blog/what-we-know-about-copy-fail-cve-2026-31431
+canonical_candidate_url: https://www.bugcrowd.com/blog/what-we-know-about-copy-fail-cve-2026-31431/
+confidence: likely
+discovered_at: '2026-10-25T08:42:07.289569Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/blog/what-we-know-about-copy-fail-cve-2026-31431/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: What we know about Copy Fail (CVE-2026-31431) | @Bugcrowd
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4ef4e549252b4db947c54361fb098bdde4c3d0636dc328af15b1409c488972e0
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/blog/what-we-know-about-copy-fail-cve-2026-31431/
+requested_url: https://www.bugcrowd.com/blog/what-we-know-about-copy-fail-cve-2026-31431
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-25T08:42:07.289569Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
