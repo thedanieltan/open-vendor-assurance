@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-34a5021a144f
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7084074
+canonical_candidate_url: https://access.redhat.com/solutions/7084074
+confidence: likely
+discovered_at: '2026-10-25T09:31:05.272533Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7084074
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Leapp upgrade fails with only one error “NameError: global name &#039;dnf&#039;
+    is not defined”. - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6cadd58ee0134abee06da9f31d8400051eb1691a8fce0a0aabd1503098fcf489
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7084074
+requested_url: https://access.redhat.com/solutions/7084074
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-25T09:31:05.272533Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

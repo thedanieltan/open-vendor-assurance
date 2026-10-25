@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-7550ede86e1b
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/6987481
+canonical_candidate_url: https://access.redhat.com/solutions/6987481
+confidence: likely
+discovered_at: '2026-10-25T09:31:05.272533Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/6987481
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: EDAC message shows in /var/log/messages but there are no hardware failures
+    in the hardware log - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:73f7df2f7f25df64ea1cd2bc11895484473f023785a37f7633f9a4c7d4aa3a96
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/6987481
+requested_url: https://access.redhat.com/solutions/6987481
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-25T09:31:05.272533Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
