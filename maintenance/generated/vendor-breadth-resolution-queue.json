@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T12:37:40Z",
+  "generated_at": "2026-10-25T12:51:37Z",
   "items": [
     {
       "candidate_vendor_id": "media",
@@ -676,6 +676,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "python",
+      "demand_count": 16,
+      "display_name_candidate": "langchain-neo4j (vendor supported package)",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-25T12:51:37Z",
+      "not_advice": true,
+      "observation_count": 16,
+      "official_domain_candidate": "python.langchain.com",
+      "priority": 144,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-c474a0d7f2a3a4af9fa5f337",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 16,
+      "source_urls": [
+        "https://neo4j.com/developer/genai-ecosystem"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "developer",
       "demand_count": 15,
       "display_name_candidate": "Apple Push Notification Service (APN)",
@@ -755,34 +783,6 @@
       "signal_count": 14,
       "source_urls": [
         "https://downloadcenter.trendmicro.com/index.php?prodid=1097&regs=nabu"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "python",
-      "demand_count": 14,
-      "display_name_candidate": "langchain-neo4j (vendor supported package)",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-22T12:47:38Z",
-      "not_advice": true,
-      "observation_count": 14,
-      "official_domain_candidate": "python.langchain.com",
-      "priority": 130,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-c474a0d7f2a3a4af9fa5f337",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 14,
-      "source_urls": [
-        "https://neo4j.com/developer/genai-ecosystem"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
