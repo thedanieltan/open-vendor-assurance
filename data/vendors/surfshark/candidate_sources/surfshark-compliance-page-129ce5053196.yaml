@@ -1,0 +1,31 @@
+candidate_source_id: surfshark-compliance-page-129ce5053196
+candidate_status: selected
+candidate_url: https://surfshark.com/de/blog/phishing-mail
+canonical_candidate_url: https://surfshark.com/de/blog/phishing-mail
+confidence: likely
+discovered_at: '2026-10-27T09:19:10.860286Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://surfshark.com/de/blog/phishing-mail
+  http_status: 200
+  matched_terms:
+  - soc
+  - trust
+  page_title: 'Phishing-Mails erkennen: Aktuelle Beispiele - Surfshark'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1a9e60cb7d2570139a95e7c6f8c4e935e3e3d2c000996e4595902c660ba74b41
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://surfshark.com/de/blog/phishing-mail
+requested_url: https://surfshark.com/de/blog/phishing-mail
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-27T09:19:10.860286Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: surfshark
