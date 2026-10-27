@@ -1,0 +1,34 @@
+candidate_source_id: red-hat-security-page-1861f61ffad9
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149475
+canonical_candidate_url: https://access.redhat.com/solutions/7149475
+confidence: likely
+discovered_at: '2026-10-27T09:19:00.987415Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149475
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: Red Hat Satellite utils 6.20 limited availability repository is accessible
+    before General Availability (GA) but fails with 404 for RHEL 10 x86_64 - Red Hat
+    Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cdb3a5e702df89298f13d570d78730936bfcb316841d69b9dc161b34ccef8dc8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149475
+requested_url: https://access.redhat.com/solutions/7149475
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-27T09:19:00.987415Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

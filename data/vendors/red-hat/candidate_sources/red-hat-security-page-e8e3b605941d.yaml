@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-e8e3b605941d
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/6976534
+canonical_candidate_url: https://access.redhat.com/solutions/6976534
+confidence: likely
+discovered_at: '2026-10-27T09:19:00.987415Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/6976534
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Openshift Update Service pod fails with error release-manifests/release-metadata
+    not found - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:34cfa09a7cb5fe9cb45ad0f15fc0e6b1f3d9cccb6b23d8dfa6e80306c830e8dc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/6976534
+requested_url: https://access.redhat.com/solutions/6976534
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-27T09:19:00.987415Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
