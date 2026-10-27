@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-a17a4b6fd5ec
+candidate_status: selected
+candidate_url: https://about.gitlab.com/fr-fr/blog/gitlab-helps-remediate-critical-php-flaws
+canonical_candidate_url: https://about.gitlab.com/fr-fr/blog/gitlab-helps-remediate-critical-php-flaws/
+confidence: likely
+discovered_at: '2026-10-27T09:19:00.987415Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/fr-fr/blog/gitlab-helps-remediate-critical-php-flaws/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Détectez et corrigez les failles PHP critiques avec GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4f2a6237d6e3f7117c9ae2dce226f337e5ff73951f326013021e5d14c1caccbd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/fr-fr/blog/gitlab-helps-remediate-critical-php-flaws/
+requested_url: https://about.gitlab.com/fr-fr/blog/gitlab-helps-remediate-critical-php-flaws
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-27T09:19:00.987415Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
