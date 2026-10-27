@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T14:09:51Z",
+  "generated_at": "2026-10-27T13:37:54Z",
   "items": [
     {
       "candidate_vendor_id": "media",
@@ -309,15 +309,15 @@
     },
     {
       "candidate_vendor_id": "catalog",
-      "demand_count": 27,
+      "demand_count": 30,
       "display_name_candidate": "NetApp",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
-      "observation_count": 27,
+      "observation_count": 30,
       "official_domain_candidate": "catalog.redhat.com",
-      "priority": 221,
+      "priority": 242,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -328,7 +328,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 27,
+      "signal_count": 30,
       "source_urls": [
         "https://connect.redhat.com/en/products/red-hat-openshift/openshift-virtualization"
       ],
@@ -506,6 +506,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "community",
+      "demand_count": 18,
+      "display_name_candidate": "View the Certification",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 18,
+      "official_domain_candidate": "community.guidewire.com",
+      "priority": 158,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-e106dc886b09fc699a3cd40e",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 18,
+      "source_urls": [
+        "https://www.guidewire.com/resources/help-and-support/trust-and-security"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "d1kwv30jm1b7sr",
+      "demand_count": 18,
+      "display_name_candidate": "their Security white paper.",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 18,
+      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
+      "priority": 158,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-80ac92394c426c366ab5d74f",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 18,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "updates",
       "demand_count": 18,
       "display_name_candidate": "Updates",
@@ -585,62 +641,6 @@
       "signal_count": 10,
       "source_urls": [
         "https://www.bitdefender.com/en-us/oem/gateway-protection"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "community",
-      "demand_count": 17,
-      "display_name_candidate": "View the Certification",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 17,
-      "official_domain_candidate": "community.guidewire.com",
-      "priority": 151,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-e106dc886b09fc699a3cd40e",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 17,
-      "source_urls": [
-        "https://www.guidewire.com/resources/help-and-support/trust-and-security"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "d1kwv30jm1b7sr",
-      "demand_count": 17,
-      "display_name_candidate": "their Security white paper.",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 17,
-      "official_domain_candidate": "d1kwv30jm1b7sr.cloudfront.net",
-      "priority": 151,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-80ac92394c426c366ab5d74f",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 17,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -760,16 +760,45 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "commission",
+      "demand_count": 17,
+      "display_name_candidate": "EU Standard Contractual Clauses",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 11,
+      "official_domain_candidate": "commission.europa.eu",
+      "priority": 139,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-b4f7a5d283ae749e0c3ebb09",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 11,
+      "source_urls": [
+        "https://doodle.com/en/privacy-policy",
+        "https://www.odoo.com/privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cronofy",
-      "demand_count": 14,
+      "demand_count": 15,
       "display_name_candidate": "Cronofy",
       "first_seen_at": "2026-07-21T10:47:04Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
-      "observation_count": 14,
+      "observation_count": 15,
       "official_domain_candidate": "cronofy.com",
-      "priority": 130,
+      "priority": 137,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -780,7 +809,7 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 14,
+      "signal_count": 15,
       "source_urls": [
         "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
@@ -844,35 +873,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "commission",
-      "demand_count": 15,
-      "display_name_candidate": "EU Standard Contractual Clauses",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "commission.europa.eu",
-      "priority": 125,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-b4f7a5d283ae749e0c3ebb09",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://doodle.com/en/privacy-policy",
-        "https://www.odoo.com/privacy"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "docs",
       "demand_count": 13,
       "display_name_candidate": "Configure Office 365 (Graph API)",
@@ -929,6 +929,62 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "blog",
+      "demand_count": 12,
+      "display_name_candidate": "Blog",
+      "first_seen_at": "2026-07-21T10:47:04Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 12,
+      "official_domain_candidate": "blog.teamtailor.com",
+      "priority": 116,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-431964346c79b58198cd7dc6",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 12,
+      "source_urls": [
+        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "businessresources",
+      "demand_count": 12,
+      "display_name_candidate": "Learn how to navigate success claims from different security vendors",
+      "first_seen_at": "2026-10-22T12:47:38Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 12,
+      "official_domain_candidate": "businessresources.bitdefender.com",
+      "priority": 116,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-0f3e70e61d4c0a100989c264",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 12,
+      "source_urls": [
+        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "support",
       "demand_count": 14,
       "display_name_candidate": "Kontaktieren Sie hier den Support.",
@@ -952,34 +1008,6 @@
       "signal_count": 7,
       "source_urls": [
         "https://www.globalsign.com/de-de/produkte"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "blog",
-      "demand_count": 11,
-      "display_name_candidate": "Blog",
-      "first_seen_at": "2026-07-21T10:47:04Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 11,
-      "official_domain_candidate": "blog.teamtailor.com",
-      "priority": 109,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-431964346c79b58198cd7dc6",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 11,
-      "source_urls": [
-        "https://support.teamtailor.com/en/articles/5355272-enterprise-calendar"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1013,6 +1041,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "community",
+      "demand_count": 10,
+      "display_name_candidate": "AI Nutrition Fact labels",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "community.canvaslms.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-678dbc1e5a92acc77a8490b5",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.instructure.com/policies/artificial-intelligence-privacy"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "connect",
       "demand_count": 10,
       "display_name_candidate": "Partner resources",
@@ -1036,6 +1092,62 @@
       "signal_count": 10,
       "source_urls": [
         "https://catalog.redhat.com/en/categories/ai"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "current",
+      "demand_count": 10,
+      "display_name_candidate": "Register now",
+      "first_seen_at": "2026-10-14T13:38:46Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "current.confluent.io",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-be97a524fba7f47b1bac0306",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.confluent.io/industry-solutions/telco"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "ir",
+      "demand_count": 10,
+      "display_name_candidate": "Code of Ethics",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 10,
+      "official_domain_candidate": "ir.instructure.com",
+      "priority": 102,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-703dcfd96a29eea9daa541ba",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 10,
+      "source_urls": [
+        "https://www.instructure.com/policies/modern-slavery-act"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1265,49 +1377,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "businessresources",
+      "candidate_vendor_id": "changelog",
       "demand_count": 9,
-      "display_name_candidate": "Learn how to navigate success claims from different security vendors",
-      "first_seen_at": "2026-10-22T12:47:38Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "businessresources.bitdefender.com",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-0f3e70e61d4c0a100989c264",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "community",
-      "demand_count": 9,
-      "display_name_candidate": "AI Nutrition Fact labels",
+      "display_name_candidate": "Changelog",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
       "observation_count": 9,
-      "official_domain_candidate": "community.canvaslms.com",
+      "official_domain_candidate": "changelog.exoscale.com",
       "priority": 95,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-678dbc1e5a92acc77a8490b5",
+      "queue_id": "vbq-b71dedaa73cc2cf787b06437",
       "reason_codes": [
         "country_missing"
       ],
@@ -1315,55 +1399,27 @@
       "schema_version": "0.1.0",
       "signal_count": 9,
       "source_urls": [
-        "https://www.instructure.com/policies/artificial-intelligence-privacy"
+        "https://www.exoscale.com/privacy"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "current",
+      "candidate_vendor_id": "jamsadr",
       "demand_count": 9,
-      "display_name_candidate": "Register now",
-      "first_seen_at": "2026-10-14T13:38:46Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 9,
-      "official_domain_candidate": "current.confluent.io",
-      "priority": 95,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-be97a524fba7f47b1bac0306",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 9,
-      "source_urls": [
-        "https://www.confluent.io/industry-solutions/telco"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "ir",
-      "demand_count": 9,
-      "display_name_candidate": "Code of Ethics",
+      "display_name_candidate": "https://www.jamsadr.com/DPF-Dispute-Resolution",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
       "observation_count": 9,
-      "official_domain_candidate": "ir.instructure.com",
+      "official_domain_candidate": "jamsadr.com",
       "priority": 95,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-703dcfd96a29eea9daa541ba",
+      "queue_id": "vbq-ca4d66c1919b17a1403ce054",
       "reason_codes": [
         "country_missing"
       ],
@@ -1371,7 +1427,7 @@
       "schema_version": "0.1.0",
       "signal_count": 9,
       "source_urls": [
-        "https://www.instructure.com/policies/modern-slavery-act"
+        "https://marketing.help.dotdigital.com/en/articles/8199473-privacy-faq"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1517,21 +1573,21 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "changelog",
+      "candidate_vendor_id": "blog",
       "demand_count": 8,
-      "display_name_candidate": "Changelog",
+      "display_name_candidate": "blog.jetbrains.com",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
       "observation_count": 8,
-      "official_domain_candidate": "changelog.exoscale.com",
+      "official_domain_candidate": "blog.jetbrains.com",
       "priority": 88,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-b71dedaa73cc2cf787b06437",
+      "queue_id": "vbq-6fa9e08417d46438648a926e",
       "reason_codes": [
         "country_missing"
       ],
@@ -1539,7 +1595,35 @@
       "schema_version": "0.1.0",
       "signal_count": 8,
       "source_urls": [
-        "https://www.exoscale.com/privacy"
+        "https://www.jetbrains.com/legal/docs/privacy/cookie-notice"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "blog",
+      "demand_count": 8,
+      "display_name_candidate": "Starburst blog",
+      "first_seen_at": "2026-10-11T14:00:01Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "blog.starburstdata.com",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-6f93a0313e95998b42279a70",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://docs.starburst.io/security/starburst-galaxy.html"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1624,34 +1708,6 @@
       "signal_count": 8,
       "source_urls": [
         "https://www.instructure.com/privacy-security/institutions-educators-faq"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "jamsadr",
-      "demand_count": 8,
-      "display_name_candidate": "https://www.jamsadr.com/DPF-Dispute-Resolution",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 8,
-      "official_domain_candidate": "jamsadr.com",
-      "priority": 88,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-ca4d66c1919b17a1403ce054",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 8,
-      "source_urls": [
-        "https://marketing.help.dotdigital.com/en/articles/8199473-privacy-faq"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -1994,59 +2050,31 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "blog",
+      "candidate_vendor_id": "aus01",
       "demand_count": 7,
-      "display_name_candidate": "blog.jetbrains.com",
+      "display_name_candidate": "Wise",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
       "observation_count": 7,
-      "official_domain_candidate": "blog.jetbrains.com",
+      "official_domain_candidate": "aus01.safelinks.protection.outlook.com",
       "priority": 81,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-6fa9e08417d46438648a926e",
+      "queue_id": "vbq-82a4a8fa6f37252f2619f993",
       "reason_codes": [
-        "country_missing"
+        "catalog_identity_collision"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
       "signal_count": 7,
       "source_urls": [
-        "https://www.jetbrains.com/legal/docs/privacy/cookie-notice"
+        "https://newsroom.wise.com/en-PAC/215928-wise-broadens-pacific-coverage-by-launching-transfers-to-fiji"
       ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "blog",
-      "demand_count": 7,
-      "display_name_candidate": "Starburst blog",
-      "first_seen_at": "2026-10-11T14:00:01Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "blog.starburstdata.com",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-6f93a0313e95998b42279a70",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://docs.starburst.io/security/starburst-galaxy.html"
-      ],
-      "state": "needs_country",
+      "state": "already_catalogued",
       "writes_canonical_vendors": false
     },
     {
@@ -2330,31 +2358,31 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "aus01",
+      "candidate_vendor_id": "attackevals",
       "demand_count": 6,
-      "display_name_candidate": "Wise",
-      "first_seen_at": "2026-10-11T14:00:01Z",
+      "display_name_candidate": "Screenshot from MITRE ATT&CK",
+      "first_seen_at": "2026-10-22T12:47:38Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-21T12:52:28Z",
+      "last_seen_at": "2026-10-27T13:37:54Z",
       "not_advice": true,
       "observation_count": 6,
-      "official_domain_candidate": "aus01.safelinks.protection.outlook.com",
+      "official_domain_candidate": "attackevals.mitre.org",
       "priority": 74,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "queue_id": "vbq-82a4a8fa6f37252f2619f993",
+      "queue_id": "vbq-0ba65316ce0eb4afdb7c844d",
       "reason_codes": [
-        "catalog_identity_collision"
+        "country_missing"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
       "signal_count": 6,
       "source_urls": [
-        "https://newsroom.wise.com/en-PAC/215928-wise-broadens-pacific-coverage-by-launching-transfers-to-fiji"
+        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
       ],
-      "state": "already_catalogued",
+      "state": "needs_country",
       "writes_canonical_vendors": false
     },
     {
@@ -2834,34 +2862,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "attackevals",
-      "demand_count": 4,
-      "display_name_candidate": "Screenshot from MITRE ATT&CK",
-      "first_seen_at": "2026-10-22T12:47:38Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-23T12:52:46Z",
-      "not_advice": true,
-      "observation_count": 4,
-      "official_domain_candidate": "attackevals.mitre.org",
-      "priority": 60,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-0ba65316ce0eb4afdb7c844d",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 4,
-      "source_urls": [
-        "https://www.bitdefender.com/en-us/blog/businessinsights/mitre-attack-evaluation-results"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "help",
       "demand_count": 4,
       "display_name_candidate": "Upgrade your integration today.",
@@ -2885,6 +2885,34 @@
       "signal_count": 4,
       "source_urls": [
         "https://blog.pleo.io/en/new-in-pleo-jan-26"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "investors",
+      "demand_count": 4,
+      "display_name_candidate": "Financial reports",
+      "first_seen_at": "2026-10-26T14:09:52Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 4,
+      "official_domain_candidate": "investors.f-secure.com",
+      "priority": 60,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-3534625bbffc59176a325a5a",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 4,
+      "source_urls": [
+        "https://company.f-secure.com/en"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -9316,6 +9344,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "av-test",
+      "demand_count": 2,
+      "display_name_candidate": "AV-TEST",
+      "first_seen_at": "2026-10-26T14:09:52Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "av-test.org",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-67f8bbde491070569a4c4f7b",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://www.f-secure.com/us-en/why-f-secure"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cisco",
       "demand_count": 2,
       "display_name_candidate": "Cisco Cisco",
@@ -9339,6 +9395,34 @@
       "signal_count": 2,
       "source_urls": [
         "https://www.upguard.com/security-report/cisco"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cloud",
+      "demand_count": 2,
+      "display_name_candidate": "Subscribe to newsletter",
+      "first_seen_at": "2026-10-26T14:09:52Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-10-27T13:37:54Z",
+      "not_advice": true,
+      "observation_count": 2,
+      "official_domain_candidate": "cloud.mail.f-secure.com",
+      "priority": 46,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-6c1ca751e77c6bf84cdfe781",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 2,
+      "source_urls": [
+        "https://company.f-secure.com/en"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -9400,34 +9484,6 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "investors",
-      "demand_count": 2,
-      "display_name_candidate": "Financial reports",
-      "first_seen_at": "2026-10-26T14:09:52Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 2,
-      "official_domain_candidate": "investors.f-secure.com",
-      "priority": 46,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-3534625bbffc59176a325a5a",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 2,
-      "source_urls": [
-        "https://company.f-secure.com/en"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "k6",
       "demand_count": 2,
       "display_name_candidate": "k6 Subprocessors",
@@ -9451,34 +9507,6 @@
       "signal_count": 2,
       "source_urls": [
         "https://grafana.com/legal/list-of-subprocessors"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "av-test",
-      "demand_count": 1,
-      "display_name_candidate": "AV-TEST",
-      "first_seen_at": "2026-10-26T14:09:52Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "av-test.org",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-67f8bbde491070569a4c4f7b",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://www.f-secure.com/us-en/why-f-secure"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
@@ -9535,34 +9563,6 @@
       "signal_count": 1,
       "source_urls": [
         "https://bigid.com/blog/cloud-data-security"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "cloud",
-      "demand_count": 1,
-      "display_name_candidate": "Subscribe to newsletter",
-      "first_seen_at": "2026-10-26T14:09:52Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-10-26T14:09:52Z",
-      "not_advice": true,
-      "observation_count": 1,
-      "official_domain_candidate": "cloud.mail.f-secure.com",
-      "priority": 39,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-6c1ca751e77c6bf84cdfe781",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 1,
-      "source_urls": [
-        "https://company.f-secure.com/en"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
