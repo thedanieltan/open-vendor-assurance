@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-cb75b161789b
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149474
+canonical_candidate_url: https://access.redhat.com/solutions/7149474
+confidence: likely
+discovered_at: '2026-10-27T09:19:00.987415Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149474
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Kernel panic &quot;Timeout: Not all CPUs entered broadcast exception
+    handler&quot; on a RHEL8 VMware virtual machine - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:4a8e9132101b83cf1e87cdacb9492706f303b4160c1dca7c5d707ca98d4754e1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149474
+requested_url: https://access.redhat.com/solutions/7149474
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-27T09:19:00.987415Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
