@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-2bfea86fc8bb
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/384403
+canonical_candidate_url: https://access.redhat.com/solutions/384403
+confidence: likely
+discovered_at: '2026-10-28T10:34:47.981141Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/384403
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: find command warns with &quot;Filesystem loop detected;&quot; messages.
+    - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:73fe9db5bd2d319d4dd738d7ee9d00fe589b224d85493219266ac943c18b3e64
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/384403
+requested_url: https://access.redhat.com/solutions/384403
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-28T10:34:47.981141Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
