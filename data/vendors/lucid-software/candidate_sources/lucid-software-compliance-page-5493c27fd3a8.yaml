@@ -1,0 +1,33 @@
+candidate_source_id: lucid-software-compliance-page-5493c27fd3a8
+candidate_status: selected
+candidate_url: https://lucid.co/platform/mcp-server
+canonical_candidate_url: https://lucid.co/platform/mcp-server
+confidence: likely
+discovered_at: '2026-10-28T10:34:47.981141Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://lucid.co/platform/mcp-server
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  - trust
+  page_title: Lucid MCP Server | Lucid
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a33e3405f42d3e4e30a0f84f949ae684cc8d843d07b620803789342db1a286ee
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://lucid.co/platform/mcp-server
+requested_url: https://lucid.co/platform/mcp-server
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-28T10:34:47.981141Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: lucid-software
