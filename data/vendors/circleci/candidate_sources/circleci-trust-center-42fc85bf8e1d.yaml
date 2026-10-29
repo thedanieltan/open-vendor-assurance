@@ -1,0 +1,31 @@
+candidate_source_id: circleci-trust-center-42fc85bf8e1d
+candidate_status: selected
+candidate_url: https://circleci.com/changelog/server-release-4-9-7
+canonical_candidate_url: https://circleci.com/changelog/server-release-4-9-7/
+confidence: likely
+discovered_at: '2026-10-29T10:22:55.022365Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://circleci.com/changelog/server-release-4-9-7/
+  http_status: 200
+  matched_terms:
+  - security
+  - compliance
+  page_title: Server Release 4.9.7 - CircleCI Changelog
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9b4b9a45152b7d6e20b837b1199ca27a5c5eed326406ff96a8d989c2a3aa8737
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://circleci.com/changelog/server-release-4-9-7/
+requested_url: https://circleci.com/changelog/server-release-4-9-7
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-29T10:22:55.022365Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: circleci
