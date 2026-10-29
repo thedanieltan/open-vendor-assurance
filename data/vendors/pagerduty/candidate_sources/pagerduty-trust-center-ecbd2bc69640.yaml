@@ -1,0 +1,31 @@
+candidate_source_id: pagerduty-trust-center-ecbd2bc69640
+candidate_status: selected
+candidate_url: https://docs.pagerduty.com/
+canonical_candidate_url: https://docs.pagerduty.com/
+confidence: likely
+discovered_at: '2026-10-29T10:22:49.120096Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.pagerduty.com/
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: PagerDuty Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:db0b084b156843b0eaad53b7b006ac0da44817429fc72500879d0f03c3b43c3e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.pagerduty.com/
+requested_url: https://docs.pagerduty.com/
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-29T10:22:49.120096Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty
