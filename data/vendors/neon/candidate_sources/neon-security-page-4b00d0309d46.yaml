@@ -1,0 +1,31 @@
+candidate_source_id: neon-security-page-4b00d0309d46
+candidate_status: selected
+candidate_url: https://neon.com/postgresql/administration/restart-ubuntu
+canonical_candidate_url: https://neon.com/postgresql/administration/restart-ubuntu
+confidence: likely
+discovered_at: '2026-10-29T10:22:49.313669Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://neon.com/postgresql/administration/restart-ubuntu
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: How to Restart PostgreSQL on Ubuntu
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:be53a41f3adecfaba61c43d6979ed8bb5528748861f3f7f4e0fab3850412a7d2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://neon.com/postgresql/administration/restart-ubuntu
+requested_url: https://neon.com/postgresql/administration/restart-ubuntu
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-29T10:22:49.313669Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon
