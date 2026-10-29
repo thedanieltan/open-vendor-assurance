@@ -1,0 +1,32 @@
+candidate_source_id: nextcloud-trust-center-a02c291a6a7d
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/integration_autophish
+canonical_candidate_url: https://apps.nextcloud.com/apps/integration_autophish
+confidence: likely
+discovered_at: '2026-10-29T11:15:31.247213Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/integration_autophish
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: 'AutoPhish: Phishing Simulation &amp; Training - Apps - App Store -
+    Nextcloud'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:51ecb1f7d3540c005ca724c02cfadc880c6337d8d0dd1cc82834aa150773352b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/integration_autophish
+requested_url: https://apps.nextcloud.com/apps/integration_autophish
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-29T11:15:31.247213Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud

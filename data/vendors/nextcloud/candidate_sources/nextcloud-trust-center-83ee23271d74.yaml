@@ -1,0 +1,31 @@
+candidate_source_id: nextcloud-trust-center-83ee23271d74
+candidate_status: selected
+candidate_url: https://apps.nextcloud.com/apps/last_opened
+canonical_candidate_url: https://apps.nextcloud.com/apps/last_opened
+confidence: likely
+discovered_at: '2026-10-29T11:15:31.247213Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://apps.nextcloud.com/apps/last_opened
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Last Opened Files - Apps - App Store - Nextcloud
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:dab7385040b4530ce1b826a879bd7461b0ada190507957bee59614a91ebc5875
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://apps.nextcloud.com/apps/last_opened
+requested_url: https://apps.nextcloud.com/apps/last_opened
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-29T11:15:31.247213Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: nextcloud
