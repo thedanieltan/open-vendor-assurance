@@ -1,11 +1,11 @@
 candidate_source_id: chainalysis-subprocessors-list-a9b53ee87304
 candidate_status: selected
-candidate_url: https://chainalysis.com/blog
+candidate_url: https://www.chainalysis.com/blog
 canonical_candidate_url: https://www.chainalysis.com/blog/
 confidence: likely
-discovered_at: '2026-10-27T09:19:06.081717Z'
+discovered_at: '2026-10-29T10:22:50.118061Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=UTF-8
   final_url: https://www.chainalysis.com/blog/
@@ -14,18 +14,19 @@ evidence:
   - sub-processors
   - sub-processor
   page_title: Blog - Chainalysis
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:10a74e0e566acd1e722f7a07012b0295e88d547ca1695141140a3705912c40c2
+  verification_status: ok
+evidence_digest: sha256:f1ffee357563a37a45106bbf502780c02a0e79cadbc5cdb4ceace199ff015510
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://www.chainalysis.com/blog/
-requested_url: https://chainalysis.com/blog
+requested_url: https://www.chainalysis.com/blog
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-10-27T09:19:06.081717Z'
+selection_run_id: '2026-10-29T10:22:50.118061Z'
 source_type_candidate: subprocessors_list
 superseded_by_candidate_id: null
 vendor_id: chainalysis
