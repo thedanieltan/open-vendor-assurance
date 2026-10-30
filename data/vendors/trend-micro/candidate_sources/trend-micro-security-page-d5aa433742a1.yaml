@@ -1,0 +1,31 @@
+candidate_source_id: trend-micro-security-page-d5aa433742a1
+candidate_status: selected
+candidate_url: https://downloadcenter.trendmicro.com/index.php?prodid=91&regs=tw
+canonical_candidate_url: https://downloadcenter.trendmicro.com/index.php?prodid=91&regs=tw
+confidence: likely
+discovered_at: '2026-10-30T10:40:43.471198Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://downloadcenter.trendmicro.com/index.php?prodid=91&regs=tw
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  page_title: Trend Micro Software Download Center
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a31352d2a5a4b58e254c6e17732180183da513a2f9f2898046657c0035efa43f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://downloadcenter.trendmicro.com/index.php?prodid=91&regs=tw
+requested_url: https://downloadcenter.trendmicro.com/index.php?prodid=91&regs=tw
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-30T10:40:43.471198Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: trend-micro
