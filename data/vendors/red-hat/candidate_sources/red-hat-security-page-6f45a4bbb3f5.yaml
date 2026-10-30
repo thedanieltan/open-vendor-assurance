@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-6f45a4bbb3f5
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7145609
+canonical_candidate_url: https://access.redhat.com/solutions/7145609
+confidence: likely
+discovered_at: '2026-10-30T11:19:57.763991Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7145609
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Unused container images are not automatically deleted after every OpenShift
+    cluster update. - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:437d5a3a73c03fa3c331f51746d53e21ae7a2b8b065b8c0a6bf5d9d11826b846
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7145609
+requested_url: https://access.redhat.com/solutions/7145609
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-30T11:19:57.763991Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
