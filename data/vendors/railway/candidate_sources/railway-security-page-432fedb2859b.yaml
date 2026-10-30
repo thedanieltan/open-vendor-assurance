@@ -1,0 +1,33 @@
+candidate_source_id: railway-security-page-432fedb2859b
+candidate_status: selected
+candidate_url: https://railway.com/deploy/postgres
+canonical_candidate_url: https://railway.com/deploy/postgres
+confidence: likely
+discovered_at: '2026-10-30T10:25:00.523486Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://railway.com/deploy/postgres
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - trust
+  page_title: Deploy &amp; Host PostgreSQL | Railway
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:648e6894542a813f1e567fa23eb0b64c65fc9243368ee4ad6c147731efa08f40
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://railway.com/deploy/postgres
+requested_url: https://railway.com/deploy/postgres
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-30T10:25:00.523486Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: railway
