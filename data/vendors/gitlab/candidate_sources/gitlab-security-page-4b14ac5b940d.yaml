@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-4b14ac5b940d
+candidate_status: selected
+candidate_url: https://about.gitlab.com/de-de/blog/find-vulnerability-blast-radius-with-gitlab-orbit
+canonical_candidate_url: https://about.gitlab.com/de-de/blog/find-vulnerability-blast-radius-with-gitlab-orbit/
+confidence: likely
+discovered_at: '2026-10-30T11:19:57.763991Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/de-de/blog/find-vulnerability-blast-radius-with-gitlab-orbit/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Blast Radius von Schwachstellen mit GitLab Orbit ermitteln
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:7fd2fb5fe0d70dcdcf1463cc6ffe27983f24b68cc45e595b7fad513f05584c14
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/de-de/blog/find-vulnerability-blast-radius-with-gitlab-orbit/
+requested_url: https://about.gitlab.com/de-de/blog/find-vulnerability-blast-radius-with-gitlab-orbit
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-30T11:19:57.763991Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
