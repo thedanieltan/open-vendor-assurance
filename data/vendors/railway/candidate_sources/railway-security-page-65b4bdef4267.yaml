@@ -1,9 +1,9 @@
 candidate_source_id: railway-security-page-65b4bdef4267
 candidate_status: selected
-candidate_url: https://docs.railway.com/platform/compare-to-fly
+candidate_url: https://docs.railway.com/maturity/compare-to-fly
 canonical_candidate_url: https://docs.railway.com/platform/compare-to-fly
 confidence: likely
-discovered_at: '2026-10-11T10:17:36.258737Z'
+discovered_at: '2026-10-30T10:25:00.523486Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -11,22 +11,24 @@ evidence:
   final_url: https://docs.railway.com/platform/compare-to-fly
   http_status: 200
   matched_terms:
+  - security
   - availability
   - incident
+  - trust
   page_title: 'Railway vs Fly.io: Technical Comparison and Migration Guide | Railway
     Docs'
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:8dd16b5d4f99ade123cdd64bb6d50938fe9714058515730fd4505e6ff27b5888
+  verification_status: redirected
+evidence_digest: sha256:7730343ffaa5c82adb54d239e18007a549ee681d82f318cdb4d2101f75a88cda
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://docs.railway.com/platform/compare-to-fly
-requested_url: https://docs.railway.com/platform/compare-to-fly
+requested_url: https://docs.railway.com/maturity/compare-to-fly
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-10-11T10:17:36.258737Z'
+selection_run_id: '2026-10-30T10:25:00.523486Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: railway

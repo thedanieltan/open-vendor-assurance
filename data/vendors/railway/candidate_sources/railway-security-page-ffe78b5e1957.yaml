@@ -1,9 +1,9 @@
 candidate_source_id: railway-security-page-ffe78b5e1957
 candidate_status: selected
-candidate_url: https://docs.railway.com/platform/compare-to-render
+candidate_url: https://docs.railway.com/maturity/compare-to-render
 canonical_candidate_url: https://docs.railway.com/platform/compare-to-render
 confidence: likely
-discovered_at: '2026-10-11T10:17:36.258737Z'
+discovered_at: '2026-10-30T10:25:00.523486Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -11,22 +11,24 @@ evidence:
   final_url: https://docs.railway.com/platform/compare-to-render
   http_status: 200
   matched_terms:
+  - security
   - availability
   - incident
+  - trust
   page_title: 'Railway vs Render: Technical Comparison and Migration Guide | Railway
     Docs'
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:ef9213d939177d129eb2dcd9a51dc304266e001f895682a5d663cb7ffc3718bf
+  verification_status: redirected
+evidence_digest: sha256:82589f78f631f2a40f562a7c1a13a82193d004b515c508665838bcbcaff36b81
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://docs.railway.com/platform/compare-to-render
-requested_url: https://docs.railway.com/platform/compare-to-render
+requested_url: https://docs.railway.com/maturity/compare-to-render
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-10-11T10:17:36.258737Z'
+selection_run_id: '2026-10-30T10:25:00.523486Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: railway
