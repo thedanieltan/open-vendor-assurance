@@ -1,0 +1,33 @@
+candidate_source_id: supabase-trust-center-fe7a77db93ae
+candidate_status: selected
+candidate_url: https://supabase.com/docs/guides/security/rotate-leaked-api-keys
+canonical_candidate_url: https://supabase.com/docs/guides/security/rotate-leaked-api-keys
+confidence: likely
+discovered_at: '2026-10-30T10:25:16.016845Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://supabase.com/docs/guides/security/rotate-leaked-api-keys
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Rotate a leaked or compromised API key | Supabase Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8c37137e351cbf98c073aa723a04183586e94ec5f88244604cb8cf06695c26f3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://supabase.com/docs/guides/security/rotate-leaked-api-keys
+requested_url: https://supabase.com/docs/guides/security/rotate-leaked-api-keys
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-30T10:25:16.016845Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: supabase
