@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-f39c9f996d4b
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-016
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-016
+confidence: likely
+discovered_at: '2026-10-31T09:55:56.706726Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-016
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: RHSB-2026-016 Use-after-free - kernel IPv4 (CVE-2026-98432) | Red Hat
+    Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8a9131a50016e2216a1101a33afcfdd49eb5201c8cf6a4fa07c8a38f4d87914b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-016
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-016
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-31T09:55:56.706726Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
