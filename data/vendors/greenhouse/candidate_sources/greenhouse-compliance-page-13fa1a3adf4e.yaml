@@ -1,0 +1,32 @@
+candidate_source_id: greenhouse-compliance-page-13fa1a3adf4e
+candidate_status: selected
+candidate_url: https://integrations.greenhouse.com/t/job-distribution/ofccp-compliance?languages=95%2C120
+canonical_candidate_url: https://integrations.greenhouse.com/t/job-distribution/ofccp-compliance?languages=95%2C120
+confidence: likely
+discovered_at: '2026-10-31T09:55:51.058802Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://integrations.greenhouse.com/t/job-distribution/ofccp-compliance?languages=95%2C120
+  http_status: 200
+  matched_terms:
+  - compliance
+  - soc
+  page_title: OFCCP compliance - Greenhouse Partner Directory
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0f413bd998f7a293a256b13d3c09f4896f8426e757476b2dd8abf9a4a8e853c8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://integrations.greenhouse.com/t/job-distribution/ofccp-compliance?languages=95%2C120
+requested_url: https://integrations.greenhouse.com/t/job-distribution/ofccp-compliance?languages=95%2C120
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-31T09:55:51.058802Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: greenhouse
