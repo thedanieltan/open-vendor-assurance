@@ -1,6 +1,6 @@
 {
   "discovery_context": "vendor_breadth_signal_mesh",
-  "generated_at": "2026-10-29T15:07:58Z",
+  "generated_at": "2026-10-31T14:20:04Z",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -18,6 +18,34 @@
     "known_vendor_count": 35
   },
   "vendor_candidates": [
+    {
+      "candidate_vendor_id": "honeycomb",
+      "cohort_id": "provider-replenishment",
+      "coverage_lane": "signal_mesh",
+      "demand_count": 17,
+      "display_name_candidate": "Subprocessors",
+      "headquarters_country_candidate": "US",
+      "independent_provider_count": 2,
+      "non_advisory": true,
+      "observation_count": 17,
+      "official_domain_candidate": "honeycomb.io",
+      "priority": 183,
+      "providers": [
+        "openva_vibe_coder_saas_directory",
+        "subprocessor_relationship_graph"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 17,
+      "source_index_url": "https://honeycomb.io",
+      "source_urls": [
+        "https://front.com/legal/list-of-subprocessors-2021-09-17",
+        "https://front.com/legal/list-of-subprocessors-2022-10-03",
+        "https://honeycomb.io"
+      ],
+      "vendor_category_candidates": [],
+      "writes_canonical_vendors": false
+    },
     {
       "candidate_vendor_id": "firebase",
       "cohort_id": "provider-replenishment",
@@ -46,52 +74,24 @@
       "writes_canonical_vendors": false
     },
     {
-      "candidate_vendor_id": "honeycomb",
-      "cohort_id": "provider-replenishment",
-      "coverage_lane": "signal_mesh",
-      "demand_count": 15,
-      "display_name_candidate": "Subprocessors",
-      "headquarters_country_candidate": "US",
-      "independent_provider_count": 2,
-      "non_advisory": true,
-      "observation_count": 15,
-      "official_domain_candidate": "honeycomb.io",
-      "priority": 169,
-      "providers": [
-        "openva_vibe_coder_saas_directory",
-        "subprocessor_relationship_graph"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 15,
-      "source_index_url": "https://honeycomb.io",
-      "source_urls": [
-        "https://front.com/legal/list-of-subprocessors-2021-09-17",
-        "https://front.com/legal/list-of-subprocessors-2022-10-03",
-        "https://honeycomb.io"
-      ],
-      "vendor_category_candidates": [],
-      "writes_canonical_vendors": false
-    },
-    {
       "candidate_vendor_id": "workato",
       "cohort_id": "provider-replenishment",
       "coverage_lane": "signal_mesh",
-      "demand_count": 9,
+      "demand_count": 10,
       "display_name_candidate": "Workato",
       "headquarters_country_candidate": "US",
       "independent_provider_count": 2,
       "non_advisory": true,
-      "observation_count": 9,
+      "observation_count": 10,
       "official_domain_candidate": "workato.com",
-      "priority": 127,
+      "priority": 134,
       "providers": [
         "openva_vibe_coder_saas_directory",
         "subprocessor_relationship_graph"
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 9,
+      "signal_count": 10,
       "source_index_url": "https://workato.com",
       "source_urls": [
         "https://workato.com",
