@@ -1,0 +1,31 @@
+candidate_source_id: bugcrowd-security-page-034d8b6cd4a2
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/resources/guide/fixing-vulnerabilities-at-the-source
+canonical_candidate_url: https://www.bugcrowd.com/resources/guide/fixing-vulnerabilities-at-the-source/
+confidence: likely
+discovered_at: '2026-10-31T09:55:53.504059Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/resources/guide/fixing-vulnerabilities-at-the-source/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: Fixing vulnerabilities at the source | Bugcrowd
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:8be082d5ada1e0de06ec81b15decc703a6c332ce193d78779db4d911390b1dfd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/resources/guide/fixing-vulnerabilities-at-the-source/
+requested_url: https://www.bugcrowd.com/resources/guide/fixing-vulnerabilities-at-the-source
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-10-31T09:55:53.504059Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
