@@ -8595,6 +8595,41 @@
       "vendor_id": "jumio"
     },
     {
+      "_openva_path": "data/vendors/jumio/candidate_sources/jumio-security-page-b4d6ee541be7.yaml",
+      "candidate_source_id": "jumio-security-page-b4d6ee541be7",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.jumio.com/identity-security-requires-continuous-resilience",
+      "canonical_candidate_url": "https://www.jumio.com/identity-security-requires-continuous-resilience/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:56:45.572514Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.jumio.com/identity-security-requires-continuous-resilience/",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Why Identity Security Requires Continuous Resilience and Why Our Investment Here Matters",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:8f1f5a7c2adc07af969f5e581ce9e4ed64e510a0fe631166740e4c2b0e8113ba",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.jumio.com/identity-security-requires-continuous-resilience/",
+      "requested_url": "https://www.jumio.com/identity-security-requires-continuous-resilience",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:56:45.572514Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "jumio"
+    },
+    {
       "_openva_path": "data/vendors/jumio/candidate_sources/jumio-security-page-b81a85789d33.yaml",
       "candidate_source_id": "jumio-security-page-b81a85789d33",
       "candidate_status": "selected",
@@ -12027,7 +12062,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 332,
+    "candidate_source_count": 333,
     "candidate_source_types": [
       "ai_terms",
       "compliance_page",
