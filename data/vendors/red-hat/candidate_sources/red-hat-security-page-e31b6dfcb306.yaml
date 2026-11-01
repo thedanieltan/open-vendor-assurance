@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-e31b6dfcb306
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/6809331
+canonical_candidate_url: https://access.redhat.com/solutions/6809331
+confidence: likely
+discovered_at: '2026-11-01T11:37:42.988179Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/6809331
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Broker configuration have a # at the end of address line but when compiled
+    its not appearing in queue names - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0f98d534888ab968d8e753937f34d7e80dbbc95dc62fc65c629891850ad15222
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/6809331
+requested_url: https://access.redhat.com/solutions/6809331
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-01T11:37:42.988179Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
