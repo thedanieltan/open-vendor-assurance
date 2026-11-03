@@ -1,0 +1,31 @@
+candidate_source_id: hetzner-trust-center-844a32acebaf
+candidate_status: selected
+candidate_url: https://status.hetzner.com/incident/9dad612e-dded-45fa-9e5e-6cfbb4d41c4f
+canonical_candidate_url: https://status.hetzner.com/incident/9dad612e-dded-45fa-9e5e-6cfbb4d41c4f
+confidence: likely
+discovered_at: '2026-11-03T11:52:50.563397Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.hetzner.com/incident/9dad612e-dded-45fa-9e5e-6cfbb4d41c4f
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Hetzner Online Status
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:053efa5a939407c632a0c2ff322458ee80016d284d5c7d3404954ebc4109cb5a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.hetzner.com/incident/9dad612e-dded-45fa-9e5e-6cfbb4d41c4f
+requested_url: https://status.hetzner.com/incident/9dad612e-dded-45fa-9e5e-6cfbb4d41c4f
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T11:52:50.563397Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: hetzner
