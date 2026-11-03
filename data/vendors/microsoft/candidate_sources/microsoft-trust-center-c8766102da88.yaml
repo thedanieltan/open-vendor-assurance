@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-c8766102da88
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-ca/security/business/security-insider
+canonical_candidate_url: https://www.microsoft.com/en-ca/security/security-insider
+confidence: likely
+discovered_at: '2026-11-03T11:30:24.699305Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-ca/security/security-insider
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Latest Insights and Trends for Security Leaders | Security Insider
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:f590827abd30a0706f3e5d89e055b7db519c388d32eff9fd6f02caa7225a5682
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-ca/security/security-insider
+requested_url: https://www.microsoft.com/en-ca/security/business/security-insider
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T11:30:24.699305Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft

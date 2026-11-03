@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-trust-center-80bb89012b7a
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink/p?LinkID=2092531&clcid=0x1009&country=ca&culture=en-ca
+canonical_candidate_url: https://go.microsoft.com/fwlink/p?LinkID=2092531&clcid=0x1009&country=ca&culture=en-ca
+confidence: likely
+discovered_at: '2026-11-03T11:30:24.699305Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-CA/windows-server
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Windows Server Operating System | Microsoft
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:e02b4d4ff8dd61074240fff339086b0752672bb82fd03bb8aff7dceaf959ce15
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-CA/windows-server
+requested_url: https://go.microsoft.com/fwlink/p?LinkID=2092531&clcid=0x1009&country=ca&culture=en-ca
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T11:30:24.699305Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: microsoft
