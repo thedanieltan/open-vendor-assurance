@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-25590de696f7
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7141500
+canonical_candidate_url: https://access.redhat.com/solutions/7141500
+confidence: likely
+discovered_at: '2026-11-03T12:10:42.478659Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7141500
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Satellite Remote Execution Task is Failing with {&quot;msg&quot;: &quot;Incorrect
+    sudo password&quot;} For theforeman.foreman_scap_client Role - Red Hat Customer
+    Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e70a7a548f6f6b238d77a155ca2858b104750c8b411d3e6311f1339517d08b62
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7141500
+requested_url: https://access.redhat.com/solutions/7141500
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T12:10:42.478659Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

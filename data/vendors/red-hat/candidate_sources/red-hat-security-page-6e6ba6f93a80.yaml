@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-6e6ba6f93a80
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7146417
+canonical_candidate_url: https://access.redhat.com/solutions/7146417
+confidence: likely
+discovered_at: '2026-11-03T12:10:42.478659Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7146417
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Capsule sync fails wtih HTTP 500 Internal Server Error and pulpcore-content
+    FileNotFoundError inside /var/lib/pulp/media/artifact/ after migrating Red Hat
+    Satellite - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:ad1117246fd856aed98fcc74a31e9d82f887af1fdd23f7d4498c308523c4360a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7146417
+requested_url: https://access.redhat.com/solutions/7146417
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T12:10:42.478659Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
