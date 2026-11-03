@@ -1,0 +1,34 @@
+candidate_source_id: loom-security-page-c777f9829b4c
+candidate_status: selected
+candidate_url: https://support.atlassian.com/security-and-access-policies/docs/understand-how-to-build-an-allocation-policy
+canonical_candidate_url: https://support.atlassian.com/security-and-access-policies/docs/understand-how-to-build-an-allocation-policy
+confidence: likely
+discovered_at: '2026-11-03T11:52:08.035075Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/security-and-access-policies/docs/understand-how-to-build-an-allocation-policy
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - incident
+  - trust
+  page_title: Understand how to build an allocation policy | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:31ae4ff51a80fb4a6f4d341f178e389d7eac9a7131ea07fde3a9c07734a1ce27
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/security-and-access-policies/docs/understand-how-to-build-an-allocation-policy
+requested_url: https://support.atlassian.com/security-and-access-policies/docs/understand-how-to-build-an-allocation-policy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-03T11:52:08.035075Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
