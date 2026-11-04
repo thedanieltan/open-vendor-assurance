@@ -1,0 +1,34 @@
+candidate_source_id: bitbucket-security-page-05236d2489da
+candidate_status: selected
+candidate_url: https://support.atlassian.com/organization-administration/docs/how-are-app-tunnels-different-from-opening-the-firewall
+canonical_candidate_url: https://support.atlassian.com/organization-administration/docs/how-are-app-tunnels-different-from-opening-the-firewall
+confidence: likely
+discovered_at: '2026-11-04T12:13:49.061159Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/organization-administration/docs/how-are-app-tunnels-different-from-opening-the-firewall
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: How are app tunnels different from opening the firewall? | Atlassian
+    Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a2ff09a26d722752ccaec5b0169698c969ac5c6935a17bee2229de7a7877e8bd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/organization-administration/docs/how-are-app-tunnels-different-from-opening-the-firewall
+requested_url: https://support.atlassian.com/organization-administration/docs/how-are-app-tunnels-different-from-opening-the-firewall
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-04T12:13:49.061159Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket

@@ -1,0 +1,33 @@
+candidate_source_id: bitbucket-security-page-89d5ee423b85
+candidate_status: selected
+candidate_url: https://support.atlassian.com/organization-administration/docs/test-drive-rovo-with-your-organization
+canonical_candidate_url: https://support.atlassian.com/organization-administration/docs/test-drive-rovo-with-your-organization
+confidence: likely
+discovered_at: '2026-11-04T12:13:49.061159Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/organization-administration/docs/test-drive-rovo-with-your-organization
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Test drive Rovo with your organization | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c36063e22f98774e31092b2f1319a8342bb010b4e4c8133cbdf7ea6b6cd95c8b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/organization-administration/docs/test-drive-rovo-with-your-organization
+requested_url: https://support.atlassian.com/organization-administration/docs/test-drive-rovo-with-your-organization
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-04T12:13:49.061159Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
