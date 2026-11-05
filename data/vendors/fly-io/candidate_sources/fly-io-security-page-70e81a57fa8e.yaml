@@ -1,0 +1,31 @@
+candidate_source_id: fly-io-security-page-70e81a57fa8e
+candidate_status: selected
+candidate_url: https://community.fly.io/t/cve-2026-122192-firecracker-escape-update/29004
+canonical_candidate_url: https://community.fly.io/t/cve-2026-122192-firecracker-escape-update/29004
+confidence: likely
+discovered_at: '2026-11-05T11:26:50.869893Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://community.fly.io/t/cve-2026-122192-firecracker-escape-update/29004
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: CVE–2026–122192 (Firecracker escape) update - General - Fly.io
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:c29c1059dfb2809acde82b32048d6b8f064cb95a3763036b731d4166a9eabcb8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://community.fly.io/t/cve-2026-122192-firecracker-escape-update/29004
+requested_url: https://community.fly.io/t/cve-2026-122192-firecracker-escape-update/29004
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:50.869893Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: fly-io
