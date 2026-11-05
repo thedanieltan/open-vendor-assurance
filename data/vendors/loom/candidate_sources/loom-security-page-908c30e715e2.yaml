@@ -1,0 +1,33 @@
+candidate_source_id: loom-security-page-908c30e715e2
+candidate_status: selected
+candidate_url: https://support.atlassian.com/jira-cloud-administration/docs/default-configurations-for-jira-service-management
+canonical_candidate_url: https://support.atlassian.com/jira-cloud-administration/docs/default-configurations-for-jira-service-management
+confidence: likely
+discovered_at: '2026-11-05T12:05:33.671028Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/jira-cloud-administration/docs/default-configurations-for-jira-service-management
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Default configurations for Jira Service Management | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:1b9e28c58558dd62c08737b8e1cc73cf4e16937a398a44c0d9cdeafb886a044b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/jira-cloud-administration/docs/default-configurations-for-jira-service-management
+requested_url: https://support.atlassian.com/jira-cloud-administration/docs/default-configurations-for-jira-service-management
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T12:05:33.671028Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: loom
