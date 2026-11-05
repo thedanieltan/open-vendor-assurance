@@ -1,0 +1,34 @@
+candidate_source_id: bitbucket-security-page-fb5c52fd06b1
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/managing-multiple-repository-access-keys-on-one-device
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/managing-multiple-repository-access-keys-on-one-device
+confidence: likely
+discovered_at: '2026-11-05T11:26:52.450779Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/managing-multiple-repository-access-keys-on-one-device
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Managing multiple Repository Access keys on one device | Bitbucket Cloud
+    | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:979f6f9afbf848149894043d14a93f4d319db46f18aeab53f3f9184be8cb494d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/managing-multiple-repository-access-keys-on-one-device
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/managing-multiple-repository-access-keys-on-one-device
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:52.450779Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
