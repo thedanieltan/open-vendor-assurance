@@ -1,11 +1,11 @@
 candidate_source_id: wingify-privacy-notice-57623be4fad8
 candidate_status: selected
-candidate_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-s-Privacy-Center
+candidate_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-Privacy-Center
 canonical_candidate_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-Privacy-Center
 confidence: likely
-discovered_at: '2026-09-08T08:19:39.643491Z'
+discovered_at: '2026-11-05T12:05:33.671028Z'
 discovered_by: agent
-discovery_method: sitemap_locator_verification
+discovery_method: rendered_dom_locator_verification
 evidence:
   content_type: text/html; charset=utf-8
   final_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-Privacy-Center
@@ -14,18 +14,19 @@ evidence:
   - privacy
   - privacy policy
   page_title: Wingify Privacy Center &ndash; Wingify
+  render_transport: playwright_intercepted_safe_fetch
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:62339bf871d8d38accf7eddbfa6cf75e47df803efd44252464ff5e16a814f15b
+  verification_status: ok
+evidence_digest: sha256:977a05745399e50cc7202e92e8afb3f95a5d498f6cd9f400dbd184caf7e6af7d
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-Privacy-Center
-requested_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-s-Privacy-Center
+requested_url: https://help.wingify.com/hc/en-us/articles/58797755205529-Wingify-Privacy-Center
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-09-08T08:19:39.643491Z'
+selection_run_id: '2026-11-05T12:05:33.671028Z'
 source_type_candidate: privacy_notice
 superseded_by_candidate_id: null
 vendor_id: wingify
