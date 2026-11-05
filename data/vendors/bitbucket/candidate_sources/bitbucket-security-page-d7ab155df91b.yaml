@@ -1,0 +1,33 @@
+candidate_source_id: bitbucket-security-page-d7ab155df91b
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/manage-unmerged-branches
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/manage-unmerged-branches
+confidence: likely
+discovered_at: '2026-11-05T11:26:52.450779Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/manage-unmerged-branches
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Manage unmerged branches | Bitbucket Cloud | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:81c147e7804fc3cc73a38daeccc6dad18401063783623c3615e78d2ce247defc
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/manage-unmerged-branches
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/manage-unmerged-branches
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:52.450779Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket

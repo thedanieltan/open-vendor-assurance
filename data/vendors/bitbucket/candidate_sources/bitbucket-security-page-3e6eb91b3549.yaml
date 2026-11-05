@@ -1,0 +1,33 @@
+candidate_source_id: bitbucket-security-page-3e6eb91b3549
+candidate_status: selected
+candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/integrate-slack-with-pipelines
+canonical_candidate_url: https://support.atlassian.com/bitbucket-cloud/docs/integrate-slack-with-pipelines
+confidence: likely
+discovered_at: '2026-11-05T11:26:52.450779Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://support.atlassian.com/bitbucket-cloud/docs/integrate-slack-with-pipelines
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  - trust
+  page_title: Integrate Slack with Pipelines | Bitbucket Cloud | Atlassian Support
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:047f5a88f508be0c0b4be8c8b72178eebf5f5422d92f5511c3283d40290340a8
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://support.atlassian.com/bitbucket-cloud/docs/integrate-slack-with-pipelines
+requested_url: https://support.atlassian.com/bitbucket-cloud/docs/integrate-slack-with-pipelines
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:52.450779Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bitbucket
