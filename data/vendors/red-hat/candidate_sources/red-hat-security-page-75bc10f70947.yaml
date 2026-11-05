@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-75bc10f70947
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149763
+canonical_candidate_url: https://access.redhat.com/solutions/7149763
+confidence: likely
+discovered_at: '2026-11-05T11:26:52.450779Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149763
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Failed hosts link on the Overview page shows &quot;No results found&quot;
+    in Ansible Automation Platform 2.7 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a0a9259466832213eec64997c2af12f3048f54dd83b8e992eb1016638d9ecf6b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149763
+requested_url: https://access.redhat.com/solutions/7149763
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:52.450779Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
