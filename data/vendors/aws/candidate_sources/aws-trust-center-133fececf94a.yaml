@@ -1,0 +1,34 @@
+candidate_source_id: aws-trust-center-133fececf94a
+candidate_status: selected
+candidate_url: https://aws.amazon.com/preferences/email/manage?nc1=f_icon
+canonical_candidate_url: https://aws.amazon.com/preferences/email/manage?nc1=f_icon
+confidence: likely
+discovered_at: '2026-11-05T11:26:55.512073Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://aws.amazon.com/preferences/email/manage?nc1=f_icon
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  - compliance
+  page_title: AWS Email Preference Center
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:eb6fa5ce2c3a1528031bec109d9e466572155187d04d116b0dee582613001a85
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://aws.amazon.com/preferences/email/manage?nc1=f_icon
+requested_url: https://aws.amazon.com/preferences/email/manage?nc1=f_icon
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:55.512073Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: aws
