@@ -1,0 +1,32 @@
+candidate_source_id: patsnap-trust-center-be065377cc40
+candidate_status: selected
+candidate_url: https://trust.patsnap.com/resources?name=patsnap-government-data-request-guide.pdf&s=mr2j3byi9zgt3flyki1to
+canonical_candidate_url: https://trust.patsnap.com/resources?name=patsnap-government-data-request-guide.pdf&s=mr2j3byi9zgt3flyki1to
+confidence: likely
+discovered_at: '2026-11-05T11:26:48.100788Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://trust.patsnap.com/resources?name=patsnap-government-data-request-guide.pdf&s=mr2j3byi9zgt3flyki1to
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  page_title: Patsnap Trust Center
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:19898da5ec149b4152f3bfe660645cfdd4bfe954094066169d5d1d3c8202ec5f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://trust.patsnap.com/resources?name=patsnap-government-data-request-guide.pdf&s=mr2j3byi9zgt3flyki1to
+requested_url: https://trust.patsnap.com/resources?name=patsnap-government-data-request-guide.pdf&s=mr2j3byi9zgt3flyki1to
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:48.100788Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: patsnap
