@@ -1,0 +1,33 @@
+candidate_source_id: aws-trust-center-3b36ee3dbd1c
+candidate_status: selected
+candidate_url: https://aws.amazon.com/trust-center/operator-access
+canonical_candidate_url: https://aws.amazon.com/trust-center/operator-access/
+confidence: likely
+discovered_at: '2026-11-05T11:26:55.512073Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html;charset=utf-8
+  final_url: https://aws.amazon.com/trust-center/operator-access/
+  http_status: 200
+  matched_terms:
+  - trust
+  - trust center
+  - security
+  page_title: Security Controls - Operator Access - AWS Trust Center
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:9ec51313b9474f9b2b78e08861e80db0a2ab61672b0617a67a267f914b4c03b3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://aws.amazon.com/trust-center/operator-access/
+requested_url: https://aws.amazon.com/trust-center/operator-access
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-05T11:26:55.512073Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: aws
