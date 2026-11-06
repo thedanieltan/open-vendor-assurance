@@ -1,0 +1,33 @@
+candidate_source_id: digitalocean-trust-center-d236f48e4a96
+candidate_status: selected
+candidate_url: https://www.digitalocean.com/security/shared-responsibility-model
+canonical_candidate_url: https://www.digitalocean.com/security/shared-responsibility-model
+confidence: likely
+discovered_at: '2026-11-06T11:25:51.106073Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.digitalocean.com/security/shared-responsibility-model
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  - compliance
+  - privacy
+  page_title: Shared Responsibility Model
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3a06f5979a64d9248fb309e75f7eb792e1d1a3e213d6932da6e3e5c287fe25c9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.digitalocean.com/security/shared-responsibility-model
+requested_url: https://www.digitalocean.com/security/shared-responsibility-model
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-06T11:25:51.106073Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean

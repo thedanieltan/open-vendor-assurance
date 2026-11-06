@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-5a237d6d8532
+candidate_status: selected
+candidate_url: https://docs.digitalocean.com/reference/doctl/how-to/install
+canonical_candidate_url: https://docs.digitalocean.com/reference/doctl/how-to/install/
+confidence: likely
+discovered_at: '2026-11-06T11:25:51.106073Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.digitalocean.com/reference/doctl/how-to/install/
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: How to Install and Configure doctl | DigitalOcean Documentation
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cb6741cd90e43a3990c7ae695a94d7d31c82ac83dfc631ade6caa8a90c51b0c6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.digitalocean.com/reference/doctl/how-to/install/
+requested_url: https://docs.digitalocean.com/reference/doctl/how-to/install
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-06T11:25:51.106073Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean
