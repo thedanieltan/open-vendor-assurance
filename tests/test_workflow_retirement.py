@@ -63,6 +63,25 @@ def test_every_retirement_entry_references_inventory_workflow():
         assert entry["name"] in names
 
 
+def test_discovery_and_security_retirement_entries_match_live_triggers():
+    names = {
+        "codeql.yml",
+        "discovery-cycle.yml",
+        "discovery-mesh.yml",
+        "discovery-mesh-intake-recovery.yml",
+        "discovery-mesh-intake-recovery-request.yml",
+        "rendered-discovery-acceptance-controller.yml",
+    }
+    entries = {entry["name"]: entry for entry in retirement_entries()}
+    for name in sorted(names):
+        # BaseLoader preserves the YAML `on` key instead of interpreting it as
+        # the YAML 1.1 boolean True.
+        workflow = yaml.load((WORKFLOW_DIR / name).read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+        assert set(entries[name]["allowed_triggers_until_retired"]) == set(workflow["on"]), name
+        assert entries[name]["current_status"] == "active", name
+        assert entries[name]["retirement_ready"] is False, name
+
+
 def test_statuses_are_valid_and_expected_statuses_are_declared():
     contract = load_yaml(WORKFLOW_RETIREMENT)
     statuses = set(contract["statuses"])
@@ -131,6 +150,7 @@ def test_discovery_mesh_is_active_and_not_retirement_ready():
         "workflow_dispatch",
         "schedule",
         "pull_request",
+        "push",
     ]
 
 

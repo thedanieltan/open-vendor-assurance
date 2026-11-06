@@ -16,6 +16,16 @@ def test_recovery_is_scoped_to_full_catalog_runs() -> None:
     assert "source_run_id" in text
 
 
+def test_recovery_checks_live_hold_before_writes_and_merge():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert 'check-hold --repository "$GITHUB_REPOSITORY"' in text
+    assert 'while IFS= read -r ENCODED; do\n            require_no_hold' in text
+    assert 'require_no_hold\n            git push -u origin "$BRANCH"' in text
+    assert 'require_no_hold || return 1\n                gh pr merge' in text
+    assert 'require_no_hold\n              PR_URL=$(gh pr create' in text
+    assert 'require_no_hold\n            PR_URL=$(gh pr create' in text
+
+
 def test_recovery_reuses_exact_aggregate_and_partitions_without_total_cap() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
@@ -33,7 +43,8 @@ def test_recovery_is_replay_safe_and_preserves_promotion_authority() -> None:
 
     assert 'gh pr list --state all --head "$BRANCH"' in text
     assert "workflow-owned branch exists with unexpected commit" in text
-    assert 'gh pr merge "$pr_number" --auto --squash --delete-branch' in text
+    assert 'gh pr merge "$pr_number" --match-head-commit "$expected_head" --squash --delete-branch' in text
+    assert 'gh pr merge "$pr_number" --auto' not in text
     assert text.count('wait_for_mergeable_then_automerge "$PR_NUMBER"') == 2
     assert 'wait_for_mergeable_then_automerge "$EXISTING_PR_NUMBER"' in text
     assert "candidate-promotion-pr.yml" in text
@@ -50,6 +61,17 @@ def test_generated_transactions_use_existing_operational_scope() -> None:
     assert "WP-DISCOVERY-MESH-INTAKE-RECOVERY-01" not in text
     assert '--title "$TITLE"' in text
     assert '"title": "Ops: stage discovery mesh candidates"' not in text
+
+
+def test_candidate_write_validation_precedes_bounded_generated_exports() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+    guard = text.index('raise SystemExit("out-of-scope intake paths:')
+    build = text.index("python -m tools.openva.validate build-indexes")
+    stage = text.index("git add -A -- indexes dist/vendors openva-pack.json")
+    generated_guard = text.index('raise SystemExit("out-of-scope generated intake paths:')
+    commit = text.index('git commit -m "$COMMIT_MESSAGE"')
+    assert guard < build < stage < generated_guard < commit
+    assert "intake_generated_paths(partition)" in text
 
 
 def test_recovery_filters_only_exact_plan_referenced_candidates() -> None:
@@ -90,8 +112,11 @@ def test_recovery_waits_for_mergeable_before_enabling_automerge() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "wait_for_mergeable_then_automerge()" in text
-    assert 'gh pr view "$pr_number" --json mergeable --jq .mergeable' in text
-    assert 'if [ "$mergeable" != "UNKNOWN" ]; then' in text
+    assert 'tools.openva.discovery_mesh_intake merge-gate' in text
+    assert '--snapshot "$snapshot" --expected-head "$expected_head"' in text
+    assert 'if [ "$gate_status" -eq 0 ]; then' in text
+    assert 'if [ "$gate_status" -ne 2 ]; then' in text
+    assert 'intake checks did not become ready' in text
     assert 'EXISTING_STATE=$(jq -r \'.[0].state\' <<< "$EXISTING")' in text
 
 
