@@ -1,0 +1,31 @@
+candidate_source_id: digitalocean-trust-center-106e66fdbd0e
+candidate_status: selected
+candidate_url: https://www.digitalocean.com/sla/cpu-droplets
+canonical_candidate_url: https://www.digitalocean.com/sla/cpu-droplets
+confidence: likely
+discovered_at: '2026-11-06T11:25:51.106073Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.digitalocean.com/sla/cpu-droplets
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Product Service Level Agreements - DigitalOcean CPU Droplet SLA
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:931a915d4541f736452347ce20ad4ceacdd78e35d286071044315117f3eeaed1
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.digitalocean.com/sla/cpu-droplets
+requested_url: https://www.digitalocean.com/sla/cpu-droplets
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-06T11:25:51.106073Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: digitalocean
