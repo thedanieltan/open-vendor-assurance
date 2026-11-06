@@ -1,0 +1,33 @@
+candidate_source_id: railway-security-page-edb34d0242d1
+candidate_status: selected
+candidate_url: https://docs.railway.com/volumes/reference
+canonical_candidate_url: https://docs.railway.com/volumes/reference
+confidence: likely
+discovered_at: '2026-11-06T11:25:25.189884Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://docs.railway.com/volumes/reference
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - incident
+  - trust
+  page_title: Volumes | Railway Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:acac1b3178f5979366d632991e2c24a0e359b8343bbf1b65f3acfba08ae35b64
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.railway.com/volumes/reference
+requested_url: https://docs.railway.com/volumes/reference
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-06T11:25:25.189884Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: railway
