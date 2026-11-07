@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-cc43392ae504
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7149816
+canonical_candidate_url: https://access.redhat.com/solutions/7149816
+confidence: likely
+discovered_at: '2026-11-07T10:39:18.062076Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7149816
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Instance creation randomly fails with &quot;Failed to allocate the network(s),
+    not rescheduling&quot; due to flapping SR-IOV ports exhausting the Neutron event
+    queue - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6b16c078315259e4682f8fa5ee8d2e799aab0bc0470208ea744b5cd4d7461abf
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7149816
+requested_url: https://access.redhat.com/solutions/7149816
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-07T10:39:18.062076Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
