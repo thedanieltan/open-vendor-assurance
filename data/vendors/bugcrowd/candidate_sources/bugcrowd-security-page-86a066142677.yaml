@@ -1,0 +1,33 @@
+candidate_source_id: bugcrowd-security-page-86a066142677
+candidate_status: selected
+candidate_url: https://www.bugcrowd.com/blog/what-are-the-benefits-of-crowdsourced-security-testing
+canonical_candidate_url: https://www.bugcrowd.com/blog/what-are-the-benefits-of-crowdsourced-security-testing/
+confidence: likely
+discovered_at: '2026-11-07T10:38:49.297196Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.bugcrowd.com/blog/what-are-the-benefits-of-crowdsourced-security-testing/
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'The Power of Numbers: Benefits of Crowdsourced Security Testing | @Bugcrowd'
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:08e87b3e428c45572ca2f027b54e44a4848248db0abfb721efe3c6a4b857f3dd
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.bugcrowd.com/blog/what-are-the-benefits-of-crowdsourced-security-testing/
+requested_url: https://www.bugcrowd.com/blog/what-are-the-benefits-of-crowdsourced-security-testing
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-07T10:38:49.297196Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: bugcrowd
