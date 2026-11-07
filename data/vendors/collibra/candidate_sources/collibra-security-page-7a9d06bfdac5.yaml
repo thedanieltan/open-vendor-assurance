@@ -1,0 +1,32 @@
+candidate_source_id: collibra-security-page-7a9d06bfdac5
+candidate_status: selected
+candidate_url: https://www.collibra.com/contact-us?email-reason=Sales+request
+canonical_candidate_url: https://www.collibra.com/contact-us?email-reason=Sales+request
+confidence: likely
+discovered_at: '2026-11-07T10:38:42.519896Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://www.collibra.com/contact-us?email-reason=Sales+request
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Contact us | Collibra
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:910ed23852db5d673ea2408d2a72da19d2ba51632226dc8b8f1f1d2717920b74
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.collibra.com/contact-us?email-reason=Sales+request
+requested_url: https://www.collibra.com/contact-us?email-reason=Sales+request
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-07T10:38:42.519896Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: collibra
