@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-1dcbdf561728
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/learn/opsec-operations-security.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/learn/opsec-operations-security.html
+confidence: likely
+discovered_at: '2026-11-08T10:43:58.321994Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/learn/opsec-operations-security.html
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: What Is OPSEC? Operations Security and How It Works | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:454b6dbab169e9851c82be3e64dc8f49215b92db9b6d5a273fcdbeb13889d200
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/learn/opsec-operations-security.html
+requested_url: https://www.splunk.com/en_us/blog/learn/opsec-operations-security.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-08T10:43:58.321994Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
