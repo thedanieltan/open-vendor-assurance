@@ -1,0 +1,32 @@
+candidate_source_id: railway-security-page-23aa52163dc1
+candidate_status: selected
+candidate_url: https://status.railway.com/incident/QBCLHG1V
+canonical_candidate_url: https://status.railway.com/incident/QBCLHG1V
+confidence: likely
+discovered_at: '2026-11-08T10:44:18.042574Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://status.railway.com/incident/QBCLHG1V
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: External network blocks affecting access to Railway — Identified | Railway
+    Status
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0d72f558d5ae46d3d547d8440ea333dcb11872c28361775829eb660b64d05dd9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://status.railway.com/incident/QBCLHG1V
+requested_url: https://status.railway.com/incident/QBCLHG1V
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-08T10:44:18.042574Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: railway
