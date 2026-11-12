@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-81c44045d140
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/cve/cve-2026-113408
+canonical_candidate_url: https://access.redhat.com/security/cve/cve-2026-113408
+confidence: likely
+discovered_at: '2026-11-12T12:31:18.866143Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/security/cve/cve-2026-113408
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - trust
+  page_title: CVE-2026-113408 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2ad3e7ef4b0aa66d2b7f4ded08d700074444cd9f2f4fde262ea6ef71483c2574
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/cve/cve-2026-113408
+requested_url: https://access.redhat.com/security/cve/cve-2026-113408
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:31:18.866143Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat

@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-3506eb769e0c
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7146603
+canonical_candidate_url: https://access.redhat.com/solutions/7146603
+confidence: likely
+discovered_at: '2026-11-12T12:31:18.866143Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7146603
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: nova-compute becomes down after updating to Red Hat OpenStack Services
+    on OpenShift 18.0.21 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:475d484ed9194d6b49d1878f2dcbf7b414df2cfbb80c80f2eaeb22dfb76bf09d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7146603
+requested_url: https://access.redhat.com/solutions/7146603
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:31:18.866143Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
