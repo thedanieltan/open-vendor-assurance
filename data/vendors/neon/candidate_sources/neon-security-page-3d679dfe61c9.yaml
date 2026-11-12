@@ -1,0 +1,35 @@
+candidate_source_id: neon-security-page-3d679dfe61c9
+candidate_status: selected
+candidate_url: https://neon.com/docs/security/soc-3-report
+canonical_candidate_url: https://neon.com/docs/security/soc-3-report
+confidence: likely
+discovered_at: '2026-11-12T12:23:50.466211Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://neon.com/docs/security/soc-3-report
+  http_status: 200
+  matched_terms:
+  - security
+  - encryption
+  - availability
+  - vulnerability
+  - incident
+  - trust
+  page_title: SOC 3 report - Neon Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:d44e10e1b4d1e866a69cc939f5d46fe441aa2068f004f9d7ec85274e215de207
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://neon.com/docs/security/soc-3-report
+requested_url: https://neon.com/docs/security/soc-3-report
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:23:50.466211Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon

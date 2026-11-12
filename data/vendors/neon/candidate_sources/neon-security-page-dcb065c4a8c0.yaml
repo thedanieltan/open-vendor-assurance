@@ -1,0 +1,31 @@
+candidate_source_id: neon-security-page-dcb065c4a8c0
+candidate_status: selected
+candidate_url: https://neon.com/docs/cli/api
+canonical_candidate_url: https://neon.com/docs/cli/api
+confidence: likely
+discovered_at: '2026-11-12T12:23:50.466211Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://neon.com/docs/cli/api
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: 'Neon CLI command: api - Neon Docs'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:a79d8c7df2e9f295441eeb3d9bdd7e8027b1b09739066856502dcf9cfc30430c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://neon.com/docs/cli/api
+requested_url: https://neon.com/docs/cli/api
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:23:50.466211Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon

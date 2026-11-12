@@ -1,0 +1,31 @@
+candidate_source_id: neon-security-page-61f95c420710
+candidate_status: selected
+candidate_url: https://neon.com/docs/cli/inspect
+canonical_candidate_url: https://neon.com/docs/cli/inspect
+confidence: likely
+discovered_at: '2026-11-12T12:23:50.466211Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://neon.com/docs/cli/inspect
+  http_status: 200
+  matched_terms:
+  - security
+  - incident
+  page_title: 'Neon CLI command: inspect - Neon Docs'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3bb2f7aec8bbd23dbad1204511b5d2c5c76e3786b7dd2aa62d06d2b45b65a2e9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://neon.com/docs/cli/inspect
+requested_url: https://neon.com/docs/cli/inspect
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:23:50.466211Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: neon
