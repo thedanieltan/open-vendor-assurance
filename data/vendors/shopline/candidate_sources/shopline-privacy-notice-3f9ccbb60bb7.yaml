@@ -1,0 +1,32 @@
+candidate_source_id: shopline-privacy-notice-3f9ccbb60bb7
+candidate_status: selected
+candidate_url: https://academy.shopline.com/privacy
+canonical_candidate_url: https://academy.shopline.com/privacy
+confidence: likely
+discovered_at: '2026-11-12T11:45:38.599454Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8; rendered=playwright
+  final_url: https://academy.shopline.com/privacy
+  http_status: 200
+  matched_terms:
+  - privacy
+  - privacy policy
+  page_title: Privacy
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cd2f602cef8032c5c816ec704d7065b08f53230675af8a9e810e39ba7040f47e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://academy.shopline.com/privacy
+requested_url: https://academy.shopline.com/privacy
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T11:45:38.599454Z'
+source_type_candidate: privacy_notice
+superseded_by_candidate_id: null
+vendor_id: shopline
