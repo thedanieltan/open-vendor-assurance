@@ -1,0 +1,32 @@
+candidate_source_id: red-hat-security-page-4ae4bd91e447
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7148110
+canonical_candidate_url: https://access.redhat.com/solutions/7148110
+confidence: likely
+discovered_at: '2026-11-12T12:31:18.866143Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7148110
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Ownership of root directory / changed to libstoragemgmt after running
+    Ansible hardening playbook in RHEL 9 or RHEL 10 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:cc4c6a4d1268b3239b59e0dd928860dfdb2d9cd6ba33434a084110e7295492b2
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7148110
+requested_url: https://access.redhat.com/solutions/7148110
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:31:18.866143Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
