@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-d4531a19fafb
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/compliance/audit_event_schema
+canonical_candidate_url: https://docs.gitlab.com/user/compliance/audit_event_schema/
+confidence: likely
+discovered_at: '2026-11-12T12:31:18.866143Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.gitlab.com/user/compliance/audit_event_schema/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Audit event schema and examples | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:05e49ff2659fef4edccc15c0559f6e50f5f29d6e038263ad45702ccf33dc97d5
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/compliance/audit_event_schema/
+requested_url: https://docs.gitlab.com/user/compliance/audit_event_schema
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:31:18.866143Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab

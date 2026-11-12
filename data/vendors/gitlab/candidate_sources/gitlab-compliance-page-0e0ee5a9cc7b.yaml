@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-compliance-page-0e0ee5a9cc7b
+candidate_status: selected
+candidate_url: https://about.gitlab.com/pt-br/blog/categories/engineering
+canonical_candidate_url: https://about.gitlab.com/pt-br/blog/categories/engineering/
+confidence: likely
+discovered_at: '2026-11-12T12:31:18.866143Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/pt-br/blog/categories/engineering/
+  http_status: 200
+  matched_terms:
+  - iso
+  - trust
+  page_title: Artigos sobre Engenharia \- Blog do GitLab
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e568d8edf8331096ac344f3ffe576be6ad62883af270a839fa0c5bfd801bba3c
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/pt-br/blog/categories/engineering/
+requested_url: https://about.gitlab.com/pt-br/blog/categories/engineering
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:31:18.866143Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
