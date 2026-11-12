@@ -1,0 +1,33 @@
+candidate_source_id: wiz-security-page-7c413c5b5223
+candidate_status: selected
+candidate_url: https://www.wiz.io/blog/cve-2026-119618-rce-apache-http-server-vulnerability
+canonical_candidate_url: https://www.wiz.io/blog/cve-2026-119618-rce-apache-http-server-vulnerability
+confidence: likely
+discovered_at: '2026-11-12T11:45:27.316866Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/blog/cve-2026-119618-rce-apache-http-server-vulnerability
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'Critical RCE Vulnerability in Apache HTTP Server: Everything You Need
+    To Know | Wiz Blog'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:69fe8664deb4dc0e7bcb52678cb45c4ac4304d6769f0943a72cbc5a35f5a864b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/blog/cve-2026-119618-rce-apache-http-server-vulnerability
+requested_url: https://www.wiz.io/blog/cve-2026-119618-rce-apache-http-server-vulnerability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T11:45:27.316866Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz
