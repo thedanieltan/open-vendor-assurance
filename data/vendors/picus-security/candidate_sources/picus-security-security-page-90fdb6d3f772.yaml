@@ -1,0 +1,33 @@
+candidate_source_id: picus-security-security-page-90fdb6d3f772
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/oracle-ebs-cve-2025-61882-vulnerability
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/oracle-ebs-cve-2025-61882-vulnerability
+confidence: likely
+discovered_at: '2026-11-12T12:13:15.095626Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/oracle-ebs-cve-2025-61882-vulnerability
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: 'Oracle EBS CVE-2025-61882 Vulnerability: Pre-auth SSRF Leads to Remote
+    Code Execution'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:726ccfd9daf8d0df5839078424982b0c476b8b6734ea661fe1d3b998d3d4e64d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/oracle-ebs-cve-2025-61882-vulnerability
+requested_url: https://www.picussecurity.com/resource/blog/oracle-ebs-cve-2025-61882-vulnerability
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:13:15.095626Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
