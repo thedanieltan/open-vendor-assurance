@@ -1,0 +1,31 @@
+candidate_source_id: pagerduty-trust-center-642b5d27917b
+candidate_status: selected
+candidate_url: https://docs.pagerduty.com/ops-guides/incident-response-guide/what-is-an-incident
+canonical_candidate_url: https://docs.pagerduty.com/ops-guides/incident-response-guide/what-is-an-incident
+confidence: likely
+discovered_at: '2026-11-12T11:45:40.434251Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.pagerduty.com/ops-guides/incident-response-guide/what-is-an-incident
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: What is an Incident? | PagerDuty Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:e901010e4617f1703e7908b0d97fc60b57622af7ed77c94753448857402ff254
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.pagerduty.com/ops-guides/incident-response-guide/what-is-an-incident
+requested_url: https://docs.pagerduty.com/ops-guides/incident-response-guide/what-is-an-incident
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T11:45:40.434251Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty

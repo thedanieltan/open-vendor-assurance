@@ -1,0 +1,31 @@
+candidate_source_id: pagerduty-trust-center-28b05d00663e
+candidate_status: selected
+candidate_url: https://docs.pagerduty.com/ops-guides/security-training
+canonical_candidate_url: https://docs.pagerduty.com/ops-guides/security-training
+confidence: likely
+discovered_at: '2026-11-12T11:45:40.434251Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.pagerduty.com/ops-guides/security-training
+  http_status: 200
+  matched_terms:
+  - security
+  - privacy
+  page_title: Security Training | PagerDuty Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:3af708ba43c28d704cedc9b5761facf90eed99d51d65f5427183a41234b7361f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.pagerduty.com/ops-guides/security-training
+requested_url: https://docs.pagerduty.com/ops-guides/security-training
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T11:45:40.434251Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: pagerduty
