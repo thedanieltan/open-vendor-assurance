@@ -1,0 +1,31 @@
+candidate_source_id: picus-security-security-page-892f0ce5e45c
+candidate_status: selected
+candidate_url: https://www.picussecurity.com/resource/blog/cve-2024-38063-remote-kernel-exploitation-via-ipv6-in-windows
+canonical_candidate_url: https://www.picussecurity.com/resource/blog/cve-2024-38063-remote-kernel-exploitation-via-ipv6-in-windows
+confidence: likely
+discovered_at: '2026-11-12T12:13:15.095626Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://www.picussecurity.com/resource/blog/cve-2024-38063-remote-kernel-exploitation-via-ipv6-in-windows
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: 'CVE-2024-38063: Remote Kernel Exploitation via IPv6 in Windows'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6895de5470a43f0c150d55dd8f05f1a2fb6d3fda431db67df12d90fa2618c15a
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.picussecurity.com/resource/blog/cve-2024-38063-remote-kernel-exploitation-via-ipv6-in-windows
+requested_url: https://www.picussecurity.com/resource/blog/cve-2024-38063-remote-kernel-exploitation-via-ipv6-in-windows
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:13:15.095626Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: picus-security
