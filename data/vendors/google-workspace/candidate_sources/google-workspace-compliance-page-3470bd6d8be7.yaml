@@ -1,0 +1,32 @@
+candidate_source_id: google-workspace-compliance-page-3470bd6d8be7
+candidate_status: selected
+candidate_url: https://payments.google.com/legaldocument?family=0.privacynotice&hl=es
+canonical_candidate_url: https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice&ldl=es
+confidence: likely
+discovered_at: '2026-11-12T12:22:07.615590Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice&ldl=es
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Payments Privacy Notice
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:5a760ff0e0ee28f53c11c62b4f51fb7d7bea4ac5cf9f924e554c5a34ca18c28b
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice&ldl=es
+requested_url: https://payments.google.com/legaldocument?family=0.privacynotice&hl=es
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T12:22:07.615590Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: google-workspace
