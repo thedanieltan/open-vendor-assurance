@@ -1,0 +1,32 @@
+candidate_source_id: darktrace-security-page-a9adf505df73
+candidate_status: selected
+candidate_url: https://www.darktrace.com/ja/demo
+canonical_candidate_url: https://www.darktrace.com/ja/demo
+confidence: likely
+discovered_at: '2026-11-12T11:46:09.019274Z'
+discovered_by: agent
+discovery_method: rendered_dom_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.darktrace.com/ja/demo
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Get a Demo | Darktrace
+  render_transport: playwright_intercepted_safe_fetch
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:57e9affea1c0004cda05cea32eaa9c15e0e1d5b383daca0e26cb3d106a0fd5d6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.darktrace.com/ja/demo
+requested_url: https://www.darktrace.com/ja/demo
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-12T11:46:09.019274Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: darktrace
