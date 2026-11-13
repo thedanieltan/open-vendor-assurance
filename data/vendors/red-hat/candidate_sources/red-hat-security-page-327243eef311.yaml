@@ -1,0 +1,34 @@
+candidate_source_id: red-hat-security-page-327243eef311
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7139916
+canonical_candidate_url: https://access.redhat.com/solutions/7139916
+confidence: likely
+discovered_at: '2026-11-13T12:04:59.000754Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7139916
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: 'A pacemaker process had to be respawned: error: pacemaker-schedulerd[2155785]
+    is unresponsive to ipc after 5 tries but we found the pid so have it killed that
+    we can restart - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:0a2d74a19225050889e3791af465e9de6e6d984f295d98ae0b42c6ab8f12a70e
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7139916
+requested_url: https://access.redhat.com/solutions/7139916
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-13T12:04:59.000754Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
