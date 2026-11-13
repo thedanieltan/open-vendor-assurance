@@ -1,32 +1,31 @@
 candidate_source_id: gitlab-security-page-45dfdcc5ce4c
 candidate_status: selected
-candidate_url: https://docs.gitlab.com/orbit/remote/security
+candidate_url: https://docs.gitlab.com/orbit
 canonical_candidate_url: https://docs.gitlab.com/orbit/
 confidence: likely
-discovered_at: '2026-10-30T11:19:57.763991Z'
+discovered_at: '2026-11-13T12:04:59.000754Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
-  content_type: text/html; charset=utf-8
+  content_type: text/html
   final_url: https://docs.gitlab.com/orbit/
   http_status: 200
   matched_terms:
-  - security
   - vulnerability
   - incident
   page_title: GitLab Orbit | GitLab Docs
   semantic_status: strong
   soft_404_detected: false
-  verification_status: redirected
-evidence_digest: sha256:ba4add6397c557447187d260865138db8522678066cd2bb67cb34b0bcba9651b
+  verification_status: ok
+evidence_digest: sha256:53f5b2e41466e66a5a3d8364d0e643e0cdcc1c205e16b085c3d488d16cac9a09
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://docs.gitlab.com/orbit/
-requested_url: https://docs.gitlab.com/orbit/remote/security
+requested_url: https://docs.gitlab.com/orbit
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-10-30T11:19:57.763991Z'
+selection_run_id: '2026-11-13T12:04:59.000754Z'
 source_type_candidate: security_page
 superseded_by_candidate_id: null
 vendor_id: gitlab
