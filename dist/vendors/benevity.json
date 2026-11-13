@@ -1908,6 +1908,41 @@
       "vendor_id": "benevity"
     },
     {
+      "_openva_path": "data/vendors/benevity/candidate_sources/benevity-privacy-notice-63a4ccbb6c2e.yaml",
+      "candidate_source_id": "benevity-privacy-notice-63a4ccbb6c2e",
+      "candidate_status": "selected",
+      "candidate_url": "https://benevity.com/pricing",
+      "canonical_candidate_url": "https://benevity.com/pricing",
+      "confidence": "likely",
+      "discovered_at": "2026-09-13T08:31:43.350279Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://benevity.com/pricing",
+        "http_status": 200,
+        "matched_terms": [
+          "privacy",
+          "privacy notice"
+        ],
+        "page_title": "Pricing | The Benevity Enterprise Impact Platform",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:6c1a0ab220e72a4c59f00361f7c3b6e68a36c644534bf9e7ff2223a04831d1d6",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://benevity.com/pricing",
+      "requested_url": "https://benevity.com/pricing",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-13T08:31:43.350279Z",
+      "source_type_candidate": "privacy_notice",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "benevity"
+    },
+    {
       "_openva_path": "data/vendors/benevity/candidate_sources/benevity-privacy-notice-640dbe4f0ed8.yaml",
       "candidate_source_id": "benevity-privacy-notice-640dbe4f0ed8",
       "candidate_status": "selected",
@@ -4042,7 +4077,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 110,
+    "candidate_source_count": 111,
     "candidate_source_types": [
       "compliance_page",
       "dpa",

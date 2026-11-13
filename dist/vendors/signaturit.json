@@ -8328,6 +8328,42 @@
       "vendor_id": "signaturit"
     },
     {
+      "_openva_path": "data/vendors/signaturit/candidate_sources/signaturit-compliance-page-b404ab7eaa5a.yaml",
+      "candidate_source_id": "signaturit-compliance-page-b404ab7eaa5a",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.signaturit.com/es/clientes/wiseed",
+      "canonical_candidate_url": "https://www.signaturit.com/es/clientes/wiseed/",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:31:53.251129Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=UTF-8",
+        "final_url": "https://www.signaturit.com/es/clientes/wiseed/",
+        "http_status": 200,
+        "matched_terms": [
+          "soc",
+          "iso",
+          "audit"
+        ],
+        "page_title": "Testimonio de cliente : Wiseed y Signaturit Group, a Namirial Company | Signaturit",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:c834f792a4bd1aaac72f0a2052863f76d2b085b3a416bf07a6cde59f6b300b0b",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.signaturit.com/es/clientes/wiseed/",
+      "requested_url": "https://www.signaturit.com/es/clientes/wiseed",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:31:53.251129Z",
+      "source_type_candidate": "compliance_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "signaturit"
+    },
+    {
       "_openva_path": "data/vendors/signaturit/candidate_sources/signaturit-compliance-page-b74a2857ecf1.yaml",
       "candidate_source_id": "signaturit-compliance-page-b74a2857ecf1",
       "candidate_status": "selected",
@@ -17528,7 +17564,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 2,
-    "candidate_source_count": 491,
+    "candidate_source_count": 492,
     "candidate_source_types": [
       "compliance_page",
       "dpa",
