@@ -32,6 +32,12 @@ promotion still flows through the independent quorum/promotion path. Separation 
 duties is intact: the resolver *discovers*; independent components *decide and
 merge*.
 
+Local ingress serializes its read/merge/write transaction with an OS file lock
+on POSIX and Windows. A platform without a supported lock backend, or a failed
+lock acquisition, refuses the transaction instead of writing without protection.
+Git object paths use forward slashes on every platform so the workflow-visible
+durability check compares the correct committed candidate blob.
+
 ## What this adds (over the merged resolver/ingress)
 
 | Piece | Where |
