@@ -1,0 +1,31 @@
+candidate_source_id: splunk-trust-center-f261f587514f
+candidate_status: selected
+candidate_url: https://www.splunk.com/en_us/blog/customers-community.html
+canonical_candidate_url: https://www.splunk.com/en_us/blog/customers.html
+confidence: likely
+discovered_at: '2026-11-13T11:54:42.430313Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.splunk.com/en_us/blog/customers.html
+  http_status: 200
+  matched_terms:
+  - trust
+  - security
+  page_title: Customers &#x26; Community Blogs | Splunk
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:6d662aea4b4615849ade300e3c848fd70c31b1904ab26e2d802474e3109e2452
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.splunk.com/en_us/blog/customers.html
+requested_url: https://www.splunk.com/en_us/blog/customers-community.html
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-13T11:54:42.430313Z'
+source_type_candidate: trust_center
+superseded_by_candidate_id: null
+vendor_id: splunk
