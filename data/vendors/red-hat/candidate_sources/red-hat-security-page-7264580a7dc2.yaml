@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-7264580a7dc2
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-017
+canonical_candidate_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-017
+confidence: likely
+discovered_at: '2026-11-13T12:04:59.000754Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=UTF-8
+  final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-017
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - trust
+  page_title: RHSB-2026-017 Remote Code Execution - Apache HTTP Server (CVE-2026-119618)
+    | Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:2facf1870e5956ab52eb06247bc8376a91bfabdffcad165baad4aed5bb087d5f
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-017
+requested_url: https://access.redhat.com/security/vulnerabilities/RHSB-2026-017
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-13T12:04:59.000754Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
