@@ -13,6 +13,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 from collections import defaultdict
 from copy import deepcopy
 from dataclasses import dataclass
@@ -35,6 +36,90 @@ BREADTH_PATHS = (
     "maintenance/generated/vendor-breadth-candidates.json",
     "maintenance/generated/vendor-breadth-provider-metrics.json",
 )
+
+
+def require_no_emergency_hold(repository: str) -> None:
+    """Read live hold state; absence of trustworthy state never permits writes."""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
+        raise ValueError("invalid repository identity for hold check")
+    for label in ("openva-bot-paused", "openva-hold"):
+        # We only need to know whether ANY matching open issue exists. One result
+        # is sufficient regardless of the size of the repository issue backlog.
+        result = subprocess.run(
+            ["gh", "api", f"repos/{repository}/issues?state=open&labels={label}&per_page=1"],
+            stdin=subprocess.DEVNULL, capture_output=True, text=True, check=True, timeout=30,
+        )
+        issues = json.loads(result.stdout)
+        if not isinstance(issues, list):
+            raise ValueError("untrusted emergency hold response")
+        if issues:
+            raise ValueError(f"active emergency hold: {label}")
+
+
+def intake_generated_paths(partition: dict[str, Any]) -> set[str]:
+    """Derived surfaces affected by this partition's candidate records only."""
+    vendors = {
+        match.group("vendor_id")
+        for path in partition.get("paths", [])
+        if (match := CANDIDATE_PATH_RE.fullmatch(str(path)))
+    }
+    if not vendors:
+        return set()
+    return {
+        "indexes/candidate-sources.json",
+        "indexes/vendor-search.json",
+        "indexes/source-coverage.json",
+        "indexes/vendor-match-index.json",
+        "indexes/summary.json",
+        *(f"dist/vendors/{vendor}.json" for vendor in vendors),
+    }
+
+
+def intake_merge_gate(snapshot: dict[str, Any], expected_head: str) -> int:
+    """Return 0 for verified checks, 2 while pending, and 1 for a denial.
+
+    This supplements, never replaces, server-side branch protection. The caller
+    must bind the eventual merge to expected_head as well.
+    """
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_head):
+        return 1
+    if snapshot.get("headRefOid") != expected_head or snapshot.get("state") != "OPEN":
+        return 1
+    if snapshot.get("isDraft") is not False:
+        return 1
+    if snapshot.get("reviewDecision") in {"CHANGES_REQUESTED", "REVIEW_REQUIRED"}:
+        return 1
+    checks = snapshot.get("statusCheckRollup")
+    if not isinstance(checks, list) or not checks:
+        return 2
+    required = {"repository-integrity", "pr-scope-guard", "weighted-review"}
+    passed: set[str] = set()
+    pending = False
+    for check in checks:
+        if not isinstance(check, dict):
+            return 1
+        if check.get("__typename") == "CheckRun":
+            name = check.get("name")
+            if check.get("status") != "COMPLETED":
+                pending = True
+                continue
+            conclusion = check.get("conclusion")
+            if conclusion not in {"SUCCESS", "SKIPPED", "NEUTRAL"}:
+                return 1
+            if name in required:
+                if conclusion != "SUCCESS":
+                    return 1
+                passed.add(name)
+        elif check.get("__typename") == "StatusContext":
+            if check.get("state") == "PENDING":
+                pending = True
+            elif check.get("state") != "SUCCESS":
+                return 1
+        else:
+            return 1
+    if pending or not required <= passed or snapshot.get("mergeable") != "MERGEABLE":
+        return 2
+    return 0
 
 
 def reconcile_candidates(
@@ -604,6 +689,11 @@ def prepare_intake(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="openva-discovery-mesh-intake")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    hold = subparsers.add_parser("check-hold")
+    hold.add_argument("--repository", required=True)
+    merge_gate = subparsers.add_parser("merge-gate")
+    merge_gate.add_argument("--snapshot", type=Path, required=True)
+    merge_gate.add_argument("--expected-head", required=True)
     prepare = subparsers.add_parser("prepare")
     prepare.add_argument("--artifact-root", type=Path, required=True)
     prepare.add_argument("--candidate-ndjson", type=Path, required=True)
@@ -634,6 +724,11 @@ def main(argv: list[str] | None = None) -> int:
     reconcile.add_argument("--output-candidates", type=Path, required=True)
     reconcile.add_argument("--output-report", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.command == "check-hold":
+        require_no_emergency_hold(args.repository)
+        return 0
+    if args.command == "merge-gate":
+        return intake_merge_gate(load_json(args.snapshot), args.expected_head)
     if args.command == "prepare":
         manifest = prepare_intake(
             artifact_root=args.artifact_root,

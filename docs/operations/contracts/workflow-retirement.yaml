@@ -17,6 +17,66 @@ statuses:
   - quarantined
   - retired
 workflows:
+  - name: codeql.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: pr_safety
+    replacement_owner: codeql.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns source security analysis]
+    required_retirement_evidence: [equivalent security analysis coverage]
+    allowed_triggers_until_retired: [pull_request, push, schedule]
+    write_permissions_allowed_until_retired: true
+  - name: discovery-cycle.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: discovery-cycle.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns breadth candidate handoff to unified candidate intake]
+    required_retirement_evidence: [replacement candidate handoff with independent promotion authority]
+    allowed_triggers_until_retired: [workflow_run, workflow_dispatch]
+    write_permissions_allowed_until_retired: true
+  - name: discovery-mesh-intake-recovery.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: discovery-mesh-intake-recovery.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns partitioned noncanonical Discovery Mesh intake recovery]
+    required_retirement_evidence: [replacement exact-run partition replay and controlled PR acceptance]
+    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
+    write_permissions_allowed_until_retired: true
+  - name: discovery-mesh-intake-recovery-request.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: discovery-mesh-intake-recovery-request.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns reviewed exact-run recovery dispatch]
+    required_retirement_evidence: [replacement reviewed recovery request validation]
+    allowed_triggers_until_retired: [push]
+    write_permissions_allowed_until_retired: true
+  - name: rendered-discovery-acceptance-controller.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: rendered-discovery-acceptance-controller.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns exact-gated rendered acceptance dispatch and receipt publication]
+    required_retirement_evidence: [replacement acceptance dispatch and durable receipts]
+    allowed_triggers_until_retired: [workflow_run, workflow_dispatch]
+    write_permissions_allowed_until_retired: true
   - name: validate.yml
     current_status: active
     inventory_status: core
