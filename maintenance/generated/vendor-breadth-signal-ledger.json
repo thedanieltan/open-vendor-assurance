@@ -3518,6 +3518,37 @@
     },
     {
       "countries": [],
+      "demand_count": 1,
+      "display_name": "Start for free",
+      "domain": "chromewebstore.google.com",
+      "entity_key": "domain:chromewebstore.google.com",
+      "first_seen_at": "2026-11-13T16:04:09Z",
+      "last_seen_at": "2026-11-13T16:04:09Z",
+      "not_advice": true,
+      "observation_count": 1,
+      "observations": [
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-11-13T16:04:09Z",
+          "observation_count": 1,
+          "observed_at": "2026-11-13T16:04:09Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-49-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-943a3eddac65d21e79f1dce0",
+          "source_kind": "relationship_graph",
+          "source_url": "https://alloy.app/legal/dpa"
+        }
+      ],
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "signal_count": 1
+    },
+    {
+      "countries": [],
       "demand_count": 2,
       "display_name": "Cisco Cisco",
       "domain": "cisco.com",
@@ -9089,14 +9120,14 @@
     },
     {
       "countries": [],
-      "demand_count": 6,
+      "demand_count": 7,
       "display_name": "General Data Protection Regulation",
       "domain": "gdpr.eu",
       "entity_key": "domain:gdpr.eu",
       "first_seen_at": "2026-09-08T12:01:23Z",
-      "last_seen_at": "2026-11-10T15:32:31Z",
+      "last_seen_at": "2026-11-13T16:04:09Z",
       "not_advice": true,
-      "observation_count": 6,
+      "observation_count": 7,
       "observations": [
         {
           "country_observed": null,
@@ -9166,6 +9197,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-11-13T16:04:09Z",
+          "observation_count": 1,
+          "observed_at": "2026-11-13T16:04:09Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-67-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-f819c6deb1b2c3efaf6745db",
+          "source_kind": "relationship_graph",
+          "source_url": "https://customer.io/legal/gdpr"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-09-09T12:47:13Z",
           "observation_count": 1,
           "observed_at": "2026-09-09T12:47:13Z",
@@ -9181,7 +9225,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 6
+      "signal_count": 7
     },
     {
       "countries": [
@@ -30226,14 +30270,14 @@
     },
     {
       "countries": [],
-      "demand_count": 6,
+      "demand_count": 7,
       "display_name": "https://typesafe.ai/",
       "domain": "typesafe.ai",
       "entity_key": "domain:typesafe.ai",
       "first_seen_at": "2026-11-05T15:20:36Z",
-      "last_seen_at": "2026-11-12T16:05:02Z",
+      "last_seen_at": "2026-11-13T16:04:09Z",
       "not_advice": true,
-      "observation_count": 6,
+      "observation_count": 7,
       "observations": [
         {
           "country_observed": null,
@@ -30290,6 +30334,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-11-13T16:04:09Z",
+          "observation_count": 1,
+          "observed_at": "2026-11-13T16:04:09Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-131-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-adf8b7dd9a167257cf4bbdb7",
+          "source_kind": "relationship_graph",
+          "source_url": "https://front.com/legal/list-of-subprocessors"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-11-12T16:05:02Z",
           "observation_count": 1,
           "observed_at": "2026-11-12T16:05:02Z",
@@ -30318,7 +30375,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 6
+      "signal_count": 7
     },
     {
       "countries": [
@@ -33983,7 +34040,7 @@
       "signal_count": 13
     }
   ],
-  "generated_at": "2026-11-12T16:05:02Z",
+  "generated_at": "2026-11-13T16:04:08Z",
   "policy_version": "vendor-breadth-mesh.v1",
   "posture": {
     "append_safe": true,
@@ -33997,9 +34054,9 @@
   "schema_version": "0.1.0",
   "summary": {
     "catalog_vendor_count_cap": null,
-    "entity_count": 366,
-    "observation_count": 2070,
+    "entity_count": 367,
+    "observation_count": 2073,
     "provider_count": 2,
-    "signal_count": 2070
+    "signal_count": 2073
   }
 }
