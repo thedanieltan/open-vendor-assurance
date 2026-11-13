@@ -13,6 +13,7 @@ import yaml
 from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.publication import load_publication_config
 from tools.openva.site_discovery import _latest_observed_at, render_index_html
+from tools.openva.source_type_labels import source_type_labels
 
 ROOT = Path(__file__).resolve().parents[1]
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -297,7 +298,7 @@ def test_homepage_has_social_identity_assets_and_visible_direct_answers(site, co
         'What is OpenVA?',
         'Which source types does OpenVA support?',
         'Are vendor source URLs permanent?',
-        'Does OpenVA assess or approve vendors?',
+        'Does OpenVA assess, approve, or score vendors?',
         'Does a vendor CSV leave the browser?',
         'How should an OpenVA result be cited?',
     ]:
@@ -357,7 +358,7 @@ def test_vendor_pages_have_social_metadata_breadcrumbs_and_source_type_links(sit
     assert 'property="og:image"' in page
     assert '"@type": "BreadcrumbList"' in page
     assert "What public sources does OpenVA record" in page
-    assert "../../source-types/" in page
+    assert config.url("source-types/") in page_hrefs(page)
 
 
 def test_manifest_and_llms_are_citation_ready(site, config):
