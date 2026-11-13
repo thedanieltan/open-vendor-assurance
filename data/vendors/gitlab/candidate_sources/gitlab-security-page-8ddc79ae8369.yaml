@@ -1,0 +1,32 @@
+candidate_source_id: gitlab-security-page-8ddc79ae8369
+candidate_status: selected
+candidate_url: https://docs.gitlab.com/user/duo_agent_platform/automations
+canonical_candidate_url: https://docs.gitlab.com/user/duo_agent_platform/automations/
+confidence: likely
+discovered_at: '2026-11-13T12:04:59.000754Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://docs.gitlab.com/user/duo_agent_platform/automations/
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - incident
+  page_title: Triggers | GitLab Docs
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:6a9bea65e0cac2629ada0444e1df3ea24d2ae1a4dd06a958222430f965e07b84
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://docs.gitlab.com/user/duo_agent_platform/automations/
+requested_url: https://docs.gitlab.com/user/duo_agent_platform/automations
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-13T12:04:59.000754Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
