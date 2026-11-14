@@ -1,0 +1,31 @@
+candidate_source_id: gitlab-security-page-789bb43136d1
+candidate_status: selected
+candidate_url: https://about.gitlab.com/de-de/blog/prevent-leaks-from-claude-code-dont-ask-again-file
+canonical_candidate_url: https://about.gitlab.com/de-de/blog/prevent-leaks-from-claude-code-dont-ask-again-file/
+confidence: likely
+discovered_at: '2026-11-14T11:29:09.672855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://about.gitlab.com/de-de/blog/prevent-leaks-from-claude-code-dont-ask-again-file/
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: Secrets in .claude&#x2F;settings.local.json finden und entfernen
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:eb5c24bcf5346d504e4ab7a3bc6528c1e5c2d0cdcbd5468d18a40390b3b2c5d9
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://about.gitlab.com/de-de/blog/prevent-leaks-from-claude-code-dont-ask-again-file/
+requested_url: https://about.gitlab.com/de-de/blog/prevent-leaks-from-claude-code-dont-ask-again-file
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-14T11:29:09.672855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gitlab
