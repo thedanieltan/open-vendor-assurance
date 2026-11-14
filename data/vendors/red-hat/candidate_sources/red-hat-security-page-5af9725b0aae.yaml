@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-5af9725b0aae
+candidate_status: selected
+candidate_url: https://access.redhat.com/security/cve/cve-2026-128886
+canonical_candidate_url: https://access.redhat.com/security/cve/cve-2026-128886
+confidence: likely
+discovered_at: '2026-11-14T11:29:09.672855Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/security/cve/cve-2026-128886
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - vulnerability
+  - trust
+  page_title: CVE-2026-128886 - Red Hat Customer Portal
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:282fdf27a47ff448ca9c85de7e4b506acaeb04f2d0ca357ab8609db5b1d95b71
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/security/cve/cve-2026-128886
+requested_url: https://access.redhat.com/security/cve/cve-2026-128886
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-14T11:29:09.672855Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
