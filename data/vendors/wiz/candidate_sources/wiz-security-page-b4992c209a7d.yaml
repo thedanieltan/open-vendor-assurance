@@ -1,0 +1,33 @@
+candidate_source_id: wiz-security-page-b4992c209a7d
+candidate_status: selected
+candidate_url: https://www.wiz.io/academy/what-is-apt42
+canonical_candidate_url: https://www.wiz.io/academy/threat-intel/what-is-apt42
+confidence: likely
+discovered_at: '2026-11-14T10:51:52.026327Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.wiz.io/academy/threat-intel/what-is-apt42
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  - incident
+  - trust
+  page_title: What is APT42? Threat Actor Profile | Wiz
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:482cdade6a4329e1efb154dc9600ceb2d861faf5b9ac65aa69ed7e8ffdd7b3c6
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.wiz.io/academy/threat-intel/what-is-apt42
+requested_url: https://www.wiz.io/academy/what-is-apt42
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-14T10:51:52.026327Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: wiz
