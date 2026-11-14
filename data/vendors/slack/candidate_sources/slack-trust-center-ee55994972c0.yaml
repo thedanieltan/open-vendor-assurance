@@ -1,9 +1,9 @@
 candidate_source_id: slack-trust-center-ee55994972c0
 candidate_status: selected
-candidate_url: https://slack.com/intl/zh-cn/trust/compliance/gdpr
+candidate_url: https://slack.com/intl/zh-cn/gdpr
 canonical_candidate_url: https://slack.com/intl/zh-cn/trust/compliance/gdpr
 confidence: likely
-discovered_at: '2026-11-07T10:38:59.645055Z'
+discovered_at: '2026-11-14T10:51:29.302317Z'
 discovered_by: agent
 discovery_method: sitemap_locator_verification
 evidence:
@@ -11,21 +11,22 @@ evidence:
   final_url: https://slack.com/intl/zh-cn/trust/compliance/gdpr
   http_status: 200
   matched_terms:
+  - trust
   - compliance
   - privacy
   page_title: Slack 的《通用数据保护条例》(GDPR) 承诺 | 法律 | Slack
   semantic_status: strong
   soft_404_detected: false
-  verification_status: ok
-evidence_digest: sha256:44ac33491e2af9f200748751d13b85ad3100299f6f96bd2d8756668c093269c7
+  verification_status: redirected
+evidence_digest: sha256:d5b2860dd9c2e74a809aef3f356a3a6fe97a975217d7a399776c67f2381d427f
 not_advice: true
 notes: Candidate source discovered from official vendor domains. Not promoted to canonical
   source without review.
 observed_final_url: https://slack.com/intl/zh-cn/trust/compliance/gdpr
-requested_url: https://slack.com/intl/zh-cn/trust/compliance/gdpr
+requested_url: https://slack.com/intl/zh-cn/gdpr
 requires_review: true
 schema_version: 0.1.0
-selection_run_id: '2026-11-07T10:38:59.645055Z'
+selection_run_id: '2026-11-14T10:51:29.302317Z'
 source_type_candidate: trust_center
 superseded_by_candidate_id: null
 vendor_id: slack
