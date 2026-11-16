@@ -1,0 +1,32 @@
+candidate_source_id: gmo-globalsign-security-page-3f5ce24e9005
+candidate_status: selected
+candidate_url: https://compliance.globalsign.com/?itemName=awareness_training&itemUid=dfa57045-54b6-4854-b060-b3c97cd00b09&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+canonical_candidate_url: https://compliance.globalsign.com/?itemName=awareness_training&itemUid=dfa57045-54b6-4854-b060-b3c97cd00b09&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+confidence: likely
+discovered_at: '2026-11-16T12:47:25.011525Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://compliance.globalsign.com/?itemName=awareness_training&itemUid=dfa57045-54b6-4854-b060-b3c97cd00b09&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+  http_status: 200
+  matched_terms:
+  - security
+  - availability
+  - trust
+  page_title: GlobalSign Trust Center | Powered by SafeBase
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:13b5fad6c62315211801689168b4a18e5c2d173c9733a6cad514a4a5f0a44ad7
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://compliance.globalsign.com/?itemName=awareness_training&itemUid=dfa57045-54b6-4854-b060-b3c97cd00b09&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+requested_url: https://compliance.globalsign.com/?itemName=awareness_training&itemUid=dfa57045-54b6-4854-b060-b3c97cd00b09&s=%27%3B%3CWRJQ_CUSTOM_XSS_1337%3E%3B%27&source=click
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-16T12:47:25.011525Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: gmo-globalsign
