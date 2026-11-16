@@ -1,0 +1,33 @@
+candidate_source_id: red-hat-security-page-e99e5ade5750
+candidate_status: selected
+candidate_url: https://access.redhat.com/solutions/7137355
+canonical_candidate_url: https://access.redhat.com/solutions/7137355
+confidence: likely
+discovered_at: '2026-11-16T12:38:36.217909Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://access.redhat.com/solutions/7137355
+  http_status: 200
+  matched_terms:
+  - security
+  - trust
+  page_title: 'Ceph/ODF: MGR crashing - &quot;Caught signal (Segmentation fault) in
+    thread 7f3c302ac640 thread_name: mgr-fin&quot; and &quot;segfault on ceph_shutdown()
+    on removing Dentry from LRU&quot; - Red Hat Customer Portal'
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:f0780b8acac0a5c58d8b661f0909a8a8750036d715b742fc7a2de3c89dce7ed3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://access.redhat.com/solutions/7137355
+requested_url: https://access.redhat.com/solutions/7137355
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-16T12:38:36.217909Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: red-hat
