@@ -22109,14 +22109,14 @@
     },
     {
       "countries": [],
-      "demand_count": 54,
+      "demand_count": 55,
       "display_name": "https://policies.google.com/privacy?hl=en",
       "domain": "policies.google.com",
       "entity_key": "domain:policies.google.com",
       "first_seen_at": "2026-10-11T14:00:01Z",
-      "last_seen_at": "2026-11-09T16:02:31Z",
+      "last_seen_at": "2026-11-16T16:04:06Z",
       "not_advice": true,
-      "observation_count": 40,
+      "observation_count": 41,
       "observations": [
         {
           "country_observed": null,
@@ -22615,6 +22615,19 @@
         {
           "country_observed": null,
           "demand_count": 1,
+          "last_seen_at": "2026-11-16T16:04:06Z",
+          "observation_count": 1,
+          "observed_at": "2026-11-16T16:04:06Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-108-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-dd1cffc604a70c3891a036c2",
+          "source_kind": "relationship_graph",
+          "source_url": "https://www.hashmicro.com/privacy-policy"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
           "last_seen_at": "2026-10-24T12:37:40Z",
           "observation_count": 1,
           "observed_at": "2026-10-24T12:37:40Z",
@@ -22643,7 +22656,7 @@
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 40
+      "signal_count": 41
     },
     {
       "countries": [],
@@ -30478,14 +30491,14 @@
     },
     {
       "countries": [],
-      "demand_count": 7,
+      "demand_count": 8,
       "display_name": "https://typesafe.ai/",
       "domain": "typesafe.ai",
       "entity_key": "domain:typesafe.ai",
       "first_seen_at": "2026-11-05T15:20:36Z",
-      "last_seen_at": "2026-11-13T16:04:09Z",
+      "last_seen_at": "2026-11-16T16:04:06Z",
       "not_advice": true,
-      "observation_count": 7,
+      "observation_count": 8,
       "observations": [
         {
           "country_observed": null,
@@ -30577,13 +30590,26 @@
           "signal_id": "vbsig-ed1f17976fc2d79685f06d92",
           "source_kind": "relationship_graph",
           "source_url": "https://front.com/legal/list-of-subprocessors"
+        },
+        {
+          "country_observed": null,
+          "demand_count": 1,
+          "last_seen_at": "2026-11-16T16:04:06Z",
+          "observation_count": 1,
+          "observed_at": "2026-11-16T16:04:06Z",
+          "provider": "subprocessor_relationship_graph",
+          "provider_record_id": "aggregate-130-0",
+          "relationship_context": null,
+          "signal_id": "vbsig-f8e78dcb39444861779881e2",
+          "source_kind": "relationship_graph",
+          "source_url": "https://front.com/legal/list-of-subprocessors"
         }
       ],
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
       ],
-      "signal_count": 7
+      "signal_count": 8
     },
     {
       "countries": [
@@ -34248,7 +34274,7 @@
       "signal_count": 13
     }
   ],
-  "generated_at": "2026-11-14T15:18:00Z",
+  "generated_at": "2026-11-16T16:04:05Z",
   "policy_version": "vendor-breadth-mesh.v1",
   "posture": {
     "append_safe": true,
@@ -34263,8 +34289,8 @@
   "summary": {
     "catalog_vendor_count_cap": null,
     "entity_count": 367,
-    "observation_count": 2089,
+    "observation_count": 2091,
     "provider_count": 2,
-    "signal_count": 2089
+    "signal_count": 2091
   }
 }
