@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T15:18:00Z",
+  "generated_at": "2026-11-16T16:04:05Z",
   "items": [
     {
       "candidate_vendor_id": "media",
@@ -221,15 +221,15 @@
     },
     {
       "candidate_vendor_id": "policies",
-      "demand_count": 54,
+      "demand_count": 55,
       "display_name_candidate": "https://policies.google.com/privacy?hl=en",
       "first_seen_at": "2026-10-11T14:00:01Z",
       "headquarters_country_candidate": null,
-      "last_seen_at": "2026-11-09T16:02:31Z",
+      "last_seen_at": "2026-11-16T16:04:06Z",
       "not_advice": true,
-      "observation_count": 40,
+      "observation_count": 41,
       "official_domain_candidate": "policies.google.com",
-      "priority": 382,
+      "priority": 389,
       "provider_count": 1,
       "providers": [
         "subprocessor_relationship_graph"
@@ -240,9 +240,10 @@
       ],
       "requires_review": true,
       "schema_version": "0.1.0",
-      "signal_count": 40,
+      "signal_count": 41,
       "source_urls": [
         "https://alloy.app/legal/privacy",
+        "https://www.hashmicro.com/privacy-policy",
         "https://www.odoo.com/da_DK/privacy",
         "https://www.odoo.com/privacy"
       ],
@@ -2559,6 +2560,34 @@
       "writes_canonical_vendors": false
     },
     {
+      "candidate_vendor_id": "typesafe",
+      "demand_count": 8,
+      "display_name_candidate": "https://typesafe.ai/",
+      "first_seen_at": "2026-11-05T15:20:36Z",
+      "headquarters_country_candidate": null,
+      "last_seen_at": "2026-11-16T16:04:06Z",
+      "not_advice": true,
+      "observation_count": 8,
+      "official_domain_candidate": "typesafe.ai",
+      "priority": 88,
+      "provider_count": 1,
+      "providers": [
+        "subprocessor_relationship_graph"
+      ],
+      "queue_id": "vbq-79a268977a5872d630a24c42",
+      "reason_codes": [
+        "country_missing"
+      ],
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "signal_count": 8,
+      "source_urls": [
+        "https://front.com/legal/list-of-subprocessors"
+      ],
+      "state": "needs_country",
+      "writes_canonical_vendors": false
+    },
+    {
       "candidate_vendor_id": "cloud",
       "demand_count": 7,
       "display_name_candidate": "Subscribe to newsletter",
@@ -2695,34 +2724,6 @@
       "signal_count": 7,
       "source_urls": [
         "https://bigid.com/sub-processors"
-      ],
-      "state": "needs_country",
-      "writes_canonical_vendors": false
-    },
-    {
-      "candidate_vendor_id": "typesafe",
-      "demand_count": 7,
-      "display_name_candidate": "https://typesafe.ai/",
-      "first_seen_at": "2026-11-05T15:20:36Z",
-      "headquarters_country_candidate": null,
-      "last_seen_at": "2026-11-13T16:04:09Z",
-      "not_advice": true,
-      "observation_count": 7,
-      "official_domain_candidate": "typesafe.ai",
-      "priority": 81,
-      "provider_count": 1,
-      "providers": [
-        "subprocessor_relationship_graph"
-      ],
-      "queue_id": "vbq-79a268977a5872d630a24c42",
-      "reason_codes": [
-        "country_missing"
-      ],
-      "requires_review": true,
-      "schema_version": "0.1.0",
-      "signal_count": 7,
-      "source_urls": [
-        "https://front.com/legal/list-of-subprocessors"
       ],
       "state": "needs_country",
       "writes_canonical_vendors": false
