@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-compliance-page-7b8e5fa082bf
+candidate_status: selected
+candidate_url: https://go.microsoft.com/fwlink?clcid=0x409&country=us&culture=en-us&linkid=2272640
+canonical_candidate_url: https://go.microsoft.com/fwlink?clcid=0x409&country=us&culture=en-us&linkid=2272640
+confidence: likely
+discovered_at: '2026-11-17T13:17:53.452344Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html
+  final_url: https://learn.microsoft.com/en-us/security/engineering/failure-modes-in-machine-learning?country=us&culture=en-us
+  http_status: 200
+  matched_terms:
+  - soc
+  - iso
+  page_title: Failure Modes in Machine Learning | Microsoft Learn
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: redirected
+evidence_digest: sha256:a6f4d693bcc78f4a95b15fcd8c5b9d59b4b0685065e7bbc401b13bdcdd80e4e3
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://learn.microsoft.com/en-us/security/engineering/failure-modes-in-machine-learning?country=us&culture=en-us
+requested_url: https://go.microsoft.com/fwlink?clcid=0x409&country=us&culture=en-us&linkid=2272640
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-17T13:17:53.452344Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
