@@ -3069,6 +3069,41 @@
       "vendor_id": "kasada"
     },
     {
+      "_openva_path": "data/vendors/kasada/candidate_sources/kasada-security-page-ed16a39ef658.yaml",
+      "candidate_source_id": "kasada-security-page-ed16a39ef658",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.kasada.io/blog/psychology-of-a-fraud-enabler",
+      "canonical_candidate_url": "https://www.kasada.io/blog/psychology-of-a-fraud-enabler",
+      "confidence": "likely",
+      "discovered_at": "2026-09-16T08:49:18.334329Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.kasada.io/blog/psychology-of-a-fraud-enabler",
+        "http_status": 200,
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "page_title": "Fraud Enabler Psychology: AI Re-Equipped an Old Adversary",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:f2afea97412a579de5bb86b4fd176aa6e4ff3da23c994df88ecd6a71acd3e5eb",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.kasada.io/blog/psychology-of-a-fraud-enabler",
+      "requested_url": "https://www.kasada.io/blog/psychology-of-a-fraud-enabler",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-16T08:49:18.334329Z",
+      "source_type_candidate": "security_page",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "kasada"
+    },
+    {
       "_openva_path": "data/vendors/kasada/candidate_sources/kasada-security-page-ee9076430da0.yaml",
       "candidate_source_id": "kasada-security-page-ee9076430da0",
       "candidate_status": "selected",
@@ -3383,6 +3418,41 @@
       "requires_review": true,
       "schema_version": "0.1.0",
       "selection_run_id": "2026-09-08T09:12:32.215849Z",
+      "source_type_candidate": "trust_center",
+      "superseded_by_candidate_id": null,
+      "vendor_id": "kasada"
+    },
+    {
+      "_openva_path": "data/vendors/kasada/candidate_sources/kasada-trust-center-19f6d3c57286.yaml",
+      "candidate_source_id": "kasada-trust-center-19f6d3c57286",
+      "candidate_status": "selected",
+      "candidate_url": "https://www.kasada.io/roundtables",
+      "canonical_candidate_url": "https://www.kasada.io/roundtables",
+      "confidence": "likely",
+      "discovered_at": "2026-09-15T09:26:50.154943Z",
+      "discovered_by": "agent",
+      "discovery_method": "sitemap_locator_verification",
+      "evidence": {
+        "content_type": "text/html; charset=utf-8",
+        "final_url": "https://www.kasada.io/roundtables",
+        "http_status": 200,
+        "matched_terms": [
+          "trust",
+          "compliance"
+        ],
+        "page_title": "Roundtables | Kasada",
+        "semantic_status": "strong",
+        "soft_404_detected": false,
+        "verification_status": "ok"
+      },
+      "evidence_digest": "sha256:23ebfe7136ac70000afd1e7321b9bbf8595143e151389deca699ef22af060092",
+      "not_advice": true,
+      "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+      "observed_final_url": "https://www.kasada.io/roundtables",
+      "requested_url": "https://www.kasada.io/roundtables",
+      "requires_review": true,
+      "schema_version": "0.1.0",
+      "selection_run_id": "2026-09-15T09:26:50.154943Z",
       "source_type_candidate": "trust_center",
       "superseded_by_candidate_id": null,
       "vendor_id": "kasada"
@@ -4015,7 +4085,7 @@
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 3,
-    "candidate_source_count": 107,
+    "candidate_source_count": 109,
     "candidate_source_types": [
       "security_page",
       "subprocessors_list",
