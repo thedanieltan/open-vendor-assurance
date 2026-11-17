@@ -1,0 +1,31 @@
+candidate_source_id: microsoft-azure-compliance-page-dac1a8af2a27
+candidate_status: selected
+candidate_url: https://www.microsoft.com/en-us/security/security-insider/leadership-perspectives
+canonical_candidate_url: https://www.microsoft.com/en-us/security/security-insider/leadership-perspectives
+confidence: likely
+discovered_at: '2026-11-17T13:17:53.452344Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://www.microsoft.com/en-us/security/security-insider/leadership-perspectives
+  http_status: 200
+  matched_terms:
+  - iso
+  - trust
+  page_title: Cybersecurity Leadership Perspectives | Security Insider
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:b366a2e9d15470aadebc593909d37d3cf4565d1523cbf22e5189f549a397bf3d
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://www.microsoft.com/en-us/security/security-insider/leadership-perspectives
+requested_url: https://www.microsoft.com/en-us/security/security-insider/leadership-perspectives
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-17T13:17:53.452344Z'
+source_type_candidate: compliance_page
+superseded_by_candidate_id: null
+vendor_id: microsoft-azure
