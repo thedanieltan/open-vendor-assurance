@@ -180,6 +180,10 @@ jobs:
             --fetch-timeout 3 \
             --output discovery-cycle-source-discovery.json
 
+      - name: Check emergency hold before candidate ingress
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+        run: python -m tools.openva.discovery_mesh_intake check-hold --repository "$GITHUB_REPOSITORY"
       - name: Project evidence through canonical candidate ingress
         if: steps.workset.outputs.candidate_count != '0'
         run: |
@@ -217,6 +221,9 @@ jobs:
         if: steps.workset.outputs.candidate_count != '0'
         run: |
           set -euo pipefail
+          # CatalogQueueIngress uses this file only as an execution lock. It must
+          # never be part of the durable, path-confined candidate intake.
+          rm -f maintenance/candidates/.lock
           git add maintenance/candidates 2>/dev/null || true
           git diff --cached --name-only > "$RUNNER_TEMP/discovery-cycle-changed.txt"
           if [ ! -s "$RUNNER_TEMP/discovery-cycle-changed.txt" ]; then
@@ -254,6 +261,7 @@ jobs:
           git commit -m "$PR_TITLE"
           # Use the workflow-triggering token for both push and PR operations.
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          python -m tools.openva.discovery_mesh_intake check-hold --repository "$GITHUB_REPOSITORY"
           git push --force-with-lease origin "$PR_BRANCH"
           {
             echo "## Discovery Cycle candidate intake"
@@ -269,6 +277,7 @@ jobs:
             echo "Raw crawl/source-discovery evidence remains in the Discovery Cycle artifact; this PR contains only unified candidate staging records."
           } > "$RUNNER_TEMP/discovery-cycle-pr.md"
           EXISTING="$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')"
+          python -m tools.openva.discovery_mesh_intake check-hold --repository "$GITHUB_REPOSITORY"
           if [ -n "$EXISTING" ]; then
             PR_NUMBER="$EXISTING"
             gh pr edit "$PR_NUMBER" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/discovery-cycle-pr.md"
@@ -276,6 +285,7 @@ jobs:
             PR_URL="$(gh pr create --base main --head "$PR_BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/discovery-cycle-pr.md")"
             PR_NUMBER="${PR_URL##*/}"
           fi
+          python -m tools.openva.discovery_mesh_intake check-hold --repository "$GITHUB_REPOSITORY"
           gh pr edit "$PR_NUMBER" --add-label candidate-intake --add-label automerge:candidate-intake
           echo "Candidate-intake PR: #$PR_NUMBER" >> "$GITHUB_STEP_SUMMARY"
 
