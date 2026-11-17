@@ -24,8 +24,24 @@ def write_inventory(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
-    with path.open("r", encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle))
+    # Candidate metadata grows independently of the canonical catalog. Read the
+    # complete fixture output instead of imposing csv's default 128 KiB field cap.
+    previous = csv.field_size_limit()
+    try:
+        csv.field_size_limit(max(previous, path.stat().st_size))
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            return list(csv.DictReader(handle))
+    finally:
+        csv.field_size_limit(previous)
+
+
+def test_csv_fixture_reader_preserves_large_fields_and_restores_limit(tmp_path):
+    path = tmp_path / "large.csv"
+    previous = csv.field_size_limit()
+    payload = "x" * (previous + 1)
+    write_inventory(path, [{"candidate_sources_json": payload}])
+    assert read_csv(path) == [{"candidate_sources_json": payload}]
+    assert csv.field_size_limit() == previous
 
 
 def test_domain_exact_match_enriches_stripe(tmp_path):
@@ -277,9 +293,12 @@ def test_json_payloads_are_compact_and_preserve_source_semantics(tmp_path):
     assert primary_sources["dpa"]["catalog_tier"] == "human_reviewed"
     assert primary_sources["dpa"]["review_state"] == "human_reviewed"
     assert primary_sources["dpa"]["advisory_boundary"] == "non_advisory"
-    assert json.loads(row["candidate_sources_json"]) == []
+    candidates = json.loads(row["candidate_sources_json"])
+    expected = [item for item in matcher.OpenVAPack.load(".").candidate_sources() if item["vendor_id"] == "stripe"]
+    assert {item["candidate_source_id"] for item in candidates} == {item["candidate_source_id"] for item in expected}
+    assert all(item["record_class"] == "candidate" and item["canonical"] is False for item in candidates)
     assert row["canonical_sources_available"] == "true"
-    assert row["candidate_sources_available"] == "false"
+    assert row["candidate_sources_available"] == ("true" if expected else "false")
 
 
 def test_primary_source_by_type_prefers_newest_dated_source(monkeypatch, tmp_path):
@@ -296,7 +315,7 @@ def test_primary_source_by_type_prefers_newest_dated_source(monkeypatch, tmp_pat
     assert primary_sources["privacy_notice"]["source_id"] == "acme-privacy"
 
 
-def test_google_domain_collision_matches_specific_subdomain(tmp_path):
+def test_google_domain_collision_keeps_shared_cloud_domain_ambiguous(tmp_path):
     input_path = tmp_path / "vendors.csv"
     output_path = tmp_path / "matched.csv"
     write_inventory(
@@ -314,10 +333,16 @@ def test_google_domain_collision_matches_specific_subdomain(tmp_path):
     assert rows[0]["matched_vendor_id"] == "google-workspace"
     assert rows[0]["match_confidence"] == "1.00"
     assert rows[0]["match_method"] == "domain_exact"
-    assert rows[1]["match_status"] == "matched"
-    assert rows[1]["matched_vendor_id"] == "google-cloud"
-    assert rows[1]["match_confidence"] == "1.00"
-    assert rows[1]["match_method"] == "domain_exact"
+    # Both Google Cloud and Wiz declare this domain in the current catalog;
+    # the consumer must not silently select one identity.
+    assert rows[1]["match_status"] == "ambiguous"
+    assert rows[1]["matched_vendor_id"] == ""
+    candidates = json.loads(rows[1]["candidate_matches_json"])
+    assert {item["vendor_id"]: item["match_method"] for item in candidates} == {
+        "google-cloud": "domain_exact",
+        "wiz": "domain_exact",
+        "google-workspace": "domain_subdomain",
+    }
 
 
 def test_google_bare_name_is_ambiguous_between_workspace_and_cloud(tmp_path):

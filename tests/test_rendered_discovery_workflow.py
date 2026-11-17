@@ -65,12 +65,14 @@ def test_push_smoke_stops_after_rendered_differential_publication() -> None:
         "Replenish stable vendor breadth state",
         "Build production health and intake decision",
         "Validate staged candidate intake",
-        "Prepare exact intake branch",
+        "Record partitioned intake handoff",
     )
     for name in production_only_steps:
         assert f"- name: {name}\n        if: github.event_name != 'push'" in text
 
     assert "HEALTH_STATUS: deployment_smoke" in text
+    assert "Prepare exact intake branch" not in text
+    assert "discovery-mesh-intake-recovery.yml" in text
 
 
 def test_push_smoke_publishes_acceptance_evidence_to_its_merge_pr() -> None:
