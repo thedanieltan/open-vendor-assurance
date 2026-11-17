@@ -1,0 +1,31 @@
+candidate_source_id: aikido-security-security-page-c9a90c6e6276
+candidate_status: selected
+candidate_url: https://help.aikido.dev/getting-started/core-functionalities/how-is-severity-score-calculated
+canonical_candidate_url: https://help.aikido.dev/getting-started/core-functionalities/how-is-severity-score-calculated
+confidence: likely
+discovered_at: '2026-11-17T12:23:00.991782Z'
+discovered_by: agent
+discovery_method: sitemap_locator_verification
+evidence:
+  content_type: text/html; charset=utf-8
+  final_url: https://help.aikido.dev/getting-started/core-functionalities/how-is-severity-score-calculated
+  http_status: 200
+  matched_terms:
+  - security
+  - vulnerability
+  page_title: How is Severity Score Calculated | Aikido
+  semantic_status: strong
+  soft_404_detected: false
+  verification_status: ok
+evidence_digest: sha256:822a29ccf42c0b5494ee1f5240888bb9b51ff23fc64541c544c60322d7949227
+not_advice: true
+notes: Candidate source discovered from official vendor domains. Not promoted to canonical
+  source without review.
+observed_final_url: https://help.aikido.dev/getting-started/core-functionalities/how-is-severity-score-calculated
+requested_url: https://help.aikido.dev/getting-started/core-functionalities/how-is-severity-score-calculated
+requires_review: true
+schema_version: 0.1.0
+selection_run_id: '2026-11-17T12:23:00.991782Z'
+source_type_candidate: security_page
+superseded_by_candidate_id: null
+vendor_id: aikido-security
